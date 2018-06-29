@@ -21,6 +21,16 @@ add_library( # Sets the name of the library.
 add_library(glTriangle
             SHARED
             src/main/cpp/drawTriangle.cpp)
+add_library(arTemplate
+            SHARED
+            src/main/cpp/drawPrimitive.cpp
+            src/main/cpp/jni_interface.cpp
+            src/main/cpp/utils.cpp)
+
+target_include_directories(arTemplate PRIVATE
+           src/main/cpp
+            ${ARCORE_INCLUDE}
+            ${ANDROID_NDK}/sources/third_party/vulkan/src/libs/glm)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -51,3 +61,9 @@ target_link_libraries(glTriangle
                       log
                       EGL
                       GLESv2)
+target_link_libraries(arTemplate
+                      android
+                      log
+                      EGL
+                      GLESv2
+                      )
