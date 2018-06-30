@@ -9,7 +9,14 @@ public class JniInterface {
     private static final String TAG = "JniInterface";
     static AssetManager assetManager;
 
-    public static native void setupGrphicDraw(int w, int t);
+    public static void setupGrphicDraw(int w, int t){
+        JNIsetupGrphicDraw(w, t, assetManager);
+    }
+    public static void drawFrame(){
+        JNIdrawFrame();
+    }
+    //pass a Java object
+    public static native void JNIsetupGrphicDraw(int w, int t, AssetManager asset_manager);
 
-    public static native void drawFrame();
+    public static native void JNIdrawFrame();
 }

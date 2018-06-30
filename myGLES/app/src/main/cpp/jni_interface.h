@@ -12,8 +12,8 @@
 
 //define helper functions to provide access to Java from C via JNI
 extern "C"{
-    JNI_METHOD(void, setupGrphicDraw)(JNIEnv *, jclass, jint width, jint height);
-    JNI_METHOD(void, drawFrame)(JNIEnv *, jclass);
+    JNI_METHOD(void, JNIsetupGrphicDraw)(JNIEnv *, jclass, jint width, jint height, jobject asset_manager);
+    JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass);
 
     //access JNI env on the current thread
     //TODO: detach the thread when thread exists

@@ -4,6 +4,6 @@
 
 #ifndef MYGLES_DRAWPRIMITIVE_H
 #define MYGLES_DRAWPRIMITIVE_H
-void initilization(int width, int height);
+void initilization(int width, int height, AAssetManager* asset_manager);
 void draw();
 #endif //MYGLES_DRAWPRIMITIVE_H

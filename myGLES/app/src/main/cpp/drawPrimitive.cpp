@@ -23,11 +23,13 @@ auto gFragmentShader =
                 "void main() {\n"
                 "  gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
                 "}\n";
+
 const GLfloat gTriangleVertices[] = { 0.0f, 0.5f, -0.5f, -0.5f,
                                       0.5f, -0.5f };
 
-void initilization(int width, int height){
-    gProgram = utils::CreateProgram(gVertexShader, gFragmentShader);
+void initilization(int width, int height, AAssetManager* asset_manager){
+//    gProgram = utils::CreateProgram(gVertexShader,gFragmentShader);
+    gProgram = utils::CreateProgram("shaders/naive.vert", "shaders/naive.frag", asset_manager);
     gvPositionHandle = glGetAttribLocation(gProgram, "vPosition");
     glViewport(0, 0, width, height);
 }
