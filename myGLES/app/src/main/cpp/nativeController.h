@@ -6,7 +6,7 @@
 #define MYGLES_NATIVECONTROLLER_H
 
 #include "utils.h"
-
+#include "arcore_c_api.h"
 namespace controller {
     class nativeController {
     public:

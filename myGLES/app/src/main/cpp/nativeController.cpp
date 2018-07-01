@@ -4,6 +4,7 @@
 
 #include "nativeController.h"
 
+
 using namespace controller;
 
 nativeController::nativeController(AAssetManager * assetManager)
@@ -13,4 +14,7 @@ nativeController::~nativeController() {}
 
 void nativeController::onTouched(float x, float y) {
     LOGE("================called from native onTouch================");
+}
+
+void nativeController::onResume(){
 }

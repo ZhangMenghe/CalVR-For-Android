@@ -5,6 +5,10 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
+add_library(arcore SHARED IMPORTED)
+set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
+                      ${ARCORE_LIBPATH}/${ANDROID_ABI}/libarcore_sdk_c.so)
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -67,4 +71,4 @@ target_link_libraries(arTemplate
                       log
                       EGL
                       GLESv2
-                      )
+                      arcore)

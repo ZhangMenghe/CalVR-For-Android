@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def arcore_path = "D:/Android_ARCore/arcore-android-sdk-1.3.0/libraries"
+def arcore_libpath = "${buildDir}/arcore-native"
+// Create a configuration to mark which aars to extract .so files from
+configurations { natives }
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -11,8 +15,14 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++11 -fexceptions"
+                cppFlags "-std=c++11 -Wall"
+                arguments "-DANDROID_STL=c++_static",
+                        "-DARCORE_LIBPATH=${arcore_libpath}/jni",
+                        "-DARCORE_INCLUDE=${arcore_path}/include"
             }
+        }
+        ndk {
+            abiFilters "arm64-v8a", "x86"
         }
     }
     buildTypes {
@@ -29,10 +39,33 @@ android {
 }
 
 dependencies {
+    //ARCore lib
+    implementation 'com.google.ar:core:1.3.0'
+    natives 'com.google.ar:core:1.3.0'
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0-alpha3'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+// Extracts the shared libraries from aars in the natives configuration.
+// This is done so that NDK builds can access these libraries.
+task extractNativeLibraries() {
+    doFirst {
+        configurations.natives.files.each { f ->
+            copy {
+                from zipTree(f)
+                into arcore_libpath
+                include "jni/**/*"
+            }
+        }
+    }
+}
+
+tasks.whenTaskAdded {
+    task-> if (task.name.contains("external") && !task.name.contains("Clean")) {
+        task.dependsOn(extractNativeLibraries)
+    }
 }

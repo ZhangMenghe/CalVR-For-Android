@@ -3,6 +3,7 @@
 #include "jni_interface.h"
 #include "drawPrimitive.h"
 #include "nativeController.h"
+
 namespace {
     //maintain a reference to VM
     static JavaVM *g_vm = nullptr;
@@ -44,7 +45,10 @@ JNI_METHOD(void, JNIonTouched)
     controllerNative(controller_addr)->onTouched(x, y);
 }
 
-
+//JNI_METHOD(void, JNIOnResume)
+//(JNIEnv *, jclass){
+//    ArInstallStatus
+//}
 JNIEnv *GetJniEnv() {
     JNIEnv *env;
     jint result = g_vm->AttachCurrentThread(&env, nullptr);
