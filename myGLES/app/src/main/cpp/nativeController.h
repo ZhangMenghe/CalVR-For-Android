@@ -16,16 +16,22 @@ namespace controller {
 
         ~nativeController();
 
+        void onCreate();
+
         void onPause();
 
-        void onResume();
+        void onResume(void * env, void* context, void* activity);
 
         void onDrawFrame();
 
+        void onViewChanged(int rot, int width, int height);
         void onTouched(float x, float y);
 
+        bool hasDetectedPlane(){return _plane_num>0;}
     private:
         AAssetManager *const _asset_manager;
+        int _plane_num = 0;
+
 
     };
 }

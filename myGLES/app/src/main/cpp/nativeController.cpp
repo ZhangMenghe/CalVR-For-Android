@@ -15,6 +15,9 @@ nativeController::~nativeController() {}
 void nativeController::onTouched(float x, float y) {
     LOGE("================called from native onTouch================");
 }
+void nativeController::onCreate() {}
 
-void nativeController::onResume(){
-}
+void nativeController::onPause() {}
+void nativeController::onResume(void *env, void *context, void *activity) {}
+void nativeController::onDrawFrame() {}
+void nativeController::onViewChanged(int rot, int width, int height) {}
