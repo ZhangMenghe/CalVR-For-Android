@@ -165,7 +165,7 @@ public class arTemplateActivity extends AppCompatActivity
             viewportWidth = width;
             viewportHeight = height;
             viewportChanged = true;
-            JniInterface.setupGrphicDraw(width, height);
+            //JniInterface.setupGrphicDraw(width, height);
         }
 
         @Override

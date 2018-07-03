@@ -9,6 +9,7 @@
 #include "arcore_utils.h"
 #include "arcore_c_api.h"
 #include "planeRenderer.h"
+#include "backgroundRenderer.h"
 namespace controller {
     class nativeController {
     public:
@@ -42,6 +43,7 @@ namespace controller {
         int _height = 1;
 
         planeRenderer * _plane_renderer;
+        backgroundRenderer * _background_renderer;
 
 
     };

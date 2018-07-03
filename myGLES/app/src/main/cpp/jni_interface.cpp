@@ -43,8 +43,8 @@ JNI_METHOD(void, JNIsetupGrphicDraw)
 
 JNI_METHOD(void, JNIdrawFrame)
 (JNIEnv *, jclass) {
-    draw();//drawPrimitive
-//    controllerNative(nativeAppAddr)->onDrawFrame();
+    //draw();//drawPrimitive
+    controllerNative(nativeAppAddr)->onDrawFrame();
 }
 
 JNI_METHOD(void, JNIonGlSurfaceCreated)

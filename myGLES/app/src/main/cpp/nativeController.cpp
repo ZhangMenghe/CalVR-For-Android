@@ -23,6 +23,8 @@ void nativeController::onTouched(float x, float y) {
     LOGE("================called from native onTouch================");
 }
 void nativeController::onCreate() {
+    //On surface created
+    _background_renderer->InitializeGlContent(_asset_manager);
     _plane_renderer->Initialization(_asset_manager);
 }
 
@@ -53,5 +55,39 @@ void nativeController::onResume(void *env, void *context, void *activity) {
     const ArStatus status = ArSession_resume(_ar_session);
     CHECK(status == AR_SUCCESS);
 }
-void nativeController::onDrawFrame() {}
+void nativeController::onDrawFrame() {
+    glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    CHECK(_ar_session);
+
+    //must call this func before update ar session
+    ArSession_setCameraTextureName(_ar_session,_background_renderer->GetTextureId());
+    // Update session to get current frame and render camera background.
+    if (ArSession_update(_ar_session, _ar_frame) != AR_SUCCESS) {
+        LOGE("OnDrawFrame ArSession_update error");
+    }
+
+    ArCamera* camera;
+    ArFrame_acquireCamera(_ar_session, _ar_frame, &camera);
+
+    mat4 view_mat;
+    mat4 proj_mat;
+
+    ArCamera_getViewMatrix(_ar_session, camera, value_ptr(view_mat));
+    ArCamera_getProjectionMatrix(_ar_session,camera, 0.1f, 100.0f, value_ptr(proj_mat));
+
+    ArTrackingState cam_track_state;
+    ArCamera_getTrackingState(_ar_session, camera, &cam_track_state);
+    ArCamera_release(camera);
+
+    _background_renderer->Draw(_ar_session, _ar_frame);
+    //not tracking anything
+    if(cam_track_state != AR_TRACKING_STATE_TRACKING)
+        return;
+}
 void nativeController::onViewChanged(int rot, int width, int height) {}
