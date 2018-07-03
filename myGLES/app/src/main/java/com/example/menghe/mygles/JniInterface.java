@@ -3,6 +3,12 @@ package com.example.menghe.mygles;
         import android.app.Activity;
         import android.content.Context;
         import android.content.res.AssetManager;
+        import android.graphics.Bitmap;
+        import android.graphics.BitmapFactory;
+        import android.opengl.GLUtils;
+        import android.util.Log;
+
+        import java.io.IOException;
 
 public class JniInterface {
     static {
@@ -22,7 +28,7 @@ public class JniInterface {
 
     public static native void JNIsetupGrphicDraw(int w, int t, AssetManager asset_manager);
 
-    public static native void JNIdrawFrame(long controller_addr);
+    public static native void JNIdrawFrame();
 
     public static native void JNIonGlSurfaceCreated();
 
@@ -37,4 +43,18 @@ public class JniInterface {
     public static native void JNIonPause();
 
     public static native void JNIonDestroy();
+
+    public static Bitmap loadImage(String imageName) {
+
+        try {
+            return BitmapFactory.decodeStream(assetManager.open(imageName));
+        } catch (IOException e) {
+            Log.e(TAG, "Cannot open image " + imageName);
+            return null;
+        }
+    }
+
+    public static void loadTexture(int target, Bitmap bitmap) {
+        GLUtils.texImage2D(target, 0, bitmap, 0);
+    }
 }

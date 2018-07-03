@@ -30,6 +30,8 @@ add_library(arTemplate
             src/main/cpp/drawPrimitive.cpp
             src/main/cpp/jni_interface.cpp
             src/main/cpp/nativeController.cpp
+            src/main/cpp/planeRenderer.cpp
+            src/main/cpp/arcore_utils.cpp
             src/main/cpp/utils.cpp)
 
 target_include_directories(arTemplate PRIVATE

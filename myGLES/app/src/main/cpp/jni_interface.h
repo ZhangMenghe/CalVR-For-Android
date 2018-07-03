@@ -22,7 +22,7 @@ extern "C"{
     JNI_METHOD(void, JNIonTouched)(JNIEnv *, jclass, jfloat x, jfloat y);
     JNI_METHOD(jboolean, JNIhasDetectedPlane)(JNIEnv*, jclass , long controller_addr);
 
-    JNI_METHOD(void, JNIonResume)(JNIEnv *, jclass, jobject contex, jobject activitiy);
+    JNI_METHOD(void, JNIonResume)(JNIEnv *, jclass,jobject contex, jobject activitiy);
     JNI_METHOD(void, JNIonPause)(JNIEnv *, jclass);
     JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr);
     //access JNI env on the current thread
@@ -30,7 +30,6 @@ extern "C"{
     JNIEnv * GetJniEnv();
 }
 
-//global environment
-jlong nativeAppAddr = 0;
+
 
 #endif //MYGLES_JNI_INTERFACE_H

@@ -6,7 +6,9 @@
 #define MYGLES_NATIVECONTROLLER_H
 
 #include "utils.h"
+#include "arcore_utils.h"
 #include "arcore_c_api.h"
+#include "planeRenderer.h"
 namespace controller {
     class nativeController {
     public:
@@ -29,8 +31,17 @@ namespace controller {
 
         bool hasDetectedPlane(){return _plane_num>0;}
     private:
+        ArSession * _ar_session = nullptr;
+        ArFrame * _ar_frame = nullptr;//get frame state
         AAssetManager *const _asset_manager;
         int _plane_num = 0;
+        bool _install_requested = false;
+
+        int _displayRotation = 0;
+        int _width = 1;
+        int _height = 1;
+
+        planeRenderer * _plane_renderer;
 
 
     };

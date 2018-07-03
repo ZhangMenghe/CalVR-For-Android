@@ -7,12 +7,16 @@
 namespace {
     //maintain a reference to VM
     static JavaVM *g_vm = nullptr;
+    //global environment
+    jlong nativeAppAddr = 0;
+
     inline jlong controllerPtr(controller::nativeController * native_controller){
         return reinterpret_cast<intptr_t>(native_controller);
     }
     inline controller::nativeController * controllerNative(jlong ptr){
         return reinterpret_cast<controller::nativeController *>(ptr);
     }
+
 }
 
 
@@ -40,7 +44,7 @@ JNI_METHOD(void, JNIsetupGrphicDraw)
 JNI_METHOD(void, JNIdrawFrame)
 (JNIEnv *, jclass) {
     draw();//drawPrimitive
-    controllerNative(nativeAppAddr)->onDrawFrame();
+//    controllerNative(nativeAppAddr)->onDrawFrame();
 }
 
 JNI_METHOD(void, JNIonGlSurfaceCreated)
