@@ -99,43 +99,7 @@ namespace utils{
             return 0;
         }
 
-        GLuint vertexShader =
-                LoadShader(GL_VERTEX_SHADER, VertexShaderContent.c_str());
-        if (!vertexShader) {
-            return 0;
-        }
-
-        GLuint fragment_shader =
-                LoadShader(GL_FRAGMENT_SHADER, FragmentShaderContent.c_str());
-        if (!fragment_shader) {
-            return 0;
-        }
-
-        GLuint program = glCreateProgram();
-        if (program) {
-            glAttachShader(program, vertexShader);
-            CheckGlError("hello_ar::util::glAttachShader");
-            glAttachShader(program, fragment_shader);
-            CheckGlError("hello_ar::util::glAttachShader");
-            glLinkProgram(program);
-            GLint link_status = GL_FALSE;
-            glGetProgramiv(program, GL_LINK_STATUS, &link_status);
-            if (link_status != GL_TRUE) {
-                GLint buf_length = 0;
-                glGetProgramiv(program, GL_INFO_LOG_LENGTH, &buf_length);
-                if (buf_length) {
-                    char* buf = reinterpret_cast<char*>(malloc(buf_length));
-                    if (buf) {
-                        glGetProgramInfoLog(program, buf_length, nullptr, buf);
-                        LOGE("hello_ar::util::Could not link program:\n%s\n", buf);
-                        free(buf);
-                    }
-                }
-                glDeleteProgram(program);
-                program = 0;
-            }
-        }
-        return program;
+        return CreateProgram(VertexShaderContent.c_str(), FragmentShaderContent.c_str());
     }
 
     bool LoadTextFileFromAssetManager(const char* file_name,
