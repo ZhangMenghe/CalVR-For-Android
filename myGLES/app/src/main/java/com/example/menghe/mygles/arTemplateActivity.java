@@ -74,7 +74,7 @@ public class arTemplateActivity extends AppCompatActivity
         super.onResume();
         surfaceView.onResume();
         //Request for camera permission, which may be used in ARCore
-        /*if (!CameraPermissionHelper.hasCameraPermission(this)) {
+        if (!CameraPermissionHelper.hasCameraPermission(this)) {
             CameraPermissionHelper.requestCameraPermission(this);
             return;
         }
@@ -85,7 +85,7 @@ public class arTemplateActivity extends AppCompatActivity
         // Listen to display changed events to detect 180° rotation, which does not cause a config
         // change or view resize.
         getSystemService(DisplayManager.class).registerDisplayListener(this, null);
-*/
+
     }
     @Override
     protected void onPause(){
