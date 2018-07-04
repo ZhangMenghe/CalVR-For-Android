@@ -30,14 +30,13 @@ add_library(arTemplate
             src/main/cpp/drawPrimitive.cpp
             src/main/cpp/jni_interface.cpp
             src/main/cpp/nativeController.cpp
-            src/main/cpp/backgroundRenderer.cpp
             src/main/cpp/planeRenderer.cpp
+            src/main/cpp/cameraRenderer.cpp
             src/main/cpp/arcore_utils.cpp
             src/main/cpp/utils.cpp)
 
 target_include_directories(arTemplate PRIVATE
            src/main/cpp
-            ${ARCORE_INCLUDE}
             ${ANDROID_NDK}/sources/third_party/vulkan/src/libs/glm)
 
 # Searches for a specified prebuilt library and stores the path as a

@@ -63,9 +63,9 @@ JNI_METHOD(void, JNIonTouched)
     controllerNative(nativeAppAddr)->onTouched(x, y);
 }
 JNI_METHOD(jboolean, JNIhasDetectedPlane)
-(JNIEnv*, jclass , long controller_addr){
+(JNIEnv*, jclass){
     return static_cast<jboolean>
-        (controllerNative(controller_addr)->hasDetectedPlane()? JNI_TRUE:JNI_FALSE);
+        (controllerNative(nativeAppAddr)->hasDetectedPlane()? JNI_TRUE:JNI_FALSE);
 }
 
 JNI_METHOD(void, JNIonResume)(JNIEnv * env, jclass, jobject contex, jobject activitiy){

@@ -94,6 +94,7 @@ public class arTemplateActivity extends AppCompatActivity
         JniInterface.JNIonPause();
         planeDetection_handler.removeCallbacks(planeDetection_runnable);
         getSystemService(DisplayManager.class).unregisterDisplayListener(this);
+
     }
 
     @Override
@@ -165,7 +166,6 @@ public class arTemplateActivity extends AppCompatActivity
             viewportWidth = width;
             viewportHeight = height;
             viewportChanged = true;
-            //JniInterface.setupGrphicDraw(width, height);
         }
 
         @Override

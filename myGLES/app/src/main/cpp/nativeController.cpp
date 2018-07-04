@@ -9,6 +9,7 @@ using namespace controller;
 
 nativeController::nativeController(AAssetManager * assetManager)
         : _asset_manager(assetManager){
+    _camera_renderer = new cameraRenderer();
     _plane_renderer = new planeRenderer();
 }
 
@@ -24,8 +25,9 @@ void nativeController::onTouched(float x, float y) {
 }
 void nativeController::onCreate() {
     //On surface created
-    _background_renderer->InitializeGlContent(_asset_manager);
+    _camera_renderer->Initialization(_asset_manager);
     _plane_renderer->Initialization(_asset_manager);
+
 }
 
 void nativeController::onPause() {
@@ -63,10 +65,11 @@ void nativeController::onDrawFrame() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    CHECK(_ar_session);
+    if(_ar_session == nullptr)
+        return;
 
     //must call this func before update ar session
-    ArSession_setCameraTextureName(_ar_session,_background_renderer->GetTextureId());
+    ArSession_setCameraTextureName(_ar_session,_camera_renderer->GetTextureId());
     // Update session to get current frame and render camera background.
     if (ArSession_update(_ar_session, _ar_frame) != AR_SUCCESS) {
         LOGE("OnDrawFrame ArSession_update error");
@@ -85,7 +88,7 @@ void nativeController::onDrawFrame() {
     ArCamera_getTrackingState(_ar_session, camera, &cam_track_state);
     ArCamera_release(camera);
 
-    _background_renderer->Draw(_ar_session, _ar_frame);
+    _camera_renderer->Draw(_ar_session, _ar_frame);
     //not tracking anything
     if(cam_track_state != AR_TRACKING_STATE_TRACKING)
         return;
