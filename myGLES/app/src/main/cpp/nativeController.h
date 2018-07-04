@@ -5,6 +5,8 @@
 #ifndef MYGLES_NATIVECONTROLLER_H
 #define MYGLES_NATIVECONTROLLER_H
 
+#include <unordered_map>
+
 #include "utils.h"
 #include "arcore_utils.h"
 #include "arcore_c_api.h"
@@ -18,10 +20,14 @@ namespace controller {
         AAssetManager *const _asset_manager;
         int _plane_num = 0;
         bool _install_requested = false;
+        bool _this_is_the_first_plane = true;
 
         int _displayRotation = 0;
         int _width = 1;
         int _height = 1;
+        float _color_correction[4] = {1.f, 1.f, 1.f, 1.f};
+
+        unordered_map<ArPlane*, vec3> _plane_color_map;
 
         planeRenderer * _plane_renderer;
         cameraRenderer * _camera_renderer;
