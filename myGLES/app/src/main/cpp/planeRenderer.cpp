@@ -6,13 +6,13 @@
 #include "arcore_utils.h"
 #include "utils.h"
 using namespace arcore_utils;
-void planeRenderer::_update_plane_vertices(const ArSession &arSession, const ArPlane &arPlane) {
+void planeRenderer::_update_plane_vertices(const ArSession *arSession, const ArPlane*arPlane) {
     _vertices.clear();
     _triangles.clear();
 
     int32_t polygon_length;
     //get the number of elements(2*#vertives)
-    ArPlane_getPolygonSize(&arSession, &arPlane, &polygon_length);
+    ArPlane_getPolygonSize(arSession, arPlane, &polygon_length);
 
     if(polygon_length == 0){
         LOGE("NO valid plane polygon found");
@@ -20,7 +20,7 @@ void planeRenderer::_update_plane_vertices(const ArSession &arSession, const ArP
     }
     const int32_t vertices_size = polygon_length/2;
     vector<vec2> raw_vertices(vertices_size);
-    ArPlane_getPolygon(&arSession, &arPlane, value_ptr(raw_vertices.front()));
+    ArPlane_getPolygon(arSession, arPlane, value_ptr(raw_vertices.front()));
 
     //fill outter vertices
     for(int32_t i=0; i<vertices_size; i++)
@@ -28,11 +28,11 @@ void planeRenderer::_update_plane_vertices(const ArSession &arSession, const ArP
 
     //get model matrix
     ArPose * arPose;
-    ArPose_create(&arSession, nullptr,&arPose);
-    ArPlane_getCenterPose(&arSession, &arPlane, arPose);
-    ArPose_getMatrix(&arSession, arPose, value_ptr(_model_mat));
+    ArPose_create(arSession, nullptr,&arPose);
+    ArPlane_getCenterPose(arSession, arPlane, arPose);
+    ArPose_getMatrix(arSession, arPose, value_ptr(_model_mat));
 
-    _normal_vec = getPlaneNormal(arSession, *arPose);
+    _normal_vec = getPlaneNormal(*arSession, *arPose);
 
     // Feather distance 0.2 meters.
     const float kFeatherLength = 0.2f;
@@ -100,7 +100,7 @@ void planeRenderer::Initialization(AAssetManager *manager) {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void planeRenderer::Draw(const ArSession &arSession, const ArPlane &arPlane, const mat4 &projMat,
+void planeRenderer::Draw(const ArSession *arSession, const ArPlane *arPlane, const mat4 &projMat,
                          const mat4 &viewMat, const vec3 &color) {
     _update_plane_vertices(arSession, arPlane);
     glUseProgram(_shader_program);
@@ -110,9 +110,9 @@ void planeRenderer::Draw(const ArSession &arSession, const ArPlane &arPlane, con
     glUniform1i(_uniform_tex_sampler, 0);
     glBindTexture(GL_TEXTURE_2D, _texture_id);
 
-    glUniformMatrix4fv(_uniform_mvp_mat, 1, false, value_ptr(projMat * viewMat * _model_mat));
+    glUniformMatrix4fv(_uniform_mvp_mat, 1, GL_FALSE, value_ptr(projMat * viewMat * _model_mat));
     glUniform3f(_uniform_normal_vec, _normal_vec.x, _normal_vec.y, _normal_vec.z);
-    glUniformMatrix4fv(_uniform_model_mat, 1, false, value_ptr(_model_mat));
+    glUniformMatrix4fv(_uniform_model_mat, 1, GL_FALSE, value_ptr(_model_mat));
     glUniform3f(_uniform_color, color.x, color.y, color.z);
 
     glEnableVertexAttribArray(_attrib_vertices);

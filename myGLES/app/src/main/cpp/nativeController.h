@@ -12,6 +12,7 @@
 #include "arcore_c_api.h"
 #include "planeRenderer.h"
 #include "cameraRenderer.h"
+#include "pointcloudRenderer.h"
 namespace controller {
     class nativeController {
     private:
@@ -31,6 +32,7 @@ namespace controller {
 
         planeRenderer * _plane_renderer;
         cameraRenderer * _camera_renderer;
+        pointcloudRenderer * _pointcloud_renderer;
     public:
         nativeController(AAssetManager *assetManager);
 

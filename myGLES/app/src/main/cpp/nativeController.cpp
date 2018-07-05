@@ -28,6 +28,7 @@ nativeController::nativeController(AAssetManager * assetManager)
         : _asset_manager(assetManager){
     _camera_renderer = new cameraRenderer();
     _plane_renderer = new planeRenderer();
+    _pointcloud_renderer = new pointcloudRenderer();
 }
 
 nativeController::~nativeController() {
@@ -44,7 +45,7 @@ void nativeController::onCreate() {
     //On surface created
     _camera_renderer->Initialization(_asset_manager);
     _plane_renderer->Initialization(_asset_manager);
-
+    _pointcloud_renderer->Initialization(_asset_manager);
 }
 
 void nativeController::onPause() {
@@ -162,12 +163,17 @@ void nativeController::onDrawFrame() {
             _plane_color_map.insert({ar_plane, plane_color});
         }
 
-        _plane_renderer->Draw(*_ar_session, *ar_plane, proj_mat, view_mat,plane_color);
+        _plane_renderer->Draw(_ar_session, ar_plane, proj_mat, view_mat,plane_color);
     }
     ArTrackableList_destroy(plane_list);
     plane_list = nullptr;
 
     //TODO:Render point clouds
-
+    ArPointCloud * pointCloud;
+    ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
+    if(pointcloud_Status != AR_SUCCESS)
+        return;
+    _pointcloud_renderer->Draw(_ar_session, pointCloud, proj_mat*view_mat);
+    ArPointCloud_release(pointCloud);
 }
 void nativeController::onViewChanged(int rot, int width, int height) {}

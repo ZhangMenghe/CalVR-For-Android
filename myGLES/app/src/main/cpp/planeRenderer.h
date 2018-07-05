@@ -35,11 +35,11 @@ private:
     GLint _uniform_color;
 
 
-    void _update_plane_vertices(const ArSession & arSession, const ArPlane & arPlane);
+    void _update_plane_vertices(const ArSession * arSession, const ArPlane * arPlane);
 
 public:
     void Initialization(AAssetManager * manager);
-    void Draw(const ArSession & arSession, const ArPlane & arPlane,
+    void Draw(const ArSession * arSession, const ArPlane * arPlane,
               const mat4 & projMat, const mat4 & viewMat,
               const vec3 & color);
 };
