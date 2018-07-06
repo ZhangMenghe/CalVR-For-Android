@@ -41,35 +41,35 @@ void objRenderer::Initialization(AAssetManager *manager, const char*obj_file_nam
     utils::LoadObjFile(manager, obj_file_name, &_vertices, &_normals, &_uvs, &_indices);
 
     //Generate VAO and bind
-    /*glGenVertexArrays(1, &_VAO);
+    glGenVertexArrays(1, &_VAO);
     glBindVertexArray(_VAO);
 
     //Generate VBO and bind
     glGenBuffers(3, _VBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, _VBO[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(_vertices), _vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertices.size(), _vertices.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(_attrib_vertices, 3, GL_FLOAT, GL_FALSE, 0,0);
     glEnableVertexAttribArray(_attrib_vertices);
 
 
     glBindBuffer(GL_ARRAY_BUFFER, _VBO[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(_uvs), _uvs.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _uvs.size(), _uvs.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(_attrib_uvs, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(_attrib_uvs);
 
     glBindBuffer(GL_ARRAY_BUFFER, _VBO[2]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(_normals), _normals.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _normals.size(), _normals.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(_attrib_normals, 3, GL_FLOAT, GL_FALSE, 0,0);
     glEnableVertexAttribArray(_attrib_normals);
 
     //Generate EBO
     glGenBuffers(1, &_EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(_indices), _indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * _indices.size(), _indices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);*/
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void objRenderer::Draw(const mat4 &projMat, const mat4 &viewMat, const mat4 &modelMat,
@@ -93,13 +93,13 @@ void objRenderer::Draw(const mat4 &projMat, const mat4 &viewMat, const mat4 &mod
     glUniform4f(_uniform_color_correction_param, color_correction[0],color_correction[1],
                 color_correction[2],color_correction[3]);
 
-  /* glBindVertexArray(_VAO);
+    glBindVertexArray(_VAO);
 
-    glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_SHORT,_indices.data());
+    glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_SHORT, nullptr);
 
     glBindVertexArray(0);
-    glUseProgram(0);*/
-    glEnableVertexAttribArray(_attrib_vertices);
+    glUseProgram(0);
+    /*glEnableVertexAttribArray(_attrib_vertices);
     glVertexAttribPointer(_attrib_vertices, 3, GL_FLOAT, GL_FALSE, 0,
                           _vertices.data());
 
@@ -117,5 +117,5 @@ void objRenderer::Draw(const mat4 &projMat, const mat4 &viewMat, const mat4 &mod
     glDisableVertexAttribArray(_attrib_uvs);
     glDisableVertexAttribArray(_attrib_normals);
 
-    glUseProgram(0);
+    glUseProgram(0);*/
 }

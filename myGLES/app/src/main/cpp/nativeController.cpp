@@ -47,6 +47,7 @@ void nativeController::onCreate() {
     _camera_renderer->Initialization(_asset_manager);
     _plane_renderer->Initialization(_asset_manager);
     _pointcloud_renderer->Initialization(_asset_manager);
+    //_obj_renderer->Initialization(_asset_manager, "models/Jigglypuff.obj", "textures/jigglypuff.png");
     _obj_renderer->Initialization(_asset_manager, "models/andy.obj", "textures/andy.png");
 }
 
