@@ -6,7 +6,7 @@
 #define MYGLES_POINTCLOUDRENDERER_H
 
 
-#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
 #include "arcore_c_api.h"
 #include "utils.h"
 

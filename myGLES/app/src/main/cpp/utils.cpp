@@ -6,7 +6,7 @@
 #include <jni.h>
 #include <string>
 #include <sstream>
-#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
 #include "jni_interface.h"
 
 using namespace std;
@@ -179,7 +179,7 @@ namespace utils{
         return true;
     }
 
-    bool LoadObjFile(const std::string& file_name, AAssetManager* asset_manager,
+    bool LoadObjFile( AAssetManager* asset_manager,const char* file_name,
                      std::vector<GLfloat>* out_vertices,
                      std::vector<GLfloat>* out_normals,
                      std::vector<GLfloat>* out_uv,
@@ -192,8 +192,7 @@ namespace utils{
         std::vector<GLushort> uv_indices;
 
         std::string file_buffer;
-        bool read_success = LoadTextFileFromAssetManager(file_name.c_str(),
-                                                         asset_manager, &file_buffer);
+        bool read_success = LoadTextFileFromAssetManager(file_name,asset_manager, &file_buffer);
         if (!read_success) {
             return false;
         }

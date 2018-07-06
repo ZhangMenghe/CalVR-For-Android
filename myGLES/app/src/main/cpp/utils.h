@@ -5,8 +5,8 @@
 #ifndef MYGLES_UTILS_H
 #define MYGLES_UTILS_H
 
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+#include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
 #include <android/asset_manager.h>
 #include <android/log.h>
 #include <errno.h>
@@ -83,7 +83,7 @@ namespace utils {
     // @param out_uv, output texture UV coordinates.
     // @param out_indices, output triangle indices.
     // @return true if obj is loaded correctly, otherwise false.
-    bool LoadObjFile(const std::string& file_name, AAssetManager* asset_manager,
+    bool LoadObjFile( AAssetManager* asset_manager,const char* file_name,
                      std::vector<GLfloat>* out_vertices,
                      std::vector<GLfloat>* out_normals,
                      std::vector<GLfloat>* out_uv,

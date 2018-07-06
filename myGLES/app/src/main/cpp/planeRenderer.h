@@ -5,8 +5,8 @@
 #ifndef MYGLES_PLANERENDERER_H
 #define MYGLES_PLANERENDERER_H
 
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+#include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
 #include <android/asset_manager.h>
 
 #include "utils.h"
@@ -42,6 +42,7 @@ public:
     void Draw(const ArSession * arSession, const ArPlane * arPlane,
               const mat4 & projMat, const mat4 & viewMat,
               const vec3 & color);
+    mat4 getModelMat(){return _model_mat;}
 };
 
 

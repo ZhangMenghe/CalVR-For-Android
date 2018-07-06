@@ -1,6 +1,6 @@
 package com.example.menghe.mygles;
 
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-            GLES20.glClearColor(1.0f, .0f, .0f, 1.0f);
+            GLES30.glClearColor(1.0f, .0f, .0f, 1.0f);
 //        JniInterface.onGlSurfaceCreated(nativeApplication);
         }
 

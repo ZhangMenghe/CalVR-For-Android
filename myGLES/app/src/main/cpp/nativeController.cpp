@@ -29,6 +29,7 @@ nativeController::nativeController(AAssetManager * assetManager)
     _camera_renderer = new cameraRenderer();
     _plane_renderer = new planeRenderer();
     _pointcloud_renderer = new pointcloudRenderer();
+    _obj_renderer = new objRenderer();
 }
 
 nativeController::~nativeController() {
@@ -46,6 +47,7 @@ void nativeController::onCreate() {
     _camera_renderer->Initialization(_asset_manager);
     _plane_renderer->Initialization(_asset_manager);
     _pointcloud_renderer->Initialization(_asset_manager);
+    _obj_renderer->Initialization(_asset_manager, "models/andy.obj", "textures/andy.png");
 }
 
 void nativeController::onPause() {
@@ -164,6 +166,9 @@ void nativeController::onDrawFrame() {
         }
 
         _plane_renderer->Draw(_ar_session, ar_plane, proj_mat, view_mat,plane_color);
+
+        _obj_renderer->Draw(proj_mat,view_mat,_plane_renderer->getModelMat(),_color_correction);
+
     }
     ArTrackableList_destroy(plane_list);
     plane_list = nullptr;

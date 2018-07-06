@@ -1,7 +1,7 @@
 package com.example.menghe.mygles;
 
 import android.hardware.display.DisplayManager;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -120,7 +120,7 @@ public class arTemplateActivity extends AppCompatActivity
         surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
         // Set up renderer.
         surfaceView.setPreserveEGLContextOnPause(true);
-        surfaceView.setEGLContextClientVersion(2);
+        surfaceView.setEGLContextClientVersion(3);
         surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0); // Alpha used for plane blending.
         surfaceView.setRenderer(new arTemplateActivity.Renderer());
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -157,7 +157,7 @@ public class arTemplateActivity extends AppCompatActivity
     private class Renderer implements GLSurfaceView.Renderer {
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-            GLES20.glClearColor(1.0f, .0f, .0f, 1.0f);
+            GLES30.glClearColor(1.0f, .0f, .0f, 1.0f);
             JniInterface.JNIonGlSurfaceCreated();
         }
 

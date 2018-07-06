@@ -30,6 +30,7 @@ add_library(arTemplate
             src/main/cpp/drawPrimitive.cpp
             src/main/cpp/jni_interface.cpp
             src/main/cpp/nativeController.cpp
+            src/main/cpp/objRenderer.cpp
             src/main/cpp/planeRenderer.cpp
             src/main/cpp/cameraRenderer.cpp
             src/main/cpp/pointcloudRenderer.cpp
@@ -73,5 +74,5 @@ target_link_libraries(arTemplate
                       android
                       log
                       EGL
-                      GLESv2
+                      GLESv3
                       arcore)
