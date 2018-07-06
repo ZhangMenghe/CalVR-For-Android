@@ -77,7 +77,8 @@ void objRenderer::Draw(const mat4 &projMat, const mat4 &viewMat, const mat4 &mod
     glUseProgram(_shader_program);
 
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(_uniform_texture_sampler, _texture_id);
+    glUniform1i(_uniform_texture_sampler, 0);
+    glBindTexture(GL_TEXTURE_2D, _texture_id);
 
     mat4 mv_mat = viewMat * modelMat;
     glUniformMatrix4fv(_uniform_mv_mat, 1,GL_FALSE,value_ptr(mv_mat));
