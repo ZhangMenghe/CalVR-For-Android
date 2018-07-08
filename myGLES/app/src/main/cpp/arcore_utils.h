@@ -25,6 +25,16 @@ namespace arcore_utils {
 
     vec3 getPlaneNormal(const ArSession & arSession, const ArPose & arPose);
 
+    // Calculate the normal distance to plane from cameraPose, the given planePose
+    // should have y axis parallel to plane's normal, for example plane's center
+    // pose or hit test pose.
+    float calculateDistanceToPlane(const ArSession& ar_session,
+                                   const ArPose& plane_pose,
+                                   const ArPose& camera_pose);
+    // Get transformation matrix from ArAnchor.
+    void getTransformMatrixFromAnchor(const ArAnchor& ar_anchor,
+                                      ArSession* ar_session,
+                                      glm::mat4* out_model_mat);
 };
 
 

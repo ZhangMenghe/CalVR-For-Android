@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "arcore_utils.h"
 #include "arcore_c_api.h"
+#include "anchorRenderer.h"
 #include "planeRenderer.h"
 #include "cameraRenderer.h"
 #include "pointcloudRenderer.h"
@@ -19,6 +20,11 @@ namespace controller {
     private:
         ArSession * _ar_session = nullptr;
         ArFrame * _ar_frame = nullptr;//get frame state
+
+
+
+        std::vector<ColoredAnchor> _anchors;
+
         AAssetManager *const _asset_manager;
         int _plane_num = 0;
         bool _install_requested = false;
@@ -35,6 +41,8 @@ namespace controller {
         cameraRenderer * _camera_renderer;
         pointcloudRenderer * _pointcloud_renderer;
         objRenderer * _obj_renderer;
+        anchorRenderer * _anchor_renderer;
+
     public:
         nativeController(AAssetManager *assetManager);
 
@@ -47,7 +55,6 @@ namespace controller {
         void onResume(void * env, void* context, void* activity);
 
         void onDrawFrame();
-
         void onViewChanged(int rot, int width, int height);
         void onTouched(float x, float y);
         bool hasDetectedPlane(){ return  _plane_num > 0;}

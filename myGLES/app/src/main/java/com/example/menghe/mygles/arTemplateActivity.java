@@ -101,9 +101,11 @@ public class arTemplateActivity extends AppCompatActivity
     protected void onDestroy(){
         super.onDestroy();
         //synchronized to avoid racing
-        synchronized (this){
-            JniInterface.JNIonDestroy();
-            controllerAddr = 0;
+        if(isFinishing()) {
+            synchronized (this) {
+                JniInterface.JNIonDestroy();
+                controllerAddr = 0;
+            }
         }
     }
 

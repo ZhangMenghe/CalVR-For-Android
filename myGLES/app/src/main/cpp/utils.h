@@ -19,6 +19,7 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
 #include "gtx/quaternion.hpp"
+#include "arcore_c_api.h"
 
 
 #define  LOG_TAG    "project"
@@ -88,6 +89,9 @@ namespace utils {
                      std::vector<GLfloat>* out_normals,
                      std::vector<GLfloat>* out_uv,
                      std::vector<GLushort>* out_indices);
+
+
+
 };
 
 

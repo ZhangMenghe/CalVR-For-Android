@@ -30,6 +30,7 @@ nativeController::nativeController(AAssetManager * assetManager)
     _plane_renderer = new planeRenderer();
     _pointcloud_renderer = new pointcloudRenderer();
     _obj_renderer = new objRenderer();
+    _anchor_renderer = new anchorRenderer();
 }
 
 nativeController::~nativeController() {
@@ -40,7 +41,127 @@ nativeController::~nativeController() {
 }
 
 void nativeController::onTouched(float x, float y) {
-    LOGE("================called from native onTouch================");
+    LOGE("================called from native onTouch================%f,%f",x, y );
+    if (_ar_frame != nullptr && _ar_session != nullptr) {
+        ArHitResultList* hit_result_list = nullptr;
+        ArHitResultList_create(_ar_session, &hit_result_list);
+        CHECK(hit_result_list);
+        ArFrame_hitTest(_ar_session, _ar_frame, x, y, hit_result_list);
+
+        int32_t hit_result_list_size = 0;
+        ArHitResultList_getSize(_ar_session, hit_result_list,
+                                &hit_result_list_size);
+
+        // The hitTest method sorts the resulting list by distance from the camera,
+        // increasing.  The first hit result will usually be the most relevant when
+        // responding to user input.
+
+        ArHitResult* ar_hit_result = nullptr;
+        ArTrackableType trackable_type = AR_TRACKABLE_NOT_VALID;
+        for (int32_t i = 0; i < hit_result_list_size; ++i) {
+            ArHitResult* ar_hit = nullptr;
+            ArHitResult_create(_ar_session, &ar_hit);
+            ArHitResultList_getItem(_ar_session, hit_result_list, i, ar_hit);
+
+            if (ar_hit == nullptr) {
+                LOGE("HelloArApplication::OnTouched ArHitResultList_getItem error");
+                return;
+            }
+
+            ArTrackable* ar_trackable = nullptr;
+            ArHitResult_acquireTrackable(_ar_session, ar_hit, &ar_trackable);
+            ArTrackableType ar_trackable_type = AR_TRACKABLE_NOT_VALID;
+            ArTrackable_getType(_ar_session, ar_trackable, &ar_trackable_type);
+            // Creates an anchor if a plane or an oriented point was hit.
+            if (AR_TRACKABLE_PLANE == ar_trackable_type) {
+                ArPose* hit_pose = nullptr;
+                ArPose_create(_ar_session, nullptr, &hit_pose);
+                ArHitResult_getHitPose(_ar_session, ar_hit, hit_pose);
+                int32_t in_polygon = 0;
+                ArPlane* ar_plane = ArAsPlane(ar_trackable);
+                ArPlane_isPoseInPolygon(_ar_session, ar_plane, hit_pose, &in_polygon);
+
+                // Use hit pose and camera pose to check if hittest is from the
+                // back of the plane, if it is, no need to create the anchor.
+                ArPose* camera_pose = nullptr;
+                ArPose_create(_ar_session, nullptr, &camera_pose);
+                ArCamera* ar_camera;
+                ArFrame_acquireCamera(_ar_session, _ar_frame, &ar_camera);
+                ArCamera_getPose(_ar_session, ar_camera, camera_pose);
+                ArCamera_release(ar_camera);
+                float normal_distance_to_plane = arcore_utils::calculateDistanceToPlane(
+                        *_ar_session, *hit_pose, *camera_pose);
+
+                ArPose_destroy(hit_pose);
+                ArPose_destroy(camera_pose);
+
+                if (!in_polygon || normal_distance_to_plane < 0) {
+                    continue;
+                }
+
+                ar_hit_result = ar_hit;
+                trackable_type = ar_trackable_type;
+                break;
+            } else if (AR_TRACKABLE_POINT == ar_trackable_type) {
+                ArPoint* ar_point = ArAsPoint(ar_trackable);
+                ArPointOrientationMode mode;
+                ArPoint_getOrientationMode(_ar_session, ar_point, &mode);
+                if (AR_POINT_ORIENTATION_ESTIMATED_SURFACE_NORMAL == mode) {
+                    ar_hit_result = ar_hit;
+                    trackable_type = ar_trackable_type;
+                    break;
+                }
+            }
+        }
+
+        if (ar_hit_result) {
+            // Note that the application is responsible for releasing the anchor
+            // pointer after using it. Call ArAnchor_release(anchor) to release.
+            ArAnchor* anchor = nullptr;
+            if (ArHitResult_acquireNewAnchor(_ar_session, ar_hit_result, &anchor) !=
+                AR_SUCCESS) {
+                LOGE(
+                        "HelloArApplication::OnTouched ArHitResult_acquireNewAnchor error");
+                return;
+            }
+
+            ArTrackingState tracking_state = AR_TRACKING_STATE_STOPPED;
+            ArAnchor_getTrackingState(_ar_session, anchor, &tracking_state);
+            if (tracking_state != AR_TRACKING_STATE_TRACKING) {
+                ArAnchor_release(anchor);
+                return;
+            }
+
+            if (_anchors.size() >= kMaxNumberOfAndroidsToRender) {
+                ArAnchor_release(_anchors[0].anchor);
+                _anchors.erase(_anchors.begin());
+            }
+
+            // Assign a color to the object for rendering based on the trackable type
+            // this anchor attached to. For AR_TRACKABLE_POINT, it's blue color, and
+            // for AR_TRACKABLE_PLANE, it's green color.
+            ColoredAnchor colored_anchor;
+            colored_anchor.anchor = anchor;
+            switch (trackable_type) {
+                case AR_TRACKABLE_POINT:
+                    colored_anchor.color = glm::vec4(66.0f, 133.0f, 244.0f, 255.0f)/255.0f;
+                    break;
+                case AR_TRACKABLE_PLANE:
+                    colored_anchor.color = glm::vec4(139.0f, 195.0f, 74.0f, 255.0f)/255.0f;
+                    break;
+                default:
+                    colored_anchor.color = glm::vec4(0.0f, 0.0f, 0.0f, 255.0f)/255.0f;
+                    break;
+            }
+            _anchors.push_back(colored_anchor);
+
+            ArHitResult_destroy(ar_hit_result);
+            ar_hit_result = nullptr;
+
+            ArHitResultList_destroy(hit_result_list);
+            hit_result_list = nullptr;
+        }
+    }
 }
 void nativeController::onCreate() {
     //On surface created
@@ -49,6 +170,7 @@ void nativeController::onCreate() {
     _pointcloud_renderer->Initialization(_asset_manager);
     //_obj_renderer->Initialization(_asset_manager, "models/Jigglypuff.obj", "textures/jigglypuff.png");
     _obj_renderer->Initialization(_asset_manager, "models/andy.obj", "textures/andy.png");
+    _anchor_renderer->Initialization(_asset_manager);
 }
 
 void nativeController::onPause() {
@@ -124,6 +246,20 @@ void nativeController::onDrawFrame() {
         ArLightEstimate_getColorCorrection(_ar_session, ar_light_estimate, _color_correction);
     ArLightEstimate_destroy(ar_light_estimate);
 
+    glm::mat4 model_mat(1.0f);
+    for (const auto& colored_anchor : _anchors) {
+        ArTrackingState tracking_state = AR_TRACKING_STATE_STOPPED;
+        ArAnchor_getTrackingState(_ar_session, colored_anchor.anchor,
+                                  &tracking_state);
+        if (tracking_state == AR_TRACKING_STATE_TRACKING) {
+            // Render object only if the tracking state is AR_TRACKING_STATE_TRACKING.
+            arcore_utils::getTransformMatrixFromAnchor(*colored_anchor.anchor, _ar_session,
+                                               &model_mat);
+            _anchor_renderer->Draw
+                    (_ar_session, colored_anchor.color, proj_mat*view_mat*model_mat);;
+        }
+    }
+
     //Render plane
     // get trackable PLANES
     ArTrackableList* plane_list = nullptr;
@@ -182,4 +318,12 @@ void nativeController::onDrawFrame() {
     _pointcloud_renderer->Draw(_ar_session, pointCloud, proj_mat*view_mat);
     ArPointCloud_release(pointCloud);
 }
-void nativeController::onViewChanged(int rot, int width, int height) {}
+void nativeController::onViewChanged(int rot, int width, int height) {
+    glViewport(0, 0, width, height);
+    _displayRotation = rot;
+    _width = width;
+    _height = height;
+    if (_ar_session != nullptr) {
+        ArSession_setDisplayGeometry(_ar_session, _displayRotation, width, height);
+    }
+}

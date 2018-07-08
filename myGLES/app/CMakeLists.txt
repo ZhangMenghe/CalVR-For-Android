@@ -35,6 +35,7 @@ add_library(arTemplate
             src/main/cpp/cameraRenderer.cpp
             src/main/cpp/pointcloudRenderer.cpp
             src/main/cpp/arcore_utils.cpp
+            src/main/cpp/anchorRenderer.cpp
             src/main/cpp/utils.cpp)
 
 target_include_directories(arTemplate PRIVATE

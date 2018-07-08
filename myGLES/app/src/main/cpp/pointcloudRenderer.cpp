@@ -10,6 +10,10 @@ void pointcloudRenderer::Initialization(AAssetManager *manager) {
     CHECK(_shader_program);
     _attrib_vertices_ = glGetAttribLocation(_shader_program,"vPosition");
     _uniform_mvp_mat = glGetUniformLocation(_shader_program, "uMVP");
+    _default_color = glm::vec4(1.0, 0.5, 0.0, 1.0);
+    glUseProgram(_shader_program);
+    glUniform4fv(glGetUniformLocation(_shader_program, "uColor"), 1, value_ptr(_default_color));
+    glUseProgram(0);
     checkGlError("Initialize point cloud renderer");
 }
 void pointcloudRenderer::Draw(const ArSession *arSession, ArPointCloud *pointCloud,
