@@ -20,7 +20,7 @@ private:
     GLuint _shader_program;
     GLuint _attrib_vertices_;
     GLuint _uniform_mvp_mat;
-    GLuint _color;
+    GLuint _uniform_color;
     glm::vec4 _position;
 public:
     void Initialization(AAssetManager * manager);

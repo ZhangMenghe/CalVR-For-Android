@@ -46,4 +46,5 @@ void arcore_utils::getTransformMatrixFromAnchor(const ArAnchor& ar_anchor,
     ArAnchor_getPose(ar_session, &ar_anchor, pose_);
     ArPose_getMatrix(ar_session, pose_,
                      glm::value_ptr(*out_model_mat));
+    ArPose_destroy(pose_);
 }

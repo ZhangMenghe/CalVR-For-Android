@@ -1,5 +1,6 @@
 package com.example.menghe.mygles;
 
+import android.app.ActionBar;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
@@ -68,6 +69,17 @@ public class arTemplateActivity extends AppCompatActivity
         setupSurfaceView();
 
         setupTouchDetector();
+
+        View decorView = getWindow().getDecorView();
+        // Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.hide();
+        }
+
+
     }
     @Override
     protected void onResume(){

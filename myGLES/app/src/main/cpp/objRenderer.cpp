@@ -34,6 +34,7 @@ void objRenderer::Initialization(AAssetManager *manager, const char*obj_file_nam
     if (!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, png_file_name)) {
         LOGE("Could not load png texture for planes.");
     }
+
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -49,19 +50,20 @@ void objRenderer::Initialization(AAssetManager *manager, const char*obj_file_nam
 
     glBindBuffer(GL_ARRAY_BUFFER, _VBO[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertices.size(), _vertices.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(_attrib_vertices, 3, GL_FLOAT, GL_FALSE, 0,0);
     glEnableVertexAttribArray(_attrib_vertices);
-
+    glVertexAttribPointer(_attrib_vertices, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),0);
 
     glBindBuffer(GL_ARRAY_BUFFER, _VBO[1]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _uvs.size(), _uvs.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(_attrib_uvs, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(_attrib_uvs);
+    glVertexAttribPointer(_attrib_uvs, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+
 
     glBindBuffer(GL_ARRAY_BUFFER, _VBO[2]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _normals.size(), _normals.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(_attrib_normals, 3, GL_FLOAT, GL_FALSE, 0,0);
     glEnableVertexAttribArray(_attrib_normals);
+    glVertexAttribPointer(_attrib_normals, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),0);
+
 
     //Generate EBO
     glGenBuffers(1, &_EBO);
