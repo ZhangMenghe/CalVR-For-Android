@@ -12,4 +12,9 @@
     - Requirement: 27.2.9+
     - Use: 27.2.9
 
-- OpenGL ES 3.1+
+
+
+## Specification for S9
+- ARCore: support up to version 1.2.1 (July 10th, 1.3.0 not support)
+- targetSdk : 26
+- OpenGL ES 3.1+ (notice that features of 3.0+, e.g. VAO/VBO not support on Emulator)
