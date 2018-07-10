@@ -50,7 +50,7 @@ private:
 public:
     void Initialization(AAssetManager * manager, const char*obj_file_name, const char *png_file_name);
     void Draw(const mat4 & projMat, const mat4 & viewMat, const mat4 & modelMat,
-              const float * color_correction);
+              const float * color_correction, float light_intensity);
 };
 
 

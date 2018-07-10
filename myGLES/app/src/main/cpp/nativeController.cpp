@@ -238,16 +238,22 @@ void nativeController::onDrawFrame(bool btn_status_normal) {
         return;
 
     ArLightEstimate* ar_light_estimate;
+    float light_intensity = 0.8f;
     ArLightEstimateState ar_light_estimate_state;
     ArLightEstimate_create(_ar_session, &ar_light_estimate);
 
     ArFrame_getLightEstimate(_ar_session, _ar_frame, ar_light_estimate);
     ArLightEstimate_getState(_ar_session, ar_light_estimate, &ar_light_estimate_state);
-    if(ar_light_estimate_state == AR_LIGHT_ESTIMATE_STATE_VALID)
+    if(ar_light_estimate_state == AR_LIGHT_ESTIMATE_STATE_VALID){
         ArLightEstimate_getColorCorrection(_ar_session, ar_light_estimate, _color_correction);
+        ArLightEstimate_getPixelIntensity(_ar_session, ar_light_estimate, &light_intensity);
+    }
+
     ArLightEstimate_destroy(ar_light_estimate);
 
     glm::mat4 model_mat(1.0f);
+
+
     for (const auto& colored_anchor : _anchors) {
         ArTrackingState tracking_state = AR_TRACKING_STATE_STOPPED;
         ArAnchor_getTrackingState(_ar_session, colored_anchor.anchor,
@@ -258,7 +264,7 @@ void nativeController::onDrawFrame(bool btn_status_normal) {
                                                &model_mat);
             _anchor_renderer->Draw
                     (colored_anchor.color, proj_mat*view_mat*model_mat);
-            _obj_renderer->Draw(proj_mat,view_mat,model_mat,_color_correction);
+            _obj_renderer->Draw(proj_mat,view_mat,model_mat,_color_correction, light_intensity);
         }
     }
 
@@ -306,13 +312,12 @@ void nativeController::onDrawFrame(bool btn_status_normal) {
 
         _plane_renderer->Draw(_ar_session, ar_plane, proj_mat, view_mat,plane_color);
 
-        _obj_renderer->Draw(proj_mat,view_mat,_plane_renderer->getModelMat(),_color_correction);
+        _obj_renderer->Draw(proj_mat,view_mat,_plane_renderer->getModelMat(),_color_correction,light_intensity);
 
     }
     ArTrackableList_destroy(plane_list);
     plane_list = nullptr;
 
-    //TODO:Render point clouds
     ArPointCloud * pointCloud;
     ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
     if(pointcloud_Status != AR_SUCCESS)

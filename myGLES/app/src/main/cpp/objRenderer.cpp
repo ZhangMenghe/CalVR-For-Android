@@ -75,7 +75,7 @@ void objRenderer::Initialization(AAssetManager *manager, const char*obj_file_nam
 }
 
 void objRenderer::Draw(const mat4 &projMat, const mat4 &viewMat, const mat4 &modelMat,
-                       const float *color_correction) {
+                       const float *color_correction, float light_intensity) {
     glUseProgram(_shader_program);
 
     glActiveTexture(GL_TEXTURE0);
@@ -88,7 +88,7 @@ void objRenderer::Draw(const mat4 &projMat, const mat4 &viewMat, const mat4 &mod
 
     vec4 view_light_direction = normalize(mv_mat * kLightDirection);
     glUniform4f(_uniform_lighting_param, view_light_direction[0],
-                view_light_direction[1], view_light_direction[2], 1.f);
+                view_light_direction[1], view_light_direction[2], light_intensity);
     glUniform4f(_uniform_material,
                 _shader_params.ambient, _shader_params.diffuse,
                 _shader_params.specular, _shader_params.specular_alpha);
