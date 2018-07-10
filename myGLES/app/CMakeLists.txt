@@ -73,6 +73,7 @@ target_link_libraries(glTriangle
                       GLESv2)
 target_link_libraries(arTemplate
                       android
+                      mediandk
                       log
                       EGL
                       GLESv3

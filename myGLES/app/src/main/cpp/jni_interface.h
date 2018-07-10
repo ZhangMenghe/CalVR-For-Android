@@ -15,7 +15,7 @@ extern "C"{
     JNI_METHOD(jlong, JNIcreateController)(JNIEnv* env, jclass, jobject asset_manager);
 
     JNI_METHOD(void, JNIsetupGrphicDraw)(JNIEnv *, jclass, jint width, jint height, jobject asset_manager);
-    JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass);
+    JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass, jboolean btn_status_normal);
     JNI_METHOD(void, JNIonGlSurfaceCreated)(JNIEnv *, jclass);
     JNI_METHOD(void, JNIonViewChanged)(JNIEnv*, jclass, jint rotation, jint width, jint height);
 

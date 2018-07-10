@@ -16,9 +16,14 @@
 
 precision mediump float;
 varying vec2 v_TexCoord;
-uniform samplerExternalOES sTexture;
 
+uniform samplerExternalOES uTexture_normal;
+uniform sampler2D uTexture_special;
+uniform int uStatus_normal;
 
 void main() {
-    gl_FragColor = texture2D(sTexture, v_TexCoord);
+    if(uStatus_normal > 0)
+        gl_FragColor = texture2D(uTexture_normal, v_TexCoord);
+    else
+         gl_FragColor = texture2D(uTexture_special, v_TexCoord);
 }

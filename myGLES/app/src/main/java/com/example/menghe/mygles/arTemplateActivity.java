@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -21,6 +22,7 @@ public class arTemplateActivity extends AppCompatActivity
     private static final String TAG = arTemplateActivity.class.getSimpleName();
     private static final int MSG_UPDATE_INTERVAL = 1000;//in milliseconds
     private GLSurfaceView surfaceView;
+    public boolean btn_status_normal = true;
     private boolean viewportChanged = false;
     private int viewportWidth;
     private int viewportHeight;
@@ -78,8 +80,17 @@ public class arTemplateActivity extends AppCompatActivity
         if(actionBar!=null){
             actionBar.hide();
         }
-
-
+        // add button actions
+        final Button switchBack_btn = (Button)findViewById(R.id.button);
+        switchBack_btn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                if(btn_status_normal)
+                    switchBack_btn.setText("Normal");
+                else
+                    switchBack_btn.setText("Special");
+                btn_status_normal = !btn_status_normal;
+            }
+        });
     }
     @Override
     protected void onResume(){
@@ -193,7 +204,7 @@ public class arTemplateActivity extends AppCompatActivity
                     JniInterface.JNIonViewChanged(displayRotation, viewportWidth, viewportHeight);
                     viewportChanged = false;
                 }
-                JniInterface.JNIdrawFrame();
+                JniInterface.JNIdrawFrame(btn_status_normal);
             }
         }
     }
@@ -206,4 +217,5 @@ public class arTemplateActivity extends AppCompatActivity
 
     @Override
     public void onDisplayChanged(int displayId) {viewportChanged = true;}
+
 }

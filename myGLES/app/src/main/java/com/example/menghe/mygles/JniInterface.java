@@ -28,7 +28,7 @@ public class JniInterface {
 
     public static native void JNIsetupGrphicDraw(int w, int t, AssetManager asset_manager);
 
-    public static native void JNIdrawFrame();
+    public static native void JNIdrawFrame(boolean btn_status_normal);
 
     public static native void JNIonGlSurfaceCreated();
 

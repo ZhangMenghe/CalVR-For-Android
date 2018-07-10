@@ -54,7 +54,7 @@ namespace controller {
 
         void onResume(void * env, void* context, void* activity);
 
-        void onDrawFrame();
+        void onDrawFrame(bool btn_status_normal);
         void onViewChanged(int rot, int width, int height);
         void onTouched(float x, float y);
         bool hasDetectedPlane(){ return  _plane_num > 0;}

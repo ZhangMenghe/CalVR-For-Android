@@ -201,7 +201,7 @@ void nativeController::onResume(void *env, void *context, void *activity) {
     const ArStatus status = ArSession_resume(_ar_session);
     CHECK(status == AR_SUCCESS);
 }
-void nativeController::onDrawFrame() {
+void nativeController::onDrawFrame(bool btn_status_normal) {
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
@@ -232,7 +232,7 @@ void nativeController::onDrawFrame() {
     ArCamera_getTrackingState(_ar_session, camera, &cam_track_state);
     ArCamera_release(camera);
 
-    _camera_renderer->Draw(_ar_session, _ar_frame);
+    _camera_renderer->Draw(_ar_session, _ar_frame, btn_status_normal);
     //not tracking anything
     if(cam_track_state != AR_TRACKING_STATE_TRACKING)
         return;

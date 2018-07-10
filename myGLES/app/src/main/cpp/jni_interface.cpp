@@ -42,9 +42,9 @@ JNI_METHOD(void, JNIsetupGrphicDraw)
 }
 
 JNI_METHOD(void, JNIdrawFrame)
-(JNIEnv *, jclass) {
+(JNIEnv *, jclass, jboolean btn_status_normal) {
     //draw();//drawPrimitive
-    controllerNative(nativeAppAddr)->onDrawFrame();
+    controllerNative(nativeAppAddr)->onDrawFrame(btn_status_normal);
 }
 
 JNI_METHOD(void, JNIonGlSurfaceCreated)

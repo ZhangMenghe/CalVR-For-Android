@@ -9,10 +9,14 @@
 #include <GLES2/gl2ext.h>
 #include <android/asset_manager.h>
 
+#include <media/NdkImage.h>
+#include <memory>
+#include <vector>
+
 #include "utils.h"
 
-#include <arcore_c_api.h>
-#include <vector>
+#include "arcore_c_api.h"
+
 
 using namespace glm;
 using namespace std;
@@ -21,16 +25,25 @@ class cameraRenderer {
 private:
     GLuint _shader_program;
     GLuint _texture_id;
+    GLuint _texture_overlay_id;
 
     GLuint _attrib_vertices;
     GLuint _attrib_uvs;
-    GLuint _uniform_texture;
+    GLuint _uniform_status_normal;
+//    GLuint _uniform_texture;
 
     float _transformed_uvs[8];
-    bool _uvs_initialized = false;
+    std::unique_ptr<uint8_t[]> processed_image_bytes_grayscale_;
+    int cpu_image_buffer_size_ = 0;
+
+//    bool _uvs_initialized = false;
+
+//    void _update_texture_coords(int32_t image_width, int32_t image_height,
+//                                float screen_aspect_ratio,
+//                                int display_rotation);
 public:
     void Initialization(AAssetManager * manager);
-    void Draw(const ArSession* session, const ArFrame* frame);
+    void Draw(ArSession* session, ArFrame* frame, bool btn_status_normal = true);
     // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
     GLuint GetTextureId(){return _texture_id;}
 };
