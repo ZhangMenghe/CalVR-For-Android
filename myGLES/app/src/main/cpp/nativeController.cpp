@@ -256,8 +256,8 @@ void nativeController::onDrawFrame() {
             // Render object only if the tracking state is AR_TRACKING_STATE_TRACKING.
             arcore_utils::getTransformMatrixFromAnchor(*colored_anchor.anchor, _ar_session,
                                                &model_mat);
-            //_anchor_renderer->Draw
-            //        (_ar_session, colored_anchor.color, proj_mat*view_mat*model_mat);
+            _anchor_renderer->Draw
+                    (colored_anchor.color, proj_mat*view_mat*model_mat);
             _obj_renderer->Draw(proj_mat,view_mat,model_mat,_color_correction);
         }
     }

@@ -21,10 +21,13 @@ private:
     GLuint _attrib_vertices_;
     GLuint _uniform_mvp_mat;
     GLuint _uniform_color;
-    glm::vec4 _position;
+    GLuint _uniform_point_size;
+    glm::vec4 _position=glm::vec4(0,0,0,1);
+    float _default_size= 50.0f;
+
 public:
     void Initialization(AAssetManager * manager);
-    void Draw(const ArSession * arSession, const glm::vec4 & color, const glm::mat4 & mvpMat);
+    void Draw(const glm::vec4 & color, const glm::mat4 & mvpMat);
 };
 
 
