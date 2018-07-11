@@ -4,6 +4,19 @@
 # Sets the minimum version of CMake required to build the native library.
 
 cmake_minimum_required(VERSION 3.4.1)
+set(OSG_SRC_DIR "${CMAKE_SOURCE_DIR}/../../..")
+# Specify critical OpenSceneGraph build variables.
+SET(OPENGL_PROFILE "GLES2" CACHE STRING "OpenGL variant to use")
+SET(DYNAMIC_OPENTHREADS OFF CACHE BOOL "Link OpenThreads statically")
+SET(DYNAMIC_OPENSCENEGRAPH OFF CACHE BOOL "Link OpenSceneGraph statically")
+
+# Build and reference OpenSceneGraph.
+set(OSG_SOURCE_DIR "${OSG_SRC_DIR}/OpenSceneGraph-3.6.2")
+set(OSG_BUILD_DIR "${OSG_SRC_DIR}/OpenSceneGraph-3.6.2/build/${ANDROID_ABI}")
+file(MAKE_DIRECTORY ${OSG_BUILD_DIR})
+add_subdirectory(${OSG_SOURCE_DIR} ${OSG_BUILD_DIR})
+include_directories(${OSG_SOURCE_DIR}/include)
+include_directories(${OSG_BUILD_DIR}/include)
 
 add_library(arcore SHARED IMPORTED)
 set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
@@ -70,7 +83,20 @@ target_link_libraries(glTriangle
                       android
                       log
                       EGL
-                      GLESv2)
+                      GLESv2
+                      osgViewer
+                      osgDB
+                      z
+                      # osgDB plugins start.
+                      osgdb_osg
+                      osgdb_serializers_osg
+                      # osgDB plugins end.
+                      osgGA
+                      osgShadow
+                      osgText
+                      osgUtil
+                      osg
+                      OpenThreads)
 target_link_libraries(arTemplate
                       android
                       mediandk

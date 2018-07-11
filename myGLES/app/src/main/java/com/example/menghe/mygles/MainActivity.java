@@ -11,7 +11,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MainActivity extends AppCompatActivity {
     static {
-        System.loadLibrary("glTriangle");
+        System.loadLibrary("glTriangled");
     }
     private GLSurfaceView surfaceView;
     private boolean viewportChanged = false;
