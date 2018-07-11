@@ -6,17 +6,49 @@
 cmake_minimum_required(VERSION 3.4.1)
 set(OSG_SRC_DIR "${CMAKE_SOURCE_DIR}/../../..")
 # Specify critical OpenSceneGraph build variables.
-SET(OPENGL_PROFILE "GLES2" CACHE STRING "OpenGL variant to use")
-SET(DYNAMIC_OPENTHREADS OFF CACHE BOOL "Link OpenThreads statically")
-SET(DYNAMIC_OPENSCENEGRAPH OFF CACHE BOOL "Link OpenSceneGraph statically")
+#SET(OPENGL_PROFILE "GLES2" CACHE STRING "OpenGL variant to use")
+#SET(DYNAMIC_OPENTHREADS OFF CACHE BOOL "Link OpenThreads statically")
+#SET(DYNAMIC_OPENSCENEGRAPH OFF CACHE BOOL "Link OpenSceneGraph statically")
 
 # Build and reference OpenSceneGraph.
 set(OSG_SOURCE_DIR "${OSG_SRC_DIR}/OpenSceneGraph-3.6.2")
 set(OSG_BUILD_DIR "${OSG_SRC_DIR}/OpenSceneGraph-3.6.2/build/${ANDROID_ABI}")
-file(MAKE_DIRECTORY ${OSG_BUILD_DIR})
-add_subdirectory(${OSG_SOURCE_DIR} ${OSG_BUILD_DIR})
+#file(MAKE_DIRECTORY ${OSG_BUILD_DIR})
+#add_subdirectory(${OSG_SOURCE_DIR} ${OSG_BUILD_DIR})
+
+
 include_directories(${OSG_SOURCE_DIR}/include)
 include_directories(${OSG_BUILD_DIR}/include)
+
+add_library(osgd STATIC IMPORTED)
+set_target_properties(osgd PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgd.a)
+add_library(osgViewerd STATIC IMPORTED)
+set_target_properties(osgd PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgViewerd.a)
+add_library(osgTextd STATIC IMPORTED)
+set_target_properties(osgd PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgTextd.a)
+
+add_library(osgGAd STATIC IMPORTED)
+set_target_properties(osgd PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgGAd.a)
+
+add_library(osgDBd STATIC IMPORTED)
+set_target_properties(osgd PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgDBd.a)
+
+add_library(osgUtild STATIC IMPORTED)
+set_target_properties(osgd PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgUtild.a)
+
+add_library(OpenThreadsd STATIC IMPORTED)
+set_target_properties(osgd PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libOpenThreadsd.a)
+
+add_library(osgShadowd STATIC IMPORTED)
+set_target_properties(osgd PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgShadowd.a)
 
 add_library(arcore SHARED IMPORTED)
 set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
@@ -84,19 +116,16 @@ target_link_libraries(glTriangle
                       log
                       EGL
                       GLESv2
-                      osgViewer
-                      osgDB
+                      #need for osg
                       z
-                      # osgDB plugins start.
-                      osgdb_osg
-                      osgdb_serializers_osg
-                      # osgDB plugins end.
-                      osgGA
-                      osgShadow
-                      osgText
-                      osgUtil
-                      osg
-                      OpenThreads)
+                      osgd
+                      osgViewerd
+                      osgTextd
+                      osgGAd
+                      osgDBd
+                      osgUtild
+                      OpenThreadsd
+                      osgShadowd)
 target_link_libraries(arTemplate
                       android
                       mediandk
