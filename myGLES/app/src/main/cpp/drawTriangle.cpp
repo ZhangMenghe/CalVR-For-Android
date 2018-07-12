@@ -17,6 +17,7 @@ extern "C"{
 JNIEXPORT void JNICALL Java_com_example_menghe_mygles_MainActivity_step(JNIEnv*env, jobject obj);
 JNIEXPORT void JNICALL Java_com_example_menghe_mygles_MainActivity_init(JNIEnv*env, jobject obj, jint width, jint height);
 };
+
 JNIEXPORT void JNICALL Java_com_example_menghe_mygles_MainActivity_step(JNIEnv*env, jobject obj){
     renderFrame();
 }
