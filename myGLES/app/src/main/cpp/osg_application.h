@@ -12,6 +12,14 @@
 #include "osg_utils.h"
 #include "utils.h"
 
+
+// BEGIN FEATURE PLUGINS_STATIC
+// Initialize OSG plugins when OpenSceneGraph is built
+// as a static library.
+USE_OSGPLUGIN(osg2)
+USE_SERIALIZER_WRAPPER_LIBRARY(osg)
+// END   FEATURE PLUGINS_STATIC
+
 using namespace osg;
 using namespace osgViewer;
 
@@ -29,7 +37,7 @@ public:
     osgApplication(){Initialization();}
 
     void loadScene(const char* filename){
-        Node * scene =  osgDB::readNodeFile(filename);
+        osg::Node *scene = osgDB::readNodeFile(filename);
         if(nullptr == scene){
             LOGE("FAILED TO LOAD SCENE");
             return;
