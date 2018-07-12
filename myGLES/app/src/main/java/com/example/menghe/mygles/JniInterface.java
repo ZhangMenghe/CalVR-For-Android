@@ -12,7 +12,7 @@ package com.example.menghe.mygles;
 
 public class JniInterface {
     static {
-        System.loadLibrary("arTemplate");
+        System.loadLibrary("arTemplated");
     }
     private static final String TAG = "JniInterface";
     static AssetManager assetManager;

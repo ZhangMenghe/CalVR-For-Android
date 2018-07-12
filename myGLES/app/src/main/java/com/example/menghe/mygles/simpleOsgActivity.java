@@ -12,14 +12,16 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class simpleOsgActivity extends AppCompatActivity {
-    static{
-        System.loadLibrary("osgScened");
-    }
     private GLSurfaceView surfaceView;
+    // further will be cast to a cpp class. Use address instead
+    private long controllerAddr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_osg);
+
+        controllerAddr = JniInterfaceOSG.createController();
+
         setupSurfaceView();
         setupResources();
     }
@@ -51,7 +53,7 @@ public class simpleOsgActivity extends AppCompatActivity {
                 FileOutputStream os = new FileOutputStream(model);
                 os.write(buffer);
             }
-            loadModel(modelPath);
+            JniInterfaceOSG.JNIDebugScene(modelPath);
         }
         catch (Exception e) {
 
@@ -59,11 +61,11 @@ public class simpleOsgActivity extends AppCompatActivity {
     }
     private class Renderer implements GLSurfaceView.Renderer{
         public void onDrawFrame(GL10 gl) {
-            step();
+            JniInterfaceOSG.JNIdrawFrame(true);
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            init(width, height);
+            JniInterfaceOSG.JNIonViewChanged(0, width, height);
         }
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -71,9 +73,4 @@ public class simpleOsgActivity extends AppCompatActivity {
             gl.glEnable(GL10.GL_DEPTH_TEST);
         }
     }
-    public static native void init(int w, int t);
-
-    public static native void step();
-
-    public static native void loadModel(String modelPath);
 }

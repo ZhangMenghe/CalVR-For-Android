@@ -6,6 +6,8 @@
 #define MYGLES_JNI_INTERFACE_H
 
 #include <jni.h>
+#include "nativeController.h"
+
 #define JNI_METHOD(returnType, funcName)\
     JNIEXPORT returnType JNICALL        \
         Java_com_example_menghe_mygles_JniInterface_##funcName

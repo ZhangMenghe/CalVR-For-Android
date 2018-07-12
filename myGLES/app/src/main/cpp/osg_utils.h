@@ -6,8 +6,19 @@
 #define MYGLES_OSG_UTILS_H
 
 #include <osg/Camera>
+#include <osgDB/ReadFile>
+#include <osgViewer/Viewer>
+#include <osgGA/TrackballManipulator>
+
+// BEGIN FEATURE PLUGINS_STATIC
+// Initialize OSG plugins when OpenSceneGraph is built
+// as a static library.
+USE_OSGPLUGIN(osg2)
+USE_SERIALIZER_WRAPPER_LIBRARY(osg)
+// END   FEATURE PLUGINS_STATIC
 
 using namespace osg;
+using namespace osgViewer;
 namespace osg_utils {
 
     // Fragment shader to display everything in red colour.
@@ -23,23 +34,10 @@ namespace osg_utils {
 
     void setupCamera(Camera *camera, GraphicsContext *context,
                      int width, int height,
-                     double fovy = 30, double zNear = 1, double zFar = 1000) {
-        camera->setGraphicsContext(context);
-        camera->setViewport(new Viewport(0, 0, width, height));
-        camera->setClearMask(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        float aspect = static_cast<float>(width) / static_cast<float >(height);
-        camera->setProjectionMatrixAsPerspective(fovy, aspect, zNear, zFar);
-    }
+                     double fovy = 30, double zNear = 1, double zFar = 1000);
 
-    Program *createShaderProgram(const char *vertShader, const char *fragShader) {
-        Shader * vs = new Shader(Shader::VERTEX, vertShader);
-        Shader * fs = new Shader(Shader::FRAGMENT, fragShader);
+    Program *createShaderProgram(const char *vertShader, const char *fragShader);
 
-        Program *program = new Program;
-        program->addShader(vs);
-        program->addShader(fs);
-        return program;
-    }
     /*Program* createShaderProgram(const char* vertex_shader_file_name,
                            const char* fragment_shader_file_name,
                            AAssetManager* asset_manager) {

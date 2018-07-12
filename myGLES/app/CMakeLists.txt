@@ -80,7 +80,10 @@ add_library(glTriangle
             src/main/cpp/drawTriangle.cpp)
 add_library(osgScene
             SHARED
-            src/main/cpp/jni_interface_osg.cpp)
+            src/main/cpp/arcore_utils.cpp
+            src/main/cpp/osg_utils.cpp
+            src/main/cpp/jni_interface_osg.cpp
+            src/main/cpp/osgController.cpp)
 add_library(arTemplate
             SHARED
             src/main/cpp/drawPrimitive.cpp
@@ -135,6 +138,7 @@ target_link_libraries(osgScene
                       log
                       EGL
                       GLESv2
+                      arcore
                       #need for osg
                       osgViewer
                       osgDB
@@ -152,5 +156,18 @@ target_link_libraries(arTemplate
                       mediandk
                       log
                       EGL
+                      GLESv2
                       GLESv3
-                      arcore)
+                      arcore
+                      #need for osg
+                      osgViewer
+                      osgDB
+                      z
+                      osgdb_osg
+                      osgdb_serializers_osg
+                      osgGA
+                      osgShadow
+                      osgText
+                      osgUtil
+                      osg
+                      OpenThreads)

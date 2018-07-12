@@ -6,26 +6,87 @@
 #include <string>
 #include <GLES2/gl2.h>
 
-#include "osg_application.h"
+#include "osgController.h"
+#include "jni_interface_osg.h"
 
 using namespace std;
+using namespace osg_controller;
 
-osgApplication app;
+namespace {
+    //maintain a reference to VM
+    static JavaVM *g_vm = nullptr;
+    //global environment
+    jlong nativeAppAddr = 0;
 
-extern "C"{
-JNIEXPORT void JNICALL Java_com_example_menghe_mygles_simpleOsgActivity_step(JNIEnv*env, jobject obj);
-JNIEXPORT void JNICALL Java_com_example_menghe_mygles_simpleOsgActivity_init(JNIEnv*env, jobject obj, jint width, jint height);
-JNIEXPORT void JNICALL Java_com_example_menghe_mygles_simpleOsgActivity_loadModel(JNIEnv*env, jobject obj, jstring filename);
-};
+    inline jlong controllerPtr(osgController * native_controller){
+        return reinterpret_cast<intptr_t>(native_controller);
+    }
+    inline osg_controller::osgController * controllerNative(jlong ptr){
+        return reinterpret_cast<osgController *>(ptr);
+    }
 
-JNIEXPORT void JNICALL Java_com_example_menghe_mygles_simpleOsgActivity_step(JNIEnv*env, jobject obj){
-    app.Draw();
 }
-JNIEXPORT void JNICALL Java_com_example_menghe_mygles_simpleOsgActivity_init(JNIEnv*env, jobject obj, jint width, jint height){
-    app.setupWindow(width, height);
+
+//JNI Library function: call when native lib is load(System.loadLibrary)
+jint JNI_OnLoad(JavaVM *vm, void *) {
+    g_vm = vm;
+    return JNI_VERSION_1_6;
 }
-JNIEXPORT void JNICALL Java_com_example_menghe_mygles_simpleOsgActivity_loadModel(JNIEnv*env, jobject obj, jstring filename){
-    const char *cpath = env->GetStringUTFChars(filename, JNI_FALSE);
-    app.loadScene(cpath);
+
+/*Native Application methods*/
+JNI_METHOD(jlong, JNIcreateController)
+(JNIEnv* env, jclass){
+nativeAppAddr =  controllerPtr(new osgController());
+return nativeAppAddr;
+}
+
+
+JNI_METHOD(void, JNIdrawFrame)
+        (JNIEnv *, jclass, jboolean btn_status_normal) {
+    //draw();//drawPrimitive
+    controllerNative(nativeAppAddr)->onDrawFrame(btn_status_normal);
+}
+
+JNI_METHOD(void, JNIonGlSurfaceCreated)
+        (JNIEnv *, jclass){
+    controllerNative(nativeAppAddr)->onCreate();
+}
+
+JNI_METHOD(void, JNIonViewChanged)
+        (JNIEnv*, jclass, jint rotation, jint width, jint height){
+    controllerNative(nativeAppAddr)->onViewChanged(rotation, width, height);
+}
+
+
+JNI_METHOD(void, JNIonTouched)
+        (JNIEnv*, jclass, jfloat x, jfloat y){
+    controllerNative(nativeAppAddr)->onTouched(x, y);
+}
+JNI_METHOD(jboolean, JNIhasDetectedPlane)
+(JNIEnv*, jclass){
+return static_cast<jboolean>
+(controllerNative(nativeAppAddr)->hasDetectedPlane()? JNI_TRUE:JNI_FALSE);
+}
+
+JNI_METHOD(void, JNIonResume)(JNIEnv * env, jclass, jobject contex, jobject activitiy){
+    controllerNative(nativeAppAddr)->onResume(env, contex, activitiy);
+}
+
+JNI_METHOD(void, JNIonPause)(JNIEnv *, jclass){
+    controllerNative(nativeAppAddr)->onPause();
+}
+
+JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr){
+    delete controllerNative(controller_addr);
+}
+JNI_METHOD(void, JNIDebugScene)(JNIEnv *env, jclass, jstring filename){
+    const char* cpath = env->GetStringUTFChars(filename, JNI_FALSE);
+    controllerNative(nativeAppAddr)->debug_loadScene(cpath);
     env->ReleaseStringUTFChars(filename, cpath);
+}
+
+JNIEnv *GetJniEnv() {
+    JNIEnv *env;
+    jint result = g_vm->AttachCurrentThread(&env, nullptr);
+    return result == JNI_OK ? env : nullptr;
 }

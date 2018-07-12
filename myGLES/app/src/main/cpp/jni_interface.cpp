@@ -2,7 +2,6 @@
 #include <android/asset_manager_jni.h>
 #include "jni_interface.h"
 #include "drawPrimitive.h"
-#include "nativeController.h"
 
 namespace {
     //maintain a reference to VM
