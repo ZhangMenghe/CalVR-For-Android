@@ -29,7 +29,7 @@ public class simpleOsgActivity extends AppCompatActivity
         controllerAddr = JniInterfaceOSG.createController();
 
         setupSurfaceView();
-        setupResources();
+        //setupResources();
     }
     @Override
     protected void onResume(){

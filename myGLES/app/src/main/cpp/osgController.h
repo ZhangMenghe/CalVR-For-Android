@@ -8,10 +8,11 @@
 #include "osg_utils.h"
 #include "arcore_c_api.h"
 #include "osg_cameraRenderer.h"
+#include <osgGA/KeySwitchMatrixManipulator>
 namespace osg_controller{
     class osgController {
     private:
-        osgViewer::Viewer * _viewer;
+
 
         ArSession * _ar_session = nullptr;
         ArFrame * _ar_frame = nullptr;//get frame state
@@ -24,11 +25,13 @@ namespace osg_controller{
         int _plane_num = 0;
         bool _install_requested = false;
 
-        ref_ptr<GraphicsContext> _context;
+        osgViewer::Viewer * _viewer;
         osg::ref_ptr<osg::Group>  _root;
-        osg::ref_ptr<osg::Camera> bg_cam;
+        osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> _manipulator;
 
         osg_cameraRenderer * _camera_renderer;
+
+        osg::ref_ptr<osg::Node> _createNode();
 
     public:
 
