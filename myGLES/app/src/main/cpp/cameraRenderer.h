@@ -9,7 +9,6 @@
 #include <GLES2/gl2ext.h>
 #include <android/asset_manager.h>
 
-#include <media/NdkImage.h>
 #include <memory>
 #include <vector>
 

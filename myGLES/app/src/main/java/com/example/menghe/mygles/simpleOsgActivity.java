@@ -1,5 +1,6 @@
 package com.example.menghe.mygles;
 
+import android.hardware.display.DisplayManager;
 import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,19 +12,63 @@ import java.io.InputStream;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class simpleOsgActivity extends AppCompatActivity {
+public class simpleOsgActivity extends AppCompatActivity
+        implements DisplayManager.DisplayListener{
     private GLSurfaceView surfaceView;
     // further will be cast to a cpp class. Use address instead
     private long controllerAddr;
+    public boolean btn_status_normal = true;
+    private boolean viewportChanged = false;
+    private int viewportWidth;
+    private int viewportHeight;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_osg);
-
+        JniInterfaceOSG.assetManager = getAssets();
         controllerAddr = JniInterfaceOSG.createController();
 
         setupSurfaceView();
         setupResources();
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        surfaceView.onResume();
+        //Request for camera permission, which may be used in ARCore
+        if (!CameraPermissionHelper.hasCameraPermission(this)) {
+            CameraPermissionHelper.requestCameraPermission(this);
+            return;
+        }
+        JniInterfaceOSG.JNIonResume(getApplicationContext(), this);
+
+//        setupPlaneDetectionMsg();
+
+        // Listen to display changed events to detect 180° rotation, which does not cause a config
+        // change or view resize.
+        getSystemService(DisplayManager.class).registerDisplayListener(this, null);
+
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        surfaceView.onPause();
+        JniInterfaceOSG.JNIonPause();
+//        planeDetection_handler.removeCallbacks(planeDetection_runnable);
+        getSystemService(DisplayManager.class).unregisterDisplayListener(this);
+
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        //synchronized to avoid racing
+        if(isFinishing()) {
+            synchronized (this) {
+                JniInterfaceOSG.JNIonDestroy();
+                controllerAddr = 0;
+            }
+        }
     }
     private void setupSurfaceView(){
         surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
@@ -61,16 +106,39 @@ public class simpleOsgActivity extends AppCompatActivity {
     }
     private class Renderer implements GLSurfaceView.Renderer{
         public void onDrawFrame(GL10 gl) {
-            JniInterfaceOSG.JNIdrawFrame(true);
+            // Synchronized to avoid racing onDestroy.
+            synchronized (this) {
+                if (controllerAddr == 0)
+                    return;
+                if (viewportChanged) {
+                    int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
+                    JniInterfaceOSG.JNIonViewChanged(displayRotation, viewportWidth, viewportHeight);
+                    viewportChanged = false;
+                }
+                JniInterfaceOSG.JNIdrawFrame(btn_status_normal);
+            }
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            JniInterfaceOSG.JNIonViewChanged(0, width, height);
+            viewportWidth = width;
+            viewportHeight = height;
+            viewportChanged = true;
+            //JniInterfaceOSG.JNIonViewChanged(0, width, height);
         }
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             // Do nothing
             gl.glEnable(GL10.GL_DEPTH_TEST);
+            JniInterfaceOSG.JNIonGlSurfaceCreated();
         }
     }
+    // DisplayListener methods
+    @Override
+    public void onDisplayAdded(int displayId) {}
+
+    @Override
+    public void onDisplayRemoved(int displayId) {}
+
+    @Override
+    public void onDisplayChanged(int displayId) {viewportChanged = true;}
 }

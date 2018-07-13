@@ -80,10 +80,13 @@ add_library(glTriangle
             src/main/cpp/drawTriangle.cpp)
 add_library(osgScene
             SHARED
+            src/main/cpp/utils.cpp
             src/main/cpp/arcore_utils.cpp
             src/main/cpp/osg_utils.cpp
             src/main/cpp/jni_interface_osg.cpp
-            src/main/cpp/osgController.cpp)
+            src/main/cpp/osgController.cpp
+            src/main/cpp/TextureAC.cpp
+            src/main/cpp/osg_cameraRenderer.cpp)
 add_library(arTemplate
             SHARED
             src/main/cpp/drawPrimitive.cpp
@@ -135,6 +138,7 @@ target_link_libraries(glTriangle
 # add lib dependencies
 target_link_libraries(osgScene
                       android
+                      mediandk
                       log
                       EGL
                       GLESv2
@@ -159,15 +163,4 @@ target_link_libraries(arTemplate
                       GLESv2
                       GLESv3
                       arcore
-                      #need for osg
-                      osgViewer
-                      osgDB
-                      z
-                      osgdb_osg
-                      osgdb_serializers_osg
-                      osgGA
-                      osgShadow
-                      osgText
-                      osgUtil
-                      osg
-                      OpenThreads)
+                      )

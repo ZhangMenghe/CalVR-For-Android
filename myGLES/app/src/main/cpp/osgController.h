@@ -7,7 +7,7 @@
 
 #include "osg_utils.h"
 #include "arcore_c_api.h"
-
+#include "osg_cameraRenderer.h"
 namespace osg_controller{
     class osgController {
     private:
@@ -16,13 +16,25 @@ namespace osg_controller{
         ArSession * _ar_session = nullptr;
         ArFrame * _ar_frame = nullptr;//get frame state
 
+        AAssetManager *const _asset_manager;
+
         int _displayRotation = 0;
         int _width = 1;
         int _height = 1;
         int _plane_num = 0;
+        bool _install_requested = false;
+
+        ref_ptr<GraphicsContext> _context;
+        osg::ref_ptr<osg::Group>  _root;
+        osg::ref_ptr<osg::Camera> bg_cam;
+
+        osg_cameraRenderer * _camera_renderer;
 
     public:
-        osgController();
+
+
+
+        osgController(AAssetManager * manager);
 
         ~osgController();
 

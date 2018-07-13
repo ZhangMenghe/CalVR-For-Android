@@ -13,7 +13,7 @@
 
 //define helper functions to provide access to Java from C via JNI
 extern "C"{
-JNI_METHOD(jlong, JNIcreateController)(JNIEnv* env, jclass);
+JNI_METHOD(jlong, JNIcreateController)(JNIEnv* env, jclass, jobject asset_manager);
 
 JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass, jboolean btn_status_normal);
 JNI_METHOD(void, JNIonGlSurfaceCreated)(JNIEnv *, jclass);

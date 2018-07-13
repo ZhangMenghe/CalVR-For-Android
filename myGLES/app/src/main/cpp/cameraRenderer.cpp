@@ -3,6 +3,7 @@
 //
 #include <type_traits>
 #include "cameraRenderer.h"
+#include "arcore_utils.h"
 
 namespace {
     // Positions of the quad vertices in clip space (X, Y, Z).
@@ -16,40 +17,6 @@ namespace {
             0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
     };
     constexpr int kSobelEdgeThreshold = 128 * 128;
-
-    bool GetNdkImageProperties(const AImage* ndk_image, int32_t* out_format,
-                               int32_t* out_width, int32_t* out_height,
-                               int32_t* out_plane_num, int32_t* out_stride) {
-        if (ndk_image == nullptr) {
-            return false;
-        }
-        media_status_t status = AImage_getFormat(ndk_image, out_format);
-        if (status != AMEDIA_OK) {
-            return false;
-        }
-
-        status = AImage_getWidth(ndk_image, out_width);
-        if (status != AMEDIA_OK) {
-            return false;
-        }
-
-        status = AImage_getHeight(ndk_image, out_height);
-        if (status != AMEDIA_OK) {
-            return false;
-        }
-
-        status = AImage_getNumberOfPlanes(ndk_image, out_plane_num);
-        if (status != AMEDIA_OK) {
-            return false;
-        }
-
-        status = AImage_getPlaneRowStride(ndk_image, 0, out_stride);
-        if (status != AMEDIA_OK) {
-            return false;
-        }
-
-        return true;
-    }
 
     bool DetectEdge(const AImage* ndk_image, int32_t width, int32_t height,
                     int32_t stride, uint8_t* output_pixels) {
@@ -158,7 +125,7 @@ void cameraRenderer::Draw(ArSession *session, ArFrame *frame, bool btn_status_no
         if (ndk_image == nullptr)
             return;
         int32_t format = 0, width = 0, height = 0, num_plane = 0, stride = 0;
-        if (GetNdkImageProperties(ndk_image, &format, &width, &height, &num_plane,
+        if (arcore_utils::getNdkImageProperties(ndk_image, &format, &width, &height, &num_plane,
                                   &stride)) {
             if (format == AIMAGE_FORMAT_YUV_420_888) {
                 if (width > 0 || height > 0 || num_plane > 0 || stride > 0) {

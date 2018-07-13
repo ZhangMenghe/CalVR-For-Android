@@ -8,19 +8,14 @@ public class JniInterfaceOSG {
     static {
         System.loadLibrary("osgScened");
     }
-    private static final String TAG = "JniInterface";
+    private static final String TAG = "JniInterfaceOSG";
     static AssetManager assetManager;
 
-    public static void setupGrphicDraw(int w, int t){
-        JNIsetupGrphicDraw(w, t);
-    }
     public static long createController(){
-        return JNIcreateController();
+        return JNIcreateController(assetManager);
     }
     //pass a Java object
-    public static native long JNIcreateController();
-
-    public static native void JNIsetupGrphicDraw(int w, int t);
+    public static native long JNIcreateController(AssetManager asset_manager);
 
     public static native void JNIdrawFrame(boolean btn_status_normal);
 

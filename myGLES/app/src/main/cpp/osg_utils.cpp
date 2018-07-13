@@ -24,3 +24,23 @@ Program *osg_utils::createShaderProgram(const char *vertShader, const char *frag
     program->addShader(fs);
     return program;
 }
+
+Program* osg_utils::createShaderProgram(const char* vertex_shader_file_name,
+                             const char* fragment_shader_file_name,
+                             AAssetManager* asset_manager){
+    std::string VertexShaderContent;
+    if (!utils::LoadTextFileFromAssetManager(vertex_shader_file_name, asset_manager,
+                                      &VertexShaderContent)) {
+        LOGE("Failed to load file: %s", vertex_shader_file_name);
+        return 0;
+    }
+
+    std::string FragmentShaderContent;
+    if (!utils::LoadTextFileFromAssetManager(fragment_shader_file_name, asset_manager,
+                                      &FragmentShaderContent)) {
+        LOGE("Failed to load file: %s", fragment_shader_file_name);
+        return 0;
+    }
+
+    return createShaderProgram(VertexShaderContent.c_str(), FragmentShaderContent.c_str());
+}

@@ -48,3 +48,36 @@ void arcore_utils::getTransformMatrixFromAnchor(const ArAnchor& ar_anchor,
                      glm::value_ptr(*out_model_mat));
     ArPose_destroy(pose_);
 }
+bool arcore_utils::getNdkImageProperties(const AImage *ndk_image, int32_t *out_format,
+                                         int32_t *out_width, int32_t *out_height,
+                                         int32_t *out_plane_num, int32_t *out_stride) {
+    if (ndk_image == nullptr) {
+        return false;
+    }
+    media_status_t status = AImage_getFormat(ndk_image, out_format);
+    if (status != AMEDIA_OK) {
+        return false;
+    }
+
+    status = AImage_getWidth(ndk_image, out_width);
+    if (status != AMEDIA_OK) {
+        return false;
+    }
+
+    status = AImage_getHeight(ndk_image, out_height);
+    if (status != AMEDIA_OK) {
+        return false;
+    }
+
+    status = AImage_getNumberOfPlanes(ndk_image, out_plane_num);
+    if (status != AMEDIA_OK) {
+        return false;
+    }
+
+    status = AImage_getPlaneRowStride(ndk_image, 0, out_stride);
+    if (status != AMEDIA_OK) {
+        return false;
+    }
+
+    return true;
+}

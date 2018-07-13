@@ -5,6 +5,7 @@
 #include <jni.h>
 #include <string>
 #include <GLES2/gl2.h>
+#include <android/asset_manager_jni.h>
 
 #include "osgController.h"
 #include "jni_interface_osg.h"
@@ -35,9 +36,10 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
 
 /*Native Application methods*/
 JNI_METHOD(jlong, JNIcreateController)
-(JNIEnv* env, jclass){
-nativeAppAddr =  controllerPtr(new osgController());
-return nativeAppAddr;
+(JNIEnv* env, jclass, jobject asset_manager){
+    AAssetManager * cpp_asset_manager = AAssetManager_fromJava(env, asset_manager);
+    nativeAppAddr =  controllerPtr(new osgController(cpp_asset_manager));
+    return nativeAppAddr;
 }
 
 
