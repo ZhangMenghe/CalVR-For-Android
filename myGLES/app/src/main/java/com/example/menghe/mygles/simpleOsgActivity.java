@@ -29,7 +29,7 @@ public class simpleOsgActivity extends AppCompatActivity
         controllerAddr = JniInterfaceOSG.createController();
 
         setupSurfaceView();
-        //setupResources();
+        setupResources("/test.jpg", R.raw.test);
     }
     @Override
     protected void onResume(){
@@ -79,26 +79,29 @@ public class simpleOsgActivity extends AppCompatActivity
         surfaceView.setRenderer(new simpleOsgActivity.Renderer());
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
-    private void setupResources()
+    private void setupResources(String filename, int id)
     {
         // Get absolute path to internal storage.
         File dir = getFilesDir();
         String path = dir.getAbsolutePath();
         // Check if 'box.osgt' already exists.
-        String modelPath = path + "/box.osgt";
+        String modelPath = path + filename;
         File model = new File(modelPath);
         // Copy 'box.ogst' from 'res/raw', if it does not exist.
         try {
             if (!model.exists()) {
                 // Note: this only works for small files,
                 // because we read the whole file into memory.
-                InputStream is = getResources().openRawResource(R.raw.box);
+                InputStream is = getResources().openRawResource(id);
                 byte[] buffer = new byte[is.available()];
                 is.read(buffer);
                 FileOutputStream os = new FileOutputStream(model);
                 os.write(buffer);
             }
-            JniInterfaceOSG.JNIDebugScene(modelPath);
+            if(id == R.raw.box)
+                JniInterfaceOSG.JNIDebugScene(modelPath);
+            else
+                JniInterfaceOSG.JNIDebugImage(modelPath);
         }
         catch (Exception e) {
 

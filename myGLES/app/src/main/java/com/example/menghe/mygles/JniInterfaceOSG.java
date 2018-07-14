@@ -34,4 +34,6 @@ public class JniInterfaceOSG {
     public static native void JNIonDestroy();
 
     public static native void JNIDebugScene(String filename);
+
+    public static native void JNIDebugImage(String filename);
 }

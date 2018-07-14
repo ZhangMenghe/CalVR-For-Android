@@ -31,8 +31,6 @@ namespace osg_controller{
 
         osg_cameraRenderer * _camera_renderer;
 
-        osg::ref_ptr<osg::Node> _createNode();
-
     public:
 
 
@@ -52,6 +50,7 @@ namespace osg_controller{
         void onTouched(float x, float y);
         bool hasDetectedPlane(){ return  _plane_num > 0;}
         void debug_loadScene(const char* filename);
+        void debug_loadImage(const char* filename){_camera_renderer->setImage(filename);}
     };
 }
 
