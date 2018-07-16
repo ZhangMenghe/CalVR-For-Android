@@ -2,6 +2,7 @@
 // Created by menghe on 7/12/2018.
 //
 
+#include <type_traits>
 #include "osg_cameraRenderer.h"
 #include "arcore_utils.h"
 
@@ -9,22 +10,21 @@ using namespace osg;
 namespace {
     // Positions of the quad vertices in clip space (X, Y, Z).
     const GLfloat kVertices[] = {
-            .0, .0f, .0f, 1.0f, .0f, .0f,
-            1.0f, .0f, 1.0f, .0f, .0f, 1.0f
+            -1.0f, -1.0f, 0.0f, +1.0f, -1.0f, 0.0f,
+            -1.0f, +1.0f, 0.0f, +1.0f, +1.0f, 0.0f,
     };
 
     // UVs of the quad vertices (S, T)
     const GLfloat kUvs[] = {
-           0.0f, 0.0f, 1.0f, 0.0f,1.0f, 1.0f, 0.0f, 1.0f
+            0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
     };
-
 }
 
 osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
-    osg::ref_ptr<osg::Geode> _bgNode = new osg::Geode();
-    osg::ref_ptr<osg::Geometry> _bgGeo = new osg::Geometry();
+    _bgNode = new osg::Geode();
+     _bgGeo = new osg::Geometry();
     osg::ref_ptr<osg::Vec3Array> _vertices = new osg::Vec3Array();
-    osg::ref_ptr<osg::Vec2Array> _uvs = new osg::Vec2Array();
+    _uvs = new osg::Vec2Array();
 
     for(int i=0; i<4; i++){
         _vertices->push_back(Vec3(kVertices[3*i], kVertices[3*i+1], kVertices[3*i+2]));
@@ -33,25 +33,27 @@ osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
     _bgGeo->setVertexArray(_vertices.get());
     _bgGeo->setTexCoordArray(0, _uvs.get());
 
-    _bgGeo->addPrimitiveSet(new DrawArrays(PrimitiveSet::QUADS, 0, 4));
+    _bgGeo->addPrimitiveSet(new DrawArrays(GL_TRIANGLE_STRIP, 0, 4));
 
     _bgNode->addDrawable(_bgGeo.get());
 
-    osg::StateSet* stateset = new osg::StateSet;
-    osg::Texture2D* _bgTexture = new osg::Texture2D();
-//    _bgTexture->setFilter(osg::Texture::FilterParameter::MIN_FILTER, osg::Texture::FilterMode::LINEAR);
-//    _bgTexture->setFilter(osg::Texture::FilterParameter::MAG_FILTER, osg::Texture::FilterMode::LINEAR);
+
+    _bgTexture = new osg::TextureAC();
+    _bgTexture->setFilter(osg::Texture::FilterParameter::MIN_FILTER, osg::Texture::FilterMode::LINEAR);
+    _bgTexture->setFilter(osg::Texture::FilterParameter::MAG_FILTER, osg::Texture::FilterMode::LINEAR);
     _bgTexture->setDataVariance(osg::Object::DYNAMIC);
 
-    osg::Uniform* samUniform = new osg::Uniform(osg::Uniform::SAMPLER_2D, "uTexture");
-    samUniform->set(0);
-    stateset->addUniform(samUniform);
+    _samUniform = new osg::Uniform(osg::Uniform::SAMPLER_2D, "uTexture");
+    _samUniform->set(0);
+
+    osg::StateSet* stateset = new osg::StateSet;
+    stateset->addUniform(_samUniform);
     stateset->setTextureAttributeAndModes(0, _bgTexture, osg::StateAttribute::ON);
 
-    if(!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, "textures/test.png"))
-        LOGE("Failed to load png image");
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
+//    if(!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, "textures/pd.png"))
+//        LOGE("Failed to load png image");
+//    glGenerateMipmap(GL_TEXTURE_2D);
+//    glBindTexture(GL_TEXTURE_2D, 0);
 
     _bgNode->setStateSet(stateset);
     _bgNode->getOrCreateStateSet()->setAttribute(
@@ -60,24 +62,27 @@ osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
 }
 
 void osg_cameraRenderer::Draw(ArSession *session, ArFrame *frame, bool btn_status_normal) {
-    static float grey = 0.5f;
-//    grey += 0.01f;
-//    if (grey > 1.0f) {
-//        grey = 0.0f;
-//    }
-    glClearColor(grey, grey, grey, 1.0f);
-
-//    glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    //_bgTexture->setImage(osgDB::readImageFile(_filename));
     // If display rotation changed (also includes view size change), we need to
     // re-query the uv coordinates for the on-screen portion of the camera image.
-    /*int32_t geometry_changed = 0;
+   int32_t geometry_changed = 0;
     ArFrame_getDisplayGeometryChanged(session, frame, &geometry_changed);
     if (geometry_changed != 0) {
         ArFrame_transformDisplayUvCoords(session, frame, 8, kUvs,
                                          _transformed_uvs);
+        _uvs->clear();
+        for(int i=0; i<4; i++)
+            _uvs ->push_back(Vec2(_transformed_uvs[2*i], _transformed_uvs[2*i+1]));
+        _bgGeo->setTexCoordArray(0, _uvs.get());
     }
-    ArImage *ar_image;
+
+
+    if(!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, "textures/pd.png"))
+        LOGE("Failed to load png image");
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, _bgTexture->textureID);
+
+
+    /*ArImage *ar_image;
     const AImage *ndk_image = nullptr;
     ArStatus status =
             ArFrame_acquireCameraImage(session, frame, &ar_image);

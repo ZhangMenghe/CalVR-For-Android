@@ -45,26 +45,6 @@ osgController::~osgController() {
 }
 
 void osgController::onCreate() {
-
-    /*bg_cam->setRenderOrder(osg::Camera::PRE_RENDER);
-    bg_cam->setReferenceFrame(osg::Camera::ABSOLUTE_RF);
-    bg_cam->setViewMatrix(osg::Matrix::identity());
-// set the projection matrix to be of width and height of 1
-    bg_cam->setProjectionMatrix(osg::Matrix::ortho2D(0, 1.0f, 0, 1.0f));
-*/
-
-
-//    _viewer->getCamera()->setClearMask(GL_DEPTH_BUFFER_BIT);
-//    _viewer->getCamera()->setClearColor(Vec4f(1.0f, .0f, .0f, 1.0f));
-//    _viewer->getCamera()->setProjectionMatrixAsPerspective(60.0f, 1.33333, 0.01, 100.0);
-//
-//    _viewer->setUpViewInWindow(11, 11, 800 + 11, 600 + 11);
-//
-//    _camera_renderer->Initialization(_asset_manager, _root);
-//
-//    _root->addChild(_camera_renderer->GetGeode());
-//   // _root->addChild(bg_cam);
-
     _root->addChild(_camera_renderer->createNode(_asset_manager));
 
     osgViewer::Viewer::Windows windows;
@@ -126,12 +106,11 @@ void osgController::onResume(void *env, void *context, void *activity) {
     CHECK(status == AR_SUCCESS);
 }
 void osgController::onDrawFrame(bool btn_status_normal) {
-
-    //if(_ar_session == nullptr)
-    //    return;
+    if(_ar_session == nullptr)
+        return;
     //must call this func before update ar session
     //TODO:FATAL ERROR HERE
-    /*ArSession_setCameraTextureName(_ar_session,_camera_renderer->GetTextureId(_context));
+    ArSession_setCameraTextureName(_ar_session,_camera_renderer->GetTextureId());
     // Update session to get current frame and render camera background.
     if (ArSession_update(_ar_session, _ar_frame) != AR_SUCCESS) {
         LOGE("OnDrawFrame ArSession_update error");
@@ -147,13 +126,14 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 
     ArTrackingState cam_track_state;
     ArCamera_getTrackingState(_ar_session, camera, &cam_track_state);
-    ArCamera_release(camera);*/
+    ArCamera_release(camera);
 
     _camera_renderer->Draw(_ar_session, _ar_frame, btn_status_normal);
+    _viewer->frame();
     //not tracking anything
    /* if(cam_track_state != AR_TRACKING_STATE_TRACKING)
         return;*/
-    _viewer->frame();
+
 }
 void osgController::onTouched(float x, float y) {}
 void osgController::debug_loadScene(const char *filename) {

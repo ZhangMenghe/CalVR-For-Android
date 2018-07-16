@@ -7,11 +7,13 @@
 
 namespace osg{
     class TextureAC: public Texture2D {
+    private:
+        void _setTextureId(GLuint id){textureID = id;}
     public:
         /** Bind the texture object. If the texture object hasn't already been
   * compiled, create the texture mipmap levels. */
-        virtual void apply(State& state) const;
-
+        virtual void apply(State& state);
+        GLuint textureID;
     };
 
 }

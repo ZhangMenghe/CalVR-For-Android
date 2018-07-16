@@ -9,10 +9,11 @@
 
 using namespace osg;
 
-void TextureAC::apply(State &state) const {
+void TextureAC::apply(State &state) {
     const unsigned int contextID = state.getContextID();
     TextureObject * textureObject = getTextureObject(contextID);
     if(textureObject){
+        textureID = textureObject->id();
         bool textureObjectInvalidated = false;
         if(_subloadCallback.valid())
             textureObjectInvalidated = !_subloadCallback->textureObjectValid(*this, state);
