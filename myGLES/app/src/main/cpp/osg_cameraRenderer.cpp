@@ -33,29 +33,6 @@ osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
     _bgGeo->setVertexArray(_vertices.get());
     _bgGeo->setTexCoordArray(0, _uvs.get());
 
-
-    //创建颜色数组
-    osg::ref_ptr<osg::Vec4Array> vc = new osg::Vec4Array();
-    //添加数据
-    vc->push_back(osg::Vec4(1, 0, 0, 1));
-    vc->push_back(osg::Vec4(0, 1, 0, 1));
-    vc->push_back(osg::Vec4(0, 0, 1, 1));
-    vc->push_back(osg::Vec4(1, 1, 0, 1));
-
-    //设置颜色数组
-    _bgGeo->setColorArray(vc.get());
-    //设置颜色的绑定方式为单个顶点
-    _bgGeo->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
-    //创建法线数组
-    osg::ref_ptr<osg::Vec3Array> nc = new osg::Vec3Array();
-    //添加法线
-    nc->push_back(osg::Vec3(0, -1, 0));
-    //设置法线
-    _bgGeo->setNormalArray(nc.get());
-    //设置法绑定为全部顶点
-    _bgGeo->setNormalBinding(osg::Geometry::BIND_OVERALL);
-    //添加图元
-
     _bgGeo->addPrimitiveSet(new DrawArrays(PrimitiveSet::QUADS, 0, 4));
 
     _bgNode->addDrawable(_bgGeo.get());
@@ -66,11 +43,15 @@ osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
 //    _bgTexture->setFilter(osg::Texture::FilterParameter::MAG_FILTER, osg::Texture::FilterMode::LINEAR);
     _bgTexture->setDataVariance(osg::Object::DYNAMIC);
 
-    _bgTexture->setImage(osgDB::readImageFile(_filename));
     osg::Uniform* samUniform = new osg::Uniform(osg::Uniform::SAMPLER_2D, "uTexture");
     samUniform->set(0);
     stateset->addUniform(samUniform);
     stateset->setTextureAttributeAndModes(0, _bgTexture, osg::StateAttribute::ON);
+
+    if(!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, "textures/test.png"))
+        LOGE("Failed to load png image");
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     _bgNode->setStateSet(stateset);
     _bgNode->getOrCreateStateSet()->setAttribute(

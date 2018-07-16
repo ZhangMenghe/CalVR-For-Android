@@ -29,7 +29,7 @@ public class simpleOsgActivity extends AppCompatActivity
         controllerAddr = JniInterfaceOSG.createController();
 
         setupSurfaceView();
-        setupResources("/test.jpg", R.raw.test);
+        //setupResources("/box.osgt", R.raw.box);
     }
     @Override
     protected void onResume(){
@@ -98,10 +98,7 @@ public class simpleOsgActivity extends AppCompatActivity
                 FileOutputStream os = new FileOutputStream(model);
                 os.write(buffer);
             }
-            if(id == R.raw.box)
-                JniInterfaceOSG.JNIDebugScene(modelPath);
-            else
-                JniInterfaceOSG.JNIDebugImage(modelPath);
+            JniInterfaceOSG.JNIDebugScene(modelPath);
         }
         catch (Exception e) {
 

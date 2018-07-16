@@ -3,10 +3,16 @@ package com.example.menghe.mygles;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.opengl.GLUtils;
+import android.util.Log;
+
+import java.io.IOException;
 
 public class JniInterfaceOSG {
     static {
-        System.loadLibrary("osgScened");
+        System.loadLibrary("osgScene");
     }
     private static final String TAG = "JniInterfaceOSG";
     static AssetManager assetManager;
@@ -35,5 +41,17 @@ public class JniInterfaceOSG {
 
     public static native void JNIDebugScene(String filename);
 
-    public static native void JNIDebugImage(String filename);
+    public static Bitmap loadImage(String imageName) {
+
+        try {
+            return BitmapFactory.decodeStream(assetManager.open(imageName));
+        } catch (IOException e) {
+            Log.e(TAG, "Cannot open image " + imageName);
+            return null;
+        }
+    }
+
+    public static void loadTexture(int target, Bitmap bitmap) {
+        GLUtils.texImage2D(target, 0, bitmap, 0);
+    }
 }
