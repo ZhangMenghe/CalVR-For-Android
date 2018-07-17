@@ -8,7 +8,6 @@
 #include <android/asset_manager.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
-#include <osg/TextureRectangle>
 #include "TextureAC.h"
 #include "arcore_c_api.h"
 #include "osg_utils.h"
@@ -25,12 +24,13 @@ private:
     osg::ref_ptr<osg::Vec2Array> _uvs;
     osg::ref_ptr<osg::Geometry> _bgGeo;
     osg::Uniform* _samUniform;
+
 public:
     osg::ref_ptr<osg::Node> createNode(AAssetManager * manager);
     void Draw(ArSession* session, ArFrame* frame, bool btn_status_normal = true);
     // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
-    GLuint GetTextureId(Viewer* const viewer){
-        ViewerBase::Contexts ctx;
+    GLuint GetTextureId(osgViewer::Viewer* const viewer){
+        osgViewer::ViewerBase::Contexts ctx;
         viewer->getContexts(ctx);
         Texture::TextureObject* textureObject = _bgTexture->getTextureObject(ctx[0]->getState()->getContextID());
         if(nullptr == textureObject){

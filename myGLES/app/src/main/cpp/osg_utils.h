@@ -7,8 +7,6 @@
 
 #include <osg/Camera>
 #include <osgDB/ReadFile>
-#include <osgViewer/Viewer>
-#include <osgGA/TrackballManipulator>
 
 #include "utils.h"
 
@@ -20,7 +18,6 @@ USE_SERIALIZER_WRAPPER_LIBRARY(osg)
 // END   FEATURE PLUGINS_STATIC
 
 using namespace osg;
-using namespace osgViewer;
 
 namespace osg_utils {
     void setupCamera(Camera *camera, GraphicsContext *context,

@@ -140,7 +140,7 @@ namespace utils{
             jmethodID load_texture_method;
         } jniIds = [env]() -> JNIData {
             constexpr char kHelperClassName[] =
-                    "com/example/menghe/mygles/JniInterface";
+                    "com/example/menghe/mygles/JniInterfaceOSG";
             constexpr char kLoadImageMethodName[] = "loadImage";
             constexpr char kLoadImageMethodSignature[] =
                     "(Ljava/lang/String;)Landroid/graphics/Bitmap;";
