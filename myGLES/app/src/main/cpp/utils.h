@@ -73,8 +73,8 @@ namespace utils {
     // @param target, openGL texture target to load the image into.
     // @param path, path to the file, relative to the assets folder.
     // @return true if png is loaded correctly, otherwise false.
+    bool LoadPngFromAssetManager(int target, const char* path,const char* className);
     bool LoadPngFromAssetManager(int target, const char* path);
-
     // Load obj file from assets folder from the app.
     //
     // @param asset_manager, AAssetManager pointer.

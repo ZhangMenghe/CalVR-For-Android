@@ -130,7 +130,7 @@ namespace utils{
     }
     bool LoadPngFromAssetManager(int target, const char* path) {
         JNIEnv* env = GetJniEnv();
-
+        //if()
         // Put all the JNI values in a structure that is statically initalized on the
         // first call to this method.  This makes it thread safe in the unlikely case
         // of multiple threads calling this method.
@@ -140,7 +140,7 @@ namespace utils{
             jmethodID load_texture_method;
         } jniIds = [env]() -> JNIData {
             constexpr char kHelperClassName[] =
-                    "com/example/menghe/mygles/JniInterfaceOSG";
+                    "com/example/menghe/mygles/JniInterface";
             constexpr char kLoadImageMethodName[] = "loadImage";
             constexpr char kLoadImageMethodSignature[] =
                     "(Ljava/lang/String;)Landroid/graphics/Bitmap;";
@@ -175,6 +175,52 @@ namespace utils{
         }
 
         env->CallStaticVoidMethod(jniIds.helper_class, jniIds.load_texture_method,
+                                  target, image_obj);
+        return true;
+    }
+
+    bool LoadPngFromAssetManager(int target, const char* path, const char* className) {
+        JNIEnv* env = GetJniEnv();
+        jclass helper_class;
+        jmethodID load_image_method;
+        jmethodID load_texture_method;
+
+        char kHelperClassName[] =
+                "com/example/menghe/mygles/";
+        strcat(kHelperClassName, className);
+        constexpr char kLoadImageMethodName[] = "loadImage";
+        constexpr char kLoadImageMethodSignature[] =
+                "(Ljava/lang/String;)Landroid/graphics/Bitmap;";
+        constexpr char kLoadTextureMethodName[] = "loadTexture";
+        constexpr char kLoadTextureMethodSignature[] =
+                "(ILandroid/graphics/Bitmap;)V";
+
+
+        helper_class = env->FindClass(kHelperClassName);
+        if (helper_class) {
+            helper_class = static_cast<jclass>(env->NewGlobalRef(helper_class));
+            load_image_method = env->GetStaticMethodID(
+                    helper_class, kLoadImageMethodName, kLoadImageMethodSignature);
+            load_texture_method = env->GetStaticMethodID(
+                    helper_class, kLoadTextureMethodName, kLoadTextureMethodSignature);
+
+        }else{
+            LOGE("utils::Could not find Java helper class %s",
+                 kHelperClassName);
+        }
+        if (!helper_class)
+            return false;
+
+        jstring j_path = env->NewStringUTF(path);
+
+        jobject image_obj = env->CallStaticObjectMethod(
+                helper_class, load_image_method, j_path);
+
+        if (j_path) {
+            env->DeleteLocalRef(j_path);
+        }
+
+        env->CallStaticVoidMethod(helper_class, load_texture_method,
                                   target, image_obj);
         return true;
     }
