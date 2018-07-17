@@ -23,7 +23,7 @@ namespace {
 osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
     _bgNode = new osg::Geode();
      _bgGeo = new osg::Geometry();
-    osg::ref_ptr<osg::Vec3Array> _vertices = new osg::Vec3Array();
+    _vertices = new osg::Vec3Array();
     _uvs = new osg::Vec2Array();
 
     for(int i=0; i<4; i++){
@@ -54,7 +54,12 @@ osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
 //        LOGE("Failed to load png image");
 //    glGenerateMipmap(GL_TEXTURE_2D);
 //    glBindTexture(GL_TEXTURE_2D, 0);
-
+//    unsigned char  data[50*50 * 4] = {0xff};
+//
+//    ref_ptr<osg::Image> img = new osg::Image();
+//
+//    img->setImage(50,50,1,GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, data, osg::Image::USE_NEW_DELETE);
+//    _bgTexture->setImage(img);
     _bgNode->setStateSet(stateset);
     _bgNode->getOrCreateStateSet()->setAttribute(
             osg_utils::createShaderProgram("shaders/osgTexture.vert", "shaders/osgTexture.frag", manager));
@@ -64,7 +69,7 @@ osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
 void osg_cameraRenderer::Draw(ArSession *session, ArFrame *frame, bool btn_status_normal) {
     // If display rotation changed (also includes view size change), we need to
     // re-query the uv coordinates for the on-screen portion of the camera image.
-   int32_t geometry_changed = 0;
+    int32_t geometry_changed = 0;
     ArFrame_getDisplayGeometryChanged(session, frame, &geometry_changed);
     if (geometry_changed != 0) {
         ArFrame_transformDisplayUvCoords(session, frame, 8, kUvs,
@@ -72,16 +77,21 @@ void osg_cameraRenderer::Draw(ArSession *session, ArFrame *frame, bool btn_statu
         _uvs->clear();
         for(int i=0; i<4; i++)
             _uvs ->push_back(Vec2(_transformed_uvs[2*i], _transformed_uvs[2*i+1]));
-        _bgGeo->setTexCoordArray(0, _uvs.get());
+
     }
 
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+//    if(!utils::LoadPngFromAssetManager(GL_TEXTURE_EXTERNAL_OES, "textures/pd.png"))
+//        LOGE("Failed to load png image");
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_EXTERNAL_OES, _bgTexture->textureID);
 
-    if(!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, "textures/pd.png"))
-        LOGE("Failed to load png image");
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, _bgTexture->textureID);
+    _bgGeo->setVertexArray(_vertices.get());
+    _bgGeo->setTexCoordArray(0, _uvs.get());
 
-
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
     /*ArImage *ar_image;
     const AImage *ndk_image = nullptr;
     ArStatus status =

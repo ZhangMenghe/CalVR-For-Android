@@ -18,7 +18,7 @@ osgController::osgController(AAssetManager * manager)
     _viewer->setCameraManipulator(new osgGA::TrackballManipulator());
     _root = new Group;
     //TODO: NO idea why can not add realize
-    //_viewer->realize();
+//    _viewer->realize();
 
     _viewer->addEventHandler(new osgViewer::StatsHandler);
     _viewer->addEventHandler(
@@ -109,8 +109,8 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     if(_ar_session == nullptr)
         return;
     //must call this func before update ar session
-    //TODO:FATAL ERROR HERE
-    ArSession_setCameraTextureName(_ar_session,_camera_renderer->GetTextureId());
+    GLuint textureId = _camera_renderer->GetTextureId(_viewer);
+    ArSession_setCameraTextureName(_ar_session, textureId);
     // Update session to get current frame and render camera background.
     if (ArSession_update(_ar_session, _ar_frame) != AR_SUCCESS) {
         LOGE("OnDrawFrame ArSession_update error");
