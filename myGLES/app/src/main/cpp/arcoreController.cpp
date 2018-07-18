@@ -17,9 +17,6 @@ void arcoreController::onDrawFrame(GLuint textureId) {
     ArCamera* camera;
     ArFrame_acquireCamera(_ar_session, _ar_frame, &camera);
 
-    mat4 view_mat;
-    mat4 proj_mat;
-
     ArCamera_getViewMatrix(_ar_session, camera, value_ptr(view_mat));
     ArCamera_getProjectionMatrix(_ar_session,camera, 0.1f, 100.0f, value_ptr(proj_mat));
 

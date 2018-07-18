@@ -72,7 +72,7 @@ osgController::~osgController() {
 void osgController::onCreate() {
     _root->addChild(_camera_renderer->createNode(_asset_manager));
     _root->addChild(_plane_renderer->createNode(_asset_manager));
-    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
+    _root->addChild(_pointcloud_renderer->createNode(_asset_manager, _ar_controller));
 //    _root->addChild(_object_renderer->createNode());
 
     osgViewer::Viewer::Windows windows;
@@ -164,14 +164,10 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     }
 
     ArTrackableList_destroy(plane_list);
-    plane_list = nullptr;
+    plane_list = nullptr;*/
 
-    ArPointCloud * pointCloud;
-    ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
-    if(pointcloud_Status != AR_SUCCESS)
-        return;
-    _pointcloud_renderer->Draw(_ar_session, pointCloud, proj_mat*view_mat);
-    ArPointCloud_release(pointCloud);*/
+    _pointcloud_renderer->Draw(_ar_controller);
+
     _viewer->frame();
     return;
 

@@ -19,8 +19,15 @@ private:
     int _width = 1;
     int _height = 1;
     bool _install_requested = false;
+
+    glm::mat4 view_mat;
+    glm::mat4 proj_mat;
 public:
+
     float transformed_camera_uvs[8];
+    const float * pointCloudData;
+    int32_t num_of_points = 0;
+
     ~arcoreController(){
         if(_ar_session) {
             ArSession_destroy(_ar_session);
@@ -74,6 +81,24 @@ public:
         }
         return false;
     }
+    bool updatePointCloudRenderer(){
+        ArPointCloud * pointCloud;
+        ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
+        if(pointcloud_Status != AR_SUCCESS)
+            return false;
+
+
+        ArPointCloud_getNumberOfPoints(_ar_session, pointCloud, &num_of_points);
+        if(num_of_points <= 0)
+            return false;
+        //point cloud data with 4 params (x,y,z, confidence)
+
+        ArPointCloud_getData(_ar_session, pointCloud, &pointCloudData);
+
+        ArPointCloud_release(pointCloud);
+        return true;
+    }
+    glm::mat4 getMVP(){return proj_mat*view_mat;}
 };
 
 
