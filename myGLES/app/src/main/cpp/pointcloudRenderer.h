@@ -10,8 +10,6 @@
 #include "arcore_c_api.h"
 #include "utils.h"
 
-using namespace glm;
-
 class pointcloudRenderer {
 private:
     GLuint _shader_program;
@@ -21,7 +19,7 @@ private:
     float _default_size = 5.0f;
 public:
     void Initialization(AAssetManager * manager);
-    void Draw(const ArSession * arSession, ArPointCloud* pointCloud, const mat4 & mvpMat);
+    void Draw(const ArSession * arSession, ArPointCloud* pointCloud, const glm::mat4 & mvpMat);
 };
 
 

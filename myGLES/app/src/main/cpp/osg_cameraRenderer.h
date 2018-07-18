@@ -9,8 +9,9 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include "TextureAC.h"
-#include "arcore_c_api.h"
 #include "osg_utils.h"
+#include "arcoreController.h"
+
 #include <string>
 #include <osgViewer/ViewerBase>
 #include <osgViewer/Viewer>
@@ -27,7 +28,7 @@ private:
 
 public:
     osg::ref_ptr<osg::Node> createNode(AAssetManager * manager);
-    void Draw(ArSession* session, ArFrame* frame, bool btn_status_normal = true);
+    void Draw(arcoreController * arController, bool btn_status_normal = true);
     // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
     GLuint GetTextureId(osgViewer::Viewer* const viewer){
         osgViewer::ViewerBase::Contexts ctx;

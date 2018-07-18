@@ -6,23 +6,21 @@
 #define MYGLES_OSGCONTROLLER_H
 #include <unordered_map>
 #include "osg_utils.h"
-#include "arcore_c_api.h"
+
 #include "osg_cameraRenderer.h"
 #include "osg_planeRenderer.h"
+#include "osg_pointcloudRenderer.h"
+#include "osg_objectRenderer.h"
+#include "arcoreController.h"
 #include <osgGA/KeySwitchMatrixManipulator>
 namespace osg_controller{
     class osgController {
     private:
-        ArSession * _ar_session = nullptr;
-        ArFrame * _ar_frame = nullptr;//get frame state
-
         AAssetManager *const _asset_manager;
 
-        int _displayRotation = 0;
-        int _width = 1;
-        int _height = 1;
+
         int _plane_num = 0;
-        bool _install_requested = false;
+
         bool _this_is_the_first_plane = true;
         float _color_correction[4] = {1.f, 1.f, 1.f, 1.f};
         std::unordered_map<ArPlane*,  glm::vec3> _plane_color_map;
@@ -31,9 +29,11 @@ namespace osg_controller{
         osg::ref_ptr<osg::Group>  _root;
         osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> _manipulator;
 
+        arcoreController * _ar_controller;
         osg_cameraRenderer * _camera_renderer;
         osg_planeRenderer * _plane_renderer;
-
+        osg_pointcloudRenderer * _pointcloud_renderer;
+        osg_objectRenderer *_object_renderer;
     public:
         osgController(AAssetManager * manager);
 

@@ -57,21 +57,23 @@ osgController::osgController(AAssetManager * manager)
     _viewer->setCameraManipulator(_manipulator.get());
 
     _viewer->getViewerStats()->collectStats("scene", true);
+
+    _ar_controller = new arcoreController();
     _camera_renderer = new osg_cameraRenderer();
     _plane_renderer = new osg_planeRenderer();
+    _pointcloud_renderer = new osg_pointcloudRenderer();
+    _object_renderer = new osg_objectRenderer();
 }
 
 osgController::~osgController() {
-    if(_ar_session) {
-        ArSession_destroy(_ar_session);
-        ArFrame_destroy(_ar_frame);
-    }
     delete(_viewer);
 }
 
 void osgController::onCreate() {
     _root->addChild(_camera_renderer->createNode(_asset_manager));
     _root->addChild(_plane_renderer->createNode(_asset_manager));
+    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
+//    _root->addChild(_object_renderer->createNode());
 
     osgViewer::Viewer::Windows windows;
     _viewer->getWindows(windows);
@@ -95,66 +97,26 @@ void osgController::onCreate() {
 
 void osgController::onViewChanged(int rot, int width, int height) {
     _viewer->setUpViewerAsEmbeddedInWindow(0,0,width,height);
-    _displayRotation = rot;
-    _width = width;
-    _height = height;
-    if (_ar_session != nullptr) {
-        ArSession_setDisplayGeometry(_ar_session, _displayRotation, width, height);
-    }
+    _ar_controller->onViewChanged(rot, width, height);
 }
 
 void osgController::onPause() {
-    if(_ar_session)
-        ArSession_pause(_ar_session);
+    _ar_controller->onPause();
 }
 void osgController::onResume(void *env, void *context, void *activity) {
-   // _context = (GraphicsContext *)context;
-    if(nullptr == _ar_session){
-        ArInstallStatus install_status;
-        bool user_requested_install = !_install_requested;
-
-        CHECK(ArCoreApk_requestInstall(env, activity, user_requested_install,&install_status) == AR_SUCCESS);
-
-        switch (install_status) {
-            case AR_INSTALL_STATUS_INSTALLED:
-                break;
-            case AR_INSTALL_STATUS_INSTALL_REQUESTED:
-                _install_requested = true;
-                return;
-        }
-        CHECK(ArSession_create(env, context, &_ar_session)==AR_SUCCESS);
-        CHECK(_ar_session);
-        ArFrame_create(_ar_session, &_ar_frame);
-        CHECK(_ar_frame);
-        ArSession_setDisplayGeometry(_ar_session, _displayRotation, _width, _height);
-    }
-    const ArStatus status = ArSession_resume(_ar_session);
-    CHECK(status == AR_SUCCESS);
+    _ar_controller->onResume(env, context, activity);
 }
 void osgController::onDrawFrame(bool btn_status_normal) {
-    if(_ar_session == nullptr)
-        return;
+
     //must call this func before update ar session
     GLuint textureId = _camera_renderer->GetTextureId(_viewer);
-    ArSession_setCameraTextureName(_ar_session, textureId);
-    // Update session to get current frame and render camera background.
-    if (ArSession_update(_ar_session, _ar_frame) != AR_SUCCESS) {
-        LOGE("OnDrawFrame ArSession_update error");
-    }
-    ArCamera* camera;
-    ArFrame_acquireCamera(_ar_session, _ar_frame, &camera);
 
-    mat4 view_mat;
-    mat4 proj_mat;
+    _ar_controller->onDrawFrame(textureId);
 
-    ArCamera_getViewMatrix(_ar_session, camera, value_ptr(view_mat));
-    ArCamera_getProjectionMatrix(_ar_session,camera, 0.1f, 100.0f, value_ptr(proj_mat));
+    _camera_renderer->Draw(_ar_controller, btn_status_normal);
 
-    ArTrackingState cam_track_state;
-    ArCamera_getTrackingState(_ar_session, camera, &cam_track_state);
-    ArCamera_release(camera);
+/*
 
-    _camera_renderer->Draw(_ar_session, _ar_frame, btn_status_normal);
 
     //Render plane
     // get trackable PLANES
@@ -203,7 +165,16 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 
     ArTrackableList_destroy(plane_list);
     plane_list = nullptr;
+
+    ArPointCloud * pointCloud;
+    ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
+    if(pointcloud_Status != AR_SUCCESS)
+        return;
+    _pointcloud_renderer->Draw(_ar_session, pointCloud, proj_mat*view_mat);
+    ArPointCloud_release(pointCloud);*/
     _viewer->frame();
+    return;
+
 
 }
 void osgController::onTouched(float x, float y) {}

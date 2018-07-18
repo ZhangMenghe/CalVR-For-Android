@@ -56,17 +56,14 @@ osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
     return _bgNode.get();
 }
 
-void osg_cameraRenderer::Draw(ArSession *session, ArFrame *frame, bool btn_status_normal) {
+void osg_cameraRenderer::Draw(arcoreController* arController, bool btn_status_normal) {
     // If display rotation changed (also includes view size change), we need to
     // re-query the uv coordinates for the on-screen portion of the camera image.
-    int32_t geometry_changed = 0;
-    ArFrame_getDisplayGeometryChanged(session, frame, &geometry_changed);
-    if (geometry_changed != 0) {
-        ArFrame_transformDisplayUvCoords(session, frame, 8, kUvs,
-                                         _transformed_uvs);
+    if(arController->updateBackgroundRender(kUvs))
+     {
         _uvs->clear();
         for(int i=0; i<4; i++)
-            _uvs ->push_back(Vec2(_transformed_uvs[2*i], _transformed_uvs[2*i+1]));
+            _uvs ->push_back(Vec2(arController->transformed_camera_uvs[2*i], arController->transformed_camera_uvs[2*i+1]));
         _bgGeo->setVertexArray(_vertices.get());
         _bgGeo->setTexCoordArray(0, _uvs.get());
 

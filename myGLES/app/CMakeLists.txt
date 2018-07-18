@@ -86,7 +86,10 @@ add_library(osgScene
             src/main/cpp/jni_interface_osg.cpp
             src/main/cpp/osgController.cpp
             src/main/cpp/TextureAC.cpp
+            src/main/cpp/arcoreController.cpp
             src/main/cpp/osg_planeRenderer.cpp
+            src/main/cpp/osg_pointcloudRenderer.cpp
+            src/main/cpp/osg_objectRenderer.cpp
             src/main/cpp/osg_cameraRenderer.cpp)
 add_library(arTemplate
             SHARED
