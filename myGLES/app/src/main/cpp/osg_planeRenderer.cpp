@@ -2,7 +2,8 @@
 // Created by menghe on 7/17/2018.
 //
 #include <type_traits>
-#include <osg/Texture2D>
+
+
 #include "arcore_utils.h"
 #include "osg_planeRenderer.h"
 using namespace arcore_utils;
@@ -20,8 +21,8 @@ void osg_planeRenderer::_update_plane_vertices(const ArSession *arSession, const
         return;
     }
     const int32_t vertices_size = polygon_length/2;
-    vector<vec2> raw_vertices(vertices_size);
-    ArPlane_getPolygon(arSession, arPlane, value_ptr(raw_vertices.front()));
+    std::vector<glm::vec2> raw_vertices(vertices_size);
+    ArPlane_getPolygon(arSession, arPlane, glm::value_ptr(raw_vertices.front()));
 
     //fill outter vertices
     for(int32_t i=0; i<vertices_size; i++)
@@ -31,7 +32,7 @@ void osg_planeRenderer::_update_plane_vertices(const ArSession *arSession, const
     ArPose * arPose;
     ArPose_create(arSession, nullptr, &arPose);
     ArPlane_getCenterPose(arSession, arPlane, arPose);
-    ArPose_getMatrix(arSession, arPose, value_ptr(_model_mat));
+    ArPose_getMatrix(arSession, arPose, glm::value_ptr(_model_mat));
 
     _normal_vec = getPlaneNormal(*arSession, *arPose);
 
@@ -43,10 +44,10 @@ void osg_planeRenderer::_update_plane_vertices(const ArSession *arSession, const
     // Fill vertex 4 to 7, with alpha set to 1.
     for (int32_t i = 0; i < vertices_size; ++i) {
         // Vector from plane center to current point.
-        vec2 v = raw_vertices[i];
+        glm::vec2 v = raw_vertices[i];
         const float scale =
                 1.0f - std::min((kFeatherLength / glm::length(v)), kFeatherScale);
-        const vec2 result_v = scale * v;
+        const glm::vec2 result_v = scale * v;
 
         _vertices->push_back(Vec3(result_v.x, result_v.y, 1.0f));
     }
@@ -80,7 +81,7 @@ osg::ref_ptr<osg::Node> osg_planeRenderer::createNode(AAssetManager *manager) {
     _geometry = new osg::Geometry();
     _vertices = new osg::Vec3Array();
     _triangles = new DrawElementsUShort(PrimitiveSet::TRIANGLES);
-    Texture2D * _planeTexture = new osg::Texture2D();
+    _planeTexture = new osg::Texture2D();
 
     _geometry->addPrimitiveSet(_triangles);
     _node->addDrawable(_geometry.get());
@@ -90,7 +91,7 @@ osg::ref_ptr<osg::Node> osg_planeRenderer::createNode(AAssetManager *manager) {
     _planeTexture->setWrap(osg::Texture::WRAP_S, osg::Texture::REPEAT);
     _planeTexture->setWrap(osg::Texture::WRAP_T, osg::Texture::REPEAT);
 
-    _planeTexture->setDataVariance(osg::Object::DYNAMIC);
+//    _planeTexture->setDataVariance(osg::Object::DYNAMIC);
 
     if(!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, "textures/trigrid.png"))
         LOGE("Failed to load png image");
@@ -115,17 +116,44 @@ osg::ref_ptr<osg::Node> osg_planeRenderer::createNode(AAssetManager *manager) {
     stateset->setTextureAttributeAndModes(0, _planeTexture, osg::StateAttribute::ON);
 
     _node->setStateSet(stateset);
-    _node->getOrCreateStateSet()->setAttribute(
-            osg_utils::createShaderProgram("shaders/plane.vert", "shaders/plane.frag", manager));
+    Program * program = osg_utils::createShaderProgram("shaders/plane.vert", "shaders/plane.frag", manager);
+    program->addBindAttribLocation("vPosition", _attribute_vpos);
+    _geometry->setVertexAttribArray(_attribute_vpos, _vertices.get(), osg::Array::BIND_PER_VERTEX);
+    _geometry->setDataVariance(osg::Object::DYNAMIC);
+//    _geometry->setUseDisplayList(false);
+    _node->getOrCreateStateSet()->setAttribute(program);
+
+
     return _node.get();
 }
-void osg_planeRenderer::Draw(const ArSession *arSession, const ArPlane *arPlane,
-                             const mat4 &projMat, const mat4 &viewMat, const vec3 &color) {
-    _update_plane_vertices(arSession, arPlane);
-    _geometry->setVertexArray(_vertices);
+void osg_planeRenderer::Draw(const ArSession *arSession, osgViewer::Viewer * viewer, const ArPlane *arPlane,
+                             const glm::mat4 &projMat, const glm::mat4 &viewMat, const glm::vec3 &color) {
+    if(!_initialized){
+        _initialized = true;
+        osgViewer::ViewerBase::Contexts ctx;
+        viewer->getContexts(ctx);
+        _textureObject = _planeTexture->getTextureObject(ctx[0]->getState()->getContextID());
+        if(nullptr == _textureObject)
+            _textureObject = _planeTexture->generateAndAssignTextureObject(ctx[0]->getState()->getContextID(), GL_TEXTURE_2D);
+    }
 
-    _uniform_model_mat->set(Matrixd(value_ptr(projMat)));
-    _uniform_mvp_mat->set(Matrixd(value_ptr(projMat * viewMat * _model_mat)));
+    _update_plane_vertices(arSession, arPlane);
+
+
+
+    _textureObject->bind();
+
+    _uniform_model_mat->set(Matrixf(glm::value_ptr(_model_mat)));
+    _uniform_mvp_mat->set(Matrixf(glm::value_ptr(projMat * viewMat * _model_mat)));
     _uniform_normal_vec->set(Vec3(_normal_vec.x, _normal_vec.y, _normal_vec.z));
     _uniform_color->set(Vec3(color.x, color.y, color.z));
+
+    _uniform_model_mat->dirty();
+    _uniform_mvp_mat->dirty();
+    _uniform_normal_vec->dirty();
+    _uniform_color->dirty();
+    _triangles->dirty();
+    _vertices->dirty();
+
+    _geometry->dirtyBound();
 }

@@ -13,6 +13,8 @@
 
 using namespace osg_controller;
 using namespace osg;
+using namespace std;
+using namespace glm;
 namespace {
     constexpr size_t kMaxNumberOfAndroidsToRender = 20;
     constexpr int32_t kPlaneColorRgbaSize = 16;
@@ -196,7 +198,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
             _plane_color_map.insert({ar_plane, plane_color});
         }
 
-        _plane_renderer->Draw(_ar_session, ar_plane, proj_mat, view_mat,plane_color);
+        _plane_renderer->Draw(_ar_session, _viewer, ar_plane, proj_mat, view_mat,plane_color);
     }
 
     ArTrackableList_destroy(plane_list);

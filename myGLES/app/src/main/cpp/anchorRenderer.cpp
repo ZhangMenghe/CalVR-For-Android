@@ -5,6 +5,7 @@
 #include "anchorRenderer.h"
 #include "arcore_utils.h"
 
+using namespace glm;
 void anchorRenderer::Initialization(AAssetManager * manager){
     _shader_program = utils::CreateProgram("shaders/point.vert", "shaders/point.frag", manager);
     CHECK(_shader_program);

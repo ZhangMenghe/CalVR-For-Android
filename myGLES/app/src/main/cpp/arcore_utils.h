@@ -14,7 +14,6 @@
 #include "gtx/quaternion.hpp"
 
 #include "arcore_c_api.h"
-using namespace glm;
 
 #ifndef CHECK
 #define CHECK(condition)                                                   \
@@ -26,7 +25,7 @@ using namespace glm;
 
 namespace arcore_utils {
 
-    vec3 getPlaneNormal(const ArSession & arSession, const ArPose & arPose);
+    glm::vec3 getPlaneNormal(const ArSession & arSession, const ArPose & arPose);
 
     // Calculate the normal distance to plane from cameraPose, the given planePose
     // should have y axis parallel to plane's normal, for example plane's center

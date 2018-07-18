@@ -6,7 +6,7 @@
 
 
 using namespace arcore_utils;
-
+using namespace glm;
 vec3 arcore_utils::getPlaneNormal(const ArSession &arSession, const ArPose &arPose) {
     float plane_pose_raw[7] = {.0f};
     ArPose_getPoseRaw(&arSession, &arPose, plane_pose_raw);

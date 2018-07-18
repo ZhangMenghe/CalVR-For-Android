@@ -25,7 +25,7 @@ namespace osg_controller{
         bool _install_requested = false;
         bool _this_is_the_first_plane = true;
         float _color_correction[4] = {1.f, 1.f, 1.f, 1.f};
-        unordered_map<ArPlane*,  glm::vec3> _plane_color_map;
+        std::unordered_map<ArPlane*,  glm::vec3> _plane_color_map;
 
         osgViewer::Viewer * _viewer;
         osg::ref_ptr<osg::Group>  _root;
