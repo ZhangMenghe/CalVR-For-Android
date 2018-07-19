@@ -55,17 +55,19 @@ osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manag
 void osg_pointcloudRenderer::Draw(arcoreController* ar) {
     if(!ar->updatePointCloudRenderer())
         return;
-    osg::RefMatrixf* mat = new RefMatrixf();
+    osg::RefMatrixf* mat = new RefMatrixf(glm::value_ptr(ar->getMVP()));
     _uniform_mvp_mat->set(*(mat));
-//
-//    for(int i=0;i<ar->num_of_points;i++)
-//        _vertices->push_back(Vec3(ar->pointCloudData[4*i], ar->pointCloudData[4*i+1], ar->pointCloudData[4*i+2]));
+
     _vertices->clear();
-    _vertices->push_back(Vec3(0.5f, -0.5f,  .0f));
-    _vertices->push_back(Vec3(-0.5f, -0.5f, .0f));
-    _vertices->push_back(Vec3(0.5f,  0.5f, .0f));
-    _vertices->push_back(Vec3(-0.5f, 0.5f, .0f));
-    _vertices->push_back(Vec3(0.0f, 0.0f, .0f));
+
+    for(int i=0;i<ar->num_of_points;i++)
+        _vertices->push_back(Vec3(ar->pointCloudData[4*i], ar->pointCloudData[4*i+1], ar->pointCloudData[4*i+2]));
+
+//    _vertices->push_back(Vec3(0.5f, -0.5f,  .0f));
+//    _vertices->push_back(Vec3(-0.5f, -0.5f, .0f));
+//    _vertices->push_back(Vec3(0.5f,  0.5f, .0f));
+//    _vertices->push_back(Vec3(-0.5f, 0.5f, .0f));
+//    _vertices->push_back(Vec3(0.0f, 0.0f, .0f));
 
 
     _drawArray->setCount(_vertices->size());
