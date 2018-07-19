@@ -11,11 +11,12 @@
 
 class osg_pointcloudRenderer {
 private:
+    osg::ref_ptr<osg::Vec3Array> _vertices;
     osg::ref_ptr<osg::Geometry> _geometry;
     osg::ref_ptr<osg::Geode> _node;
+    osg::DrawArrays* _drawArray;
     GLuint _attribute_vpos = 1;
-    float _default_size = 5.0f;
-    osg::Uniform* _uniform_color;
+    osg::Uniform* _uniform_mvp_mat;
 public:
     osg::ref_ptr<osg::Geode> createNode(AAssetManager * manager, arcoreController* ar);
     void Draw(arcoreController * ar);
