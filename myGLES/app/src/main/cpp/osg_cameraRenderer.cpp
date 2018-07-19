@@ -11,7 +11,7 @@ namespace {
     // Positions of the quad vertices in clip space (X, Y, Z).
     const GLfloat kVertices[] = {
             -1.0f, -1.0f, 0.0f, +1.0f, -1.0f, 0.0f,
-            -1.0f, +1.0f, 0.0f, +1.0f, +1.0f, 0.0f,
+            -1.0f, +1.0f, 0.0f, +1.0f, +1.0f, 0.0f
     };
 
     // UVs of the quad vertices (S, T)
@@ -20,7 +20,7 @@ namespace {
     };
 }
 
-osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
+osg::ref_ptr<osg::Geode> osg_cameraRenderer::createNode(AAssetManager *manager) {
     _bgNode = new osg::Geode();
      _bgGeo = new osg::Geometry();
     _vertices = new osg::Vec3Array();
@@ -49,10 +49,13 @@ osg::ref_ptr<osg::Node> osg_cameraRenderer::createNode(AAssetManager *manager) {
     osg::StateSet* stateset = new osg::StateSet;
     stateset->addUniform(_samUniform);
     stateset->setTextureAttributeAndModes(0, _bgTexture, osg::StateAttribute::ON);
+    stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+    stateset->setMode(GL_BLEND, osg::StateAttribute::ON);
+
+    stateset->setAttribute(
+            osg_utils::createShaderProgram("shaders/osgTexture.vert", "shaders/osgTexture.frag", manager));
 
     _bgNode->setStateSet(stateset);
-    _bgNode->getOrCreateStateSet()->setAttribute(
-            osg_utils::createShaderProgram("shaders/osgTexture.vert", "shaders/osgTexture.frag", manager));
     return _bgNode.get();
 }
 

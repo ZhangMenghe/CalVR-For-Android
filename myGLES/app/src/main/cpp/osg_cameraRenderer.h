@@ -27,7 +27,7 @@ private:
     osg::Uniform* _samUniform;
 
 public:
-    osg::ref_ptr<osg::Node> createNode(AAssetManager * manager);
+    osg::ref_ptr<osg::Geode> createNode(AAssetManager * manager);
     void Draw(arcoreController * arController, bool btn_status_normal = true);
     // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
     GLuint GetTextureId(osgViewer::Viewer* const viewer){

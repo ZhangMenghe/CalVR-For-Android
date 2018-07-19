@@ -16,7 +16,7 @@ private:
     float _default_size = 5.0f;
     osg::Uniform* _uniform_color;
 public:
-    osg::ref_ptr<osg::Node> createNode(AAssetManager * manager, arcoreController* ar);
+    osg::ref_ptr<osg::Geode> createNode(AAssetManager * manager, arcoreController* ar);
     void Draw(arcoreController * ar);
 };
 
