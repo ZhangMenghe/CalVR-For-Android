@@ -23,38 +23,33 @@ public:
 };
 
 osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manager, arcoreController* ar) {
+
+
+
+    _geometry = new osg::Geometry();
+    _node = new osg::Geode;
+
+
+    _node->addDrawable(_geometry.get());
+    _geometry->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+    _geometry->getOrCreateStateSet()->setMode(GL_VERTEX_PROGRAM_POINT_SIZE, osg::StateAttribute::ON);
+    Program * program = osg_utils::createShaderProgram("shaders/osgPoint.vert", "shaders/point.frag", manager);
+    program->addBindAttribLocation("vPosition", _attribute_vpos);
+
+    _geometry->getOrCreateStateSet()->setAttribute(program);
+    return _node.get();
+}
+
+void osg_pointcloudRenderer::Draw(arcoreController* ar) {
     osg::ref_ptr<osg::Vec3Array> _vertices = new osg::Vec3Array();
-//    _vertices->push_back(Vec3(-1.0f,-1.0f,.0f));
-
-//    _vertices->push_back(Vec3(1.0f, -1.0f, .0f));
-
-//    _vertices->push_back(Vec3(1.0f, 1.0f, .0f));
-
 
     _vertices->push_back(Vec3(0.5f, -0.5f,  .0f));
     _vertices->push_back(Vec3(-0.5f, -0.5f, .0f));
     _vertices->push_back(Vec3(0.5f,  0.5f, .0f));
     _vertices->push_back(Vec3(-0.5f, 0.5f, .0f));
     _vertices->push_back(Vec3(0.0f, 0.0f, .0f));
-
-
-    _geometry = new osg::Geometry();
-    _node = new osg::Geode;
-
-//    _geometry->setVertexArray(_vertices.get());
-
     _geometry->addPrimitiveSet(new DrawArrays(osg::PrimitiveSet::POINTS, 0, _vertices->size()));
-    _node->addDrawable(_geometry.get());
-    _geometry->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
-    _geometry->getOrCreateStateSet()->setMode(GL_VERTEX_PROGRAM_POINT_SIZE, osg::StateAttribute::ON);
-    Program * program = osg_utils::createShaderProgram("shaders/osgPoint.vert", "shaders/point.frag", manager);
-    program->addBindAttribLocation("vPosition", _attribute_vpos);
     _geometry->setVertexAttribArray(_attribute_vpos, _vertices.get(), osg::Array::BIND_PER_VERTEX);
-    _geometry->getOrCreateStateSet()->setAttribute(program);
-    return _node.get();
-}
-
-void osg_pointcloudRenderer::Draw(arcoreController* ar) {
 //    if(!ar->updatePointCloudRenderer())
 //        return;
 
