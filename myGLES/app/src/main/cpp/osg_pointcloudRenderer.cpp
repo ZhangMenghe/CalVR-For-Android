@@ -23,12 +23,8 @@ public:
 };
 
 osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manager, arcoreController* ar) {
-
-
-
     _geometry = new osg::Geometry();
     _node = new osg::Geode;
-
 
     _node->addDrawable(_geometry.get());
     _geometry->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
@@ -41,6 +37,8 @@ osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manag
 }
 
 void osg_pointcloudRenderer::Draw(arcoreController* ar) {
+//    if(!ar->updatePointCloudRenderer())
+//        return;
     osg::ref_ptr<osg::Vec3Array> _vertices = new osg::Vec3Array();
 
     _vertices->push_back(Vec3(0.5f, -0.5f,  .0f));
@@ -50,23 +48,4 @@ void osg_pointcloudRenderer::Draw(arcoreController* ar) {
     _vertices->push_back(Vec3(0.0f, 0.0f, .0f));
     _geometry->addPrimitiveSet(new DrawArrays(osg::PrimitiveSet::POINTS, 0, _vertices->size()));
     _geometry->setVertexAttribArray(_attribute_vpos, _vertices.get(), osg::Array::BIND_PER_VERTEX);
-//    if(!ar->updatePointCloudRenderer())
-//        return;
-
-//    osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( _geometry->getVertexArray() );
-//
-//
-//    vertices->clear();
-//    vertices->push_back(Vec3(0.5f, -0.5f,  .0f));
-//    vertices->push_back(Vec3(-0.5f, -0.5f, .0f));
-//    vertices->push_back(Vec3(0.5f,  0.5f, .0f));
-//    vertices->push_back(Vec3(-0.5f, 0.5f, .0f));
-//    vertices->push_back(Vec3(0.0f, 0.0f, .0f));
-////    for(int i=0;i<ar->num_of_points;i++)
-////        vertices->push_back(Vec3f(ar->pointCloudData[4*i], ar->pointCloudData[4*i+1], ar->pointCloudData[4*i+2]));
-//
-//    vertices->dirty();
-//    _geometry->setVertexArray(vertices);
-//
-//    _geometry->dirtyBound();
 }

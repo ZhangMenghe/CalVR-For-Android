@@ -73,7 +73,7 @@ void osgController::onCreate() {
 //    osg::ref_ptr<osg::Geode> background = _camera_renderer->createNode(_asset_manager);
 //    _root->addChild(_camera_renderer->createNode(_asset_manager));
 //    _root->addChild(_plane_renderer->createNode(_asset_manager));
-    osg::ref_ptr<osg::Geode> background =_pointcloud_renderer->createNode(_asset_manager, _ar_controller);
+    _root->addChild(_pointcloud_renderer->createNode(_asset_manager, _ar_controller));
 //    _root->addChild(_object_renderer->createNode());
 
     osgViewer::Viewer::Windows windows;
@@ -84,12 +84,12 @@ void osgController::onCreate() {
         (*itr)->getState()->setUseVertexAttributeAliasing(true);
     }
 
-    _viewer->setSceneData(background.get());
+    _viewer->setSceneData(_root.get());
     _manipulator->getNode();
     _viewer->home();
 
     _viewer->getDatabasePager()->clear();
-    _viewer->getDatabasePager()->registerPagedLODs(background.get());
+    _viewer->getDatabasePager()->registerPagedLODs(_root.get());
     _viewer->getDatabasePager()->setUpThreads(3, 1);
     _viewer->getDatabasePager()->setTargetMaximumNumberOfPageLOD(2);
     _viewer->getDatabasePager()->setUnrefImageDataAfterApplyPolicy(true, true);
