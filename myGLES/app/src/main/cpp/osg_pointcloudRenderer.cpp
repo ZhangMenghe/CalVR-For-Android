@@ -37,6 +37,8 @@ osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manag
     stateset->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
     stateset->setMode(GL_VERTEX_PROGRAM_POINT_SIZE, osg::StateAttribute::ON);
     stateset->addUniform(_uniform_color);
+    stateset->addUniform(_uniform_mvp_mat);
+
     _geometry->setStateSet(stateset);
     _geometry->setDataVariance(osg::Object::DYNAMIC);
 
@@ -53,7 +55,8 @@ osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manag
 void osg_pointcloudRenderer::Draw(arcoreController* ar) {
     if(!ar->updatePointCloudRenderer())
         return;
-    _uniform_mvp_mat->set(osg::Matrixf(glm::value_ptr(ar->getMVP())));
+    osg::RefMatrixf* mat = new RefMatrixf();
+    _uniform_mvp_mat->set(*(mat));
 //
 //    for(int i=0;i<ar->num_of_points;i++)
 //        _vertices->push_back(Vec3(ar->pointCloudData[4*i], ar->pointCloudData[4*i+1], ar->pointCloudData[4*i+2]));

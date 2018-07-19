@@ -98,7 +98,10 @@ public:
         ArPointCloud_release(pointCloud);
         return true;
     }
-    glm::mat4 getMVP(){return proj_mat*view_mat;}
+    glm::mat4 getMVP(){
+        return glm::mat4(1.0f);
+//        return proj_mat*view_mat;
+    }
 };
 
 
