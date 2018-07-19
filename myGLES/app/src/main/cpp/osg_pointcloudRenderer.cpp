@@ -25,6 +25,8 @@ public:
 osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manager, arcoreController* ar) {
     _geometry = new osg::Geometry();
     _node = new osg::Geode;
+    _vertices = new osg::Vec3Array();
+
     _node->addDrawable(_geometry.get());
 
     _uniform_mvp_mat = new osg::Uniform(osg::Uniform::FLOAT_MAT4, "uMVP");
@@ -52,7 +54,7 @@ void osg_pointcloudRenderer::Draw(arcoreController* ar) {
     if(!ar->updatePointCloudRenderer())
         return;
     _uniform_mvp_mat->set(osg::Matrixf(glm::value_ptr(ar->getMVP())));
-    _vertices = new osg::Vec3Array();
+//
 //    for(int i=0;i<ar->num_of_points;i++)
 //        _vertices->push_back(Vec3(ar->pointCloudData[4*i], ar->pointCloudData[4*i+1], ar->pointCloudData[4*i+2]));
     _vertices->clear();
