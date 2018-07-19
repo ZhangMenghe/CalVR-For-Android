@@ -13,6 +13,7 @@ class osg_pointcloudRenderer {
 private:
     osg::ref_ptr<osg::Geometry> _geometry;
     osg::ref_ptr<osg::Geode> _node;
+    GLuint _attribute_vpos = 1;
     float _default_size = 5.0f;
     osg::Uniform* _uniform_color;
 public:
