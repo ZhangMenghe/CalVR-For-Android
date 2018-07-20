@@ -70,11 +70,11 @@ ref_ptr<Geode> osg_objectRenderer::createNode(AAssetManager * manager, const cha
 
     osg::StateSet* stateset = new osg::StateSet;
     stateset->addUniform(samUniform);
-//    stateset->addUniform(uniform_material);
-//    stateset->addUniform(_uniform_mvp);
-//    stateset->addUniform(_uniform_mv);
-//    stateset->addUniform(_uniform_light);
-//    stateset->addUniform(_uniform_color_correct);
+    stateset->addUniform(uniform_material);
+    stateset->addUniform(_uniform_mvp);
+    stateset->addUniform(_uniform_mv);
+    stateset->addUniform(_uniform_light);
+    stateset->addUniform(_uniform_color_correct);
 
     stateset->setMode(GL_LIGHTING, osg::StateAttribute::ON);
     stateset->setTextureAttributeAndModes(0, objTexture, osg::StateAttribute::ON);

@@ -107,6 +107,10 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 //    _ar_controller->doPlaneDetection(_plane_renderer, _object_renderer);
 
 //    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer, _object_renderer);
+    const float mcolor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+    _object_renderer->Draw(glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f), mcolor, 1);
+//    void Draw(const glm::mat4 & projMat, const glm::mat4 & viewMat, const glm::mat4 & modelMat,
+//              const float * color_correction, float light_intensity)
     _viewer->frame();
 }
 void osgController::onTouched(float x, float y) {}
