@@ -68,53 +68,5 @@ void osg_cameraRenderer::Draw(arcoreController* arController, bool btn_status_no
         _uvs->clear();
         for(int i=0; i<4; i++)
             _uvs ->push_back(Vec2(arController->transformed_camera_uvs[2*i], arController->transformed_camera_uvs[2*i+1]));
-        _bgGeo->setVertexArray(_vertices.get());
-        _bgGeo->setTexCoordArray(0, _uvs.get());
-
     }
-
-//    glDisable(GL_DEPTH_TEST);
-//    glDepthMask(GL_FALSE);
-//    if(!utils::LoadPngFromAssetManager(GL_TEXTURE_EXTERNAL_OES, "textures/pd.png", "JniInterfaceOSG"))
-//        LOGE("Failed to load png image");
-//    glActiveTexture(GL_TEXTURE0);
-//    glBindTexture(GL_TEXTURE_EXTERNAL_OES, _bgTexture->textureID);
-
-
-
-//    glDepthMask(GL_TRUE);
-//    glEnable(GL_DEPTH_TEST);
-    /*ArImage *ar_image;
-    const AImage *ndk_image = nullptr;
-    ArStatus status =
-            ArFrame_acquireCameraImage(session, frame, &ar_image);
-    if (status == AR_SUCCESS) {
-        ArImage_getNdkImage(ar_image, &ndk_image);
-        ArImage_release(ar_image);
-    } else {
-        LOGE("ComputerVisionApplication::OnDrawFrame acquire camera image not ready.");
-    }
-    if (ndk_image == nullptr)
-        return;
-    int32_t format = 0, width = 0, height = 0, num_plane = 0, stride = 0;
-    if (arcore_utils::getNdkImageProperties(ndk_image, &format, &width, &height, &num_plane,
-                              &stride)) {
-        if (format == AIMAGE_FORMAT_YUV_420_888) {
-            if (width > 0 || height > 0 || num_plane > 0 || stride > 0) {
-                ref_ptr<Image> osgImg = new Image;
-                uint8_t* input_pixels = nullptr;
-                int length = 0;
-                media_status_t status =
-                        AImage_getPlaneData(ndk_image, 0, &input_pixels, &length);
-                if (status != AMEDIA_OK)
-                    return;
-                osgImg->setImage(width, height, 3,
-                                 GL_RGB, GL_RGB, GL_UNSIGNED_BYTE,
-                                 (unsigned char*)input_pixels,
-                                 osg::Image::AllocationMode::NO_DELETE, 1);
-                _bgTexture->setImage(osgImg);
-            }
-        }
-    }*/
-
 }
