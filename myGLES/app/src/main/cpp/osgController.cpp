@@ -15,24 +15,6 @@ using namespace osg_controller;
 using namespace osg;
 using namespace std;
 using namespace glm;
-namespace {
-    constexpr size_t kMaxNumberOfAndroidsToRender = 20;
-    constexpr int32_t kPlaneColorRgbaSize = 16;
-
-    const glm::vec3 kWhite = {255, 255, 255};
-
-    constexpr std::array<uint32_t, kPlaneColorRgbaSize> kPlaneColorRgba = {
-            {0xFFFFFFFF, 0xF44336FF, 0xE91E63FF, 0x9C27B0FF, 0x673AB7FF, 0x3F51B5FF,
-                    0x2196F3FF, 0x03A9F4FF, 0x00BCD4FF, 0x009688FF, 0x4CAF50FF, 0x8BC34AFF,
-                    0xCDDC39FF, 0xFFEB3BFF, 0xFFC107FF, 0xFF9800FF}};
-
-    inline glm::vec3 GetRandomPlaneColor() {
-        const int32_t colorRgba = kPlaneColorRgba[std::rand() % kPlaneColorRgbaSize];
-        return glm::vec3(((colorRgba >> 24) & 0xff) / 255.0f,
-                         ((colorRgba >> 16) & 0xff) / 255.0f,
-                         ((colorRgba >> 8) & 0xff) / 255.0f);
-    }
-}
 
 osgController::osgController(AAssetManager * manager)
         :_asset_manager(manager) {
@@ -119,62 +101,13 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 //
 //    _camera_renderer->Draw(_ar_controller, btn_status_normal);
 
-/*
+//    if(!_ar_controller->isTracking())
+//        return;
+//    _ar_controller->doLightEstimation();
+//    _ar_controller->doPlaneDetection(_plane_renderer, _object_renderer);
 
-
-    //Render plane
-    // get trackable PLANES
-    ArTrackableList* plane_list = nullptr;
-    ArTrackableList_create(_ar_session, & plane_list);
-    CHECK(plane_list!= nullptr);
-    ArSession_getAllTrackables(_ar_session, AR_TRACKABLE_PLANE,plane_list);
-    ArTrackableList_getSize(_ar_session, plane_list, &_plane_num);
-
-    for(int i=0; i<_plane_num; i++){
-        ArTrackable * ar_trackable = nullptr;
-        ArTrackableList_acquireItem(_ar_session, plane_list, i, &ar_trackable);
-
-        //cast down trackable to plane
-        ArPlane * ar_plane = ArAsPlane(ar_trackable);
-
-        //check the trackingstate, if not tracking, skip rendering
-        ArTrackingState trackingState;
-        ArTrackable_getTrackingState(_ar_session, ar_trackable, &trackingState);
-        if(trackingState != AR_TRACKING_STATE_TRACKING)
-            continue;
-
-        //check if the plane contain the subsume plane, if so, skip to avoid overlapping
-        ArPlane * subsume_plane;
-        ArPlane_acquireSubsumedBy(_ar_session, ar_plane, &subsume_plane);
-        if(subsume_plane != nullptr)
-            continue;
-        vec3 plane_color;
-        //Find if the plane already in the dic with specific color. Or add into dic
-        auto iter = _plane_color_map.find(ar_plane);
-        if(iter!=_plane_color_map.end()){
-            plane_color = iter->second;
-            ArTrackable_release(ar_trackable);
-        }else{
-            if(_this_is_the_first_plane){
-                _this_is_the_first_plane = false;
-                plane_color = kWhite;
-            }else{
-                plane_color = GetRandomPlaneColor();
-            }
-            _plane_color_map.insert({ar_plane, plane_color});
-        }
-
-        _plane_renderer->Draw(_ar_session, _viewer, ar_plane, proj_mat, view_mat,plane_color);
-    }
-
-    ArTrackableList_destroy(plane_list);
-    plane_list = nullptr;*/
-
-//    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);
+//    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer, _object_renderer);
     _viewer->frame();
-    return;
-
-
 }
 void osgController::onTouched(float x, float y) {}
 void osgController::debug_loadScene(const char *filename) {

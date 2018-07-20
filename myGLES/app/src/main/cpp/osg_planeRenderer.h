@@ -41,7 +41,7 @@ private:
 
 public:
     osg::ref_ptr<osg::Node> createNode(AAssetManager * manager);
-    void Draw(const ArSession * arSession, osgViewer::Viewer * viewer, const ArPlane * arPlane,
+    void Draw(const ArSession * arSession, const ArPlane * arPlane,
               const glm::mat4 & projMat, const  glm::mat4 & viewMat,
               const  glm::vec3 & color);
     glm::mat4 getModelMat(){return _model_mat;}

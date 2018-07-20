@@ -20,7 +20,6 @@ void arcoreController::onDrawFrame(GLuint textureId) {
     ArCamera_getViewMatrix(_ar_session, camera, value_ptr(view_mat));
     ArCamera_getProjectionMatrix(_ar_session,camera, 0.1f, 100.0f, value_ptr(proj_mat));
 
-    ArTrackingState cam_track_state;
     ArCamera_getTrackingState(_ar_session, camera, &cam_track_state);
     ArCamera_release(camera);
 }

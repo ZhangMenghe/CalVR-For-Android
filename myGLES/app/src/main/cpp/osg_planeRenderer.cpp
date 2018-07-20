@@ -126,34 +126,34 @@ osg::ref_ptr<osg::Node> osg_planeRenderer::createNode(AAssetManager *manager) {
 
     return _node.get();
 }
-void osg_planeRenderer::Draw(const ArSession *arSession, osgViewer::Viewer * viewer, const ArPlane *arPlane,
+void osg_planeRenderer::Draw(const ArSession *arSession, const ArPlane *arPlane,
                              const glm::mat4 &projMat, const glm::mat4 &viewMat, const glm::vec3 &color) {
-    if(!_initialized){
-        _initialized = true;
-        osgViewer::ViewerBase::Contexts ctx;
-        viewer->getContexts(ctx);
-        _textureObject = _planeTexture->getTextureObject(ctx[0]->getState()->getContextID());
-        if(nullptr == _textureObject)
-            _textureObject = _planeTexture->generateAndAssignTextureObject(ctx[0]->getState()->getContextID(), GL_TEXTURE_2D);
-    }
+//    if(!_initialized){
+//        _initialized = true;
+//        osgViewer::ViewerBase::Contexts ctx;
+//        viewer->getContexts(ctx);
+//        _textureObject = _planeTexture->getTextureObject(ctx[0]->getState()->getContextID());
+//        if(nullptr == _textureObject)
+//            _textureObject = _planeTexture->generateAndAssignTextureObject(ctx[0]->getState()->getContextID(), GL_TEXTURE_2D);
+//    }
 
     _update_plane_vertices(arSession, arPlane);
 
 
 
-    _textureObject->bind();
+//    _textureObject->bind();
 
-    _uniform_model_mat->set(Matrixf(glm::value_ptr(_model_mat)));
-    _uniform_mvp_mat->set(Matrixf(glm::value_ptr(projMat * viewMat * _model_mat)));
-    _uniform_normal_vec->set(Vec3(_normal_vec.x, _normal_vec.y, _normal_vec.z));
-    _uniform_color->set(Vec3(color.x, color.y, color.z));
-
-    _uniform_model_mat->dirty();
-    _uniform_mvp_mat->dirty();
-    _uniform_normal_vec->dirty();
-    _uniform_color->dirty();
-    _triangles->dirty();
-    _vertices->dirty();
-
-    _geometry->dirtyBound();
+//    _uniform_model_mat->set(Matrixf(glm::value_ptr(_model_mat)));
+//    _uniform_mvp_mat->set(Matrixf(glm::value_ptr(projMat * viewMat * _model_mat)));
+//    _uniform_normal_vec->set(Vec3(_normal_vec.x, _normal_vec.y, _normal_vec.z));
+//    _uniform_color->set(Vec3(color.x, color.y, color.z));
+//
+//    _uniform_model_mat->dirty();
+//    _uniform_mvp_mat->dirty();
+//    _uniform_normal_vec->dirty();
+//    _uniform_color->dirty();
+//    _triangles->dirty();
+//    _vertices->dirty();
+//
+//    _geometry->dirtyBound();
 }

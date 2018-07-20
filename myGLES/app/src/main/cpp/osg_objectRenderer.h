@@ -20,8 +20,14 @@ typedef struct{
 
 class osg_objectRenderer {
 private:
+    objParams _shader_params;
     osg::ref_ptr<osg::Geometry> _geometry;
     osg::ref_ptr<osg::Geode> _node;
+
+    osg::Uniform * _uniform_mvp;
+    osg::Uniform * _uniform_mv;
+    osg::Uniform * _uniform_light;
+    osg::Uniform * _uniform_color_correct;
 
 public:
     osg::ref_ptr<osg::Geode> createNode(AAssetManager * manager, const char* obj_file_name, const char* png_file_name);
