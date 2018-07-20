@@ -28,7 +28,6 @@ private:
     vector<GLfloat> _vertices;
     vector<GLfloat > _uvs;
     vector<GLfloat > _normals;
-
     vector<GLushort > _indices;
 
     GLuint _texture_id;

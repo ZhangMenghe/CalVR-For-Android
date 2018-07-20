@@ -71,10 +71,10 @@ osgController::~osgController() {
 
 void osgController::onCreate() {
 //    _camera_renderer->createNode(_asset_manager);
-    _root->addChild(_camera_renderer->createNode(_asset_manager));
+//    _root->addChild(_camera_renderer->createNode(_asset_manager));
 //    _root->addChild(_plane_renderer->createNode(_asset_manager));
-    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
-//    _root->addChild(_object_renderer->createNode());
+//    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
+    _root->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
 
     osgViewer::Viewer::Windows windows;
     _viewer->getWindows(windows);
@@ -113,11 +113,11 @@ void osgController::onResume(void *env, void *context, void *activity) {
 void osgController::onDrawFrame(bool btn_status_normal) {
 
     //must call this func before update ar session
-    GLuint textureId = _camera_renderer->GetTextureId(_viewer);
-
-    _ar_controller->onDrawFrame(textureId);
-
-    _camera_renderer->Draw(_ar_controller, btn_status_normal);
+//    GLuint textureId = _camera_renderer->GetTextureId(_viewer);
+//
+//    _ar_controller->onDrawFrame(textureId);
+//
+//    _camera_renderer->Draw(_ar_controller, btn_status_normal);
 
 /*
 
@@ -170,7 +170,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     ArTrackableList_destroy(plane_list);
     plane_list = nullptr;*/
 
-    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);
+//    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);
     _viewer->frame();
     return;
 

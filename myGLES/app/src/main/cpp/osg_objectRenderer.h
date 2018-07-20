@@ -11,16 +11,22 @@
 #include <osg/Shape>
 #include "osg_utils.h"
 
+typedef struct{
+    float ambient = .0f;
+    float diffuse = 2.0f;
+    float specular = 0.5f;
+    float specular_alpha = 6.0f;
+}objParams;
+
 class osg_objectRenderer {
+private:
+    osg::ref_ptr<osg::Geometry> _geometry;
+    osg::ref_ptr<osg::Geode> _node;
+
 public:
-    osg::ref_ptr<osg::Node> createNode(){
-            osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-            shape->setShape(new osg::Sphere(osg::Vec3(.0f,.0f,.0f), 1.0f));
-            shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
-            osg::ref_ptr<osg::Geode> node = new osg::Geode;
-            node->addDrawable(shape.get());
-            return node.get();
-    }
+    osg::ref_ptr<osg::Geode> createNode(AAssetManager * manager, const char* obj_file_name, const char* png_file_name);
+    void Draw(const glm::mat4 & projMat, const glm::mat4 & viewMat, const glm::mat4 & modelMat,
+              const float * color_correction, float light_intensity);
 };
 
 

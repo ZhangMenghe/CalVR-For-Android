@@ -3,3 +3,79 @@
 //
 
 #include "osg_objectRenderer.h"
+#include <osg/Texture2D>
+using namespace osg;
+
+ref_ptr<Geode> osg_objectRenderer::createNode(AAssetManager * manager, const char* obj_file_name, const char* png_file_name){
+//    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
+//    shape->setShape(new osg::Sphere(osg::Vec3(.0f,.0f,.0f), 1.0f));
+//    shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
+//    osg::ref_ptr<osg::Geode> node = new osg::Geode;
+//    node->addDrawable(shape.get());
+//    return node.get();
+
+    _geometry = new osg::Geometry();
+    _node = new osg::Geode;
+    _node->addDrawable(_geometry.get());
+
+    ref_ptr<Vec3Array> vertices = new Vec3Array();
+    ref_ptr<Vec3Array> normals = new Vec3Array();
+
+    ref_ptr<Vec2Array> uvs = new Vec2Array();
+
+    std::vector<GLfloat> _vertices;
+    std::vector<GLfloat > _uvs;
+    std::vector<GLfloat > _normals;
+    std::vector<GLushort > _indices;
+
+    utils::LoadObjFile(manager, obj_file_name, &_vertices, &_normals, &_uvs, &_indices);
+
+
+    for(int i=0; i<_uvs.size()/2; i++){
+        vertices->push_back(Vec3f(_vertices[3*i], _vertices[3*i+1], _vertices[3*i+2]));
+        normals->push_back(Vec3f(_normals[3*i], _normals[3*i+1], _normals[3*i+2]));
+        uvs->push_back(Vec2f(_uvs[2*i], _uvs[2*i+1]));
+    }
+
+    _geometry->setVertexArray(vertices.get());
+    _geometry->setNormalArray(normals.get());
+    _geometry->setTexCoordArray(0, uvs.get());
+    _geometry->addPrimitiveSet(new DrawElementsUShort(GL_TRIANGLES, _indices.size(), _indices.data()));
+    _geometry->setUseVertexBufferObjects(true);
+    _geometry->setUseDisplayList(false);
+
+    Texture2D* objTexture = new Texture2D();
+    objTexture->setFilter(osg::Texture::FilterParameter::MIN_FILTER, osg::Texture::FilterMode::LINEAR_MIPMAP_LINEAR);
+    objTexture->setFilter(osg::Texture::FilterParameter::MAG_FILTER, osg::Texture::FilterMode::LINEAR);
+    objTexture->setWrap(Texture::WRAP_T, Texture::REPEAT);
+    objTexture->setWrap(Texture::WRAP_S, Texture::REPEAT);
+
+    if (!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, png_file_name)) {
+        LOGE("Could not load png texture for planes.");
+    }
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    osg::Uniform* samUniform =new osg::Uniform(osg::Uniform::SAMPLER_2D, "uTexture");
+    samUniform->set(0);
+
+
+    osg::StateSet* stateset = new osg::StateSet;
+    stateset->addUniform(samUniform);
+    stateset->setMode(GL_LIGHTING, osg::StateAttribute::ON);
+    stateset->setTextureAttributeAndModes(0, objTexture, osg::StateAttribute::ON);
+    stateset->setAttribute(
+            osg_utils::createShaderProgram("shaders/osgTexture.vert", "shaders/osgObject.frag", manager));
+
+    _geometry->setStateSet(stateset);
+
+    return _node.get();
+}
+
+void osg_objectRenderer::Draw(const glm::mat4 &projMat,
+                                                  const glm::mat4 &viewMat,
+                                                  const glm::mat4 &modelMat,
+                                                  const float *color_correction,
+                                                  float light_intensity) {
+
+}
