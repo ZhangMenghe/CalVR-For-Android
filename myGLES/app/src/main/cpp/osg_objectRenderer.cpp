@@ -78,8 +78,14 @@ ref_ptr<Geode> osg_objectRenderer::createNode(AAssetManager * manager, const cha
 
     stateset->setMode(GL_LIGHTING, osg::StateAttribute::ON);
     stateset->setTextureAttributeAndModes(0, objTexture, osg::StateAttribute::ON);
-    stateset->setAttribute(
-            osg_utils::createShaderProgram("shaders/osgObject.vert", "shaders/osgObject.frag", manager));
+    Program * program = osg_utils::createShaderProgram("shaders/osgObject.vert", "shaders/osgObject.frag", manager);
+
+    GLuint _attribute_vNormal = 1;
+    program->addBindAttribLocation("vNormal", 1);
+
+    _geometry->setVertexAttribArray(_attribute_vNormal, normals.get(), osg::Array::BIND_PER_VERTEX);
+
+    stateset->setAttribute(program);
 
     _geometry->setStateSet(stateset);
 
