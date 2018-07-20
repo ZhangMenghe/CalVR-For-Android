@@ -43,19 +43,20 @@ osg::ref_ptr<osg::Geode> osg_cameraRenderer::createNode(AAssetManager *manager) 
     _bgTexture->setFilter(osg::Texture::FilterParameter::MAG_FILTER, osg::Texture::FilterMode::LINEAR);
     _bgTexture->setDataVariance(osg::Object::DYNAMIC);
 
-    _samUniform = new osg::Uniform(osg::Uniform::SAMPLER_2D, "uTexture");
+    _samUniform = new osg::Uniform("uTexture", GL_TEXTURE_EXTERNAL_OES);
     _samUniform->set(0);
 
     osg::StateSet* stateset = new osg::StateSet;
     stateset->addUniform(_samUniform);
     stateset->setTextureAttributeAndModes(0, _bgTexture, osg::StateAttribute::ON);
-    stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-    stateset->setMode(GL_BLEND, osg::StateAttribute::ON);
 
+    stateset->setMode(GL_BLEND, osg::StateAttribute::ON);
+    stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
     stateset->setAttribute(
             osg_utils::createShaderProgram("shaders/osgTexture.vert", "shaders/osgTexture.frag", manager));
 
-    _bgNode->setStateSet(stateset);
+    _bgGeo->setStateSet(stateset);
+//    _bgNode->setStateSet(stateset);
     return _bgNode.get();
 }
 

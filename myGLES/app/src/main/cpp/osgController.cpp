@@ -61,7 +61,7 @@ osgController::osgController(AAssetManager * manager)
     _ar_controller = new arcoreController();
     _camera_renderer = new osg_cameraRenderer();
     _plane_renderer = new osg_planeRenderer();
-    _pointcloud_renderer = new osg_pointcloudRenderer();
+//    _pointcloud_renderer = new osg_pointcloudRenderer();
     _object_renderer = new osg_objectRenderer();
 }
 
@@ -70,10 +70,10 @@ osgController::~osgController() {
 }
 
 void osgController::onCreate() {
-    _camera_renderer->createNode(_asset_manager);
-//    _root->addChild(_camera_renderer->createNode(_asset_manager));
+//    _camera_renderer->createNode(_asset_manager);
+    _root->addChild(_camera_renderer->createNode(_asset_manager));
 //    _root->addChild(_plane_renderer->createNode(_asset_manager));
-    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
+//    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
 //    _root->addChild(_object_renderer->createNode());
 
     osgViewer::Viewer::Windows windows;
@@ -117,7 +117,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 
     _ar_controller->onDrawFrame(textureId);
 
-//    _camera_renderer->Draw(_ar_controller, btn_status_normal);
+    _camera_renderer->Draw(_ar_controller, btn_status_normal);
 
 /*
 
@@ -170,7 +170,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     ArTrackableList_destroy(plane_list);
     plane_list = nullptr;*/
 
-    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);
+//    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);
     _viewer->frame();
     return;
 
