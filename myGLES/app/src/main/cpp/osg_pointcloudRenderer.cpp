@@ -12,17 +12,17 @@
 #include "osg_pointcloudRenderer.h"
 #include "osg_utils.h"
 
-class pointCallBack:public osg::UniformCallback{
-protected: arcoreController * _ar;
-public:
-    pointCallBack(arcoreController * ar):_ar(ar){}
-    virtual void operator()(Uniform *uf, NodeVisitor *nv){
-        uf->set(Matrixf(glm::value_ptr(_ar->getMVP())));
-        uf->dirty();
-    }
-};
+//class pointCallBack:public osg::UniformCallback{
+//protected: arcoreController * _ar;
+//public:
+//    pointCallBack(arcoreController * ar):_ar(ar){}
+//    virtual void operator()(Uniform *uf, NodeVisitor *nv){
+//        uf->set(Matrixf(glm::value_ptr(_ar->getMVP())));
+//        uf->dirty();
+//    }
+//};
 
-osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manager, arcoreController* ar) {
+osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manager) {
     _geometry = new osg::Geometry();
     _node = new osg::Geode;
     _vertices = new osg::Vec3Array();
@@ -52,16 +52,16 @@ osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manag
     return _node.get();
 }
 
-void osg_pointcloudRenderer::Draw(arcoreController* ar) {
-    if(!ar->updatePointCloudRenderer())
-        return;
-    osg::RefMatrixf* mat = new RefMatrixf(glm::value_ptr(ar->getMVP()));
+
+void osg_pointcloudRenderer::Draw(glm::mat4 mvp, int num_of_points,
+                                                  const float *pointCloudData) {
+    osg::RefMatrixf* mat = new osg::RefMatrixf(glm::value_ptr(mvp));
     _uniform_mvp_mat->set(*(mat));
 
     _vertices->clear();
 
-    for(int i=0;i<ar->num_of_points;i++)
-        _vertices->push_back(Vec3(ar->pointCloudData[4*i], ar->pointCloudData[4*i+1], ar->pointCloudData[4*i+2]));
+    for(int i=0;i<num_of_points;i++)
+        _vertices->push_back(osg::Vec3(pointCloudData[4*i], pointCloudData[4*i+1], pointCloudData[4*i+2]));
 
 //    _vertices->push_back(Vec3(0.5f, -0.5f,  .0f));
 //    _vertices->push_back(Vec3(-0.5f, -0.5f, .0f));
@@ -72,4 +72,5 @@ void osg_pointcloudRenderer::Draw(arcoreController* ar) {
 
     _drawArray->setCount(_vertices->size());
     _geometry->setVertexAttribArray(_attribute_vpos, _vertices.get(), osg::Array::BIND_PER_VERTEX);
+
 }

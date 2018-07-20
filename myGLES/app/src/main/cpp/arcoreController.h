@@ -9,6 +9,7 @@
 #include "arcore_c_api.h"
 #include "arcore_utils.h"
 #include "utils.h"
+#include "osg_pointcloudRenderer.h"
 
 class arcoreController {
 private:
@@ -25,8 +26,6 @@ private:
 public:
 
     float transformed_camera_uvs[8];
-    const float * pointCloudData;
-    int32_t num_of_points = 0;
 
     ~arcoreController(){
         if(_ar_session) {
@@ -81,27 +80,25 @@ public:
         }
         return false;
     }
-    bool updatePointCloudRenderer(){
+    bool updatePointCloudRenderer(osg_pointcloudRenderer * pc_renderer){
         ArPointCloud * pointCloud;
         ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
         if(pointcloud_Status != AR_SUCCESS)
             return false;
 
+        int32_t num_of_points = 0;
+        const float* pointCloudData;
 
         ArPointCloud_getNumberOfPoints(_ar_session, pointCloud, &num_of_points);
         if(num_of_points <= 0)
             return false;
         //point cloud data with 4 params (x,y,z, confidence)
-
         ArPointCloud_getData(_ar_session, pointCloud, &pointCloudData);
-
+        pc_renderer->Draw(proj_mat*view_mat, num_of_points, pointCloudData);
         ArPointCloud_release(pointCloud);
         return true;
     }
-    glm::mat4 getMVP(){
-//        return glm::mat4(1.0f);
-        return proj_mat*view_mat;
-    }
+
 };
 
 
