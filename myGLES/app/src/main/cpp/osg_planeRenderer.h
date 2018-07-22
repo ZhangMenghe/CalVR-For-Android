@@ -21,7 +21,7 @@ private:
     osg::ref_ptr<osg::Geometry> _geometry;
 
     osg::ref_ptr<osg::Vec3Array> _vertices;
-    DrawElementsUShort* _triangles;
+    std::vector<GLushort > _triangles;
 
     GLuint _attribute_vpos = 1;
     osg::Uniform* _uniform_tex_sampler;
@@ -32,6 +32,8 @@ private:
 
     glm::mat4 _model_mat = glm::mat4(1.0f);
     glm::vec3 _normal_vec = glm::vec3(.0f);
+
+    bool initialized = false;
 
     void _update_plane_vertices(const ArSession * arSession, const ArPlane * arPlane);
 

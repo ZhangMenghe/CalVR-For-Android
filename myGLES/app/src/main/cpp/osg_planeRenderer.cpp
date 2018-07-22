@@ -10,7 +10,7 @@ using namespace arcore_utils;
 
 void osg_planeRenderer::_update_plane_vertices(const ArSession *arSession, const ArPlane*arPlane) {
     _vertices->clear();
-    _triangles->clear();
+    _triangles.clear();
 
     int32_t polygon_length;
     //get the number of elements(2*#vertives)
@@ -57,21 +57,21 @@ void osg_planeRenderer::_update_plane_vertices(const ArSession *arSession, const
 
     // Generate triangle (4, 5, 6) and (4, 6, 7).
     for (int i = half_vertices_length + 1; i < vertices_length - 1; ++i) {
-        _triangles->push_back(half_vertices_length);
-        _triangles->push_back(i);
-        _triangles->push_back(i + 1);
+        _triangles.push_back(half_vertices_length);
+        _triangles.push_back(i);
+        _triangles.push_back(i + 1);
     }
 
     // Generate triangle (0, 1, 4), (4, 1, 5), (5, 1, 2), (5, 2, 6),
     // (6, 2, 3), (6, 3, 7), (7, 3, 0), (7, 0, 4)
     for (int i = 0; i < half_vertices_length; ++i) {
-        _triangles->push_back(i);
-        _triangles->push_back((i + 1) % half_vertices_length);
-        _triangles->push_back(i + half_vertices_length);
+        _triangles.push_back(i);
+        _triangles.push_back((i + 1) % half_vertices_length);
+        _triangles.push_back(i + half_vertices_length);
 
-        _triangles->push_back(i + half_vertices_length);
-        _triangles->push_back((i + 1) % half_vertices_length);
-        _triangles->push_back((i + half_vertices_length + 1) % half_vertices_length +
+        _triangles.push_back(i + half_vertices_length);
+        _triangles.push_back((i + 1) % half_vertices_length);
+        _triangles.push_back((i + half_vertices_length + 1) % half_vertices_length +
                              half_vertices_length);
     }
 }
@@ -81,13 +81,8 @@ osg::ref_ptr<osg::Node> osg_planeRenderer::createNode(AAssetManager *manager) {
     _geometry = new osg::Geometry();
     _node->addDrawable(_geometry.get());
 
-
     _vertices = new osg::Vec3Array();
     _geometry->setDataVariance(osg::Object::DYNAMIC);
-    _triangles = new DrawElementsUShort(PrimitiveSet::TRIANGLES);
-    _triangles->setDataVariance(osg::Object::DYNAMIC);
-
-    _geometry->addPrimitiveSet(_triangles);
 
     Texture2D * planeTexture = new osg::Texture2D();
     planeTexture->setFilter(osg::Texture::FilterParameter::MIN_FILTER, osg::Texture::FilterMode::LINEAR_MIPMAP_LINEAR);
@@ -95,9 +90,7 @@ osg::ref_ptr<osg::Node> osg_planeRenderer::createNode(AAssetManager *manager) {
     planeTexture->setWrap(osg::Texture::WRAP_S, osg::Texture::REPEAT);
     planeTexture->setWrap(osg::Texture::WRAP_T, osg::Texture::REPEAT);
 
-//    _planeTexture->setDataVariance(osg::Object::DYNAMIC);
-
-    if(!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, "textures/trigrid.png"))
+    if(!utils::LoadPngFromAssetManager(GL_TEXTURE_2D, "textures/tmp.png"))
         LOGE("Failed to load png image");
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -129,7 +122,14 @@ void osg_planeRenderer::Draw(const ArSession *arSession, const ArPlane *arPlane,
     _update_plane_vertices(arSession, arPlane);
 
     _geometry->setVertexAttribArray(_attribute_vpos, _vertices.get(), osg::Array::BIND_PER_VERTEX);
-    _triangles->dirty();
+
+    if(initialized)
+        _geometry->removePrimitiveSet(0);
+    else
+        initialized = true;
+
+    //TODO: REWRITE DrawElementUShort to support varying #elements
+    _geometry->addPrimitiveSet(new DrawElementsUShort(PrimitiveSet::TRIANGLES, _triangles.size(), _triangles.data()));
 
     _uniform_model_mat->set(*(new osg::RefMatrixf(glm::value_ptr(_model_mat))));
     _uniform_mvp_mat->set(*(new osg::RefMatrixf(glm::value_ptr(projMat * viewMat * _model_mat))));
