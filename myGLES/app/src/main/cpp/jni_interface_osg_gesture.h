@@ -14,7 +14,7 @@
 
 //define helper functions to provide access to Java from C via JNI
 extern "C" {
-JNI_METHOD(void, JNIDrawSphere)(JNIEnv *env, jclass);
+JNI_METHOD(void, JNIDrawSphere)(JNIEnv *env, jclass,jlong osgAppAddr);
 JNI_METHOD(void, JNIonTouched)(JNIEnv *, jclass, jfloat x, jfloat y);
 }
 

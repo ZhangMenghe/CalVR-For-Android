@@ -13,7 +13,7 @@
 #include <android/asset_manager_jni.h>
 
 #include "gesture_controller.h"
-
+#include "osgController.h"
 using namespace std;
 
 namespace {
@@ -31,9 +31,9 @@ namespace {
 
 /*Native Application methods*/
 JNI_METHOD(void, JNIDrawSphere)
-(JNIEnv* env, jclass){
+(JNIEnv* env, jclass, jlong osgAppAddr){
     nativeAppAddr =  controllerPtr(new gesture_controller());
-    controllerNative(nativeAppAddr)->createSphere();
+    controllerNative(nativeAppAddr)->createSphere(reinterpret_cast<osg_controller::osgController *>(osgAppAddr));
 }
 
 JNI_METHOD(void, JNIonTouched)

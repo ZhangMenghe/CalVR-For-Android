@@ -50,6 +50,7 @@ namespace osg_controller{
         void onTouched(float x, float y);
         bool hasDetectedPlane(){ return  _plane_num > 0;}
         void debug_loadScene(const char* filename);
+        void addNode(osg::ref_ptr<osg::Geode> node){_root->addChild(node);}
     };
 }
 

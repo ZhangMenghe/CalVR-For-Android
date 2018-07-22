@@ -106,7 +106,7 @@ public class OsgInteractionActivity extends AppCompatActivity
                             case R.id.touchId:
                                 Toast.makeText(OsgInteractionActivity.this, "Do touch detection",
                                         Toast.LENGTH_SHORT).show();
-                                JniInterfaceGesture.JNIDrawSphere();
+                                JniInterfaceGesture.JNIDrawSphere(controllerAddr);
                                 surfaceView.setOnTouchListener(
                                         new View.OnTouchListener(){
                                             @Override
