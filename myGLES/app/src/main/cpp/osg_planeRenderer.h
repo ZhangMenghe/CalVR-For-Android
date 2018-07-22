@@ -19,8 +19,6 @@ class osg_planeRenderer {
 private:
     osg::ref_ptr<osg::Geode> _node;
     osg::ref_ptr<osg::Geometry> _geometry;
-    osg::Texture2D* _planeTexture;
-    Texture::TextureObject* _textureObject;
 
     osg::ref_ptr<osg::Vec3Array> _vertices;
     DrawElementsUShort* _triangles;
@@ -34,8 +32,6 @@ private:
 
     glm::mat4 _model_mat = glm::mat4(1.0f);
     glm::vec3 _normal_vec = glm::vec3(.0f);
-
-    bool _initialized = false;
 
     void _update_plane_vertices(const ArSession * arSession, const ArPlane * arPlane);
 

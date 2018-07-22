@@ -208,7 +208,7 @@ public:
                 _planes.plane_color_map.insert({ar_plane, plane_color});
             }
 
-            planeRenderer->Draw(_ar_session, ar_plane, proj_mat, view_mat,plane_color);
+            planeRenderer->Draw(_ar_session, ar_plane, proj_mat, view_mat, plane_color);
 
 //            objRenderer->Draw(proj_mat,view_mat,planeRenderer->getModelMat(),_light.color_correction,_light.intensity);
 

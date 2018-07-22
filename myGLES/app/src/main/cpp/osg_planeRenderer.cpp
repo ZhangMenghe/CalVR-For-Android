@@ -79,17 +79,21 @@ void osg_planeRenderer::_update_plane_vertices(const ArSession *arSession, const
 osg::ref_ptr<osg::Node> osg_planeRenderer::createNode(AAssetManager *manager) {
     _node = new osg::Geode();
     _geometry = new osg::Geometry();
-    _vertices = new osg::Vec3Array();
-    _triangles = new DrawElementsUShort(PrimitiveSet::TRIANGLES);
-    _planeTexture = new osg::Texture2D();
-
-    _geometry->addPrimitiveSet(_triangles);
     _node->addDrawable(_geometry.get());
 
-    _planeTexture->setFilter(osg::Texture::FilterParameter::MIN_FILTER, osg::Texture::FilterMode::LINEAR_MIPMAP_LINEAR);
-    _planeTexture->setFilter(osg::Texture::FilterParameter::MAG_FILTER, osg::Texture::FilterMode::LINEAR);
-    _planeTexture->setWrap(osg::Texture::WRAP_S, osg::Texture::REPEAT);
-    _planeTexture->setWrap(osg::Texture::WRAP_T, osg::Texture::REPEAT);
+
+    _vertices = new osg::Vec3Array();
+    _geometry->setDataVariance(osg::Object::DYNAMIC);
+    _triangles = new DrawElementsUShort(PrimitiveSet::TRIANGLES);
+    _triangles->setDataVariance(osg::Object::DYNAMIC);
+
+    _geometry->addPrimitiveSet(_triangles);
+
+    Texture2D * planeTexture = new osg::Texture2D();
+    planeTexture->setFilter(osg::Texture::FilterParameter::MIN_FILTER, osg::Texture::FilterMode::LINEAR_MIPMAP_LINEAR);
+    planeTexture->setFilter(osg::Texture::FilterParameter::MAG_FILTER, osg::Texture::FilterMode::LINEAR);
+    planeTexture->setWrap(osg::Texture::WRAP_S, osg::Texture::REPEAT);
+    planeTexture->setWrap(osg::Texture::WRAP_T, osg::Texture::REPEAT);
 
 //    _planeTexture->setDataVariance(osg::Object::DYNAMIC);
 
@@ -112,48 +116,23 @@ osg::ref_ptr<osg::Node> osg_planeRenderer::createNode(AAssetManager *manager) {
     stateset->addUniform(_uniform_model_mat);
     stateset->addUniform(_uniform_normal_vec);
     stateset->addUniform(_uniform_color);
-
-    stateset->setTextureAttributeAndModes(0, _planeTexture, osg::StateAttribute::ON);
-
-    _node->setStateSet(stateset);
+    stateset->setTextureAttributeAndModes(0, planeTexture, osg::StateAttribute::ON);
     Program * program = osg_utils::createShaderProgram("shaders/plane.vert", "shaders/plane.frag", manager);
     program->addBindAttribLocation("vPosition", _attribute_vpos);
-    _geometry->setVertexAttribArray(_attribute_vpos, _vertices.get(), osg::Array::BIND_PER_VERTEX);
-    _geometry->setDataVariance(osg::Object::DYNAMIC);
-//    _geometry->setUseDisplayList(false);
-    _node->getOrCreateStateSet()->setAttribute(program);
-
+    stateset->setAttribute(program);
+    _geometry->setStateSet(stateset);
 
     return _node.get();
 }
 void osg_planeRenderer::Draw(const ArSession *arSession, const ArPlane *arPlane,
                              const glm::mat4 &projMat, const glm::mat4 &viewMat, const glm::vec3 &color) {
-//    if(!_initialized){
-//        _initialized = true;
-//        osgViewer::ViewerBase::Contexts ctx;
-//        viewer->getContexts(ctx);
-//        _textureObject = _planeTexture->getTextureObject(ctx[0]->getState()->getContextID());
-//        if(nullptr == _textureObject)
-//            _textureObject = _planeTexture->generateAndAssignTextureObject(ctx[0]->getState()->getContextID(), GL_TEXTURE_2D);
-//    }
-
     _update_plane_vertices(arSession, arPlane);
 
+    _geometry->setVertexAttribArray(_attribute_vpos, _vertices.get(), osg::Array::BIND_PER_VERTEX);
+    _triangles->dirty();
 
-
-//    _textureObject->bind();
-
-//    _uniform_model_mat->set(Matrixf(glm::value_ptr(_model_mat)));
-//    _uniform_mvp_mat->set(Matrixf(glm::value_ptr(projMat * viewMat * _model_mat)));
-//    _uniform_normal_vec->set(Vec3(_normal_vec.x, _normal_vec.y, _normal_vec.z));
-//    _uniform_color->set(Vec3(color.x, color.y, color.z));
-//
-//    _uniform_model_mat->dirty();
-//    _uniform_mvp_mat->dirty();
-//    _uniform_normal_vec->dirty();
-//    _uniform_color->dirty();
-//    _triangles->dirty();
-//    _vertices->dirty();
-//
-//    _geometry->dirtyBound();
+    _uniform_model_mat->set(*(new osg::RefMatrixf(glm::value_ptr(_model_mat))));
+    _uniform_mvp_mat->set(*(new osg::RefMatrixf(glm::value_ptr(projMat * viewMat * _model_mat))));
+    _uniform_normal_vec->set(Vec3(_normal_vec.x, _normal_vec.y, _normal_vec.z));
+    _uniform_color->set(Vec3(color.x, color.y, color.z));
 }
