@@ -90,7 +90,9 @@ add_library(osgScene
             src/main/cpp/osg_planeRenderer.cpp
             src/main/cpp/osg_pointcloudRenderer.cpp
             src/main/cpp/osg_objectRenderer.cpp
-            src/main/cpp/osg_cameraRenderer.cpp)
+            src/main/cpp/osg_cameraRenderer.cpp
+            src/main/cpp/jni_interface_osg_gesture.cpp
+            src/main/cpp/gesture_controller.cpp)
 add_library(arTemplate
             SHARED
             src/main/cpp/drawPrimitive.cpp
