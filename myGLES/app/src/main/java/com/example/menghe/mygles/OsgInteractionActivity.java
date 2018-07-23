@@ -10,8 +10,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,6 +24,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class OsgInteractionActivity extends AppCompatActivity
         implements DisplayManager.DisplayListener{
+    private static final String TAG = "OSG-Interaction";
     private GLSurfaceView surfaceView;
     // further will be cast to a cpp class. Use address instead
     private long controllerAddr;
@@ -31,6 +34,9 @@ public class OsgInteractionActivity extends AppCompatActivity
     private int viewportHeight;
 
     private GestureDetector touchDetector;
+    private ViewFlipper flipper;
+    private int[] imgIds = {R.drawable.pre_arrow, R.drawable.next_arrow, R.drawable.up_arrow, R.drawable.down_arrow};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +45,7 @@ public class OsgInteractionActivity extends AppCompatActivity
         controllerAddr = JniInterfaceOSG.createController();
 
         setupSurfaceView();
+        setupViewFlipper("action");
         setupTouchDetection();
         setupGestureMenu();
     }
@@ -88,6 +95,23 @@ public class OsgInteractionActivity extends AppCompatActivity
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
 
+    private void setupViewFlipper(String choose){
+        flipper = (ViewFlipper) findViewById(R.id.flipper);
+        if(choose.equalsIgnoreCase("action")){
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(R.drawable.leaf);
+            flipper.addView(imageView);
+            return;
+        }
+        for(int i:imgIds){
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(i);
+            flipper.addView(imageView);
+        }
+        flipper.setFlipInterval(3000);
+        flipper.startFlipping();
+    }
+
     private void setupTouchDetection(){
         touchDetector = new GestureDetector(this, new gestureListener());
     }
@@ -129,6 +153,18 @@ public class OsgInteractionActivity extends AppCompatActivity
         });
 
     }
+
+//    单击：onDown(MotionEvent e)
+//
+//    抬起：onSingleTapUp(MotionEvent e)
+//
+//    短按：onShowPress(MotionEvent e)
+//
+//    长按：onLongPress(MotionEvent e)
+//
+//    滚动；onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+//
+//    滑动：onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
    private class gestureListener extends GestureDetector.SimpleOnGestureListener{
        @Override
         public boolean onSingleTapUp(final MotionEvent e){
@@ -143,7 +179,29 @@ public class OsgInteractionActivity extends AppCompatActivity
             return true;
         }
         @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                               float velocityY) {
+            Log.i(TAG, "============onFling=============: ");
+            drawTouch(e1.getX(),e1.getY(),e2.getX(),e2.getY());
+
+            return true;
+        }
+
+       @Override
         public boolean onDown(MotionEvent e){return true;}
+
+        private void drawTouch(float x, float y, float upx, float upy){
+           ImageView view = (ImageView) flipper.getCurrentView();
+           if(upx - x > 100)
+               view.setImageResource(R.drawable.next_arrow);
+           else if(upx - x  < -100)
+               view.setImageResource(R.drawable.pre_arrow);
+           else if(upy - y > 100)
+               view.setImageResource(R.drawable.down_arrow);
+           else if(upy - y < -100)
+               view.setImageResource(R.drawable.up_arrow);
+
+        }
     }
 
     private class Renderer implements GLSurfaceView.Renderer{

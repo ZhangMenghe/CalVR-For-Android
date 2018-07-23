@@ -9,6 +9,10 @@
 #include "utils.h"
 #include "osgController.h"
 class gesture_controller {
+private:
+    osg::Sphere *sphere;
+    osg::ref_ptr<osg::ShapeDrawable> shape;
+    osg_controller::osgController * _osgApp;
 public:
     osg::ref_ptr<osg::Geode> node;
     void createSphere(osg_controller::osgController * osgApp);
