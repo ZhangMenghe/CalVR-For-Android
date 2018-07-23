@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -41,7 +42,10 @@ public class OsgInteractionActivity extends AppCompatActivity
     private int viewportHeight;
 
     private GestureDetector touchDetector;
+    private GestureDetector multiTouchDetector;
+    private gestureMultiTouchListener multiTouchListener;
     private GestureOverlayView touchOverlayView;
+
     private ViewFlipper flipper;
     private int[] imgIds = {R.drawable.pre_arrow, R.drawable.next_arrow, R.drawable.up_arrow, R.drawable.down_arrow};
     private GestureLibrary gestureLibrary;
@@ -125,6 +129,13 @@ public class OsgInteractionActivity extends AppCompatActivity
         //Simple touch detector
         touchDetector = new GestureDetector(this, new gestureListener());
 
+        //Multi touch detector
+        TextView textView = (TextView) findViewById(R.id.gestureNameView);
+        textView.setVisibility(View.GONE);
+        multiTouchListener = new gestureMultiTouchListener(
+                this.getApplicationContext(),textView);
+        multiTouchDetector = new GestureDetector(this, multiTouchListener);
+
         //customize gesture
         gestureLibrary = GestureLibraries.fromRawResource(OsgInteractionActivity.this, R.raw.gesture);
         gestureLibrary.load();
@@ -144,6 +155,7 @@ public class OsgInteractionActivity extends AppCompatActivity
                 pop_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
+                        TextView textView = (TextView) findViewById(R.id.gestureNameView);
                         switch (menuItem.getItemId()){
                             case R.id.touchId:
                                 Toast.makeText(OsgInteractionActivity.this, "Do touch detection",
@@ -153,6 +165,7 @@ public class OsgInteractionActivity extends AppCompatActivity
                                         new View.OnTouchListener(){
                                             @Override
                                             public boolean onTouch(View v, MotionEvent e){
+
                                                 return touchDetector.onTouchEvent(e);
                                             }
                                         }
@@ -164,10 +177,23 @@ public class OsgInteractionActivity extends AppCompatActivity
                             case R.id.mtouchId:
                                 Toast.makeText(OsgInteractionActivity.this, "call from multi touch",
                                         Toast.LENGTH_SHORT).show();
+                                surfaceView.setOnTouchListener(
+                                        new View.OnTouchListener(){
+                                            @Override
+                                            public boolean onTouch(View v, MotionEvent e){
+                                                return multiTouchListener.onTouchEvent(e)||multiTouchDetector.onTouchEvent(e);
+                                            }
+                                        }
+                                );
+
+                                textView.setVisibility(View.VISIBLE);
+                                touchOverlayView.getChildAt(0).setVisibility(View.VISIBLE);
+                                touchOverlayView.setEnabled(true);
                                 break;
                             case R.id.customize:
                                 Toast.makeText(OsgInteractionActivity.this, "call from customize gestures",
                                         Toast.LENGTH_SHORT).show();
+                                textView.setVisibility(View.GONE);
                                 flipper.getCurrentView().setVisibility(View.GONE);
                                 touchOverlayView.getChildAt(0).setVisibility(View.VISIBLE);
                                 touchOverlayView.setEnabled(true);
@@ -254,7 +280,6 @@ public class OsgInteractionActivity extends AppCompatActivity
             return true;
         }
     }
-
 
     private class gestureOverlayListener implements GestureOverlayView.OnGesturePerformedListener{
         @Override
