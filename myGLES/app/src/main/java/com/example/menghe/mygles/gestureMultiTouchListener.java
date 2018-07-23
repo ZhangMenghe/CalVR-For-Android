@@ -230,7 +230,7 @@ public class gestureMultiTouchListener implements OnGestureListener,
         boolean scroll = isScrollGesture(e2);
         boolean pinch = isPinchGesture(e2);
 
-        prepend("onScroll() scroll = " + scroll + " \n pinch = " + pinch);
+        prepend("scroll = " + scroll + " \n pinch = " + pinch);
 
         if (scroll || pinch)
             cancelAll();
@@ -251,7 +251,13 @@ public class gestureMultiTouchListener implements OnGestureListener,
     }
 
     private void prepend(String method) {
-        StringBuilder s = new StringBuilder();
+        CharSequence currentText = mGestureName.getText();
+        StringBuilder s;
+        if(currentText.length() > 100)
+            s = new StringBuilder();
+        else
+            s= new StringBuilder(currentText);
+        s.insert(0, '\n');
         s.insert(0, method);
         mGestureName.setText(s);
     }

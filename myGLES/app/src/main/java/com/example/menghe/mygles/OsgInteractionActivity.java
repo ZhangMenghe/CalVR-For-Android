@@ -156,6 +156,11 @@ public class OsgInteractionActivity extends AppCompatActivity
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         TextView textView = (TextView) findViewById(R.id.gestureNameView);
+                        touchOverlayView.setEnabled(false);
+                        surfaceView.setOnTouchListener(null);
+                        textView.setVisibility(View.GONE);
+                        touchOverlayView.getChildAt(0).setVisibility(View.GONE);
+                        flipper.getCurrentView().setVisibility(View.GONE);
                         switch (menuItem.getItemId()){
                             case R.id.touchId:
                                 Toast.makeText(OsgInteractionActivity.this, "Do touch detection",
@@ -171,8 +176,6 @@ public class OsgInteractionActivity extends AppCompatActivity
                                         }
                                 );
                                 flipper.getCurrentView().setVisibility(View.VISIBLE);
-                                touchOverlayView.setEnabled(false);
-                                touchOverlayView.getChildAt(0).setVisibility(View.GONE);
                                 break;
                             case R.id.mtouchId:
                                 Toast.makeText(OsgInteractionActivity.this, "call from multi touch",
@@ -185,19 +188,15 @@ public class OsgInteractionActivity extends AppCompatActivity
                                             }
                                         }
                                 );
-
                                 textView.setVisibility(View.VISIBLE);
-                                touchOverlayView.getChildAt(0).setVisibility(View.VISIBLE);
-                                touchOverlayView.setEnabled(true);
                                 break;
                             case R.id.customize:
                                 Toast.makeText(OsgInteractionActivity.this, "call from customize gestures",
                                         Toast.LENGTH_SHORT).show();
-                                textView.setVisibility(View.GONE);
-                                flipper.getCurrentView().setVisibility(View.GONE);
+
                                 touchOverlayView.getChildAt(0).setVisibility(View.VISIBLE);
                                 touchOverlayView.setEnabled(true);
-                                surfaceView.setOnTouchListener(null);
+
                                 break;
                         }
                         return true;
