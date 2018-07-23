@@ -11,6 +11,32 @@
         android:layout_height="match_parent"
         android:layout_gravity="top"/>
 
+    <android.gesture.GestureOverlayView
+        android:id="@+id/gestureOverlayView1"
+
+        android:layout_width="720dp"
+        android:layout_height="320dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_vertical|center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.497">
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="150dp"
+            android:layout_gravity="center|top"
+
+            android:text="Draw a tick pls"
+            android:textColor="#e18529"
+            android:textSize="25sp" />
+
+
+    </android.gesture.GestureOverlayView>
     <ViewFlipper
         android:id="@+id/flipper"
         android:layout_width="160dp"

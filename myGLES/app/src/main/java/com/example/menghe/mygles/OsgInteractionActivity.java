@@ -1,5 +1,10 @@
 package com.example.menghe.mygles;
 
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +17,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -34,8 +41,10 @@ public class OsgInteractionActivity extends AppCompatActivity
     private int viewportHeight;
 
     private GestureDetector touchDetector;
+    private GestureOverlayView touchOverlayView;
     private ViewFlipper flipper;
     private int[] imgIds = {R.drawable.pre_arrow, R.drawable.next_arrow, R.drawable.up_arrow, R.drawable.down_arrow};
+    private GestureLibrary gestureLibrary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +52,6 @@ public class OsgInteractionActivity extends AppCompatActivity
         setContentView(R.layout.activity_osg_interaction);
         JniInterfaceOSG.assetManager = getAssets();
         controllerAddr = JniInterfaceOSG.createController();
-
         setupSurfaceView();
         setupViewFlipper("action");
         setupTouchDetection();
@@ -101,6 +109,7 @@ public class OsgInteractionActivity extends AppCompatActivity
             ImageView imageView = new ImageView(this);
             imageView.setImageResource(R.drawable.leaf);
             flipper.addView(imageView);
+            imageView.setVisibility(View.GONE);
             return;
         }
         for(int i:imgIds){
@@ -113,7 +122,16 @@ public class OsgInteractionActivity extends AppCompatActivity
     }
 
     private void setupTouchDetection(){
+        //Simple touch detector
         touchDetector = new GestureDetector(this, new gestureListener());
+
+        //customize gesture
+        gestureLibrary = GestureLibraries.fromRawResource(OsgInteractionActivity.this, R.raw.gesture);
+        gestureLibrary.load();
+        touchOverlayView = (GestureOverlayView)findViewById(R.id.gestureOverlayView1);
+        touchOverlayView.addOnGesturePerformedListener(new gestureOverlayListener());
+        touchOverlayView.setEnabled(false);
+        touchOverlayView.getChildAt(0).setVisibility(View.GONE);
     }
 
     private void setupGestureMenu(){
@@ -139,10 +157,21 @@ public class OsgInteractionActivity extends AppCompatActivity
                                             }
                                         }
                                 );
+                                flipper.getCurrentView().setVisibility(View.VISIBLE);
+                                touchOverlayView.setEnabled(false);
+                                touchOverlayView.getChildAt(0).setVisibility(View.GONE);
                                 break;
                             case R.id.mtouchId:
-                                Toast.makeText(OsgInteractionActivity.this, "call from leaves",
+                                Toast.makeText(OsgInteractionActivity.this, "call from multi touch",
                                         Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.customize:
+                                Toast.makeText(OsgInteractionActivity.this, "call from customize gestures",
+                                        Toast.LENGTH_SHORT).show();
+                                flipper.getCurrentView().setVisibility(View.GONE);
+                                touchOverlayView.getChildAt(0).setVisibility(View.VISIBLE);
+                                touchOverlayView.setEnabled(true);
+                                surfaceView.setOnTouchListener(null);
                                 break;
                         }
                         return true;
@@ -165,7 +194,7 @@ public class OsgInteractionActivity extends AppCompatActivity
 //    滚动；onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
 //
 //    滑动：onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
-   private class gestureListener extends GestureDetector.SimpleOnGestureListener{
+    private class gestureListener extends GestureDetector.SimpleOnGestureListener{
        @Override
         public boolean onSingleTapUp(final MotionEvent e){
             surfaceView.queueEvent(
@@ -200,6 +229,26 @@ public class OsgInteractionActivity extends AppCompatActivity
                view.setImageResource(R.drawable.down_arrow);
            else if(upy - y < -100)
                view.setImageResource(R.drawable.up_arrow);
+
+        }
+    }
+
+    private class gestureOverlayListener implements GestureOverlayView.OnGesturePerformedListener{
+        @Override
+        public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture){
+            // Read gesture file
+            Prediction prediction = gestureLibrary.recognize(gesture).get(0);
+            TextView tview = (TextView) touchOverlayView.getChildAt(0);
+            if(prediction.score >= 5.0){
+                if(prediction.name.equals("tick")){
+                    ImageView view = (ImageView) flipper.getCurrentView();
+                    view.setImageResource(R.drawable.checked);
+                    view.setVisibility(View.VISIBLE);
+                    tview.setText("This is true");
+                }
+            }else{
+                tview.setText("Draw another tick");
+            }
 
         }
     }
