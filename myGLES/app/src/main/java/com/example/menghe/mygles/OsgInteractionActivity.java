@@ -194,7 +194,8 @@ public class OsgInteractionActivity extends AppCompatActivity
 //    滚动；onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
 //
 //    滑动：onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
-    private class gestureListener extends GestureDetector.SimpleOnGestureListener{
+    private class gestureListener extends GestureDetector.SimpleOnGestureListener
+                                  implements GestureDetector.OnDoubleTapListener{
        @Override
         public boolean onSingleTapUp(final MotionEvent e){
             surfaceView.queueEvent(
@@ -231,7 +232,29 @@ public class OsgInteractionActivity extends AppCompatActivity
                view.setImageResource(R.drawable.up_arrow);
 
         }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Log.e(TAG, "onDoubleTap() ptrs:" + e.getPointerCount() );
+
+            return true;
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            Log.e(TAG, "onDoubleTapEvent() ptrs:" + e.getPointerCount() );
+
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.e(TAG, "onSingleTapConfirmed() ptrs:" + e.getPointerCount() );
+
+            return true;
+        }
     }
+
 
     private class gestureOverlayListener implements GestureOverlayView.OnGesturePerformedListener{
         @Override
