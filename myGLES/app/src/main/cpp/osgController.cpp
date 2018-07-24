@@ -36,7 +36,7 @@ osgController::osgController(AAssetManager * manager)
     _manipulator = new osgGA::KeySwitchMatrixManipulator;
     _manipulator->addMatrixManipulator('1', "Trackball",
                                        new osgGA::TrackballManipulator());
-    _viewer->setCameraManipulator(_manipulator.get());
+//    _viewer->setCameraManipulator(_manipulator.get());
 
     _viewer->getViewerStats()->collectStats("scene", true);
 

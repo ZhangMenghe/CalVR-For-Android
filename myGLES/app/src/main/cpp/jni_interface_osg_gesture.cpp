@@ -30,10 +30,11 @@ namespace {
 }
 
 /*Native Application methods*/
-JNI_METHOD(void, JNIDrawSphere)
-(JNIEnv* env, jclass, jlong osgAppAddr){
+JNI_METHOD(void, JNICreateNode)
+(JNIEnv* env, jclass, jlong osgAppAddr, jobject asset_manager){
     nativeAppAddr =  controllerPtr(new gesture_controller());
-    controllerNative(nativeAppAddr)->createSphere(reinterpret_cast<osg_controller::osgController *>(osgAppAddr));
+    AAssetManager * cpp_asset_manager = AAssetManager_fromJava(env, asset_manager);
+    controllerNative(nativeAppAddr)->createNode(reinterpret_cast<osg_controller::osgController *>(osgAppAddr),cpp_asset_manager);
 }
 
 JNI_METHOD(void, JNIonTouched)
