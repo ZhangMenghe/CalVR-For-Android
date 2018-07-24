@@ -55,8 +55,8 @@ void osgController::onCreate() {
 //    _camera_renderer->createNode(_asset_manager);
     _root->addChild(_camera_renderer->createNode(_asset_manager));
 //    _root->addChild(_plane_renderer->createNode(_asset_manager));
-//    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
-//    _root->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
+    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
+    _root->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
 
     osgViewer::Viewer::Windows windows;
     _viewer->getWindows(windows);
@@ -106,7 +106,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 //    _ar_controller->doLightEstimation();
 //    _ar_controller->doPlaneDetection(_plane_renderer);
 
-//    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer, _object_renderer);
+    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer, _object_renderer);
 
 //    const float mcolor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 //    _object_renderer->Draw(glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f), mcolor, 1);

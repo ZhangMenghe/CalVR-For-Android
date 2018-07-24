@@ -128,6 +128,12 @@ namespace utils{
         AAsset_close(asset);
         return true;
     }
+    void sendTextToJava(std::string str){
+        std::string kHelperClassName = "com/example/menghe/mygles/OsgInteractionActivity";
+//
+//        JNIEnv* env = GetJniEnv();
+//        jclass helper_class = env->FindClass();
+    }
     bool LoadPngFromAssetManager(int target, const char* path) {
         JNIEnv* env = GetJniEnv();
         //if()

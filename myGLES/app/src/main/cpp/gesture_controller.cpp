@@ -24,7 +24,7 @@ void gesture_controller::createNode(osg_controller::osgController * osgApp, AAss
     _uniform_color = new osg::Uniform(osg::Uniform::FLOAT_VEC4, "uColor");
     Uniform * _uniform_pointSize = new osg::Uniform(osg::Uniform::FLOAT, "uPointSize");
 
-    _uniform_color->set(Vec4(1.0, 0.5, .0, 1.0));
+    _uniform_color->set(color1);
     _uniform_pointSize->set(20.0f);
     _uniform_mvp_mat->set(*(new osg::RefMatrixf()));
 

@@ -16,6 +16,7 @@
 #include <vector>
 
 #include <glm.hpp>
+#include <string>
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
 #include "gtx/quaternion.hpp"
@@ -90,7 +91,7 @@ namespace utils {
                      std::vector<GLfloat>* out_uv,
                      std::vector<GLushort>* out_indices);
 
-
+    void sendTextToJava(std::string str);
 
 };
 

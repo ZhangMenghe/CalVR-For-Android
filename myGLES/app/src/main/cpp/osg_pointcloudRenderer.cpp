@@ -31,7 +31,7 @@ osg::ref_ptr<osg::Geode> osg_pointcloudRenderer::createNode(AAssetManager *manag
 
     _uniform_mvp_mat = new osg::Uniform(osg::Uniform::FLOAT_MAT4, "uMVP");
     Uniform * _uniform_color = new osg::Uniform(osg::Uniform::FLOAT_VEC4, "uColor");
-    Uniform * _uniform_pointSize = new osg::Uniform("uPointSize", osg::Uniform::FLOAT);
+    Uniform * _uniform_pointSize = new osg::Uniform(osg::Uniform::FLOAT, "uPointSize");
 
     _uniform_color->set(Vec4(1.0, 0.5, .0, 1.0));
     _uniform_pointSize->set(15.0f);
