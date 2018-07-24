@@ -227,7 +227,7 @@ public class OsgInteractionActivity extends AppCompatActivity
                     new Runnable() {
                         @Override
                         public void run() {
-                            JniInterfaceGesture.JNIonTouched(e.getX(), e.getY());
+                            JniInterfaceGesture.JNIonTouched(true,e.getX(), e.getY());
                         }
                     }
             );
@@ -243,7 +243,10 @@ public class OsgInteractionActivity extends AppCompatActivity
         }
 
        @Override
-        public boolean onDown(MotionEvent e){return true;}
+        public boolean onDown(MotionEvent e){
+//           JniInterfaceGesture.JNIonMove(e.getX(), e.getY());
+           return true;
+       }
 
         private void drawTouch(float x, float y, float upx, float upy){
            ImageView view = (ImageView) flipper.getCurrentView();

@@ -12,12 +12,21 @@ class gesture_controller {
 private:
     osg::Sphere *sphere;
     osg::ref_ptr<osg::ShapeDrawable> shape;
-    osg_controller::osgController * _osgApp;
+    osgViewer::Viewer * view;
 public:
     osg::ref_ptr<osg::Geode> node;
     void createSphere(osg_controller::osgController * osgApp);
-    void onTouched(float x, float y);
-
+    void onMove(float x, float y)
+    {
+        view->getEventQueue()->mouseMotion(x, y);
+    }
+    void onTouched(bool down, float x, float y)
+    {
+        if (down)
+            view->getEventQueue()->mouseButtonPress(x, y, 2 /* MMB */);
+        else
+            view->getEventQueue()->mouseButtonRelease(x, y, 2 /* MMB */);
+    }
 };
 
 

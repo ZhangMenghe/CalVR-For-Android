@@ -19,7 +19,7 @@ using namespace std;
 namespace {
     //global environment
     jlong nativeAppAddr = 0;
-
+    const float TOUCH_MOTION_FACTOR = 0.005;
     inline jlong controllerPtr(gesture_controller * native_controller){
         return reinterpret_cast<intptr_t>(native_controller);
     }
@@ -37,6 +37,10 @@ JNI_METHOD(void, JNIDrawSphere)
 }
 
 JNI_METHOD(void, JNIonTouched)
+(JNIEnv*, jclass,jboolean down, jfloat x, jfloat y){
+    controllerNative(nativeAppAddr)->onTouched(down==JNI_TRUE, x * TOUCH_MOTION_FACTOR, y*TOUCH_MOTION_FACTOR);
+}
+JNI_METHOD(void, JNIonMove)
 (JNIEnv*, jclass, jfloat x, jfloat y){
-    controllerNative(nativeAppAddr)->onTouched(x, y);
+    controllerNative(nativeAppAddr)->onMove(x*TOUCH_MOTION_FACTOR, y*TOUCH_MOTION_FACTOR);
 }

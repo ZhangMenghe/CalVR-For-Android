@@ -51,6 +51,7 @@ namespace osg_controller{
         bool hasDetectedPlane(){ return  _plane_num > 0;}
         void debug_loadScene(const char* filename);
         void addNode(osg::ref_ptr<osg::Geode> node){_root->addChild(node);}
+        osgViewer::Viewer * getViewer(){return _viewer;}
     };
 }
 
