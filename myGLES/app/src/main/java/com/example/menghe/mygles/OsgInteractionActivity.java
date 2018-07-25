@@ -173,6 +173,10 @@ public class OsgInteractionActivity extends AppCompatActivity
                                                 int action = e.getAction() & e.ACTION_MASK;
                                                 if(action == MotionEvent.ACTION_MOVE){
                                                     JniInterfaceGesture.JNIonMove(e.getX(), e.getY());
+                                                }else if(action == MotionEvent.ACTION_DOWN){
+                                                    JniInterfaceGesture.JNIonTouched(true,e.getX(), e.getY());
+                                                }else if(action==MotionEvent.ACTION_CANCEL){
+                                                    JniInterfaceGesture.JNIonTouched(false,e.getX(), e.getY());
                                                 }
                                                 return touchDetector.onTouchEvent(e);
                                             }
@@ -226,14 +230,14 @@ public class OsgInteractionActivity extends AppCompatActivity
                                   implements GestureDetector.OnDoubleTapListener{
        @Override
         public boolean onSingleTapUp(final MotionEvent e){
-            surfaceView.queueEvent(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            JniInterfaceGesture.JNIonTouched(true,e.getX(), e.getY());
-                        }
-                    }
-            );
+//            surfaceView.queueEvent(
+//                    new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JniInterfaceGesture.JNIonTouched(true,e.getX(), e.getY());
+//                        }
+//                    }
+//            );
             return true;
         }
         @Override
