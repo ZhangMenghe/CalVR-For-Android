@@ -88,6 +88,7 @@ add_library(osgScene
             src/main/cpp/TextureAC.cpp
             src/main/cpp/arcoreController.cpp
             src/main/cpp/osg_planeRenderer.cpp
+            src/main/cpp/pointDrawable.cpp
             src/main/cpp/osg_pointcloudRenderer.cpp
             src/main/cpp/osg_objectRenderer.cpp
             src/main/cpp/osg_cameraRenderer.cpp

@@ -19,7 +19,7 @@ using namespace std;
 namespace {
     //global environment
     jlong nativeAppAddr = 0;
-    const float TOUCH_MOTION_FACTOR = 0.005;
+    const float TOUCH_MOTION_FACTOR = 0.001;
     inline jlong controllerPtr(gesture_controller * native_controller){
         return reinterpret_cast<intptr_t>(native_controller);
     }

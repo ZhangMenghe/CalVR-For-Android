@@ -182,7 +182,7 @@ public class OsgInteractionActivity extends AppCompatActivity
                                             }
                                         }
                                 );
-                                flipper.getCurrentView().setVisibility(View.VISIBLE);
+//                                flipper.getCurrentView().setVisibility(View.VISIBLE);
                                 break;
                             case R.id.mtouchId:
                                 Toast.makeText(OsgInteractionActivity.this, "call from multi touch",

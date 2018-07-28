@@ -69,12 +69,12 @@ public:
                       AAssetManager * manager);
     void onMove(float x, float y)
     {
-        LOGE("================called from onMove================");
+//        LOGE("================called from onMove================");
         view->getEventQueue()->mouseMotion(x, y);
     }
     void onTouched(bool down, float x, float y)
     {
-        LOGE("================called from onTouch================");
+//        LOGE("================called from onTouch================");
         //Button numbering is 1 for left mouse button, 2 for middle, 3 for right.
         if (down)
             view->getEventQueue()->mouseButtonPress(x, y, 2);

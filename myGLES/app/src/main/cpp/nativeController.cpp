@@ -41,7 +41,7 @@ nativeController::~nativeController() {
 }
 
 void nativeController::onTouched(float x, float y) {
-    LOGE("================called from native onTouch================%f,%f",x, y );
+//    LOGE("================called from native onTouch================%f,%f",x, y );
     if (_ar_frame != nullptr && _ar_session != nullptr) {
         ArHitResultList* hit_result_list = nullptr;
         ArHitResultList_create(_ar_session, &hit_result_list);

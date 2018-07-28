@@ -1,0 +1,97 @@
+//
+// Created by menghe on 7/28/2018.
+//
+
+#include "pointDrawable.h"
+#include "arcore_utils.h"
+#include <stack>
+using namespace glm;
+namespace {
+    typedef struct glState_S {
+        GLboolean depthTest, blend, cullFace;
+        GLboolean dither, colorLogicOp, polygonOffsetLine, polygonOffsetFill;
+        GLboolean polygonOffsetPoint, polygonSmooth, scissorTest, stencilTest;
+    } glState;
+
+    static std::stack<glState> stateStack;
+
+    bool PushAllState(void)
+    {
+        glState state;
+
+        state.blend = glIsEnabled(GL_BLEND);
+        state.depthTest = glIsEnabled(GL_DEPTH_TEST);
+        state.cullFace = glIsEnabled(GL_CULL_FACE);
+        state.dither = glIsEnabled(GL_DITHER);
+        state.polygonOffsetFill = glIsEnabled(GL_POLYGON_OFFSET_FILL);
+        state.scissorTest = glIsEnabled(GL_SCISSOR_TEST);
+        state.stencilTest = glIsEnabled(GL_STENCIL_TEST);
+
+        stateStack.push(state);
+        return true;
+    }
+
+    bool PopAllState(void)
+    {
+        if (!stateStack.empty()) {
+            glState state = stateStack.top();
+
+            if (state.blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
+            if (state.depthTest) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
+            if (state.cullFace) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
+            if (state.dither) glEnable(GL_DITHER); else glDisable(GL_DITHER);
+            if (state.polygonOffsetFill) glEnable(GL_POLYGON_OFFSET_FILL); else glDisable(GL_POLYGON_OFFSET_FILL);
+            if (state.scissorTest) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
+            if (state.stencilTest) glEnable(GL_STENCIL_TEST); else glDisable(GL_STENCIL_TEST);
+
+            stateStack.pop();
+        }
+        return true;
+    }
+}
+pointDrawable::pointDrawable(osgViewer::Viewer *viewer)
+:_viewer(viewer){
+
+}
+void pointDrawable::Initialization(AAssetManager *manager) {
+    _shader_program = utils::CreateProgram("shaders/point.vert", "shaders/point.frag", manager);
+//    CHECK(_shader_program);
+    _attrib_vertices_ = glGetAttribLocation(_shader_program,"vPosition");
+    _uniform_mvp_mat = glGetUniformLocation(_shader_program, "uMVP");
+
+    glUseProgram(_shader_program);
+    glUniform4fv(glGetUniformLocation(_shader_program, "uColor"), 1, value_ptr(_default_color));
+    glUniform1f(glGetUniformLocation(_shader_program, "uPointSize"), _default_size);
+    glUseProgram(0);
+
+    checkGlError("Initialize point cloud renderer");
+}
+
+void pointDrawable::drawImplementation(osg::RenderInfo&) const{
+    PushAllState();
+    osg::Vec3d center,eye,up;
+    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
+
+    glm::mat4 ViewMat = glm::lookAt(
+            glm::vec3(eye[0],eye[2],-eye[1]), // Camera is at (4,3,3), in World Space
+            glm::vec3(0,0,0), // and looks at the origin
+            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+    double fovy, aspectRatio, zNear, zFar;
+    _viewer->getCamera()->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+    glm::mat4 ProjMat = glm::perspective((float)fovy, (float)aspectRatio,(float)zNear, (float)zFar);
+    glm::mat4 mvp = ProjMat * ViewMat * mat4(1.0f);
+//    osg::Matrixd projmat = _viewer->getCamera()->getProjectionMatrix();
+//    osg::Matrixd viewMat = _viewer->getCamera()->getViewMatrix();
+//    osg::Matrixd mvp = projmat*viewMat;
+
+    glUseProgram(_shader_program);
+    glUniformMatrix4fv(_uniform_mvp_mat, 1, GL_FALSE, value_ptr(mvp));
+
+    glEnableVertexAttribArray(_attrib_vertices_);
+    glVertexAttribPointer(_attrib_vertices_, 4, GL_FLOAT, GL_FALSE, 0, pointCloudData);
+    glDrawArrays(GL_POINTS, 0, 5);
+    glUseProgram(0);
+    checkGlError("Draw point cloud");
+    PopAllState();
+}
