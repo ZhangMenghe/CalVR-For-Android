@@ -54,12 +54,18 @@ pointDrawable::pointDrawable(osgViewer::Viewer *viewer)
 
 }
 void pointDrawable::Initialization(AAssetManager *manager) {
-    _shader_program = utils::CreateProgram("shaders/point.vert", "shaders/point.frag", manager);
-//    CHECK(_shader_program);
+    _shader_program = utils::CreateProgram("shaders/pointDrawable.vert", "shaders/point.frag", manager);
+
     _attrib_vertices_ = glGetAttribLocation(_shader_program,"vPosition");
-    _uniform_mvp_mat = glGetUniformLocation(_shader_program, "uMVP");
+    _uniform_proj_mat = glGetUniformLocation(_shader_program, "uProjMat");
+    _uniform_view_mat = glGetUniformLocation(_shader_program, "uViewMat");
+
+    double fovy, aspectRatio, zNear, zFar;
+    _viewer->getCamera()->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+    glm::mat4 ProjMat = glm::perspective((float)fovy, (float)aspectRatio,(float)zNear, (float)zFar);
 
     glUseProgram(_shader_program);
+    glUniformMatrix4fv(_uniform_proj_mat, 1, GL_FALSE, value_ptr(ProjMat));
     glUniform4fv(glGetUniformLocation(_shader_program, "uColor"), 1, value_ptr(_default_color));
     glUniform1f(glGetUniformLocation(_shader_program, "uPointSize"), _default_size);
     glUseProgram(0);
@@ -69,29 +75,25 @@ void pointDrawable::Initialization(AAssetManager *manager) {
 
 void pointDrawable::drawImplementation(osg::RenderInfo&) const{
     PushAllState();
+//    glDisable(GL_LIGHTING); // color will be apparant
+
     osg::Vec3d center,eye,up;
     _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
 
     glm::mat4 ViewMat = glm::lookAt(
             glm::vec3(eye[0],eye[2],-eye[1]), // Camera is at (4,3,3), in World Space
-            glm::vec3(0,0,0), // and looks at the origin
-            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+            glm::vec3(center[0],center[2],-center[1]), // and looks at the origin
+            glm::vec3(up[0],up[2],-up[1])  // Head is up (set to 0,-1,0 to look upside-down)
     );
-    double fovy, aspectRatio, zNear, zFar;
-    _viewer->getCamera()->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
-    glm::mat4 ProjMat = glm::perspective((float)fovy, (float)aspectRatio,(float)zNear, (float)zFar);
-    glm::mat4 mvp = ProjMat * ViewMat * mat4(1.0f);
-//    osg::Matrixd projmat = _viewer->getCamera()->getProjectionMatrix();
-//    osg::Matrixd viewMat = _viewer->getCamera()->getViewMatrix();
-//    osg::Matrixd mvp = projmat*viewMat;
 
     glUseProgram(_shader_program);
-    glUniformMatrix4fv(_uniform_mvp_mat, 1, GL_FALSE, value_ptr(mvp));
-
+    glUniformMatrix4fv(_uniform_view_mat, 1, GL_FALSE, value_ptr(ViewMat));
     glEnableVertexAttribArray(_attrib_vertices_);
     glVertexAttribPointer(_attrib_vertices_, 4, GL_FLOAT, GL_FALSE, 0, pointCloudData);
-    glDrawArrays(GL_POINTS, 0, 5);
+    glDrawArrays(GL_POINTS, 0, 2);
+    glDisableVertexAttribArray(_attrib_vertices_);
     glUseProgram(0);
     checkGlError("Draw point cloud");
+
     PopAllState();
 }

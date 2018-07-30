@@ -17,6 +17,19 @@ using namespace osg_controller;
 using namespace osg;
 using namespace std;
 using namespace glm;
+class LightPosCallback : public osg::Uniform::Callback
+{
+public:
+    virtual void operator()( osg::Uniform* uniform,
+                             osg::NodeVisitor* nv )
+    {
+        const osg::FrameStamp* fs = nv->getFrameStamp();
+        if ( !fs ) return;
+        float angle = osg::inDegrees( (float)fs->getFrameNumber() );
+        uniform->set( osg::Vec3(20.0f * cosf(angle), 20.0f *
+                                                     sinf(angle), 1.0f) );
+    }
+};
 
 osgController::osgController(AAssetManager * manager)
         :_asset_manager(manager) {
@@ -42,7 +55,7 @@ osgController::~osgController() {
 void osgController::_initialize_camera() {
     osg::ref_ptr<osg::Camera> mainCam = _viewer->getCamera();
     mainCam->setClearColor(osg::Vec4f(0.81, 0.77, 0.75,1.0));
-    osg::Vec3d eye = osg::Vec3d(0,-1,.0);
+    osg::Vec3d eye = osg::Vec3d(0,-5,.0);
     osg::Vec3d center = osg::Vec3d(0,.0,.0);
     osg::Vec3d up = osg::Vec3d(0,0,1);
     // set position and orientation of the viewer
@@ -55,11 +68,25 @@ void osgController::_initialize_camera() {
 }
 void osgController::createDebugOSGPrimitive() {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-    shape->setShape(new osg::Sphere(osg::Vec3(.0f,.0f,.0f), 1.0f));
+    shape->setShape(new osg::Sphere(osg::Vec3(.0f,.0f,.0f), 0.05f));
     shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
 
-    shape->getOrCreateStateSet()->setAttribute(osg_utils::createShaderProgram("shaders/naiveOSG.vert","shaders/naiveOSG.frag",_asset_manager));
+    Program * program = osg_utils::createShaderProgram("shaders/lightingOSG.vert","shaders/lightingOSG.frag",_asset_manager);
+
+    osg::StateSet * stateSet = node->getOrCreateStateSet();
+    stateSet->setAttributeAndModes(program);
+    stateSet->addUniform( new osg::Uniform("lightDiffuse",
+                                           osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("lightSpecular",
+                                           osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
+
+    osg::ref_ptr<osg::Uniform> lightPos = new osg::Uniform(
+            "lightPosition", osg::Vec3() );
+    lightPos->setUpdateCallback( new LightPosCallback );
+    stateSet->addUniform( lightPos.get() );
+
     node->addDrawable(shape.get());
     _root->addChild(node);
 }
@@ -72,7 +99,7 @@ void osgController::createDebugGLDrawable() {
     _root->addChild(glNode);
 }
 void osgController::onCreate() {
-//    createDebugOSGPrimitive();
+    createDebugOSGPrimitive();
     createDebugGLDrawable();
     _viewer->setSceneData(_root.get());
 
@@ -82,26 +109,6 @@ void osgController::onCreate() {
 //    _root->addChild(_plane_renderer->createNode(_asset_manager));
 //    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
 //    _root->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
-
-//    osgViewer::Viewer::Windows windows;
-//    _viewer->getWindows(windows);
-//    for (osgViewer::Viewer::Windows::iterator itr = windows.begin();
-//         itr != windows.end(); ++itr) {
-//        (*itr)->getState()->setUseModelViewAndProjectionUniforms(true);
-//        (*itr)->getState()->setUseVertexAttributeAliasing(true);
-//    }
-//
-//
-////    _manipulator->getNode();
-//    _viewer->home();
-//
-//    _viewer->getDatabasePager()->clear();
-//    _viewer->getDatabasePager()->registerPagedLODs(_root.get());
-//    _viewer->getDatabasePager()->setUpThreads(3, 1);
-//    _viewer->getDatabasePager()->setTargetMaximumNumberOfPageLOD(2);
-//    _viewer->getDatabasePager()->setUnrefImageDataAfterApplyPolicy(true, true);
-
-
 }
 
 void osgController::onViewChanged(int rot, int width, int height) {
@@ -132,7 +139,8 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 
 //    const float mcolor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 //    _object_renderer->Draw(glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f), mcolor, 1);
-
+    osg::Vec3d center,eye,up;
+    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
     _viewer->frame();
 }
 void osgController::onTouched(float x, float y) {}
