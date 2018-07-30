@@ -149,6 +149,7 @@ target_link_libraries(osgScene
                       log
                       EGL
                       GLESv2
+                      GLESv3
                       arcore
                       #need for osg
                       osgViewer

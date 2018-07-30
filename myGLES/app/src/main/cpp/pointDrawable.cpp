@@ -5,6 +5,7 @@
 #include "pointDrawable.h"
 #include "arcore_utils.h"
 #include <stack>
+#include <GLES3/gl3.h>
 using namespace glm;
 namespace {
     typedef struct glState_S {
@@ -60,6 +61,22 @@ void pointDrawable::Initialization(AAssetManager *manager) {
     _uniform_proj_mat = glGetUniformLocation(_shader_program, "uProjMat");
     _uniform_view_mat = glGetUniformLocation(_shader_program, "uViewMat");
 
+
+    //Generate VAO and bind
+    glGenVertexArrays(1, &_VAO);
+    glBindVertexArray(_VAO);
+
+    //Generate VBO and bind
+    glGenBuffers(1, &_VBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _point_num * 4, pointCloudData, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(_attrib_vertices_);
+    glVertexAttribPointer(_attrib_vertices_, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     double fovy, aspectRatio, zNear, zFar;
     _viewer->getCamera()->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
     glm::mat4 ProjMat = glm::perspective((float)fovy, (float)aspectRatio,(float)zNear, (float)zFar);
@@ -88,10 +105,11 @@ void pointDrawable::drawImplementation(osg::RenderInfo&) const{
 
     glUseProgram(_shader_program);
     glUniformMatrix4fv(_uniform_view_mat, 1, GL_FALSE, value_ptr(ViewMat));
-    glEnableVertexAttribArray(_attrib_vertices_);
-    glVertexAttribPointer(_attrib_vertices_, 4, GL_FLOAT, GL_FALSE, 0, pointCloudData);
-    glDrawArrays(GL_POINTS, 0, 2);
-    glDisableVertexAttribArray(_attrib_vertices_);
+
+    glBindVertexArray(_VAO);
+    glDrawArrays(GL_POINTS, 0, _point_num);
+
+    glBindVertexArray(0);
     glUseProgram(0);
     checkGlError("Draw point cloud");
 
