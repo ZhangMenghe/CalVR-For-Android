@@ -12,7 +12,7 @@
 #include <osgGA/FirstPersonManipulator>
 #include <array>
 #include <osg/Camera>
-#include "pointDrawable.h"
+
 using namespace osg_controller;
 using namespace osg;
 using namespace std;
@@ -91,11 +91,11 @@ void osgController::createDebugOSGPrimitive() {
     _root->addChild(node);
 }
 void osgController::createDebugGLDrawable() {
-    osg::ref_ptr<pointDrawable> glDrawable = new pointDrawable(_viewer);
-    glDrawable->Initialization(_asset_manager);
+    _glDrawable = new pointDrawable();
+    _glDrawable->Initialization(_asset_manager, _viewer->getCamera());
     osg::ref_ptr<osg::Geode> glNode = new osg::Geode;
-    glNode->addDrawable(glDrawable.get());
-    glDrawable->setUseDisplayList(false);
+    glNode->addDrawable(_glDrawable.get());
+    _glDrawable->setUseDisplayList(false);
     _root->addChild(glNode);
 }
 void osgController::onCreate() {
@@ -122,6 +122,10 @@ void osgController::onPause() {
 void osgController::onResume(void *env, void *context, void *activity) {
     _ar_controller->onResume(env, context, activity);
 }
+void osgController::debug_tryDynamicDrawable(pointDrawable *drawable) {
+    drawable->updateVertices();
+
+}
 void osgController::onDrawFrame(bool btn_status_normal) {
     //must call this func before update ar session
 //    GLuint textureId = _camera_renderer->GetTextureId(_viewer);
@@ -139,8 +143,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 
 //    const float mcolor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 //    _object_renderer->Draw(glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f), mcolor, 1);
-    osg::Vec3d center,eye,up;
-    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
+    debug_tryDynamicDrawable(_glDrawable);
     _viewer->frame();
 }
 void osgController::onTouched(float x, float y) {}

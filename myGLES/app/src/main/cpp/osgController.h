@@ -12,12 +12,15 @@
 #include "osg_pointcloudRenderer.h"
 #include "osg_objectRenderer.h"
 #include "arcoreController.h"
+
+#include "pointDrawable.h"
 #include <osgGA/KeySwitchMatrixManipulator>
+
 namespace osg_controller{
     class osgController {
     private:
         AAssetManager *const _asset_manager;
-
+        osg::ref_ptr<pointDrawable> _glDrawable;
 
         int _plane_num = 0;
 
@@ -38,6 +41,7 @@ namespace osg_controller{
         void createDebugOSGPrimitive();
         void createDebugGLDrawable();
         void _initialize_camera();
+        void debug_tryDynamicDrawable(pointDrawable * drawable);
     public:
         osgController(AAssetManager * manager);
 
