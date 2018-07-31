@@ -51,14 +51,11 @@ namespace {
     }
 }
 
-void pointDrawable::Initialization(AAssetManager *manager, osg::Camera * osgCamera) {
-    _osgCamera = osgCamera;
+void pointDrawable::Initialization(AAssetManager *manager) {
     _shader_program = utils::CreateProgram("shaders/pointDrawable.vert", "shaders/point.frag", manager);
 
     _attrib_vertices_ = glGetAttribLocation(_shader_program,"vPosition");
-    _uniform_proj_mat = glGetUniformLocation(_shader_program, "uProjMat");
-    _uniform_view_mat = glGetUniformLocation(_shader_program, "uViewMat");
-
+    _uniform_arMVP_mat =  glGetUniformLocation(_shader_program, "uarMVP");
 
     //Generate VAO and bind
     glGenVertexArrays(1, &_VAO);
@@ -77,17 +74,10 @@ void pointDrawable::Initialization(AAssetManager *manager, osg::Camera * osgCame
 //    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _point_num * 4, pointCloudData, GL_STATIC_DRAW);
 //    glEnableVertexAttribArray(_attrib_vertices_);
 //    glVertexAttribPointer(_attrib_vertices_, 4, GL_FLOAT, GL_FALSE, 4* sizeof(float), 0);
-
-
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    double fovy, aspectRatio, zNear, zFar;
-    osgCamera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
-    glm::mat4 ProjMat = glm::perspective((float)fovy, (float)aspectRatio,(float)zNear, (float)zFar);
-
     glUseProgram(_shader_program);
-    glUniformMatrix4fv(_uniform_proj_mat, 1, GL_FALSE, value_ptr(ProjMat));
     glUniform4fv(glGetUniformLocation(_shader_program, "uColor"), 1, value_ptr(_default_color));
     glUniform1f(glGetUniformLocation(_shader_program, "uPointSize"), _default_size);
     glUseProgram(0);
@@ -97,19 +87,8 @@ void pointDrawable::Initialization(AAssetManager *manager, osg::Camera * osgCame
 
 void pointDrawable::drawImplementation(osg::RenderInfo&) const{
     PushAllState();
-//    glDisable(GL_LIGHTING); // color will be apparant
-
-    osg::Vec3d center,eye,up;
-    _osgCamera->getViewMatrixAsLookAt(eye,center,up);
-
-    glm::mat4 ViewMat = glm::lookAt(
-            glm::vec3(eye[0],eye[2],-eye[1]), // Camera is at (4,3,3), in World Space
-            glm::vec3(center[0],center[2],-center[1]), // and looks at the origin
-            glm::vec3(up[0],up[2],-up[1])  // Head is up (set to 0,-1,0 to look upside-down)
-    );
-
     glUseProgram(_shader_program);
-    glUniformMatrix4fv(_uniform_view_mat, 1, GL_FALSE, value_ptr(ViewMat));
+    glUniformMatrix4fv(_uniform_arMVP_mat, 1, GL_FALSE, value_ptr(_ar_mvp));
 
     glBindVertexArray(_VAO);
     glDrawArrays(GL_POINTS, 0, _point_num);

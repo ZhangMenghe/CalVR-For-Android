@@ -41,7 +41,7 @@ namespace osg_controller{
         void createDebugOSGPrimitive();
         void createDebugGLDrawable();
         void _initialize_camera();
-        void debug_tryDynamicDrawable(pointDrawable * drawable);
+
     public:
         osgController(AAssetManager * manager);
 

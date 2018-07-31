@@ -55,7 +55,7 @@ osgController::~osgController() {
 void osgController::_initialize_camera() {
     osg::ref_ptr<osg::Camera> mainCam = _viewer->getCamera();
     mainCam->setClearColor(osg::Vec4f(0.81, 0.77, 0.75,1.0));
-    osg::Vec3d eye = osg::Vec3d(0.000275, -1.5,-0.019077);
+    osg::Vec3d eye = osg::Vec3d(0,-1,0);
     osg::Vec3d center = osg::Vec3d(0,0,.0);
     osg::Vec3d up = osg::Vec3d(0,0,1);
     // set position and orientation of the viewer
@@ -68,7 +68,7 @@ void osgController::_initialize_camera() {
 }
 void osgController::createDebugOSGPrimitive() {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-    shape->setShape(new osg::Sphere(osg::Vec3(.0f,.0f,.0f), 0.05f));
+    shape->setShape(new osg::Sphere(osg::Vec3(.0f,0.1f,.0f), 0.05f));
     shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
 
@@ -92,20 +92,20 @@ void osgController::createDebugOSGPrimitive() {
 }
 void osgController::createDebugGLDrawable() {
     _glDrawable = new pointDrawable();
-    _glDrawable->Initialization(_asset_manager, _viewer->getCamera());
+    _glDrawable->Initialization(_asset_manager);
     osg::ref_ptr<osg::Geode> glNode = new osg::Geode;
     glNode->addDrawable(_glDrawable.get());
     _glDrawable->setUseDisplayList(false);
     _root->addChild(glNode);
 }
 void osgController::onCreate() {
-//    createDebugOSGPrimitive();
+    createDebugOSGPrimitive();
 //    createDebugGLDrawable();
 
 
-//    _camera_renderer->createNode(_asset_manager);
+    _camera_renderer->createNode(_asset_manager);
 
-    _root->addChild(_camera_renderer->createNode(_asset_manager));
+//    _root->addChild(_camera_renderer->createNode(_asset_manager));
 //    _root->addChild(_plane_renderer->createNode(_asset_manager));
 //    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
 //    _root->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
@@ -124,18 +124,32 @@ void osgController::onPause() {
 void osgController::onResume(void *env, void *context, void *activity) {
     _ar_controller->onResume(env, context, activity);
 }
-void osgController::debug_tryDynamicDrawable(pointDrawable *drawable) {
-    drawable->updateVertices();
 
-}
 void osgController::onDrawFrame(bool btn_status_normal) {
     //must call this func before update ar session
     GLuint textureId = _camera_renderer->GetTextureId(_viewer);
 
     _ar_controller->onDrawFrame(textureId);
-    _ar_controller->renderPointClouds(_glDrawable);
-    _camera_renderer->Draw(_ar_controller, btn_status_normal);
 
+
+    osg::Vec3d center,eye,up;
+
+    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
+
+    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
+    _viewer->getCamera()->setViewMatrix(*mat);
+
+
+    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
+//    LOGE("eye: === %f === %f === %f", eye[0], eye[1], eye[2]);
+//    LOGE("center: === %f === %f === %f", center[0], center[1], center[2]);
+//    LOGE("up: === %f === %f === %f", up[0], up[1], up[2]);
+    _viewer->getCameraManipulator()->setHomePosition(eye,center,up);
+    _viewer->home();
+
+    _ar_controller->renderPointClouds(_glDrawable);
+
+//    _camera_renderer->Draw(_ar_controller, btn_status_normal);
 //    if(!_ar_controller->isTracking())
 //        return;
 //    _ar_controller->doLightEstimation();
@@ -145,7 +159,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 
 //    const float mcolor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 //    _object_renderer->Draw(glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f), mcolor, 1);
-//    debug_tryDynamicDrawable(_glDrawable);
+
     _viewer->frame();
 }
 void osgController::onTouched(float x, float y) {}

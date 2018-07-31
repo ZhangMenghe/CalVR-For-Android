@@ -59,11 +59,11 @@ private:
     int last_point_num = 0;
 
 
+
+
+public:
     glm::mat4 view_mat;
     glm::mat4 proj_mat;
-    glm::mat4 model_mat;
-public:
-
     float transformed_camera_uvs[8];
 
     ~arcoreController(){
@@ -129,17 +129,17 @@ public:
         const float* pointCloudData;
 
         ArPointCloud_getNumberOfPoints(_ar_session, pointCloud, &num_of_points);
-        if(last_point_num == num_of_points || num_of_points <= 0)
+        if(num_of_points <= 0)
             return false;
-        last_point_num = num_of_points;
+//        last_point_num = num_of_points;
 
         //point cloud data with 4 params (x,y,z, confidence)
         ArPointCloud_getData(_ar_session, pointCloud, &pointCloudData);
-        for(int i=0;i<num_of_points;i++){
-            LOGE("%f, %f, %f ", pointCloudData[4*i], pointCloudData[4*i+1], pointCloudData[4*i+2]);
-        }
+//        for(int i=0;i<num_of_points;i++){
+//            LOGE("%f, %f, %f ", pointCloudData[4*i], pointCloudData[4*i+1], pointCloudData[4*i+2]);
+//        }
         drawable->updateVertices(pointCloudData, num_of_points);
-
+        drawable->updateARMatrix(proj_mat*view_mat);
         ArPointCloud_release(pointCloud);
         return true;
     }
