@@ -103,9 +103,9 @@ void osgController::onCreate() {
 //    createDebugGLDrawable();
 
 
-    _camera_renderer->createNode(_asset_manager);
+//    _camera_renderer->createNode(_asset_manager);
 
-//    _root->addChild(_camera_renderer->createNode(_asset_manager));
+    _root->addChild(_camera_renderer->createNode(_asset_manager));
 //    _root->addChild(_plane_renderer->createNode(_asset_manager));
 //    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
 //    _root->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
@@ -134,7 +134,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 
     _ar_controller->onDrawFrame(textureId);
     _ar_controller->renderPointClouds(_glDrawable);
-//    _camera_renderer->Draw(_ar_controller, btn_status_normal);
+    _camera_renderer->Draw(_ar_controller, btn_status_normal);
 
 //    if(!_ar_controller->isTracking())
 //        return;

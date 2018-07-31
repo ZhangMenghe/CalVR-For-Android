@@ -69,7 +69,7 @@ void pointDrawable::Initialization(AAssetManager *manager, osg::Camera * osgCame
 
     //dynamic feed data
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 100 * 4, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * MAX_POINTS * 4, nullptr, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(_attrib_vertices_);
     glVertexAttribPointer(_attrib_vertices_, 4, GL_FLOAT, GL_FALSE, 0, 0);
     //static draw,debug only

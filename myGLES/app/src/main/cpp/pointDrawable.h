@@ -7,7 +7,7 @@
 
 #include <osg/Drawable>
 #include "utils.h"
-
+#define MAX_POINTS 100
 class pointDrawable: public osg::Drawable {
 private:
     GLuint _VAO;
