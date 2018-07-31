@@ -55,8 +55,8 @@ osgController::~osgController() {
 void osgController::_initialize_camera() {
     osg::ref_ptr<osg::Camera> mainCam = _viewer->getCamera();
     mainCam->setClearColor(osg::Vec4f(0.81, 0.77, 0.75,1.0));
-    osg::Vec3d eye = osg::Vec3d(0,-5,.0);
-    osg::Vec3d center = osg::Vec3d(0,.0,.0);
+    osg::Vec3d eye = osg::Vec3d(0.000275, -1.5,-0.019077);
+    osg::Vec3d center = osg::Vec3d(0,0,.0);
     osg::Vec3d up = osg::Vec3d(0,0,1);
     // set position and orientation of the viewer
     mainCam->setViewMatrixAsLookAt(eye,center,up); // usual up vector
@@ -99,16 +99,18 @@ void osgController::createDebugGLDrawable() {
     _root->addChild(glNode);
 }
 void osgController::onCreate() {
-    createDebugOSGPrimitive();
-    createDebugGLDrawable();
-    _viewer->setSceneData(_root.get());
+//    createDebugOSGPrimitive();
+//    createDebugGLDrawable();
 
-//    _camera_renderer->createNode(_asset_manager);
+
+    _camera_renderer->createNode(_asset_manager);
 
 //    _root->addChild(_camera_renderer->createNode(_asset_manager));
 //    _root->addChild(_plane_renderer->createNode(_asset_manager));
 //    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
 //    _root->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
+    createDebugGLDrawable();
+    _viewer->setSceneData(_root.get());
 }
 
 void osgController::onViewChanged(int rot, int width, int height) {
@@ -128,10 +130,10 @@ void osgController::debug_tryDynamicDrawable(pointDrawable *drawable) {
 }
 void osgController::onDrawFrame(bool btn_status_normal) {
     //must call this func before update ar session
-//    GLuint textureId = _camera_renderer->GetTextureId(_viewer);
-//
-//    _ar_controller->onDrawFrame(textureId);
-//
+    GLuint textureId = _camera_renderer->GetTextureId(_viewer);
+
+    _ar_controller->onDrawFrame(textureId);
+    _ar_controller->renderPointClouds(_glDrawable);
 //    _camera_renderer->Draw(_ar_controller, btn_status_normal);
 
 //    if(!_ar_controller->isTracking())
@@ -139,11 +141,11 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 //    _ar_controller->doLightEstimation();
 //    _ar_controller->doPlaneDetection(_plane_renderer);
 
-//    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer, _object_renderer);
+//    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);
 
 //    const float mcolor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 //    _object_renderer->Draw(glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f), mcolor, 1);
-    debug_tryDynamicDrawable(_glDrawable);
+//    debug_tryDynamicDrawable(_glDrawable);
     _viewer->frame();
 }
 void osgController::onTouched(float x, float y) {}

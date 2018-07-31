@@ -14,6 +14,8 @@
 #include "osg_pointcloudRenderer.h"
 #include "osg_planeRenderer.h"
 #include "osg_objectRenderer.h"
+
+#include "pointDrawable.h"
 namespace {
     constexpr size_t kMaxNumberOfAndroidsToRender = 20;
     constexpr int32_t kPlaneColorRgbaSize = 16;
@@ -54,7 +56,7 @@ private:
     int _width = 1;
     int _height = 1;
     bool _install_requested = false;
-
+    int last_point_num = 0;
 
 
     glm::mat4 view_mat;
@@ -116,6 +118,30 @@ public:
             return true;
         }
         return false;
+    }
+    bool renderPointClouds(pointDrawable * drawable){
+        ArPointCloud * pointCloud;
+        ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
+        if(pointcloud_Status != AR_SUCCESS)
+            return false;
+
+        int32_t num_of_points = 0;
+        const float* pointCloudData;
+
+        ArPointCloud_getNumberOfPoints(_ar_session, pointCloud, &num_of_points);
+        if(last_point_num == num_of_points || num_of_points <= 0)
+            return false;
+        last_point_num = num_of_points;
+
+        //point cloud data with 4 params (x,y,z, confidence)
+        ArPointCloud_getData(_ar_session, pointCloud, &pointCloudData);
+        for(int i=0;i<num_of_points;i++){
+            LOGE("%f, %f, %f ", pointCloudData[4*i], pointCloudData[4*i+1], pointCloudData[4*i+2]);
+        }
+        drawable->updateVertices(pointCloudData, num_of_points);
+
+        ArPointCloud_release(pointCloud);
+        return true;
     }
     bool updatePointCloudRenderer(osg_pointcloudRenderer * pc_renderer, osg_objectRenderer * objRenderer){
         ArPointCloud * pointCloud;
