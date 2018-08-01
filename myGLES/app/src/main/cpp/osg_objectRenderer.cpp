@@ -79,7 +79,7 @@ ref_ptr<Geode> osg_objectRenderer::createNode(AAssetManager * manager, const cha
     stateset->addUniform(_uniform_mv);
     stateset->addUniform(_uniform_light);
     stateset->addUniform(_uniform_color_correct);
-    stateset->addUniform(new osg::Uniform("ulightPosition", osg::Vec3f(0,1,0)));
+//    stateset->addUniform(new osg::Uniform("ulightPosition", osg::Vec3f(0,1,0)));
 //    stateset->setMode(GL_LIGHTING, osg::StateAttribute::ON);
 
     stateset->setAttributeAndModes(program);
