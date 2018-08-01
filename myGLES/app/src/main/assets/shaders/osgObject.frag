@@ -1,8 +1,9 @@
 precision mediump float;
-//uniform vec4 uLightingParams;
-//uniform vec4 uMaterialParams;
-//uniform vec4 uColorCorrection;
-//
+uniform vec4 uLightingParams;
+uniform vec4 uMaterialParams;
+uniform vec4 uColorCorrection;
+
+varying vec3 normal, eyeVec, lightDir;
 varying vec2 v_texCoord;
 //varying vec3 v_viewNormal;
 //varying vec3 v_viewPosition;
@@ -10,8 +11,25 @@ varying vec2 v_texCoord;
 uniform sampler2D uTexture;
 
 void main() {
-	gl_FragColor = texture2D(uTexture, v_texCoord);
-//    // We support approximate sRGB gamma.
+    vec4 lightDiffuse = vec4(0.8,0.8,0.8,1.0);
+    vec4 lightSpecular = vec4(1.0,1.0,0.4,1.0);
+    float shininess = 64.0f;
+
+	vec4 sampledColor = texture2D(uTexture, v_texCoord);
+	vec3 N = normalize(normal);
+        vec3 L = normalize(lightDir);
+        float lambert = dot(N,L);
+        if (lambert > 0.0)
+        {
+            sampledColor += lightDiffuse * lambert;
+            vec3 E = normalize(eyeVec);
+            vec3 R = reflect(-L, N);
+            float specular = pow(max(dot(R, E), 0.0), shininess);
+            sampledColor += lightSpecular * specular;
+        }
+        gl_FragColor = sampledColor;
+
+    // We support approximate sRGB gamma.
 //    const float kGamma = 0.4545454;
 //    const float kInverseGamma = 2.2;
 //    const float kMiddleGrayGamma = 0.466;
