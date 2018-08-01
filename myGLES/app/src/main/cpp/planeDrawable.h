@@ -35,11 +35,9 @@ private:
     glm::mat4 _viewMat;
     void _update_plane_vertices(const ArSession * arSession, const ArPlane * arPlane);
 public:
-    void updateVertices(const ArSession * arSession, const ArPlane * arPlane,const  glm::vec3 & color);
-    void updateARMatrix(const glm::mat4 & projMat, const  glm::mat4 & viewMat){
-        _projMat = projMat;
-        _viewMat = viewMat;
-    }
+    void updateOnFrame(const ArSession * arSession, const ArPlane * arPlane,
+                       const glm::mat4 & projMat, const  glm::mat4 & viewMat,
+                       const  glm::vec3 & color);
     void Initialization(AAssetManager * manager,std::stack<utils::glState>* stateStack);
     void drawImplementation(osg::RenderInfo&) const;
 };

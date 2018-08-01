@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "arcore_utils.h"
 #include "osg_utils.h"
+#include "arcoreController.h"
 #include <osgViewer/ViewerEventHandlers>
 #include <osgGA/StateSetManipulator>
 #include <osgGA/TrackballManipulator>
@@ -98,8 +99,8 @@ void osgController::onCreate() {
     _pointcloudDrawable = new pointDrawable();
     _root->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
-    _planeDrawable = new planeDrawable();
-    _root->addChild(_planeDrawable->createDrawableNode(_asset_manager, &glStateStack));
+//    _planeDrawable = new planeDrawable();
+//    _root->addChild(_planeDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
     _camera_renderer->createNode(_asset_manager);
 //    _root->addChild(_camera_renderer->createNode(_asset_manager));
@@ -131,14 +132,14 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     GLuint textureId = _camera_renderer->GetTextureId(_viewer);
     _ar_controller->onDrawFrame(textureId);
 
-//    osg::Vec3d center,eye,up;
-//    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
-//    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
-//    _viewer->getCamera()->setViewMatrix(*mat);
-//
-//    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
-//    _viewer->getCameraManipulator()->setHomePosition(eye,center,up);
-//    _viewer->home();
+    osg::Vec3d center,eye,up;
+    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
+    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
+    _viewer->getCamera()->setViewMatrix(*mat);
+
+    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
+    _viewer->getCameraManipulator()->setHomePosition(eye,center,up);
+    _viewer->home();
 //    LOGE("eye: === %f === %f === %f", eye[0], eye[1], eye[2]);
 //    LOGE("center: === %f === %f === %f", center[0], center[1], center[2]);
 //    LOGE("up: === %f === %f === %f", up[0], up[1], up[2]);
@@ -154,7 +155,22 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     if(!_ar_controller->isTracking())
         return;
     _ar_controller->doLightEstimation();
-    _ar_controller->doPlaneDetection(_planeDrawable);
+
+    PlaneParams planes = _ar_controller->doPlaneDetection();
+    if(_plane_num < planes.plane_color_map.size()){
+        for(int i= _plane_num; i<planes.plane_color_map.size();i++){
+            planeDrawable * pd = new planeDrawable();
+            _root->addChild(pd->createDrawableNode(_asset_manager, &glStateStack));
+            _planeDrawables.push_back(pd);
+        }
+        _plane_num = planes.plane_color_map.size();
+    }
+    auto planeIt = planes.plane_color_map.begin();
+    for(int i=0; i<_plane_num; i++,planeIt++)
+        _planeDrawables[i]->updateOnFrame(_ar_controller->getSession(), planeIt->first,
+                                          _ar_controller->proj_mat, _ar_controller->view_mat,
+                                          planeIt->second);
+
 
     /*NEARLY DEPRECATE*/
 //    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);

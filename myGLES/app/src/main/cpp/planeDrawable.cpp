@@ -125,8 +125,12 @@ void planeDrawable::Initialization(AAssetManager * manager,std::stack<utils::glS
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void planeDrawable::updateVertices(const ArSession *arSession, const ArPlane *arPlane,
-                                   const glm::vec3 &color) {
+void planeDrawable::updateOnFrame(const ArSession *arSession, const ArPlane *arPlane,
+                                  const glm::mat4 &projMat, const glm::mat4 &viewMat,
+                                  const glm::vec3 &color) {
+    _projMat = projMat;
+    _viewMat = viewMat;
+
     _update_plane_vertices(arSession, arPlane);
 
     LOGE("DRAW PLANE: %d", _vertices.size());

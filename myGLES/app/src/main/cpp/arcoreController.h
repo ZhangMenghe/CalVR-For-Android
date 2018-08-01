@@ -39,7 +39,6 @@ typedef  struct{
     float color_correction[4] = {1.f, 1.f, 1.f, 1.f};
 }LightSrc;
 typedef struct {
-    int plane_num = 0;
     std::unordered_map<ArPlane*, glm::vec3> plane_color_map;
     bool this_is_the_first_plane = true;
 }PlaneParams;
@@ -193,14 +192,15 @@ public:
         ArLightEstimate_destroy(ar_light_estimate);
     }
 
-    void doPlaneDetection(planeDrawable* drawable){
+    PlaneParams doPlaneDetection(){
+        int detectedPlaneNum;
         ArTrackableList* plane_list = nullptr;
         ArTrackableList_create(_ar_session, & plane_list);
         CHECK(plane_list!= nullptr);
         ArSession_getAllTrackables(_ar_session, AR_TRACKABLE_PLANE,plane_list);
-        ArTrackableList_getSize(_ar_session, plane_list, &_planes.plane_num);
+        ArTrackableList_getSize(_ar_session, plane_list, &detectedPlaneNum);
 
-        for(int i=0; i<_planes.plane_num; i++){
+        for(int i=0; i<detectedPlaneNum; i++){
             ArTrackable * ar_trackable = nullptr;
             ArTrackableList_acquireItem(_ar_session, plane_list, i, &ar_trackable);
 
@@ -233,11 +233,12 @@ public:
                 }
                 _planes.plane_color_map.insert({ar_plane, plane_color});
             }
-            drawable->updateARMatrix(proj_mat, view_mat);
-            drawable->updateVertices(_ar_session, ar_plane, plane_color);
+//            drawable->updateARMatrix(proj_mat, view_mat);
+//            drawable->updateVertices(_ar_session, ar_plane, plane_color);
         }
         ArTrackableList_destroy(plane_list);
         plane_list = nullptr;
+        return _planes;
     }
 
 };

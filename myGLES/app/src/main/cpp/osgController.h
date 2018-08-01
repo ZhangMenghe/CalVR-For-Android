@@ -21,11 +21,10 @@ namespace osg_controller{
     private:
         AAssetManager *const _asset_manager;
         osg::ref_ptr<pointDrawable> _pointcloudDrawable;
-        osg::ref_ptr<planeDrawable> _planeDrawable;
-        osg::ref_ptr<osg::Geode> _debugSphereNode;
+        std::vector<osg::ref_ptr<planeDrawable>> _planeDrawables;
+
         int _plane_num = 0;
         std::stack<utils::glState> glStateStack;
-        bool _this_is_the_first_plane = true;
         float _color_correction[4] = {1.f, 1.f, 1.f, 1.f};
         std::unordered_map<ArPlane*,  glm::vec3> _plane_color_map;
 
