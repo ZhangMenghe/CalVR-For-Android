@@ -44,7 +44,7 @@ osgController::osgController(AAssetManager * manager)
 
     _ar_controller = new arcoreController();
     _camera_renderer = new osg_cameraRenderer();
-    _plane_renderer = new osg_planeRenderer();
+//    _plane_renderer = new osg_planeRenderer();
 //    _pointcloud_renderer = new osg_pointcloudRenderer();
     _object_renderer = new osg_objectRenderer();
 }
@@ -90,28 +90,28 @@ void osgController::createDebugOSGSphere(osg::Vec3 pos) {
     node->addDrawable(shape.get());
     _root->addChild(node);
 }
-void osgController::createDebugGLDrawable() {
-    _glDrawable = new pointDrawable();
-    _glDrawable->Initialization(_asset_manager);
+void osgController:: _create_glDrawable(osg::ref_ptr<pointDrawable> drawable) {
+    drawable->Initialization(_asset_manager,&glStateStack);
     osg::ref_ptr<osg::Geode> glNode = new osg::Geode;
-    glNode->addDrawable(_glDrawable.get());
-    _glDrawable->setUseDisplayList(false);
+    glNode->addDrawable(drawable.get());
+    drawable->setUseDisplayList(false);
     _root->addChild(glNode);
 }
 void osgController::onCreate() {
     createDebugOSGSphere(osg::Vec3(.0f,0.1f,.0f));
-//    createDebugOSGSphere(osg::Vec3(.0f,0.f,0.2f));
-//    createDebugGLDrawable();
-
+    _pointcloudDrawable = new pointDrawable();
+    _create_glDrawable(_pointcloudDrawable);
 
     _camera_renderer->createNode(_asset_manager);
-
 //    _root->addChild(_camera_renderer->createNode(_asset_manager));
-//    _root->addChild(_plane_renderer->createNode(_asset_manager));
-//    _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
-   Geode * objNode = _object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png");
-//    createDebugGLDrawable();
-    _root->addChild(objNode);
+
+
+    /*DEPRECATE:
+     * _root->addChild(_plane_renderer->createNode(_asset_manager));
+     * _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
+     * */
+
+    _root->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
     _viewer->setSceneData(_root.get());
 }
 
@@ -146,23 +146,24 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 
 
     /*UNCOMMENT THIS TO DRAW POINT CLOUDS*/
-//    _ar_controller->renderPointClouds(_glDrawable);
+    _ar_controller->renderPointClouds(_pointcloudDrawable);
 
     /*UNCOMMENT THIS TO DRAW BACKGROUND CAMERA*/
 //    _camera_renderer->Draw(_ar_controller, btn_status_normal);
 
     /*UNCOMMENT THIS TO DRAW PLANES*/
-//    if(!_ar_controller->isTracking())
-//        return;
-//    _ar_controller->doLightEstimation();
-//    _ar_controller->doPlaneDetection(_plane_renderer);
+    if(!_ar_controller->isTracking())
+        return;
+    _ar_controller->doLightEstimation();
+
 
     /*NEARLY DEPRECATE*/
 //    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);
+//    _ar_controller->doPlaneDetection(_plane_renderer);
 
-    const float mcolor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+    /*UNCOMMENT THIS TO DRAW ANDROID FIGURE*/
     _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
-                           glm::translate(glm::mat4(), glm::vec3(.0f, 0.3f, 0.0f)), mcolor, 1);
+                           glm::translate(glm::mat4(), glm::vec3(.0f, 0.3f, 0.0f)), _color_correction, 1);
 
     _viewer->frame();
 }

@@ -13,33 +13,36 @@
 #include "osg_objectRenderer.h"
 #include "arcoreController.h"
 
-#include "pointDrawable.h"
+#include "glDrawable.h"
 #include <osgGA/KeySwitchMatrixManipulator>
 
 namespace osg_controller{
     class osgController {
     private:
         AAssetManager *const _asset_manager;
-        osg::ref_ptr<pointDrawable> _glDrawable;
+        osg::ref_ptr<pointDrawable> _pointcloudDrawable;
 
         int _plane_num = 0;
-
+        std::stack<utils::glState> glStateStack;
         bool _this_is_the_first_plane = true;
         float _color_correction[4] = {1.f, 1.f, 1.f, 1.f};
         std::unordered_map<ArPlane*,  glm::vec3> _plane_color_map;
 
         osgViewer::Viewer * _viewer;
         osg::ref_ptr<osg::Group>  _root;
-        osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> _manipulator;
 
         arcoreController * _ar_controller;
         osg_cameraRenderer * _camera_renderer;
-        osg_planeRenderer * _plane_renderer;
-//        osg_pointcloudRenderer * _pointcloud_renderer;
+
+        /*DEPRECATED
+         * osg_pointcloudRenderer * _pointcloud_renderer;
+         * osg_planeRenderer * _plane_renderer;
+         * */
+
         osg_objectRenderer *_object_renderer;
 
         void createDebugOSGSphere(osg::Vec3 pos);
-        void createDebugGLDrawable();
+        void _create_glDrawable(osg::ref_ptr<pointDrawable> drawable);
         void _initialize_camera();
 
     public:

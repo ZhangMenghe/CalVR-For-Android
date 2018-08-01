@@ -40,6 +40,12 @@ static void checkGlError(const char* op) {
 }
 
 namespace utils {
+    typedef struct glState_S {
+        GLboolean depthTest, blend, cullFace;
+        GLboolean dither, colorLogicOp, polygonOffsetLine, polygonOffsetFill;
+        GLboolean polygonOffsetPoint, polygonSmooth, scissorTest, stencilTest;
+    } glState;
+
     // Check GL error, and abort if an error is encountered.
     //
     // @param operation, the name of the GL function call.

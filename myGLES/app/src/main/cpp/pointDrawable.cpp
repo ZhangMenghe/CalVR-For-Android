@@ -7,51 +7,9 @@
 #include <stack>
 #include <GLES3/gl3.h>
 using namespace glm;
-namespace {
-    typedef struct glState_S {
-        GLboolean depthTest, blend, cullFace;
-        GLboolean dither, colorLogicOp, polygonOffsetLine, polygonOffsetFill;
-        GLboolean polygonOffsetPoint, polygonSmooth, scissorTest, stencilTest;
-    } glState;
 
-    static std::stack<glState> stateStack;
-
-    bool PushAllState(void)
-    {
-        glState state;
-
-        state.blend = glIsEnabled(GL_BLEND);
-        state.depthTest = glIsEnabled(GL_DEPTH_TEST);
-        state.cullFace = glIsEnabled(GL_CULL_FACE);
-        state.dither = glIsEnabled(GL_DITHER);
-        state.polygonOffsetFill = glIsEnabled(GL_POLYGON_OFFSET_FILL);
-        state.scissorTest = glIsEnabled(GL_SCISSOR_TEST);
-        state.stencilTest = glIsEnabled(GL_STENCIL_TEST);
-
-        stateStack.push(state);
-        return true;
-    }
-
-    bool PopAllState(void)
-    {
-        if (!stateStack.empty()) {
-            glState state = stateStack.top();
-
-            if (state.blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
-            if (state.depthTest) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
-            if (state.cullFace) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
-            if (state.dither) glEnable(GL_DITHER); else glDisable(GL_DITHER);
-            if (state.polygonOffsetFill) glEnable(GL_POLYGON_OFFSET_FILL); else glDisable(GL_POLYGON_OFFSET_FILL);
-            if (state.scissorTest) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
-            if (state.stencilTest) glEnable(GL_STENCIL_TEST); else glDisable(GL_STENCIL_TEST);
-
-            stateStack.pop();
-        }
-        return true;
-    }
-}
-
-void pointDrawable::Initialization(AAssetManager *manager) {
+void pointDrawable::Initialization(AAssetManager *manager,std::stack<utils::glState>* stateStack) {
+    glDrawable::Initialization(manager, stateStack);
     _shader_program = utils::CreateProgram("shaders/pointDrawable.vert", "shaders/point.frag", manager);
 
     _attrib_vertices_ = glGetAttribLocation(_shader_program,"vPosition");
