@@ -1,11 +1,11 @@
 precision mediump float;
-uniform vec4 uLightingParams;
-uniform vec4 uMaterialParams;
-uniform vec4 uColorCorrection;
-
+//uniform vec4 uLightingParams;
+//uniform vec4 uMaterialParams;
+//uniform vec4 uColorCorrection;
+//
 varying vec2 v_texCoord;
-varying vec3 v_viewNormal;
-varying vec3 v_viewPosition;
+//varying vec3 v_viewNormal;
+//varying vec3 v_viewPosition;
 
 uniform sampler2D uTexture;
 

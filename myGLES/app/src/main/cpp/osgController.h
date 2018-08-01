@@ -35,10 +35,10 @@ namespace osg_controller{
         arcoreController * _ar_controller;
         osg_cameraRenderer * _camera_renderer;
         osg_planeRenderer * _plane_renderer;
-        osg_pointcloudRenderer * _pointcloud_renderer;
+//        osg_pointcloudRenderer * _pointcloud_renderer;
         osg_objectRenderer *_object_renderer;
 
-        void createDebugOSGPrimitive();
+        void createDebugOSGSphere(osg::Vec3 pos);
         void createDebugGLDrawable();
         void _initialize_camera();
 

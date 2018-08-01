@@ -56,34 +56,34 @@ ref_ptr<Geode> osg_objectRenderer::createNode(AAssetManager * manager, const cha
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    osg::Uniform* samUniform =new osg::Uniform(osg::Uniform::SAMPLER_2D, "uTexture");
-    osg::Uniform * uniform_material = new osg::Uniform(osg::Uniform::FLOAT_VEC4, "uMaterialParams");
-    samUniform->set(0);
-    uniform_material->set(Vec4f(_shader_params.ambient, _shader_params.diffuse,
-                                _shader_params.specular, _shader_params.specular_alpha));
+    osg::Uniform* _uniform_sampler =new osg::Uniform(osg::Uniform::SAMPLER_2D, "uTexture");
+//    osg::Uniform * uniform_material = new osg::Uniform(osg::Uniform::FLOAT_VEC4, "uMaterialParams");
+    _uniform_sampler->set(0);
+//    uniform_material->set(Vec4f(_shader_params.ambient, _shader_params.diffuse,
+//                                _shader_params.specular, _shader_params.specular_alpha));
 
     _uniform_mvp = new osg::Uniform(osg::Uniform::FLOAT_MAT4, "uMVP");
-    _uniform_mv = new osg::Uniform(osg::Uniform::FLOAT_MAT4, "uMV");
-
-    _uniform_light = new osg::Uniform(osg::Uniform::FLOAT_VEC4, "uLightingParams");
-    _uniform_color_correct = new osg::Uniform(osg::Uniform::FLOAT_VEC4, "uColorCorrection");
+//    _uniform_mv = new osg::Uniform(osg::Uniform::FLOAT_MAT4, "uMV");
+//
+//    _uniform_light = new osg::Uniform(osg::Uniform::FLOAT_VEC4, "uLightingParams");
+//    _uniform_color_correct = new osg::Uniform(osg::Uniform::FLOAT_VEC4, "uColorCorrection");
 
     osg::StateSet* stateset = new osg::StateSet;
-    stateset->addUniform(samUniform);
-    stateset->addUniform(uniform_material);
+    stateset->addUniform(_uniform_sampler);
+//    stateset->addUniform(uniform_material);
     stateset->addUniform(_uniform_mvp);
-    stateset->addUniform(_uniform_mv);
-    stateset->addUniform(_uniform_light);
-    stateset->addUniform(_uniform_color_correct);
+//    stateset->addUniform(_uniform_mv);
+//    stateset->addUniform(_uniform_light);
+//    stateset->addUniform(_uniform_color_correct);
 
-    stateset->setMode(GL_LIGHTING, osg::StateAttribute::ON);
+//    stateset->setMode(GL_LIGHTING, osg::StateAttribute::ON);
     stateset->setTextureAttributeAndModes(0, objTexture, osg::StateAttribute::ON);
     Program * program = osg_utils::createShaderProgram("shaders/osgObject.vert", "shaders/osgObject.frag", manager);
 
-    GLuint _attribute_vNormal = 1;
-    program->addBindAttribLocation("vNormal", 1);
-
-    _geometry->setVertexAttribArray(_attribute_vNormal, normals.get(), osg::Array::BIND_PER_VERTEX);
+//    GLuint _attribute_vNormal = 1;
+//    program->addBindAttribLocation("vNormal", 1);
+//
+//    _geometry->setVertexAttribArray(_attribute_vNormal, normals.get(), osg::Array::BIND_PER_VERTEX);
 
     stateset->setAttribute(program);
 
@@ -100,9 +100,9 @@ void osg_objectRenderer::Draw(const glm::mat4 &projMat,
     glm::mat4 mv = viewMat * modelMat;
     glm::vec4 v_light = glm::normalize(mv * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
 
-    _uniform_mv->set(*(new RefMatrixf(glm::value_ptr(mv))));
+//    _uniform_mv->set(*(new RefMatrixf(glm::value_ptr(mv))));
     _uniform_mvp->set(*(new RefMatrixf(glm::value_ptr(projMat* mv))));
-    _uniform_light->set(Vec4f(v_light[0], v_light[1], v_light[2], light_intensity));
-    _uniform_color_correct->set(Vec4f(color_correction[0], color_correction[1], color_correction[2], color_correction[3]));
+//    _uniform_light->set(Vec4f(v_light[0], v_light[1], v_light[2], light_intensity));
+//    _uniform_color_correct->set(Vec4f(color_correction[0], color_correction[1], color_correction[2], color_correction[3]));
 
 }
