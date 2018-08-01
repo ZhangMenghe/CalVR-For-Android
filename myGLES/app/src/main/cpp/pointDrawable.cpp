@@ -12,7 +12,7 @@ void pointDrawable::Initialization(AAssetManager *manager,std::stack<utils::glSt
     glDrawable::Initialization(manager, stateStack);
     _shader_program = utils::CreateProgram("shaders/pointDrawable.vert", "shaders/point.frag", manager);
 
-    _attrib_vertices_ = glGetAttribLocation(_shader_program,"vPosition");
+    _attrib_vertices = glGetAttribLocation(_shader_program,"vPosition");
     _uniform_arMVP_mat =  glGetUniformLocation(_shader_program, "uarMVP");
 
     //Generate VAO and bind
@@ -25,13 +25,13 @@ void pointDrawable::Initialization(AAssetManager *manager,std::stack<utils::glSt
     //dynamic feed data
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * MAX_POINTS * 4, nullptr, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(_attrib_vertices_);
-    glVertexAttribPointer(_attrib_vertices_, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(_attrib_vertices);
+    glVertexAttribPointer(_attrib_vertices, 4, GL_FLOAT, GL_FALSE, 0, 0);
     //static draw,debug only
 //    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 //    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _point_num * 4, pointCloudData, GL_STATIC_DRAW);
-//    glEnableVertexAttribArray(_attrib_vertices_);
-//    glVertexAttribPointer(_attrib_vertices_, 4, GL_FLOAT, GL_FALSE, 4* sizeof(float), 0);
+//    glEnableVertexAttribArray(_attrib_vertices);
+//    glVertexAttribPointer(_attrib_vertices, 4, GL_FLOAT, GL_FALSE, 4* sizeof(float), 0);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 

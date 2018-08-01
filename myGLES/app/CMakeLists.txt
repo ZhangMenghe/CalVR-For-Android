@@ -90,6 +90,7 @@ add_library(osgScene
             src/main/cpp/osg_planeRenderer.cpp
             src/main/cpp/glDrawable.cpp
             src/main/cpp/pointDrawable.cpp
+            src/main/cpp/planeDrawable.cpp
             src/main/cpp/osg_pointcloudRenderer.cpp
             src/main/cpp/osg_objectRenderer.cpp
             src/main/cpp/osg_cameraRenderer.cpp

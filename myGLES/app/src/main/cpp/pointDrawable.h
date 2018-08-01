@@ -15,7 +15,7 @@ private:
     GLuint _VBO;
     GLuint _shader_program;
 
-    GLuint _attrib_vertices_;
+    GLuint _attrib_vertices;
     GLuint _uniform_arMVP_mat;
 
     glm::vec4 _default_color= glm::vec4(1.0, 0.5, 0.0, 1.0);

@@ -15,13 +15,14 @@
 
 #include "glDrawable.h"
 #include <osgGA/KeySwitchMatrixManipulator>
-
+#include "planeDrawable.h"
 namespace osg_controller{
     class osgController {
     private:
         AAssetManager *const _asset_manager;
         osg::ref_ptr<pointDrawable> _pointcloudDrawable;
-
+        osg::ref_ptr<planeDrawable> _planeDrawable;
+        osg::ref_ptr<osg::Geode> _debugSphereNode;
         int _plane_num = 0;
         std::stack<utils::glState> glStateStack;
         bool _this_is_the_first_plane = true;
@@ -42,7 +43,6 @@ namespace osg_controller{
         osg_objectRenderer *_object_renderer;
 
         void createDebugOSGSphere(osg::Vec3 pos);
-        void _create_glDrawable(osg::ref_ptr<pointDrawable> drawable);
         void _initialize_camera();
 
     public:

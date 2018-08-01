@@ -7,6 +7,7 @@
 
 
 #include <osg/Drawable>
+#include <osg/Geode>
 #include <stack>
 #include <android/asset_manager.h>
 #include "utils.h"
@@ -17,6 +18,13 @@ protected:
     bool PopAllState() const;
 public:
     virtual void Initialization(AAssetManager *manager,std::stack<utils::glState>* stateStack){_stateStack = stateStack;}
+    osg::ref_ptr<osg::Geode> createDrawableNode(AAssetManager *manager,std::stack<utils::glState>* stateStack){
+        Initialization(manager, stateStack);
+        osg::ref_ptr<osg::Geode> glNode = new osg::Geode;
+        glNode->addDrawable(this);
+        setUseDisplayList(false);
+        return glNode.get();
+    }
 };
 
 

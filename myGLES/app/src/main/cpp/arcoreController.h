@@ -13,7 +13,7 @@
 #include "utils.h"
 #include "osg_pointcloudRenderer.h"
 #include "osg_planeRenderer.h"
-#include "osg_objectRenderer.h"
+#include "planeDrawable.h"
 
 #include "pointDrawable.h"
 namespace {
@@ -143,7 +143,7 @@ public:
         ArPointCloud_release(pointCloud);
         return true;
     }
-    bool updatePointCloudRenderer(osg_pointcloudRenderer * pc_renderer, osg_objectRenderer * objRenderer){
+    /*bool updatePointCloudRenderer(osg_pointcloudRenderer * pc_renderer, osg_objectRenderer * objRenderer){
         ArPointCloud * pointCloud;
         ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
         if(pointcloud_Status != AR_SUCCESS)
@@ -174,7 +174,7 @@ public:
 
         ArPointCloud_release(pointCloud);
         return true;
-    }
+    }*/
     bool isTracking(){
         return (cam_track_state == AR_TRACKING_STATE_TRACKING);
     }
@@ -193,7 +193,7 @@ public:
         ArLightEstimate_destroy(ar_light_estimate);
     }
 
-    void doPlaneDetection(osg_planeRenderer* planeRenderer){
+    void doPlaneDetection(planeDrawable* drawable){
         ArTrackableList* plane_list = nullptr;
         ArTrackableList_create(_ar_session, & plane_list);
         CHECK(plane_list!= nullptr);
@@ -233,11 +233,8 @@ public:
                 }
                 _planes.plane_color_map.insert({ar_plane, plane_color});
             }
-
-            planeRenderer->Draw(_ar_session, ar_plane, proj_mat, view_mat, plane_color);
-
-//            objRenderer->Draw(proj_mat,view_mat,planeRenderer->getModelMat(),_light.color_correction,_light.intensity);
-
+            drawable->updateARMatrix(proj_mat, view_mat);
+            drawable->updateVertices(_ar_session, ar_plane, plane_color);
         }
         ArTrackableList_destroy(plane_list);
         plane_list = nullptr;

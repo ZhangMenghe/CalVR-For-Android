@@ -1,12 +1,13 @@
 //
-// Created by menghe on 7/2/2018.
+// Created by menghe on 8/1/2018.
 //
 
-#include "planeRenderer.h"
+#include "planeDrawable.h"
 #include "arcore_utils.h"
-#include "utils.h"
+
 using namespace arcore_utils;
-void planeRenderer::_update_plane_vertices(const ArSession *arSession, const ArPlane*arPlane) {
+using namespace glm;
+void planeDrawable::_update_plane_vertices(const ArSession *arSession, const ArPlane*arPlane) {
     _vertices.clear();
     _triangles.clear();
 
@@ -19,7 +20,7 @@ void planeRenderer::_update_plane_vertices(const ArSession *arSession, const ArP
         return;
     }
     const int32_t vertices_size = polygon_length/2;
-    vector<vec2> raw_vertices(vertices_size);
+    std::vector<vec2> raw_vertices(vertices_size);
     ArPlane_getPolygon(arSession, arPlane, value_ptr(raw_vertices.front()));
 
     //fill outter vertices
@@ -73,7 +74,9 @@ void planeRenderer::_update_plane_vertices(const ArSession *arSession, const ArP
                              half_vertices_length);
     }
 }
-void planeRenderer::Initialization(AAssetManager *manager) {
+
+void planeDrawable::Initialization(AAssetManager * manager,std::stack<utils::glState>* stateStack){
+    glDrawable::Initialization(manager, stateStack);
     _shader_program = utils::CreateProgram("shaders/plane.vert", "shaders/plane.frag", manager);
     if(!_shader_program)
         LOGE("Failed to create shader program");
@@ -98,11 +101,58 @@ void planeRenderer::Initialization(AAssetManager *manager) {
         LOGE("Failed to load png image");
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    //Generate VAO and bind
+    glGenVertexArrays(1, &_VAO);
+    glBindVertexArray(_VAO);
+
+    //Generate VBO and bind
+    glGenBuffers(1, &_VBO);
+
+    //dynamic feed data
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * MAX_PLANE_VERTICES * 3, nullptr, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(_attrib_vertices);
+    glVertexAttribPointer(_attrib_vertices, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    //Generate EBO
+    glGenBuffers(1, &_EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * MAX_PLANE_VERTICES*5, nullptr, GL_STATIC_DRAW);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void planeRenderer::Draw(const ArSession *arSession, const ArPlane *arPlane, const mat4 &projMat,
-                         const mat4 &viewMat, const vec3 &color) {
+void planeDrawable::updateVertices(const ArSession *arSession, const ArPlane *arPlane,
+                                   const glm::vec3 &color) {
     _update_plane_vertices(arSession, arPlane);
+
+    LOGE("DRAW PLANE: %d", _vertices.size());
+
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)*_vertices.size()*3, _vertices.data());
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLushort) * _triangles.size(), _triangles.data());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glUseProgram(_shader_program);
+    glUniform3f(_uniform_color, color.x, color.y, color.z);
+    glUseProgram(0);
+}
+
+void planeDrawable::drawImplementation(osg::RenderInfo&) const{
+    PushAllState();
+
+//    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+//    glEnable(GL_CULL_FACE);
+//    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glUseProgram(_shader_program);
     glDepthMask(GL_FALSE);
 
@@ -110,15 +160,17 @@ void planeRenderer::Draw(const ArSession *arSession, const ArPlane *arPlane, con
     glUniform1i(_uniform_tex_sampler, 0);
     glBindTexture(GL_TEXTURE_2D, _texture_id);
 
-    glUniformMatrix4fv(_uniform_mvp_mat, 1, GL_FALSE, value_ptr(projMat * viewMat * _model_mat));
+    glUniformMatrix4fv(_uniform_mvp_mat, 1, GL_FALSE, glm::value_ptr(_projMat * _viewMat * _model_mat));
     glUniform3f(_uniform_normal_vec, _normal_vec.x, _normal_vec.y, _normal_vec.z);
-    glUniformMatrix4fv(_uniform_model_mat, 1, GL_FALSE, value_ptr(_model_mat));
-    glUniform3f(_uniform_color, color.x, color.y, color.z);
+    glUniformMatrix4fv(_uniform_model_mat, 1, GL_FALSE, glm::value_ptr(_model_mat));
 
-    glEnableVertexAttribArray(_attrib_vertices);
-    glVertexAttribPointer(_attrib_vertices, 3, GL_FLOAT, GL_FALSE, 0, _vertices.data());
-    glDrawElements(GL_TRIANGLES, _triangles.size(), GL_UNSIGNED_SHORT, _triangles.data());
+    glBindVertexArray(_VAO);
+
+    glDrawElements(GL_TRIANGLES, _triangles.size(), GL_UNSIGNED_SHORT, nullptr);
+    glBindVertexArray(0);
 
     glUseProgram(0);
-    glDepthMask(GL_TRUE);
+    checkGlError("Draw point cloud");
+
+    PopAllState();
 }

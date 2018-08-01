@@ -55,7 +55,7 @@ osgController::~osgController() {
 void osgController::_initialize_camera() {
     osg::ref_ptr<osg::Camera> mainCam = _viewer->getCamera();
     mainCam->setClearColor(osg::Vec4f(0.81, 0.77, 0.75,1.0));
-    osg::Vec3d eye = osg::Vec3d(0,-1,0);
+    osg::Vec3d eye = osg::Vec3d(0,-5,0);
     osg::Vec3d center = osg::Vec3d(0,0,.0);
     osg::Vec3d up = osg::Vec3d(0,0,1);
     // set position and orientation of the viewer
@@ -74,7 +74,7 @@ void osgController::createDebugOSGSphere(osg::Vec3 pos) {
 
     Program * program = osg_utils::createShaderProgram("shaders/lightingOSG.vert","shaders/lightingOSG.frag",_asset_manager);
 
-    osg::StateSet * stateSet = node->getOrCreateStateSet();
+    osg::StateSet * stateSet = shape->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
     stateSet->addUniform( new osg::Uniform("lightDiffuse",
                                            osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
@@ -90,17 +90,16 @@ void osgController::createDebugOSGSphere(osg::Vec3 pos) {
     node->addDrawable(shape.get());
     _root->addChild(node);
 }
-void osgController:: _create_glDrawable(osg::ref_ptr<pointDrawable> drawable) {
-    drawable->Initialization(_asset_manager,&glStateStack);
-    osg::ref_ptr<osg::Geode> glNode = new osg::Geode;
-    glNode->addDrawable(drawable.get());
-    drawable->setUseDisplayList(false);
-    _root->addChild(glNode);
-}
+
 void osgController::onCreate() {
     createDebugOSGSphere(osg::Vec3(.0f,0.1f,.0f));
+    createDebugOSGSphere(osg::Vec3(.0f,.0f,0.2f));
+
     _pointcloudDrawable = new pointDrawable();
-    _create_glDrawable(_pointcloudDrawable);
+    _root->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &glStateStack));
+
+    _planeDrawable = new planeDrawable();
+    _root->addChild(_planeDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
     _camera_renderer->createNode(_asset_manager);
 //    _root->addChild(_camera_renderer->createNode(_asset_manager));
@@ -132,14 +131,14 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     GLuint textureId = _camera_renderer->GetTextureId(_viewer);
     _ar_controller->onDrawFrame(textureId);
 
-    osg::Vec3d center,eye,up;
-    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
-    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
-    _viewer->getCamera()->setViewMatrix(*mat);
-
-    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
-    _viewer->getCameraManipulator()->setHomePosition(eye,center,up);
-    _viewer->home();
+//    osg::Vec3d center,eye,up;
+//    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
+//    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
+//    _viewer->getCamera()->setViewMatrix(*mat);
+//
+//    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
+//    _viewer->getCameraManipulator()->setHomePosition(eye,center,up);
+//    _viewer->home();
 //    LOGE("eye: === %f === %f === %f", eye[0], eye[1], eye[2]);
 //    LOGE("center: === %f === %f === %f", center[0], center[1], center[2]);
 //    LOGE("up: === %f === %f === %f", up[0], up[1], up[2]);
@@ -155,15 +154,15 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     if(!_ar_controller->isTracking())
         return;
     _ar_controller->doLightEstimation();
-
+    _ar_controller->doPlaneDetection(_planeDrawable);
 
     /*NEARLY DEPRECATE*/
 //    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);
 //    _ar_controller->doPlaneDetection(_plane_renderer);
 
     /*UNCOMMENT THIS TO DRAW ANDROID FIGURE*/
-    _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
-                           glm::translate(glm::mat4(), glm::vec3(.0f, 0.3f, 0.0f)), _color_correction, 1);
+//    _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
+//                           glm::translate(glm::mat4(), glm::vec3(.0f, 0.3f, 0.0f)), _color_correction, 1);
 
     _viewer->frame();
 }
