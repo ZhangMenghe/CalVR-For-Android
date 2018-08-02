@@ -1,0 +1,9 @@
+set(EXT_PROJ_DIR  "${CMAKE_SOURCE_DIR}/../../..")
+# Specify critical mini-xml build variables.
+# Build and reference OpenSceneGraph.
+SET(MXML_SOURCE_DIR "${EXT_PROJ_DIR}/mxml-2.11")
+SET(MXML_BUILD_DIR "${EXT_PROJ_DIR}/mxml-2.11/build/${ANDROID_ABI}")
+
+add_library(mxml STATIC IMPORTED)
+set_target_properties(mxml PROPERTIES IMPORTED_LOCATION
+                      ${MXML_BUILD_DIR}/lib/libmxml.a)

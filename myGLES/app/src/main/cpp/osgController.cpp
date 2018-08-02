@@ -187,7 +187,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
 
     /*UNCOMMENT THIS TO DRAW ANDROID FIGURE*/
     _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
-                           glm::translate(glm::mat4(), glm::vec3(.0f, 0.3f, 0.0f)), _color_correction, 1);
+                           glm::translate(glm::mat4(), glm::vec3(.0f, 0.1f, 0.0f)), _color_correction, 1);
 
     _viewer->frame();
 }
