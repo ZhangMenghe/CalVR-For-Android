@@ -5,6 +5,8 @@
 #ifndef MYGLES_BGDRAWABLE_H
 #define MYGLES_BGDRAWABLE_H
 
+#include <osg/BlendFunc>
+#include <osg/MatrixTransform>
 #include "glDrawable.h"
 
 class bgDrawable: public glDrawable {
@@ -34,9 +36,16 @@ public:
     GLuint GetTextureId(){return _texture_id;}
     osg::ref_ptr<osg::Geode> createDrawableNode(AAssetManager *manager,std::stack<utils::glState>* stateStack){
         osg::ref_ptr<osg::Geode> glNode = glDrawable::createDrawableNode(manager, stateStack);
-        osg::StateSet * stateset = glNode->getOrCreateStateSet();
-        stateset->setMode(GL_BLEND, osg::StateAttribute::ON);
-        stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+        glNode->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+        glNode->getOrCreateStateSet()->setRenderBinDetails(1,"RenderBin");
+//        osg::StateSet * stateset = glNode->getOrCreateStateSet();
+//        stateset->setMode(GL_BLEND, osg::StateAttribute::ON);
+//        osg::BlendFunc *fuct = new osg::BlendFunc();
+//        fuct->setFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//        stateset->setAttributeAndModes(fuct);
+//
+//        stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+//        stateset->setRenderBinDetails(1, "transparent");
         return glNode.get();
     }
 };

@@ -32,7 +32,7 @@ namespace osg_controller{
 
         osgViewer::Viewer * _viewer;
         osg::ref_ptr<osg::Group>  _root;
-
+        osg::ref_ptr<osg::Group>  _sceneGroup;
         arcoreController * _ar_controller;
 
 

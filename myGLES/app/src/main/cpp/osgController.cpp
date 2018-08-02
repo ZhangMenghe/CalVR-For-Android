@@ -39,6 +39,7 @@ osgController::osgController(AAssetManager * manager)
     _viewer->setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
 
     _root = new Group;
+    _sceneGroup = new Group;
     //TODO: NO idea why can not add realize
 //
     _initialize_camera();
@@ -61,11 +62,12 @@ void osgController::_initialize_camera() {
     osg::Vec3d up = osg::Vec3d(0,0,1);
     // set position and orientation of the viewer
     mainCam->setViewMatrixAsLookAt(eye,center,up); // usual up vector
-
+    mainCam->setRenderOrder(osg::Camera::NESTED_RENDER);
     //TODO:RE-IMPLEMENT MYSELF MANIPULATOR
     _viewer->setCameraManipulator(new osgGA::TrackballManipulator);
 //    _viewer->setCameraManipulator(new osgGA::FirstPersonManipulator());
-    _viewer->getCameraManipulator()->setHomePosition(eye,center,up,false);;
+    _viewer->getCameraManipulator()->setHomePosition(eye,center,up,false);
+
 }
 void osgController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
@@ -89,7 +91,7 @@ void osgController::createDebugOSGSphere(osg::Vec3 pos) {
     stateSet->addUniform( lightPos.get() );
 
     node->addDrawable(shape.get());
-    _root->addChild(node);
+    _sceneGroup->addChild(node);
 }
 
 void osgController::onCreate() {
@@ -97,12 +99,12 @@ void osgController::onCreate() {
 //    createDebugOSGSphere(osg::Vec3(.0f,.0f,0.2f));
 
     _pointcloudDrawable = new pointDrawable();
-    _root->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &glStateStack));
+    _sceneGroup->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
     _bgDrawable = new bgDrawable();
     /*Switch between whether add into scene*/
-    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
-//    _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
+//    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
+    _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
     /*DEPRECATE:
      *  _camera_renderer->createNode(_asset_manager);
@@ -111,7 +113,13 @@ void osgController::onCreate() {
      * _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
      * */
 
-    _root->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
+    _sceneGroup->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
+
+    //This will make sure camera always in the background
+    _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
+    _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
+    _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+    _root->addChild(_sceneGroup);
     _viewer->setSceneData(_root.get());
 }
 
@@ -131,14 +139,14 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     //must call this func before update ar session
     _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
 
-    osg::Vec3d center,eye,up;
-    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
-    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
-    _viewer->getCamera()->setViewMatrix(*mat);
-
-    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
-    _viewer->getCameraManipulator()->setHomePosition(eye,center,up);
-    _viewer->home();
+//    osg::Vec3d center,eye,up;
+//    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
+//    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
+//    _viewer->getCamera()->setViewMatrix(*mat);
+//
+//    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
+//    _viewer->getCameraManipulator()->setHomePosition(eye,center,up);
+//    _viewer->home();
 //    LOGE("eye: === %f === %f === %f", eye[0], eye[1], eye[2]);
 //    LOGE("center: === %f === %f === %f", center[0], center[1], center[2]);
 //    LOGE("up: === %f === %f === %f", up[0], up[1], up[2]);
@@ -161,7 +169,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     if(_plane_num < planes.plane_color_map.size()){
         for(int i= _plane_num; i<planes.plane_color_map.size();i++){
             planeDrawable * pd = new planeDrawable();
-            _root->addChild(pd->createDrawableNode(_asset_manager, &glStateStack));
+            _sceneGroup->addChild(pd->createDrawableNode(_asset_manager, &glStateStack));
             _planeDrawables.push_back(pd);
         }
         _plane_num = planes.plane_color_map.size();
