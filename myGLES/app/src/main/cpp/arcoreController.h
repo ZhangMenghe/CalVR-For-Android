@@ -118,6 +118,20 @@ public:
         }
         return false;
     }
+    float* updateBackgroundRender(){
+        // UVs of the quad vertices (S, T)
+        const GLfloat uvs[] = {
+                0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        };
+        int32_t geometry_changed = 0;
+        ArFrame_getDisplayGeometryChanged(_ar_session, _ar_frame, &geometry_changed);
+        if (geometry_changed != 0){
+            ArFrame_transformDisplayUvCoords(_ar_session, _ar_frame, 8, uvs,
+                                             transformed_camera_uvs);
+            return transformed_camera_uvs;
+        }
+        return nullptr;
+    }
     bool renderPointClouds(pointDrawable * drawable){
         ArPointCloud * pointCloud;
         ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);

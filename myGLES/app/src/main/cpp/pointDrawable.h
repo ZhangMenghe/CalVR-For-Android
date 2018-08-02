@@ -28,7 +28,7 @@ private:
 
 public:
     void updateVertices(const float *newData, int num_of_points){
-         _point_num = num_of_points;
+        _point_num = num_of_points;
         size_t mem_size =  _point_num * 4 * sizeof(float);
         pointCloudData = (float*)malloc(mem_size);
         memcpy(pointCloudData, newData, mem_size);

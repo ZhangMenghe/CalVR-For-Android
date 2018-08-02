@@ -89,11 +89,11 @@ add_library(osgScene
             src/main/cpp/arcoreController.cpp
             src/main/cpp/osg_planeRenderer.cpp
             src/main/cpp/glDrawable.cpp
+            src/main/cpp/bgDrawable.cpp
             src/main/cpp/pointDrawable.cpp
             src/main/cpp/planeDrawable.cpp
             src/main/cpp/osg_pointcloudRenderer.cpp
             src/main/cpp/osg_objectRenderer.cpp
-            src/main/cpp/osg_cameraRenderer.cpp
             src/main/cpp/jni_interface_osg_gesture.cpp
             src/main/cpp/gesture_controller.cpp)
 add_library(arTemplate

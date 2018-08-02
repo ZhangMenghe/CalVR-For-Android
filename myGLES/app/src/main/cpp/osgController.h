@@ -13,13 +13,15 @@
 #include "osg_objectRenderer.h"
 #include "arcoreController.h"
 
-#include "glDrawable.h"
+
 #include <osgGA/KeySwitchMatrixManipulator>
 #include "planeDrawable.h"
+#include "bgDrawable.h"
 namespace osg_controller{
     class osgController {
     private:
         AAssetManager *const _asset_manager;
+        osg::ref_ptr<bgDrawable> _bgDrawable;
         osg::ref_ptr<pointDrawable> _pointcloudDrawable;
         std::vector<osg::ref_ptr<planeDrawable>> _planeDrawables;
 
@@ -32,9 +34,10 @@ namespace osg_controller{
         osg::ref_ptr<osg::Group>  _root;
 
         arcoreController * _ar_controller;
-        osg_cameraRenderer * _camera_renderer;
+
 
         /*DEPRECATED
+         * osg_cameraRenderer * _camera_renderer;
          * osg_pointcloudRenderer * _pointcloud_renderer;
          * osg_planeRenderer * _plane_renderer;
          * */

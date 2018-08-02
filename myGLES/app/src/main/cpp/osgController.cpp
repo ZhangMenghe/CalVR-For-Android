@@ -44,7 +44,7 @@ osgController::osgController(AAssetManager * manager)
     _initialize_camera();
 
     _ar_controller = new arcoreController();
-    _camera_renderer = new osg_cameraRenderer();
+//    _camera_renderer = new osg_cameraRenderer();
 //    _plane_renderer = new osg_planeRenderer();
 //    _pointcloud_renderer = new osg_pointcloudRenderer();
     _object_renderer = new osg_objectRenderer();
@@ -69,7 +69,7 @@ void osgController::_initialize_camera() {
 }
 void osgController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-    shape->setShape(new osg::Sphere(pos, 0.05f));
+    shape->setShape(new osg::Sphere(pos, 0.1f));
     shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
 
@@ -94,19 +94,19 @@ void osgController::createDebugOSGSphere(osg::Vec3 pos) {
 
 void osgController::onCreate() {
     createDebugOSGSphere(osg::Vec3(.0f,0.1f,.0f));
-    createDebugOSGSphere(osg::Vec3(.0f,.0f,0.2f));
+//    createDebugOSGSphere(osg::Vec3(.0f,.0f,0.2f));
 
     _pointcloudDrawable = new pointDrawable();
     _root->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
-//    _planeDrawable = new planeDrawable();
-//    _root->addChild(_planeDrawable->createDrawableNode(_asset_manager, &glStateStack));
-
-    _camera_renderer->createNode(_asset_manager);
-//    _root->addChild(_camera_renderer->createNode(_asset_manager));
-
+    _bgDrawable = new bgDrawable();
+    /*Switch between whether add into scene*/
+    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
+//    _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
     /*DEPRECATE:
+     *  _camera_renderer->createNode(_asset_manager);
+     * _root->addChild(_camera_renderer->createNode(_asset_manager));
      * _root->addChild(_plane_renderer->createNode(_asset_manager));
      * _root->addChild(_pointcloud_renderer->createNode(_asset_manager));
      * */
@@ -129,8 +129,7 @@ void osgController::onResume(void *env, void *context, void *activity) {
 
 void osgController::onDrawFrame(bool btn_status_normal) {
     //must call this func before update ar session
-    GLuint textureId = _camera_renderer->GetTextureId(_viewer);
-    _ar_controller->onDrawFrame(textureId);
+    _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
 
     osg::Vec3d center,eye,up;
     glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
@@ -149,7 +148,9 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     _ar_controller->renderPointClouds(_pointcloudDrawable);
 
     /*UNCOMMENT THIS TO DRAW BACKGROUND CAMERA*/
-//    _camera_renderer->Draw(_ar_controller, btn_status_normal);
+    float * transUV = _ar_controller->updateBackgroundRender();
+    if(nullptr != transUV)
+        _bgDrawable->updateOnFrame(transUV);
 
     /*UNCOMMENT THIS TO DRAW PLANES*/
     if(!_ar_controller->isTracking())
@@ -171,14 +172,14 @@ void osgController::onDrawFrame(bool btn_status_normal) {
                                           _ar_controller->proj_mat, _ar_controller->view_mat,
                                           planeIt->second);
 
-
     /*NEARLY DEPRECATE*/
 //    _ar_controller->updatePointCloudRenderer(_pointcloud_renderer);
-//    _ar_controller->doPlaneDetection(_plane_renderer);
+    //GLuint textureId = _camera_renderer->GetTextureId(_viewer);
+    //_camera_renderer->Draw(_ar_controller, btn_status_normal);
 
     /*UNCOMMENT THIS TO DRAW ANDROID FIGURE*/
-//    _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
-//                           glm::translate(glm::mat4(), glm::vec3(.0f, 0.3f, 0.0f)), _color_correction, 1);
+    _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
+                           glm::translate(glm::mat4(), glm::vec3(.0f, 0.3f, 0.0f)), _color_correction, 1);
 
     _viewer->frame();
 }
