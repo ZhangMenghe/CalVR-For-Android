@@ -6,10 +6,14 @@ SET(REBUILD, NO)
 IF(${REBUILD})
     include(CMakeLists-buildMXML.txt)
     include(CMakeLists-buildOSG.txt)
+    include(CMakeLists-buildCALVR.txt)
 ELSE()
     include(CMakeLists-staticOSG.txt)
     include(CMakeLists-staticMXML.txt)
+    include(CMakeLists-staticCALVR.txt)
 ENDIF()
+
+
 
 add_library(arcore SHARED IMPORTED)
 set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
@@ -66,34 +70,43 @@ target_link_libraries(glTriangle
                       GLESv2)
 # add lib dependencies
 target_link_libraries(osgScene
+                      cvrKernel                     # For cvr, Kernel > Menu > Util
+                      cvrMenu                       # The order of Input, Config, Collaborative is unsure (current order works)
+                      cvrUtil                       #
+                      cvrInput                      #
+                      cvrConfig                     #
+                      cvrCollaborative              #
+
                       android
                       mediandk
                       log
 
                       mxml
                       arcore
+
                       #need for osg
                       osgPresentation               # For osg, the dependency relations:
-                          osgWidget                     # osgPresentation: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgPresentation.png
-                          osgUI                         # osgdb_osg: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgdb_osg.png
-                          osgManipulator                # osgdb_serializers_osg:
-                          osgAnimation                  # https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgdb_serializers_osg.png
-                          osgViewer                     # (These three are the "roots" of the trees)
-                          osgVolume                     #
-                          osgSim                        #
-                          osgShadow                     #
-                          osgTerrain                    #
-                          osgParticle                   #
-                          osgFX                         #
-                          z                             #
-                          osgText                       #
-                          osgGA                         #
-                          osgdb_osg                     #
-                          osgdb_serializers_osg         #
-                          osgDB                         #
-                          osgUtil                       #
-                          osg                           #
-                          OpenThreads                   #
+                      osgWidget                     # osgPresentation: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgPresentation.png
+                      osgUI                         # osgdb_osg: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgdb_osg.png
+                      osgManipulator                # osgdb_serializers_osg:
+                      osgAnimation                  # https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgdb_serializers_osg.png
+                      osgViewer                     # (These three are the "roots" of the trees)
+                      osgVolume                     #
+                      osgSim                        #
+                      osgShadow                     #
+                      osgTerrain                    #
+                      osgParticle                   #
+                      osgFX                         #
+                      z                             #
+                      osgText                       #
+                      osgGA                         #
+                      osgdb_osg                     #
+                      osgdb_serializers_osg         #
+                      osgDB                         #
+                      osgUtil                       #
+                      osg
+                      OpenThreads
+
                       EGL
                       GLESv2
                       GLESv3)
