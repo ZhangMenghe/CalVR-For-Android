@@ -6,4 +6,4 @@ SET(MXML_BUILD_DIR "${EXT_PROJ_DIR}/mxml-2.11/build/${ANDROID_ABI}")
 
 add_library(mxml STATIC IMPORTED)
 set_target_properties(mxml PROPERTIES IMPORTED_LOCATION
-                      ${MXML_BUILD_DIR}/lib/libmxml.a)
+                      ${MXML_BUILD_DIR}/lib/libmxmld.a)

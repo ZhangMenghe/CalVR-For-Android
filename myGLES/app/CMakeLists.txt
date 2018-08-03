@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.4.1)
 
 SET(REBUILD, NO)
 
-
-
 # Choose between static or build from origin
 IF(${REBUILD})
     include(CMakeLists-buildMXML.txt)
@@ -75,17 +73,27 @@ target_link_libraries(osgScene
                       mxml
                       arcore
                       #need for osg
-                      osgViewer
-                      osgDB
-                      z
-                      osgdb_osg
-                      osgdb_serializers_osg
-                      osgGA
-                      osgShadow
-                      osgText
-                      osgUtil
-                      osg
-                      OpenThreads
+                      osgPresentation               # For osg, the dependency relations:
+                          osgWidget                     # osgPresentation: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgPresentation.png
+                          osgUI                         # osgdb_osg: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgdb_osg.png
+                          osgManipulator                # osgdb_serializers_osg:
+                          osgAnimation                  # https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgdb_serializers_osg.png
+                          osgViewer                     # (These three are the "roots" of the trees)
+                          osgVolume                     #
+                          osgSim                        #
+                          osgShadow                     #
+                          osgTerrain                    #
+                          osgParticle                   #
+                          osgFX                         #
+                          z                             #
+                          osgText                       #
+                          osgGA                         #
+                          osgdb_osg                     #
+                          osgdb_serializers_osg         #
+                          osgDB                         #
+                          osgUtil                       #
+                          osg                           #
+                          OpenThreads                   #
                       EGL
                       GLESv2
                       GLESv3)

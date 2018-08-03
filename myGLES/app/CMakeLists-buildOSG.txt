@@ -12,3 +12,6 @@ add_subdirectory(${OSG_SOURCE_DIR} ${OSG_BUILD_DIR})
 
 include_directories(${OSG_SOURCE_DIR}/include)
 include_directories(${OSG_BUILD_DIR}/include)
+
+SET(OSG_LIB_DIR "${OSG_BUILD_DIR}/lib")
+LINK_DIRECTORIES(${OSG_LIB_DIR})

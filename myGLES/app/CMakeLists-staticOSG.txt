@@ -43,3 +43,43 @@ set_target_properties(OpenThreads PROPERTIES IMPORTED_LOCATION
 add_library(osgShadow STATIC IMPORTED)
 set_target_properties(osgShadow PROPERTIES IMPORTED_LOCATION
                       ${OSG_BUILD_DIR}/lib/libosgShadowd.a)
+
+add_library(osgSim STATIC IMPORTED)
+set_target_properties(osgSim PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgSimd.a)
+
+add_library(osgTerrain STATIC IMPORTED)
+set_target_properties(osgTerrain PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgTerraind.a)
+
+add_library(osgWidget STATIC IMPORTED)
+set_target_properties(osgWidget PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgWidgetd.a)
+
+add_library(osgAnimation STATIC IMPORTED)
+set_target_properties(osgAnimation PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgAnimationd.a)
+
+add_library(osgFX STATIC IMPORTED)
+set_target_properties(osgFX PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgFXd.a)
+
+add_library(osgManipulator STATIC IMPORTED)
+set_target_properties(osgManipulator PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgManipulatord.a)
+
+add_library(osgParticle STATIC IMPORTED)
+set_target_properties(osgParticle PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgParticled.a)
+
+add_library(osgUI STATIC IMPORTED)
+set_target_properties(osgUI PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgUId.a)
+
+add_library(osgVolume STATIC IMPORTED)
+set_target_properties(osgVolume PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgVolumed.a)
+
+add_library(osgPresentation STATIC IMPORTED)
+set_target_properties(osgPresentation PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgPresentationd.a)

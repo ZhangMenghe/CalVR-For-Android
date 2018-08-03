@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class JniInterfaceOSG {
     static {
-        System.loadLibrary("osgScene");
+        System.loadLibrary("osgScened");
     }
     private static final String TAG = "JniInterfaceOSG";
     static AssetManager assetManager;
