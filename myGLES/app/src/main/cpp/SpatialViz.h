@@ -75,10 +75,7 @@ class SpatialViz : public cvr::CVRPlugin, public cvr::MenuCallback
 //    osg::PositionAttitudeTransform  * addCube(osg::Group*, osg::Vec3, float, float, float, osg::Vec3);
  
   public:
-//    SpatialViz();
-//    virtual ~SpatialViz();
-//
-//    bool init();
+    bool init();
 //    void menuCallback(cvr::MenuItem * item);
 //    void preFrame();
 //

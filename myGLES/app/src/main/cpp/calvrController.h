@@ -9,6 +9,7 @@
 #include <osgViewer/Viewer>
 #include <cvrKernel/CVRViewer.h>
 
+#include "SpatialViz.h"
 namespace controller{
     class calvrController {
     private:
@@ -21,6 +22,8 @@ namespace controller{
         cvr::SceneManager * _scene;
         cvr::ConfigManager * _config;
         cvr::MenuManager * _menu;
+
+        SpatialViz* _spatialViz;
 
         void createDebugOSGSphere(osg::Vec3 pos);
         void initialize_camera();

@@ -23,6 +23,7 @@ calvrController::calvrController(AAssetManager *assetManager)
     _menu =  cvr::MenuManager::instance();
     _scene = cvr::SceneManager::instance();
     _config = cvr::ConfigManager::instance();
+    _spatialViz = new SpatialViz();
     initialize_camera();
 }
 
@@ -86,6 +87,9 @@ void calvrController::onCreate(const char * calvr_path){
 
     if(!_menu->init())
         LOGE("==========MENU INITIALIZATION FAIL=========");
+
+    if(!_spatialViz->init())
+        LOGE("SPATIALVIZ INITIALIZATION FAIL");
 
     _viewer->setSceneData(_root.get());
 }
