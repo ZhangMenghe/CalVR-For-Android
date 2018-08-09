@@ -1,0 +1,10 @@
+add_library(glTriangle
+            SHARED
+            src/main/cpp/drawTriangle.cpp)
+
+# add lib dependencies
+target_link_libraries(glTriangle
+                      android
+                      log
+                      EGL
+                      GLESv2)

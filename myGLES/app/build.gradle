@@ -15,7 +15,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++11 -Wall"
+                cppFlags "-std=c++1z -Wall"
                 arguments "-DANDROID_STL=c++_static",
                         "-DARCORE_LIBPATH=${arcore_libpath}/jni"
             }
