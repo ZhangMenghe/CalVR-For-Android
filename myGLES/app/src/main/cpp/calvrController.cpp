@@ -64,7 +64,7 @@ void calvrController::setupDefaultEnvironment(const char *root_path) {
     std::string homeDir = std::string(root_path) + "/";
     setenv("CALVR_HOME", homeDir);
     setenv("CALVR_CONFIG_DIR", homeDir+"config/");
-    setenv("CALVR_RESOURCE_DIR", homeDir+"icons/");
+    setenv("CALVR_RESOURCE_DIR", homeDir+"resources/");
     setenv("CALVR_CONFIG_FILE", homeDir+"config/config.xml");
 }
 
@@ -77,6 +77,12 @@ void calvrController::onCreate(const char * calvr_path){
     setupDefaultEnvironment(calvr_path);
 
     createDebugOSGSphere(osg::Vec3(.0f, 0.1f, .0f));
+
+    std::string fontfile = getenv("CALVR_RESOURCE_DIR");
+
+    fontfile = fontfile + "arial.ttf";
+    ///utils::loadFontFile(_asset_manager, fontfile.c_str());
+
     if(!_scene->init())
         LOGE("==========SCENE INITIALIZATION FAIL=========");
 

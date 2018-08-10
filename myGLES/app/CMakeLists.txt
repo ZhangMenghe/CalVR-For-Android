@@ -3,11 +3,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -Wall")
 SET(REBUILD, NO)
 
 # Choose between static or build from origin
+#
 IF(${REBUILD})
+    #include(CMakeLists-buildFreetype.txt)
     include(CMakeLists-buildMXML.txt)
     include(CMakeLists-buildOSG.txt)
     include(CMakeLists-buildCALVR.txt)
 ELSE()
+    include(CMakeLists-staticFreetype.txt)
     include(CMakeLists-staticOSG.txt)
     include(CMakeLists-staticMXML.txt)
     #include(CMakeLists-staticCALVR.txt)

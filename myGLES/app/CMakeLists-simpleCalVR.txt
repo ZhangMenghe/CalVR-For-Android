@@ -22,7 +22,7 @@ target_link_libraries(simpleCalVR
                       mediandk
                       log
                       mxml
-
+                      freetype
                       #need for osg
                       osgPresentation               # For osg, the dependency relations:
                       osgWidget                     # osgPresentation: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgPresentation.png
