@@ -109,7 +109,9 @@ void osgController::onCreate(const char* res_path) {
     string font = string(res_path) + string("calvrAssets/resources/arial.ttf");
     _textDrawable = new freetypeDrawable(font.c_str());
     _sceneGroup->addChild(_textDrawable->createDrawableNode(_asset_manager, &glStateStack));
-
+    /*Draw a test freetype character*/
+    _textDrawable->addTargetString("creek",-0.8f, 0.5f, 0.005);
+    _textDrawable->addTargetString("leaves",-0.2f, .0f, 0.005);
 
     /*DEPRECATE:
      *  _camera_renderer->createNode(_asset_manager);
@@ -126,6 +128,7 @@ void osgController::onCreate(const char* res_path) {
     _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
     _root->addChild(_sceneGroup);
     _viewer->setSceneData(_root.get());
+
 }
 
 void osgController::onViewChanged(int rot, int width, int height) {
@@ -194,8 +197,7 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
                            glm::translate(glm::mat4(), glm::vec3(.0f, 0.1f, 0.0f)), _color_correction, 1);
 
-    /*Draw a test freetype character*/
-    _textDrawable->setTargetString("creek",-0.1f, -0.1f, 0.01);
+
 
     _viewer->frame();
 }

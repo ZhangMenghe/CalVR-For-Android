@@ -14,10 +14,14 @@
 class glDrawable: public osg::Drawable {
 protected:
     std::stack<utils::glState>* _stateStack;
+    AAssetManager *_asset_manager;
     bool PushAllState() const;
     bool PopAllState() const;
 public:
-    virtual void Initialization(AAssetManager *manager,std::stack<utils::glState>* stateStack){_stateStack = stateStack;}
+    virtual void Initialization(AAssetManager *manager,std::stack<utils::glState>* stateStack){
+            _stateStack = stateStack;
+            _asset_manager = manager;
+    }
     osg::ref_ptr<osg::Geode> createDrawableNode(AAssetManager *manager,std::stack<utils::glState>* stateStack){
         Initialization(manager, stateStack);
         osg::ref_ptr<osg::Geode> glNode = new osg::Geode;
