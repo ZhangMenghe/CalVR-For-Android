@@ -50,8 +50,10 @@ JNI_METHOD(void, JNIdrawFrame)
 }
 
 JNI_METHOD(void, JNIonGlSurfaceCreated)
-        (JNIEnv *, jclass){
-    controllerNative(nativeAppAddr)->onCreate();
+        (JNIEnv *env, jclass, jstring res_path){
+    const char* cpath = env->GetStringUTFChars(res_path, JNI_FALSE);
+    controllerNative(nativeAppAddr)->onCreate(cpath);
+    env->ReleaseStringUTFChars(res_path, cpath);
 }
 
 JNI_METHOD(void, JNIonViewChanged)

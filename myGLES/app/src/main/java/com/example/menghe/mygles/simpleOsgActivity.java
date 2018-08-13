@@ -21,6 +21,8 @@ public class simpleOsgActivity extends AppCompatActivity
     private boolean viewportChanged = false;
     private int viewportWidth;
     private int viewportHeight;
+    String resourceDest = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,7 @@ public class simpleOsgActivity extends AppCompatActivity
 
         setupSurfaceView();
         //setupResources("/box.osgt", R.raw.box);
+        resourceDest = getFilesDir().getAbsolutePath() + "/";
     }
     @Override
     protected void onResume(){
@@ -129,7 +132,7 @@ public class simpleOsgActivity extends AppCompatActivity
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             // Do nothing
             gl.glEnable(GL10.GL_DEPTH_TEST);
-            JniInterfaceOSG.JNIonGlSurfaceCreated();
+            JniInterfaceOSG.JNIonGlSurfaceCreated(resourceDest);
         }
     }
     // DisplayListener methods

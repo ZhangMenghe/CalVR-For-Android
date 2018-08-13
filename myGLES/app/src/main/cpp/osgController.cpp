@@ -94,8 +94,8 @@ void osgController::createDebugOSGSphere(osg::Vec3 pos) {
     _sceneGroup->addChild(node);
 }
 
-void osgController::onCreate() {
-    createDebugOSGSphere(osg::Vec3(.0f,0.1f,.0f));
+void osgController::onCreate(const char* res_path) {
+    //createDebugOSGSphere(osg::Vec3(.0f,0.1f,.0f));
 //    createDebugOSGSphere(osg::Vec3(.0f,.0f,0.2f));
 
     _pointcloudDrawable = new pointDrawable();
@@ -103,8 +103,13 @@ void osgController::onCreate() {
 
     _bgDrawable = new bgDrawable();
     /*Switch between whether add into scene*/
-//    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
-    _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
+    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
+    //_root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
+
+    string font = string(res_path) + string("calvrAssets/resources/arial.ttf");
+    _textDrawable = new freetypeDrawable(font.c_str());
+    _sceneGroup->addChild(_textDrawable->createDrawableNode(_asset_manager, &glStateStack));
+
 
     /*DEPRECATE:
      *  _camera_renderer->createNode(_asset_manager);
@@ -188,6 +193,9 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     /*UNCOMMENT THIS TO DRAW ANDROID FIGURE*/
     _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
                            glm::translate(glm::mat4(), glm::vec3(.0f, 0.1f, 0.0f)), _color_correction, 1);
+
+    /*Draw a test freetype character*/
+    _textDrawable->setTargetString("creek",-0.1f, -0.1f, 0.01);
 
     _viewer->frame();
 }

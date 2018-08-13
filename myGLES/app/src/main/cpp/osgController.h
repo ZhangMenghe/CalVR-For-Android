@@ -17,6 +17,8 @@
 #include <osgGA/KeySwitchMatrixManipulator>
 #include "planeDrawable.h"
 #include "bgDrawable.h"
+#include "freetypeDrawable.h"
+
 namespace osg_controller{
     class osgController {
     private:
@@ -24,6 +26,7 @@ namespace osg_controller{
         osg::ref_ptr<bgDrawable> _bgDrawable;
         osg::ref_ptr<pointDrawable> _pointcloudDrawable;
         std::vector<osg::ref_ptr<planeDrawable>> _planeDrawables;
+        osg::ref_ptr<freetypeDrawable> _textDrawable;
 
         int _plane_num = 0;
         std::stack<utils::glState> glStateStack;
@@ -52,7 +55,7 @@ namespace osg_controller{
 
         ~osgController();
 
-        void onCreate();
+        void onCreate(const char* res_path);
 
         void onPause();
 

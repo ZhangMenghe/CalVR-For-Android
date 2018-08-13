@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class JniInterfaceOSG {
     static {
-        System.loadLibrary("osgScened");
+        System.loadLibrary("osgScene");
     }
     private static final String TAG = "JniInterfaceOSG";
     static AssetManager assetManager;
@@ -25,7 +25,7 @@ public class JniInterfaceOSG {
 
     public static native void JNIdrawFrame(boolean btn_status_normal);
 
-    public static native void JNIonGlSurfaceCreated();
+    public static native void JNIonGlSurfaceCreated(String resourceDest);
 
     public static native void JNIonViewChanged(int rotation, int width, int height);
 

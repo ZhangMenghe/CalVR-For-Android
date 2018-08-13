@@ -50,6 +50,8 @@ public class OsgInteractionActivity extends AppCompatActivity
     private int[] imgIds = {R.drawable.pre_arrow, R.drawable.next_arrow, R.drawable.up_arrow, R.drawable.down_arrow};
     private GestureLibrary gestureLibrary;
 
+    String resourceDest = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,8 @@ public class OsgInteractionActivity extends AppCompatActivity
         setupViewFlipper("action");
         setupTouchDetection();
         setupGestureMenu();
+
+        resourceDest = getFilesDir().getAbsolutePath() + "/";
     }
 
 
@@ -335,7 +339,7 @@ public class OsgInteractionActivity extends AppCompatActivity
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             // Do nothing
             gl.glEnable(GL10.GL_DEPTH_TEST);
-            JniInterfaceOSG.JNIonGlSurfaceCreated();
+            JniInterfaceOSG.JNIonGlSurfaceCreated(resourceDest);
         }
     }
 
