@@ -45,6 +45,7 @@ osgController::osgController(AAssetManager * manager)
     _initialize_camera();
 
     _ar_controller = new arcoreController();
+    //Deprecated:
 //    _camera_renderer = new osg_cameraRenderer();
 //    _plane_renderer = new osg_planeRenderer();
 //    _pointcloud_renderer = new osg_pointcloudRenderer();
@@ -95,7 +96,7 @@ void osgController::createDebugOSGSphere(osg::Vec3 pos) {
 }
 
 void osgController::onCreate(const char* res_path) {
-    //createDebugOSGSphere(osg::Vec3(.0f,0.1f,.0f));
+    createDebugOSGSphere(osg::Vec3(.0f,0.1f,.0f));
 //    createDebugOSGSphere(osg::Vec3(.0f,.0f,0.2f));
 
     _pointcloudDrawable = new pointDrawable();
@@ -103,15 +104,15 @@ void osgController::onCreate(const char* res_path) {
 
     _bgDrawable = new bgDrawable();
     /*Switch between whether add into scene*/
-    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
-    //_root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
+//    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
+    _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
     string font = string(res_path) + string("calvrAssets/resources/arial.ttf");
     _textDrawable = new freetypeDrawable(font.c_str());
     _sceneGroup->addChild(_textDrawable->createDrawableNode(_asset_manager, &glStateStack));
     /*Draw a test freetype character*/
-    _textDrawable->addTargetString("creek",-0.8f, 0.5f, 0.005);
-    _textDrawable->addTargetString("leaves",-0.2f, .0f, 0.005);
+    _textDrawable->addTargetString("Menu Title",-0.8f, 0.5f, 0.005);
+    _textDrawable->addTargetString("MenuButton",-0.2f, .0f, 0.005);
 
     /*DEPRECATE:
      *  _camera_renderer->createNode(_asset_manager);
