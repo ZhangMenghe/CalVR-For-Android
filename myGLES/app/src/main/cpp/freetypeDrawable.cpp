@@ -23,7 +23,7 @@ void freetypeDrawable::Initialization(AAssetManager *manager,
     FT_Set_Pixel_Sizes(face, 0, 48);
 
     // Disable byte-alignment restriction
-    /*glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     // Load first 128 characters of ASCII set
     for (GLubyte c = 0; c < 128; c++)
@@ -38,17 +38,15 @@ void freetypeDrawable::Initialization(AAssetManager *manager,
         GLuint texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RED,
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-        );
+        glTexImage2D(GL_TEXTURE_2D,
+                     0,
+                     GL_ALPHA,
+                     face->glyph->bitmap.width,
+                     face->glyph->bitmap.rows,
+                     0,
+                     GL_ALPHA,
+                     GL_UNSIGNED_BYTE,
+                     face->glyph->bitmap.buffer);
         // Set texture options
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -67,7 +65,6 @@ void freetypeDrawable::Initialization(AAssetManager *manager,
     // Destroy FreeType once we're finished
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
-*/
     _attribute_vertex = glGetAttribLocation(_shader_program,"vPosition");
     _attribute_uv = glGetAttribLocation(_shader_program,"vTexcoord");
 
@@ -91,24 +88,40 @@ void freetypeDrawable::Initialization(AAssetManager *manager,
     glBindVertexArray(0);
 
     GLuint proj_mat =  glGetUniformLocation(_shader_program, "uProj");
-//    GLuint text_color = glGetUniformLocation(_shader_program, "texColor");
-    _uniform_tex_sampler = glGetUniformLocation(_shader_program, "uTexture");
+    GLuint text_color = glGetUniformLocation(_shader_program, "texColor");
+
     glUseProgram(_shader_program);
     glUniformMatrix4fv(proj_mat, 1, GL_FALSE, glm::value_ptr(glm::mat4()));
-//    glUniform3f(text_color, 1.0, .0, .0);
-//    glUniform1i(glGetUniformLocation(_shader_program, "uSampler"), 0);
+    glUniform3f(text_color, 1.0, .0, .0);
+    glUniform1i(glGetUniformLocation(_shader_program, "uTexture"), 0);
     glUseProgram(0);
 }
 
+void freetypeDrawable::setTargetString(std::string text, float x, float y, float scale) {
+    //delete above to recover characters as pre-load
+    Character ch = Characters[text[0]];
+    _TextureID = ch.TextureID;
+    GLfloat xpos = x + ch.Bearing.x * scale;
+    GLfloat ypos = -y-ch.Bearing.y * scale;//y - (ch.Size.y - ch.Bearing.y)*scale;
+    GLfloat w = ch.Size.x * scale;
+    GLfloat h = ch.Size.y * scale;
+    const GLfloat vertices[] = {
+            xpos,     -ypos,
+            xpos + w, -ypos,
+            xpos,     -ypos - h,
+            xpos + w, -ypos - h
+    };
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) *_pointNum * 2, vertices); // Be sure to use glBufferSubData and not glBufferData
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
 void freetypeDrawable::drawImplementation(osg::RenderInfo&) const{
     PushAllState();
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glUseProgram(_shader_program);
-//    glDepthMask(GL_FALSE);
 
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(_uniform_tex_sampler, 0);
 
     glBindVertexArray(_VAO);
     glBindTexture(GL_TEXTURE_2D, _TextureID);
@@ -121,50 +134,4 @@ void freetypeDrawable::drawImplementation(osg::RenderInfo&) const{
     glUseProgram(0);
     checkGlError("Draw point cloud");
     PopAllState();
-}
-void freetypeDrawable::setTargetString(std::string text, float x, float y, float scale) {
-    FT_GlyphSlot g = face->glyph;
-
-    /* Create a texture that will be used to hold one "glyph" */
-    GLuint tex;
-    glActiveTexture(GL_TEXTURE0);
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    /* Clamping to edges is important to prevent artifacts when scaling */
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    /* Linear filtering usually looks best for text */
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    if(FT_Load_Char(face, text[0], FT_LOAD_RENDER))
-        return;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, g->bitmap.width, g->bitmap.rows, 0, GL_ALPHA, GL_UNSIGNED_BYTE, g->bitmap.buffer);
-
-    Character ch = {
-            tex,
-            glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            (GLuint)face->glyph->advance.x
-    };
-    //delete above to recover characters as pre-load
-//    Character ch = Characters[text[0]];
-    _TextureID = ch.TextureID;
-    GLfloat xpos = x + ch.Bearing.x * scale;
-    GLfloat ypos = -y-ch.Bearing.y * scale;//y - (ch.Size.y - ch.Bearing.y)*scale;
-    GLfloat w = ch.Size.x * scale;
-    GLfloat h = ch.Size.y * scale;
-    const GLfloat vertices[] = {
-            xpos,     -ypos,
-            xpos + w, -ypos,
-            xpos,     -ypos - h,
-            xpos + w, -ypos - h
-    };
-//    glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO[0]);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) *_pointNum * 2, vertices); // Be sure to use glBufferSubData and not glBufferData
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-//    glBindTexture(GL_TEXTURE_2D, 0);
 }
