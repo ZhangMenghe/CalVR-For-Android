@@ -58,6 +58,22 @@ JNI_METHOD(void, JNIonViewChanged)
 (JNIEnv*, jclass, jint rotation, jint width, jint height){
     controllerNative(nativeAppAddr)->onViewChanged(rotation, width, height);
 }
+
+JNI_METHOD(void, JNIonTouched)
+(JNIEnv*, jclass, jfloat x, jfloat y){
+    controllerNative(nativeAppAddr)->onTouch(x, y);
+}
+
+JNI_METHOD(void, JNIonDoubleTouch)
+(JNIEnv*, jclass, jfloat x, jfloat y){
+    controllerNative(nativeAppAddr)->onDoubleTouch(x,y);
+}
+
+JNI_METHOD(void, JNIonTouchMove)
+(JNIEnv*, jclass, jfloat srcx, jfloat srcy, jfloat destx, jfloat desty){
+    controllerNative(nativeAppAddr)->onTouchMove(srcx, srcy, destx, desty);
+}
+
 JNIEnv *GetJniEnv() {
     JNIEnv *env;
     jint result = g_vm->AttachCurrentThread(&env, nullptr);

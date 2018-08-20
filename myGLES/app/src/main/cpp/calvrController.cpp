@@ -13,7 +13,7 @@
 
 using namespace controller;
 using namespace osg;
-
+using namespace cvr;
 calvrController::calvrController(AAssetManager *assetManager)
 :_asset_manager(assetManager){
 //    _viewer = new osgViewer::Viewer();
@@ -23,6 +23,9 @@ calvrController::calvrController(AAssetManager *assetManager)
     _menu =  cvr::MenuManager::instance();
     _scene = cvr::SceneManager::instance();
     _config = cvr::ConfigManager::instance();
+    _interactionManager = cvr::InteractionManager::instance();
+//    _tracking = TrackingManager::instance();
+//    _navigation = cvr::Navigation::instance();
     _spatialViz = new SpatialViz();
     initialize_camera();
 }
@@ -94,6 +97,15 @@ void calvrController::onCreate(const char * calvr_path){
     if(!_menu->init())
         LOGE("==========MENU INITIALIZATION FAIL=========");
 
+    if(!_interactionManager->init())
+        LOGE("==========INTERACTION MANAGER FAIL=========");
+
+//    if(!_tracking->init())
+//        LOGE("==========TRACKING MANAGER FAIL=========");
+//
+//    if(!_navigation->init())
+//        LOGE("=========NAVIGATION FAIL===========");
+
     if(!_spatialViz->init())
         LOGE("SPATIALVIZ INITIALIZATION FAIL");
 
@@ -103,11 +115,16 @@ void calvrController::onCreate(const char * calvr_path){
 void calvrController::onDrawFrame(){
 //    calvr->frame();
     _menu->update();
+    _interactionManager->update();
+//    _tracking->update();
+//    _navigation->update();
     _viewer->frame();
 }
 
 void calvrController::onViewChanged(int rot, int width, int height){
     _viewer->setUpViewerAsEmbeddedInWindow(0,0,width,height);
+    _screenWidth = width;
+    _screenHeight = height;
 //    calvr->onViewChanged(width, height);
 }
 
@@ -117,4 +134,33 @@ void calvrController::onResourceLoaded(const char *path) {
         LOGE("FAILED TO LOAD RESOURCE FILE");
         return;
     }
+}
+osg::Vec3f calvrController::screenToWorld(float x, float y) {
+//    return osg::Vec3f(x-_screenWidth/2, 0, _screenHeight/2 - y);
+    return osg::Vec3f(-50,.0,100);
+}
+void calvrController::onTouch(float x, float y) {
+    LOGE("=================TOUCHED HERE============%f=====%f======", x, y);
+//    MouseInteractionEvent * mie = new MouseInteractionEvent();
+//    mie->setInteraction(BUTTON_UP);
+//    mie->setButton(0);
+    PointerInteractionEvent * pie = new PointerInteractionEvent();
+    pie->setPointerType(PointerInteractionEvent::TOUCH_POINTER);
+    pie->setButton(1);//secondary button
+    pie->setInteraction(Interaction::BUTTON_DOWN);
+    _interactionManager->addEvent(pie);
+}
+void calvrController::onDoubleTouch(float x, float y){
+    PointerInteractionEvent * pie = new PointerInteractionEvent();
+    pie->setPointerType(PointerInteractionEvent::TOUCH_POINTER);
+    pie->setButton(1);//secondary button
+    osg::Matrix m;
+    m.makeTranslate(screenToWorld(x,y));
+    pie->setTransform(m);
+    pie->setInteraction(Interaction::BUTTON_DOUBLE_CLICK);
+    _interactionManager->addEvent(pie);
+}
+
+void calvrController::onTouchMove(float srcx, float srcy, float destx, float desty) {
+    LOGE("=================TOUCHED MOVE HERE=======================");
 }

@@ -25,6 +25,12 @@ JNI_METHOD(void, JNIonResourceLoaded)(JNIEnv*, jclass, jstring path);
 
 JNI_METHOD(void, JNIonViewChanged)(JNIEnv*, jclass, jint rotation, jint width, jint height);
 
+JNI_METHOD(void, JNIonTouched)(JNIEnv*, jclass, jfloat x, jfloat y);
+
+JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv*, jclass, jfloat x, jfloat y);
+
+JNI_METHOD(void, JNIonTouchMove)(JNIEnv*, jclass, jfloat srcx, jfloat srcy, jfloat destx, jfloat desty);
+
 JNIEnv * GetJniEnv();
 }
 

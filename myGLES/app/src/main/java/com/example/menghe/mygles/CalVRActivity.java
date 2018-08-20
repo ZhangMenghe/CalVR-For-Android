@@ -5,6 +5,10 @@ import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,14 +23,19 @@ public class CalVRActivity extends AppCompatActivity {
     private GLSurfaceView surfaceView;
     final static private String calvr_folder = "calvrAssets";
     String calvr_dest = null;
+    //For touch event
+    private GestureDetector gestureDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_cal_vr);
         JniInterfaceCalVR.assetManager = getAssets();
         copyFromAssets();
         controllerAddr = JniInterfaceCalVR.JNIcreateController(JniInterfaceCalVR.assetManager);
         setupSurfaceView();
+        setupTouchDetector();
     }
     private void setupSurfaceView(){
         surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
@@ -36,6 +45,18 @@ public class CalVRActivity extends AppCompatActivity {
         surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0); // Alpha used for plane blending.
         surfaceView.setRenderer(new CalVRActivity.Renderer());
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+    }
+    private void setupTouchDetector(){
+        gestureDetector = new GestureDetector(this,new gestureListener());
+
+        surfaceView.setOnTouchListener(
+                new View.OnTouchListener(){
+                    @Override
+                    public boolean onTouch(View v, MotionEvent e){
+                        return gestureDetector.onTouchEvent(e);
+                    }
+                }
+        );
     }
     private void copyFromAssets(){
         calvr_dest = getFilesDir().getAbsolutePath() + "/" + calvr_folder;
