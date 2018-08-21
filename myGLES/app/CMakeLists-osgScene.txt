@@ -1,6 +1,7 @@
 add_library(osgScene
             SHARED
             src/main/cpp/utils.cpp
+            src/main/cpp/perfMonitor.cpp
             src/main/cpp/arcore_utils.cpp
             src/main/cpp/osg_utils.cpp
             src/main/cpp/jni_interface_osg.cpp

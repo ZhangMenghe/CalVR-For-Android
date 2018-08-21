@@ -19,19 +19,24 @@
 #include "bgDrawable.h"
 #include "freetypeDrawable.h"
 #include "perfMonitor.h"
+
+#define MOVE_OSG_CAM true
+
 namespace osg_controller{
     class osgController {
     private:
         AAssetManager *const _asset_manager;
+        perfMonitor * _monitor;
+
         osg::ref_ptr<bgDrawable> _bgDrawable;
         osg::ref_ptr<pointDrawable> _pointcloudDrawable;
         std::vector<osg::ref_ptr<planeDrawable>> _planeDrawables;
         osg::ref_ptr<freetypeDrawable> _textDrawable;
+        osg_objectRenderer *_object_renderer;
 
         int _plane_num = 0;
         std::stack<utils::glState> glStateStack;
         float _color_correction[4] = {1.f, 1.f, 1.f, 1.f};
-        std::unordered_map<ArPlane*,  glm::vec3> _plane_color_map;
 
         osgViewer::Viewer * _viewer;
         osg::ref_ptr<osg::Group>  _root;
@@ -45,12 +50,14 @@ namespace osg_controller{
          * osg_planeRenderer * _plane_renderer;
          * */
 
-        osg_objectRenderer *_object_renderer;
-
         void createDebugOSGSphere(osg::Vec3 pos);
         void _initialize_camera();
 
     public:
+        bool drawSphere = true; bool drawBackground = true;
+        bool drawPoints = false;bool drawPlane = false;
+        bool drawObj = false; bool drawFreetype = false;
+
         osgController(AAssetManager * manager);
 
         ~osgController();
@@ -68,7 +75,7 @@ namespace osg_controller{
         void debug_loadScene(const char* filename);
         void addNode(osg::ref_ptr<osg::Geode> node){_root->addChild(node);}
         osgViewer::Viewer * getViewer(){return _viewer;}
-        float getFPS(){return 60;}
+        float getFPS(){return _monitor->Update();}
     };
 }
 
