@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">myGLES</string>
+    <string name="app_name">Samsung Project</string>
+    <string name="fps">0.0 FPS</string>
 </resources>

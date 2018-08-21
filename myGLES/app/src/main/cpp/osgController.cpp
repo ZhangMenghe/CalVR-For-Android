@@ -65,9 +65,9 @@ void osgController::_initialize_camera() {
     mainCam->setViewMatrixAsLookAt(eye,center,up); // usual up vector
     mainCam->setRenderOrder(osg::Camera::NESTED_RENDER);
     //TODO:RE-IMPLEMENT MYSELF MANIPULATOR
-    _viewer->setCameraManipulator(new osgGA::TrackballManipulator);
+//    _viewer->setCameraManipulator(new osgGA::TrackballManipulator);
 //    _viewer->setCameraManipulator(new osgGA::FirstPersonManipulator());
-    _viewer->getCameraManipulator()->setHomePosition(eye,center,up,false);
+//    _viewer->getCameraManipulator()->setHomePosition(eye,center,up,false);
 
 }
 void osgController::createDebugOSGSphere(osg::Vec3 pos) {
@@ -107,12 +107,12 @@ void osgController::onCreate(const char* res_path) {
 //    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
     _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
-    string font = string(res_path) + string("calvrAssets/resources/arial.ttf");
-    _textDrawable = new freetypeDrawable(font.c_str());
-    _sceneGroup->addChild(_textDrawable->createDrawableNode(_asset_manager, &glStateStack));
-    /*Draw a test freetype character*/
-    _textDrawable->addTargetString("Menu Title",-0.8f, 0.5f, 0.005);
-    _textDrawable->addTargetString("MenuButton",-0.2f, .0f, 0.005);
+//    string font = string(res_path) + string("calvrAssets/resources/arial.ttf");
+//    _textDrawable = new freetypeDrawable(font.c_str());
+//    _sceneGroup->addChild(_textDrawable->createDrawableNode(_asset_manager, &glStateStack));
+//    /*Draw a test freetype character*/
+//    _textDrawable->addTargetString("Menu Title",-0.8f, 0.5f, 0.005);
+//    _textDrawable->addTargetString("MenuButton",-0.2f, .0f, 0.005);
 
     /*DEPRECATE:
      *  _camera_renderer->createNode(_asset_manager);
@@ -149,9 +149,9 @@ void osgController::onDrawFrame(bool btn_status_normal) {
     _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
 
 //    osg::Vec3d center,eye,up;
-//    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
-//    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
-//    _viewer->getCamera()->setViewMatrix(*mat);
+    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-30.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
+    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
+    _viewer->getCamera()->setViewMatrix(*mat);
 //
 //    _viewer->getCamera()->getViewMatrixAsLookAt(eye,center,up);
 //    _viewer->getCameraManipulator()->setHomePosition(eye,center,up);

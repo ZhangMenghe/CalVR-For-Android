@@ -39,6 +39,8 @@ public class JniInterfaceOSG {
 
     public static native void JNIonDestroy();
 
+    public static native float JNIgetFPS();
+
     public static native void JNIDebugScene(String filename);
 
     public static Bitmap loadImage(String imageName) {

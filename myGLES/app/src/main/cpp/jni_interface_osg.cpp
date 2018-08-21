@@ -88,7 +88,9 @@ JNI_METHOD(void, JNIDebugScene)(JNIEnv *env, jclass, jstring filename){
     controllerNative(nativeAppAddr)->debug_loadScene(cpath);
     env->ReleaseStringUTFChars(filename, cpath);
 }
-
+JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass){
+    return controllerNative(nativeAppAddr)->getFPS();
+}
 JNIEnv *GetJniEnv() {
     JNIEnv *env;
     jint result = g_vm->AttachCurrentThread(&env, nullptr);

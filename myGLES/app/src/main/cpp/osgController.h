@@ -18,7 +18,7 @@
 #include "planeDrawable.h"
 #include "bgDrawable.h"
 #include "freetypeDrawable.h"
-
+#include "perfMonitor.h"
 namespace osg_controller{
     class osgController {
     private:
@@ -68,6 +68,7 @@ namespace osg_controller{
         void debug_loadScene(const char* filename);
         void addNode(osg::ref_ptr<osg::Geode> node){_root->addChild(node);}
         osgViewer::Viewer * getViewer(){return _viewer;}
+        float getFPS(){return 60;}
     };
 }
 

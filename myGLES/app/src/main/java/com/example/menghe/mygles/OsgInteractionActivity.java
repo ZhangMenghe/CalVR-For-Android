@@ -51,6 +51,7 @@ public class OsgInteractionActivity extends AppCompatActivity
     private GestureLibrary gestureLibrary;
 
     String resourceDest = null;
+    TextView FPSlabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class OsgInteractionActivity extends AppCompatActivity
         setupGestureMenu();
 
         resourceDest = getFilesDir().getAbsolutePath() + "/";
+        FPSlabel = (TextView) findViewById(R.id.textViewFPS);
     }
 
 
@@ -326,6 +328,7 @@ public class OsgInteractionActivity extends AppCompatActivity
                     viewportChanged = false;
                 }
                 JniInterfaceOSG.JNIdrawFrame(btn_status_normal);
+                updateFPS(JniInterfaceOSG.JNIgetFPS());
             }
         }
 
@@ -353,4 +356,16 @@ public class OsgInteractionActivity extends AppCompatActivity
 
     @Override
     public void onDisplayChanged(int displayId) {viewportChanged = true;}
+
+    public void updateFPS(final float fFPS)
+    {
+        if( FPSlabel == null )
+            return;
+        this.runOnUiThread(new Runnable()  {
+            @Override
+            public void run()  {
+                FPSlabel.setText(String.format("%2.2f FPS", fFPS));
+
+            }});
+    }
 }
