@@ -12,6 +12,7 @@ target_include_directories(simpleCalVR PRIVATE
 
 # add lib dependencies
 target_link_libraries(simpleCalVR
+                      MenuBasics
                       cvrKernel                     # For cvr, Kernel > Menu > Util
                       cvrMenu                       # The order of Input, Config, Collaborative is unsure (current order works)
                       cvrUtil                       #
