@@ -125,6 +125,7 @@ void calvrController::onViewChanged(int rot, int width, int height){
     _viewer->setUpViewerAsEmbeddedInWindow(0,0,width,height);
     _screenWidth = width;
     _screenHeight = height;
+    _screen_ratio = height/540;
 //    calvr->onViewChanged(width, height);
 }
 
@@ -136,8 +137,7 @@ void calvrController::onResourceLoaded(const char *path) {
     }
 }
 osg::Vec3f calvrController::screenToWorld(float x, float y) {
-//    return osg::Vec3f(x-_screenWidth/2, 0, _screenHeight/2 - y);
-    return osg::Vec3f(-50,.0,100);
+    return osg::Vec3f((x-_screenWidth/2)/_screen_ratio, 0, (_screenHeight/2 - y)/_screen_ratio);
 }
 void calvrController::onTouch(float x, float y) {
     LOGE("=================TOUCHED HERE============%f=====%f======", x, y);

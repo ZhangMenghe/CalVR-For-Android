@@ -19,6 +19,7 @@ namespace controller{
 
         int _screenWidth;
         int _screenHeight;
+        float _screen_ratio;
 
         ///////////////////////////////
 //        osgViewer::Viewer * _viewer;
