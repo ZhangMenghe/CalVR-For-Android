@@ -32,6 +32,18 @@ add_library(osgdb_serializers_osg STATIC IMPORTED)
 set_target_properties(osgdb_serializers_osg PROPERTIES IMPORTED_LOCATION
                       ${OSG_BUILD_DIR}/lib/libosgdb_serializers_osgd.a)
 
+add_library(osgdb_jpeg STATIC IMPORTED)
+set_target_properties(osgdb_jpeg PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgdb_jpegd.a)
+
+add_library(osgdb_png STATIC IMPORTED)
+set_target_properties(osgdb_png PROPERTIES IMPORTED_LOCATION
+                    ${OSG_BUILD_DIR}/lib/libosgdb_pngd.a)
+
+add_library(osgdb_tiff STATIC IMPORTED)
+set_target_properties(osgdb_tiff PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgdb_tiffd.a)
+
 add_library(osgUtil STATIC IMPORTED)
 set_target_properties(osgUtil PROPERTIES IMPORTED_LOCATION
                       ${OSG_BUILD_DIR}/lib/libosgUtild.a)

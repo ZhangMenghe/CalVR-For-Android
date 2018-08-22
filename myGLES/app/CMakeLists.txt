@@ -54,12 +54,13 @@ SET(KERNEL_LIBRARIES
 
 # Choose between static or build from origin
 #
-include(CMakeLists-buildDependencies.txt)
-include(CMakeLists-buildOSG.txt)
+include(CMakeLists-staticDependencies.txt)
+include(CMakeLists-staticOSG.txt)
 #include(CMakeLists-staticMXML.txt)
 #include(CMakeLists-buildCALVR.txt)
 
 #IF(${REBUILD})
+    #include(CMakeLists-buildDependencies.txt)
     #include(CMakeLists-buildFreetype.txt)
  #   include(CMakeLists-buildMXML.txt)
   #  include(CMakeLists-buildOSG.txt)
