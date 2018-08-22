@@ -6,6 +6,7 @@ SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
 SET( CMAKE_SHARED_LINKER_FLAGS  "${CMAKE_SHARED_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
 SET( CMAKE_STATIC_LINKER_FLAGS  "${CMAKE_STATIC_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
+SET(OSG_CPP_EXCEPTIONS_AVAILABLE "Yes")
 
 SET(REBUILD, NO)
 
@@ -109,8 +110,8 @@ target_link_libraries(glTriangle
                           z                             #
                           osgText                       #
                           osgGA                         #
-                          #osgdb_tiff
-                          #osgdb_png
+                          osgdb_tiff
+                          osgdb_png
                           osgdb_jpeg
                           osgdb_osg                     #
                           osgdb_serializers_osg         #
