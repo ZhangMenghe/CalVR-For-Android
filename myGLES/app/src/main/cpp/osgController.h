@@ -55,8 +55,8 @@ namespace osg_controller{
 
     public:
         bool drawSphere = true; bool drawBackground = true;
-        bool drawPoints = false;bool drawPlane = false;
-        bool drawObj = false; bool drawFreetype = false;
+        bool drawPoints = true;bool drawPlane = true;
+        bool drawObj = true; bool drawFreetype = false;
 
         osgController(AAssetManager * manager);
 

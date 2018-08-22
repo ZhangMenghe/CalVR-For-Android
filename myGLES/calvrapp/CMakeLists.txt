@@ -13,9 +13,9 @@ ELSE()
     include(CMakeLists-staticFreetype.txt)
     include(CMakeLists-staticOSG.txt)
     include(CMakeLists-staticMXML.txt)
-    #include(CMakeLists-staticCALVR.txt)
+    include(CMakeLists-staticCALVR.txt)
 ENDIF()
-include(CMakeLists-buildCALVR.txt)
+#include(CMakeLists-buildCALVR.txt)
 
 
 add_library(arcore SHARED IMPORTED)

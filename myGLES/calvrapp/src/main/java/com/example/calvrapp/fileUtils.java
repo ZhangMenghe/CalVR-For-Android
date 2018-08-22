@@ -1,4 +1,4 @@
-package com.example.menghe.mygles;
+package com.example.calvrapp;
 import android.content.res.AssetManager;
 import android.util.Log;
 

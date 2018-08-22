@@ -133,7 +133,7 @@ public class OsgInteractionActivity extends AppCompatActivity
 
     private void setupTouchDetection(){
         //Simple touch detector
-        touchDetector = new GestureDetector(this, new gestureListener());
+        touchDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener());
 
         //Multi touch detector
         TextView textView = (TextView) findViewById(R.id.gestureNameView);

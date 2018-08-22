@@ -1,4 +1,4 @@
-package com.example.menghe.mygles;
+package com.example.calvrapp;
 
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.Window;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -68,29 +66,6 @@ public class CalVRActivity extends AppCompatActivity {
             fileUtils.copyFromAsset(getAssets(), calvr_folder, calvr_dest);
         }catch (Exception e){
             Log.e(TAG, "copyFromAssets: Failed to copy from asset folder");
-        }
-    }
-    private void setupResources()
-    {
-        String filename = "/config.xml";
-        File dir = getFilesDir();
-        String path = dir.getAbsolutePath();
-        String modelPath = path + filename;
-        File model = new File(modelPath);
-        try {
-            if (!model.exists()) {
-                // Note: this only works for small files,
-                // because we read the whole file into memory.
-                InputStream is = getResources().openRawResource(R.raw.config);
-                byte[] buffer = new byte[is.available()];
-                is.read(buffer);
-                FileOutputStream os = new FileOutputStream(model);
-                os.write(buffer);
-            }
-            JniInterfaceCalVR.JNIonResourceLoaded(modelPath);
-        }
-        catch (Exception e) {
-            Log.e(TAG, "setupResources: can not copy resource files");
         }
     }
     private class Renderer implements GLSurfaceView.Renderer {

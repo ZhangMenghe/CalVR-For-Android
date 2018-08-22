@@ -11,7 +11,7 @@
 
 #define JNI_METHOD(returnType, funcName)\
     JNIEXPORT returnType JNICALL        \
-        Java_com_example_menghe_mygles_JniInterfaceCalVR_##funcName
+        Java_com_example_calvrapp_JniInterfaceCalVR_##funcName
 
 //define helper functions to provide access to Java from C via JNI
 extern "C"{

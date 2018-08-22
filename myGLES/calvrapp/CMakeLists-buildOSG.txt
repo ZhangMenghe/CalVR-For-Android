@@ -1,0 +1,17 @@
+set(OSG_SRC_DIR "${CMAKE_SOURCE_DIR}/../../..")
+set(OSG_SOURCE_DIR "${OSG_SRC_DIR}/OpenSceneGraph-3.6.2")
+set(OSG_BUILD_DIR "${OSG_SRC_DIR}/OpenSceneGraph-3.6.2/build/${ANDROID_ABI}")
+
+# Specify critical OpenSceneGraph build variables.
+SET(OPENGL_PROFILE "GLES2+GLES3" CACHE STRING "OpenGL variant to use")
+SET(DYNAMIC_OPENTHREADS OFF CACHE BOOL "Link OpenThreads statically")
+SET(DYNAMIC_OPENSCENEGRAPH OFF CACHE BOOL "Link OpenSceneGraph statically")
+
+file(MAKE_DIRECTORY ${OSG_BUILD_DIR})
+add_subdirectory(${OSG_SOURCE_DIR} ${OSG_BUILD_DIR})
+
+include_directories(${OSG_SOURCE_DIR}/include)
+include_directories(${OSG_BUILD_DIR}/include)
+
+SET(OSG_LIB_DIR "${OSG_BUILD_DIR}/lib")
+LINK_DIRECTORIES(${OSG_LIB_DIR})
