@@ -9,6 +9,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -22,8 +24,7 @@ public class CalVRActivity extends AppCompatActivity {
     final static private String calvr_folder = "calvrAssets";
     String calvr_dest = null;
     //For touch event
-    private GestureDetector gestureDetector;
-
+    private calvrGestureDetector gestureDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,7 @@ public class CalVRActivity extends AppCompatActivity {
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
     private void setupTouchDetector(){
-        gestureDetector = new GestureDetector(this,new gestureListener());
+        gestureDetector = new calvrGestureDetector(this);
 
         surfaceView.setOnTouchListener(
                 new View.OnTouchListener(){

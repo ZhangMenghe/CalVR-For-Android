@@ -24,7 +24,7 @@ calvrController::calvrController(AAssetManager *assetManager)
     _scene = cvr::SceneManager::instance();
     _config = cvr::ConfigManager::instance();
     _interactionManager = cvr::InteractionManager::instance();
-//    _tracking = TrackingManager::instance();
+    _tracking = TrackingManager::instance();
 //    _navigation = cvr::Navigation::instance();
     _spatialViz = new SpatialViz();
     _menuBasics = new MenuBasics();
@@ -104,7 +104,7 @@ void calvrController::onCreate(const char * calvr_path){
 
 //    if(!_tracking->init())
 //        LOGE("==========TRACKING MANAGER FAIL=========");
-//
+
 //    if(!_navigation->init())
 //        LOGE("=========NAVIGATION FAIL===========");
     if(!_menuBasics->init())
@@ -143,28 +143,41 @@ void calvrController::onResourceLoaded(const char *path) {
 osg::Vec3f calvrController::screenToWorld(float x, float y) {
     return osg::Vec3f((x-_screenWidth/2)/_screen_ratio, 0, (_screenHeight/2 - y)/_screen_ratio);
 }
-void calvrController::onTouch(float x, float y) {
+
+void calvrController::onSingleTouch(int pointer_num, float x, float y) {
     LOGE("=================TOUCHED HERE============%f=====%f======", x, y);
-//    MouseInteractionEvent * mie = new MouseInteractionEvent();
-//    mie->setInteraction(BUTTON_UP);
-//    mie->setButton(0);
-    PointerInteractionEvent * pie = new PointerInteractionEvent();
-    pie->setPointerType(PointerInteractionEvent::TOUCH_POINTER);
-    pie->setButton(1);//secondary button
-    pie->setInteraction(Interaction::BUTTON_DOWN);
-    _interactionManager->addEvent(pie);
-}
-void calvrController::onDoubleTouch(float x, float y){
-    PointerInteractionEvent * pie = new PointerInteractionEvent();
-    pie->setPointerType(PointerInteractionEvent::TOUCH_POINTER);
-    pie->setButton(1);//secondary button
+    MouseInteractionEvent * mie = new MouseInteractionEvent();
+    mie->setInteraction(BUTTON_DOWN);
+    mie->setButton(pointer_num - 1);
     osg::Matrix m;
     m.makeTranslate(screenToWorld(x,y));
-    pie->setTransform(m);
-    pie->setInteraction(Interaction::BUTTON_DOUBLE_CLICK);
-    _interactionManager->addEvent(pie);
+    mie->setTransform(m);
+    _interactionManager->addEvent(mie);
+//    PointerInteractionEvent * pie = new PointerInteractionEvent();
+//    pie->setPointerType(PointerInteractionEvent::TOUCH_POINTER);
+//    pie->setButton(1);//secondary button
+//    pie->setInteraction(Interaction::BUTTON_DOWN);
+//    _interactionManager->addEvent(pie);
+}
+void calvrController::onDoubleTouch(int pointer_num, float x, float y){
+    MouseInteractionEvent * mie = new MouseInteractionEvent();
+    mie->setInteraction(BUTTON_DOUBLE_CLICK);
+    mie->setButton(pointer_num - 1);
+    osg::Matrix m;
+    m.makeTranslate(screenToWorld(x,y));
+    mie->setTransform(m);
+    _interactionManager->addEvent(mie);
+
+//    PointerInteractionEvent * pie = new PointerInteractionEvent();
+//    pie->setPointerType(PointerInteractionEvent::TOUCH_POINTER);
+//    pie->setButton(1);//secondary button
+//    osg::Matrix m;
+//    m.makeTranslate(screenToWorld(x,y));
+//    pie->setTransform(m);
+//    pie->setInteraction(Interaction::BUTTON_DOUBLE_CLICK);
+//    _interactionManager->addEvent(pie);
 }
 
-void calvrController::onTouchMove(float srcx, float srcy, float destx, float desty) {
+void calvrController::onTouchMove(int pointer_num, float srcx, float srcy, float destx, float desty) {
     LOGE("=================TOUCHED MOVE HERE=======================");
 }

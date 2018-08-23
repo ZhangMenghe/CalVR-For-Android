@@ -50,11 +50,11 @@ namespace controller{
 
         void onResourceLoaded(const char* path);
 
-        void onTouch(float x, float y);
+        void onSingleTouch(int pointer_num, float x, float y);
 
-        void onDoubleTouch(float x, float y);
+        void onDoubleTouch(int pointer_num, float x, float y);
 
-        void onTouchMove(float srcx, float srcy, float destx, float desty);
+        void onTouchMove(int pointer_num, float srcx, float srcy, float destx, float desty);
     };
 }
 

@@ -20,9 +20,9 @@ public class JniInterfaceCalVR {
 
     public static native void JNIdrawFrame();
 
-    public static native void JNIonTouched(float x, float y);
+    public static native void JNIonSingleTouch(int pointer_num, float x, float y);
 
-    public static native void JNIonDoubleTouch(float x, float y);
+    public static native void JNIonDoubleTouch(int pointer_num, float x, float y);
 
-    public static native void JNIonTouchMove(float srcx, float srcy, float destx, float testy);
+    public static native void JNIonTouchMove(int pointer_num, float srcx, float srcy, float destx, float testy);
 }
