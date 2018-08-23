@@ -1,6 +1,7 @@
 package com.example.calvrapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -13,12 +14,14 @@ public class calvrGestureDetector{
         multiDetector = new SimpleTwoFingerDoubleTapDetector() {
             @Override
             public void onTwoFingerLongPress(float ex, float ey){
-                JniInterfaceCalVR.JNIonSingleTouch(2, ex, ey);
+                Log.e("singleTap", "==========onTwoFingerLongPress: ==============");
+
             }
-            
+
             @Override
             public void onTwoFingerSingleTap(float ex, float ey){
-
+                JniInterfaceCalVR.JNIonSingleTouch(2, ex, ey);
+                Log.e("singleTap", "==========onTwoFingerSingleTouch: ==============");
             }
 
             @Override
