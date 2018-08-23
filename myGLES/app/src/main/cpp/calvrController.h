@@ -10,6 +10,7 @@
 #include <cvrKernel/CVRViewer.h>
 #include <cvrKernel/InteractionManager.h>
 #include "SpatialViz.h"
+#include <MenuBasics.h>
 namespace controller{
     class calvrController {
     private:
@@ -31,6 +32,7 @@ namespace controller{
         cvr::TrackingManager * _tracking;
         cvr::Navigation * _navigation;
         SpatialViz* _spatialViz;
+        MenuBasics* _menuBasics;
 
         void createDebugOSGSphere(osg::Vec3 pos);
         void initialize_camera();

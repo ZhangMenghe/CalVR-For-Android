@@ -27,6 +27,7 @@ calvrController::calvrController(AAssetManager *assetManager)
 //    _tracking = TrackingManager::instance();
 //    _navigation = cvr::Navigation::instance();
     _spatialViz = new SpatialViz();
+    _menuBasics = new MenuBasics();
     initialize_camera();
 }
 
@@ -105,6 +106,8 @@ void calvrController::onCreate(const char * calvr_path){
 //
 //    if(!_navigation->init())
 //        LOGE("=========NAVIGATION FAIL===========");
+    if(!_menuBasics->init())
+        LOGE("MENU BASICS");
 
     if(!_spatialViz->init())
         LOGE("SPATIALVIZ INITIALIZATION FAIL");

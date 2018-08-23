@@ -18,7 +18,7 @@ SET(KERNEL_LIBRARIES
     cvrConfig                     #
     cvrCollaborative              #
     mxml                          # mxml must be included before cvr
-    ${log-lib}                    #
+    log                   #
     osgPresentation               # For osg, the dependency relations:
     osgWidget                     # osgPresentation: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgPresentation.png
     osgUI                         # osgdb_osg: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgdb_osg.png
@@ -34,10 +34,10 @@ SET(KERNEL_LIBRARIES
     z                             #
     osgText                       #
     osgGA                         #
-    #osgdb_tiff
-    #osgdb_png
-    #osgdb_jpeg
-    #osgdb_osg                     #
+    osgdb_tiff
+    osgdb_png
+    osgdb_jpeg
+    osgdb_osg                     #
     osgdb_serializers_osg         #
     osgDB                         #
     osgUtil                       #
@@ -56,8 +56,8 @@ SET(KERNEL_LIBRARIES
 #
 include(CMakeLists-staticDependencies.txt)
 include(CMakeLists-staticOSG.txt)
-#include(CMakeLists-staticMXML.txt)
-#include(CMakeLists-buildCALVR.txt)
+include(CMakeLists-staticMXML.txt)
+include(CMakeLists-buildCALVR.txt)
 
 #IF(${REBUILD})
     #include(CMakeLists-buildDependencies.txt)
@@ -90,41 +90,22 @@ set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
 #Build simple CalVR project
 #include(CMakeLists-simpleCalVR.txt)
 
-add_library(glTriangle
+add_library(simpleCalVR
             SHARED
-            src/main/cpp/drawTriangle.cpp)
+            src/main/cpp/utils.cpp
+            src/main/cpp/osg_utils.cpp
+            src/main/cpp/jni_interface_calvr.cpp
+            src/main/cpp/calvrController.cpp
+            src/main/cpp/SpatialViz.cpp)
+
+target_include_directories(simpleCalVR PRIVATE
+           src/main/cpp
+            ${ANDROID_NDK}/sources/third_party/vulkan/src/libs/glm)
 
 # add lib dependencies
-target_link_libraries(glTriangle
-                          osgPresentation               # For osg, the dependency relations:
-                          osgWidget                     # osgPresentation: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgPresentation.png
-                          osgUI                         # osgdb_osg: https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgdb_osg.png
-                          osgManipulator                # osgdb_serializers_osg:
-                          osgAnimation                  # https://github.com/WeichenLiu/CalVR_for_Android/blob/master/Note/osgdb_serializers_osg.png
-                          osgViewer                     # (These three are the "roots" of the trees)
-                          osgVolume                     #
-                          osgSim                        #
-                          osgShadow                     #
-                          osgTerrain                    #
-                          osgParticle                   #
-                          osgFX                         #
-                          z                             #
-                          osgText                       #
-                          osgGA                         #
-                          osgdb_tiff
-                          osgdb_png
-                          osgdb_jpeg
-                          osgdb_osg                     #
-                          osgdb_serializers_osg         #
-                          osgDB                         #
-                          osgUtil                       #
-                          osg                           #
-                          OpenThreads                   #
-                          tiff
-                          png
-                          jpeg
+target_link_libraries(simpleCalVR
+                      MenuBasics
                       android
-                      log
-                      EGL
-                      GLESv2
-                      GLESv3)
+                      mediandk
+                      ${KERNEL_LIBRARIES}
+                      )
