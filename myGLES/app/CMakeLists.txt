@@ -35,6 +35,7 @@ SET(KERNEL_LIBRARIES
     osgText                       #
     osgGA                         #
     osgdb_tiff
+    osgdb_rgb
     osgdb_png
     osgdb_jpeg
     osgdb_osg                     #

@@ -40,6 +40,10 @@ add_library(osgdb_png STATIC IMPORTED)
 set_target_properties(osgdb_png PROPERTIES IMPORTED_LOCATION
                     ${OSG_BUILD_DIR}/lib/libosgdb_pngd.a)
 
+add_library(osgdb_rgb STATIC IMPORTED)
+set_target_properties(osgdb_rgb PROPERTIES IMPORTED_LOCATION
+                      ${OSG_BUILD_DIR}/lib/libosgdb_rgbd.a)
+
 add_library(osgdb_tiff STATIC IMPORTED)
 set_target_properties(osgdb_tiff PROPERTIES IMPORTED_LOCATION
                       ${OSG_BUILD_DIR}/lib/libosgdb_tiffd.a)

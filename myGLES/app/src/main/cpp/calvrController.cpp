@@ -67,6 +67,7 @@ void calvrController::createDebugOSGSphere(osg::Vec3 pos) {
 void calvrController::setupDefaultEnvironment(const char *root_path) {
     std::string homeDir = std::string(root_path) + "/";
     setenv("CALVR_HOME", homeDir);
+    setenv("CALVR_ICON_DIR", homeDir + "icons/");
     setenv("CALVR_CONFIG_DIR", homeDir+"config/");
     setenv("CALVR_RESOURCE_DIR", homeDir+"resources/");
     setenv("CALVR_CONFIG_FILE", homeDir+"config/config.xml");
