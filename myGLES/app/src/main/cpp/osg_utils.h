@@ -14,6 +14,8 @@
 // Initialize OSG plugins when OpenSceneGraph is built
 // as a static library.
 USE_OSGPLUGIN(osg2)
+USE_OSGPLUGIN(rgb)
+USE_OSGPLUGIN(tiff)
 USE_SERIALIZER_WRAPPER_LIBRARY(osg)
 // END   FEATURE PLUGINS_STATIC
 

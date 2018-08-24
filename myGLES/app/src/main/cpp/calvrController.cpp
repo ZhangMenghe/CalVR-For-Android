@@ -28,7 +28,7 @@ calvrController::calvrController(AAssetManager *assetManager)
     _navigation = cvr::Navigation::instance();
     _communication = cvr::ComController::instance();
     _spatialViz = new SpatialViz();
-    _menuBasics = new MenuBasics();
+//    _menuBasics = new MenuBasics();
     initialize_camera();
 }
 
@@ -67,6 +67,7 @@ void calvrController::createDebugOSGSphere(osg::Vec3 pos) {
 }
 void calvrController::setupDefaultEnvironment(const char *root_path) {
     std::string homeDir = std::string(root_path) + "/";
+    setenv("CALVR_HOST_NAME", "calvrHost");
     setenv("CALVR_HOME", homeDir);
     setenv("CALVR_ICON_DIR", homeDir + "icons/");
     setenv("CALVR_CONFIG_DIR", homeDir+"config/");
@@ -84,15 +85,6 @@ void calvrController::onCreate(const char * calvr_path){
 
     createDebugOSGSphere(osg::Vec3(.0f, 0.1f, .0f));
 
-    std::string fontfile = getenv("CALVR_RESOURCE_DIR");
-
-    fontfile = fontfile + "arial.ttf";
-    ///utils::loadFontFile(_asset_manager, fontfile.c_str());
-
-    if(!_scene->init())
-        LOGE("==========SCENE INITIALIZATION FAIL=========");
-
-    _root->addChild(_scene->getSceneRoot());
 
     //Initialization should follow a specific order
 
@@ -106,10 +98,15 @@ void calvrController::onCreate(const char * calvr_path){
         LOGE("==========INTERACTION MANAGER FAIL=========");
     if(!_navigation->init())
         LOGE("=========NAVIGATION FAIL===========");
+    if(!_scene->init())
+        LOGE("==========SCENE INITIALIZATION FAIL=========");
+
+    _root->addChild(_scene->getSceneRoot());
     if(!_menu->init())
         LOGE("==========MENU INITIALIZATION FAIL=========");
-    if(!_menuBasics->init())
-        LOGE("MENU BASICS");
+
+//    if(!_menuBasics->init())
+//        LOGE("MENU BASICS");
 
     if(!_spatialViz->init())
         LOGE("SPATIALVIZ INITIALIZATION FAIL");
@@ -119,10 +116,13 @@ void calvrController::onCreate(const char * calvr_path){
 
 void calvrController::onDrawFrame(){
 //    calvr->frame();
+    _tracking->update();
+    _scene->update();
     _menu->update();
     _interactionManager->update();
-    _tracking->update();
+
     _navigation->update();
+    _scene->postEventUpdate();
     _viewer->frame();
     if(_communication->getIsSyncError())
         LOGE("Sync error");

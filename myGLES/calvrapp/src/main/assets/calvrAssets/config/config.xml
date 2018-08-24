@@ -309,7 +309,7 @@
 
    <MenuSystem type="BOARDMENU">
     <BoardMenu>
-     <Position distance="3000" />
+     <Position distance="1000" />
      <Scale value="1.0" />
      <Buttons select="0" open="1" />
      <Trigger value="DOUBLECLICK" />
