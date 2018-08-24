@@ -29,6 +29,7 @@ namespace controller{
         cvr::ConfigManager * _config;
         cvr::MenuManager * _menu;
         cvr::InteractionManager * _interactionManager;
+        cvr::ComController * _communication;
         cvr::TrackingManager * _tracking;
         cvr::Navigation * _navigation;
         SpatialViz* _spatialViz;

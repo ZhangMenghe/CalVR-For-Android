@@ -25,7 +25,8 @@ calvrController::calvrController(AAssetManager *assetManager)
     _config = cvr::ConfigManager::instance();
     _interactionManager = cvr::InteractionManager::instance();
     _tracking = TrackingManager::instance();
-//    _navigation = cvr::Navigation::instance();
+    _navigation = cvr::Navigation::instance();
+    _communication = cvr::ComController::instance();
     _spatialViz = new SpatialViz();
     _menuBasics = new MenuBasics();
     initialize_camera();
@@ -93,20 +94,20 @@ void calvrController::onCreate(const char * calvr_path){
 
     _root->addChild(_scene->getSceneRoot());
 
+    //Initialization should follow a specific order
+
     if(!_config->init())
         LOGE("==========CONFIG INITIALIZATION FAIL========");
-
-    if(!_menu->init())
-        LOGE("==========MENU INITIALIZATION FAIL=========");
-
+    if(!_communication->init())
+        LOGE("==========INTERACTION MANAGER FAIL=========");
+    if(!_tracking->init())
+        LOGE("==========TRACKING MANAGER FAIL=========");
     if(!_interactionManager->init())
         LOGE("==========INTERACTION MANAGER FAIL=========");
-
-//    if(!_tracking->init())
-//        LOGE("==========TRACKING MANAGER FAIL=========");
-
-//    if(!_navigation->init())
-//        LOGE("=========NAVIGATION FAIL===========");
+    if(!_navigation->init())
+        LOGE("=========NAVIGATION FAIL===========");
+    if(!_menu->init())
+        LOGE("==========MENU INITIALIZATION FAIL=========");
     if(!_menuBasics->init())
         LOGE("MENU BASICS");
 
@@ -120,9 +121,11 @@ void calvrController::onDrawFrame(){
 //    calvr->frame();
     _menu->update();
     _interactionManager->update();
-//    _tracking->update();
-//    _navigation->update();
+    _tracking->update();
+    _navigation->update();
     _viewer->frame();
+    if(_communication->getIsSyncError())
+        LOGE("Sync error");
 }
 
 void calvrController::onViewChanged(int rot, int width, int height){
@@ -153,12 +156,12 @@ void calvrController::onSingleTouch(int pointer_num, float x, float y) {
     m.makeTranslate(screenToWorld(x,y));
     mie->setTransform(m);
     _interactionManager->addEvent(mie);
-//    PointerInteractionEvent * pie = new PointerInteractionEvent();
-//    pie->setPointerType(PointerInteractionEvent::TOUCH_POINTER);
-//    pie->setButton(1);//secondary button
-//    pie->setInteraction(Interaction::BUTTON_DOWN);
-//    _interactionManager->addEvent(pie);
+//    if(pointer_num == 1){
+//        int test = mie->getHand();
+//        LOGE("==============%d==========",test);
+//    }
 }
+
 void calvrController::onDoubleTouch(int pointer_num, float x, float y){
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOUBLE_CLICK);
@@ -167,15 +170,6 @@ void calvrController::onDoubleTouch(int pointer_num, float x, float y){
     m.makeTranslate(screenToWorld(x,y));
     mie->setTransform(m);
     _interactionManager->addEvent(mie);
-
-//    PointerInteractionEvent * pie = new PointerInteractionEvent();
-//    pie->setPointerType(PointerInteractionEvent::TOUCH_POINTER);
-//    pie->setButton(1);//secondary button
-//    osg::Matrix m;
-//    m.makeTranslate(screenToWorld(x,y));
-//    pie->setTransform(m);
-//    pie->setInteraction(Interaction::BUTTON_DOUBLE_CLICK);
-//    _interactionManager->addEvent(pie);
 }
 
 void calvrController::onTouchMove(int pointer_num, float srcx, float srcy, float destx, float desty) {
