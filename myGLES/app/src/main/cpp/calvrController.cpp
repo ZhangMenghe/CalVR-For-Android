@@ -116,6 +116,10 @@ void calvrController::onCreate(const char * calvr_path){
 
 void calvrController::onDrawFrame(){
 //    calvr->frame();
+    _viewer->frameStart();
+    _viewer->advance(USE_REFERENCE_TIME);
+//    _viewer->eventTraversal();
+
     _tracking->update();
     _scene->update();
     _menu->update();
@@ -148,27 +152,33 @@ osg::Vec3f calvrController::screenToWorld(float x, float y) {
 }
 
 void calvrController::onSingleTouch(int pointer_num, float x, float y) {
-    LOGE("=================TOUCHED HERE============%f=====%f======", x, y);
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOWN);
     mie->setButton(pointer_num - 1);
+    mie->setX(x);
+    mie->setY(y);
+    mie->setHand(0);
     osg::Matrix m;
     m.makeTranslate(screenToWorld(x,y));
     mie->setTransform(m);
+    _tracking->setTouchEventMatrix(m);
     _interactionManager->addEvent(mie);
-//    if(pointer_num == 1){
-//        int test = mie->getHand();
-//        LOGE("==============%d==========",test);
-//    }
 }
 
 void calvrController::onDoubleTouch(int pointer_num, float x, float y){
+//    _interactionManager->setMouseInteraction(pointer_num-1, screenToWorld(x,y));
+//    InteractionManager::instance()->createMouseDoubleClickEvent(1);
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOUBLE_CLICK);
     mie->setButton(pointer_num - 1);
+    mie->setX(x);
+    mie->setY(y);
+    mie->setHand(0);
     osg::Matrix m;
     m.makeTranslate(screenToWorld(x,y));
     mie->setTransform(m);
+    _tracking->setTouchEventMatrix(m);
+
     _interactionManager->addEvent(mie);
 }
 
