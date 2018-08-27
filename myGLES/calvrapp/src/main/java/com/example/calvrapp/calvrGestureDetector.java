@@ -6,30 +6,52 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 public class calvrGestureDetector{
-    private GestureDetector singleDetector;
-    private SimpleTwoFingerDoubleTapDetector multiDetector;
+        private MultiFingerTapDetector multiDetector;
+        final static String TAG = "CalVR_Gesture";
+    calvrGestureDetector(Context ctx){
+        multiDetector = new MultiFingerTapDetector() {
+            // Methods that need to be overridden
+            //public abstract void testing();
+            public void onOneFingerDown(MotionEvent event){}
+            public void onOneFingerMove(MotionEvent event){}
 
-    calvrGestureDetector(Context context){
-        singleDetector = new GestureDetector(context, new gestureListener());
-        multiDetector = new SimpleTwoFingerDoubleTapDetector() {
-            @Override
-            public void onTwoFingerLongPress(float ex, float ey){
-                Log.e("singleTap", "==========onTwoFingerLongPress: ==============");
+            public  void onFling(int pointerNum, float srcx, float srcy, float dstx, float dsty){
+                Log.e(TAG, "=============onFling: ================"+pointerNum );
+                JniInterfaceCalVR.JNIonTouchMove(pointerNum,srcx,srcy,dstx,dsty);
             }
 
-            @Override
-            public void onTwoFingerSingleTap(float ex, float ey){
-                JniInterfaceCalVR.JNIonSingleTouch(2, ex, ey);
+            public  void onSingleTap(int pointerNum, MotionEvent event){
+                JniInterfaceCalVR.JNIonSingleTouch(pointerNum, event.getX(), event.getY());
             }
 
-            @Override
-            public void onTwoFingerDoubleTap(float ex, float ey) {
-                JniInterfaceCalVR.JNIonDoubleTouch(2, ex, ey);
+            public void onMoreFingersDown(MotionEvent event){
             }
+
+            public void onTwoFingersMove(MotionEvent event){}
+            public void onThreeFingersMove(MotionEvent event){}
+
+            public void onOneFingerDoubleTap(float ex, float ey){
+                JniInterfaceCalVR.JNIonDoubleTouch(1, ex, ey);
+            }
+
+            public void onOneFingerTripleTap(){}
+            public void onOneFingerLongPress(){}
+
+            // TWO FINGER TAPS
+            public void onTwoFingerDoubleTap(float avgX, float avgY){
+                JniInterfaceCalVR.JNIonDoubleTouch(2, avgX, avgY);
+            }
+
+            public void onTwoFingerTripleTap(){}
+            public void onTwoFingerLongPress(MotionEvent event){}
+
+            // THREE FINGER TAPS
+            public void onThreeFingerDoubleTap(){}
+            public void onThreeFingerTripleTap(){}
+            public void onThreeFingerLongPress(MotionEvent event){}
         };
     }
     public boolean onTouchEvent(MotionEvent event) {
-        singleDetector.onTouchEvent(event);
         multiDetector.onTouchEvent(event);
         return true;
     }
