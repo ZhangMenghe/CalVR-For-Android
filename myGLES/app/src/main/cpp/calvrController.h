@@ -39,10 +39,13 @@ namespace controller{
         void initialize_camera();
         void setupDefaultEnvironment(const char* root_path);
         osg::Vec3f screenToWorld(float x, float y);
+        void commonMouseEvent(cvr::MouseInteractionEvent * mie,
+                              int pointer_num, float x, float y);
 
     public:
         calvrController(AAssetManager *assetManager);
 
+        ~calvrController();
         void onCreate(const char * calvr_path);
 
         void onDrawFrame();
@@ -51,11 +54,13 @@ namespace controller{
 
         void onResourceLoaded(const char* path);
 
-        void onSingleTouch(int pointer_num, float x, float y);
+        void onSingleTouchDown(int pointer_num, float x, float y);
+
+        void onSingleTouchUp(int pointer_num, float x, float y);
 
         void onDoubleTouch(int pointer_num, float x, float y);
 
-        void onTouchMove(int pointer_num, float srcx, float srcy, float destx, float desty);
+        void onTouchMove(int pointer_num, float destx, float desty);
     };
 }
 

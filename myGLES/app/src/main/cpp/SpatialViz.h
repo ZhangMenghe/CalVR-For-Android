@@ -36,11 +36,12 @@
 class SpatialViz : public cvr::CVRPlugin, public cvr::MenuCallback
 {
   protected:
-    cvr::MenuCheckbox * testItem1;
-    cvr::MenuCheckbox * testItem2;
-    cvr::MenuCheckbox * testItem3;
- 
-  public:
+    cvr::SubMenu *_mainMenu;
+    cvr::MenuButton *_mazePuzzleButton, *_5x5puzzleButton, *_tetrisPuzzle2, *_labyrinthPuzzle, *_tetrisPuzzle, *_removePuzzles, *_restartPhysics;
+    osg::Switch *_root, *_labyrinthSwitch, *_5x5Switch, *_mazeSwitch, *_tetrisSwitch, *_mainTetrisSwitch, *_tetrisSwitch2, *_mainTetrisSwitch2;
+
+
+public:
     bool init();
     void menuCallback(cvr::MenuItem * item);
 

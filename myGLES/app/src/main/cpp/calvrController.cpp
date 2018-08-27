@@ -32,6 +32,62 @@ calvrController::calvrController(AAssetManager *assetManager)
     initialize_camera();
 }
 
+calvrController::~calvrController(){
+    if(_spatialViz)
+    {
+        delete _spatialViz;
+    }
+    // should be friend class to call deconstructor
+//    if(_file)
+//    {
+//        delete _file;
+//    }
+    /*if(_menu)
+    {
+        delete _menu;
+    }
+//    if(_threadedLoader)
+//    {
+//        delete _threadedLoader;
+//    }
+    if(_communication)
+    {
+        delete _communication;
+    }
+    if(_scene)
+    {
+        delete _scene;
+    }
+//    if(_screens)
+//    {
+//        delete _screens;
+//    }
+    if(_viewer)
+    {
+        delete _viewer;
+    }
+    if(_navigation)
+    {
+        delete _navigation;
+    }
+    if(_interactionManager)
+    {
+        delete _interactionManager;
+    }
+    if(_tracking)
+    {
+        delete _tracking;
+    }
+    if(_communication)
+    {
+        delete _communication;
+    }
+    if(_config)
+    {
+        delete _config;
+    }*/
+}
+
 void calvrController::initialize_camera() {
     osg::ref_ptr<osg::Camera> mainCam = _viewer->getCamera();
     mainCam->setClearColor(osg::Vec4f(0.81, 0.77, 0.75,1.0));
@@ -83,7 +139,7 @@ void calvrController::onCreate(const char * calvr_path){
 //    }
     setupDefaultEnvironment(calvr_path);
 
-    createDebugOSGSphere(osg::Vec3(.0f, 0.1f, .0f));
+//    createDebugOSGSphere(osg::Vec3(.0f, 0.1f, .0f));
 
 
     //Initialization should follow a specific order
@@ -127,7 +183,9 @@ void calvrController::onDrawFrame(){
 
     _navigation->update();
     _scene->postEventUpdate();
-    _viewer->frame();
+//    _viewer->frame();
+    _viewer->updateTraversal();
+    _viewer->renderingTraversals();
     if(_communication->getIsSyncError())
         LOGE("Sync error");
 }
@@ -151,9 +209,8 @@ osg::Vec3f calvrController::screenToWorld(float x, float y) {
     return osg::Vec3f((x-_screenWidth/2)/_screen_ratio, 0, (_screenHeight/2 - y)/_screen_ratio);
 }
 
-void calvrController::onSingleTouch(int pointer_num, float x, float y) {
-    MouseInteractionEvent * mie = new MouseInteractionEvent();
-    mie->setInteraction(BUTTON_DOWN);
+void calvrController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
+                                       int pointer_num, float x, float y){
     mie->setButton(pointer_num - 1);
     mie->setX(x);
     mie->setY(y);
@@ -163,25 +220,28 @@ void calvrController::onSingleTouch(int pointer_num, float x, float y) {
     mie->setTransform(m);
     _tracking->setTouchEventMatrix(m);
     _interactionManager->addEvent(mie);
+}
+
+void calvrController::onSingleTouchDown(int pointer_num, float x, float y) {
+    MouseInteractionEvent * mie = new MouseInteractionEvent();
+    mie->setInteraction(BUTTON_DOWN);
+    commonMouseEvent(mie, pointer_num, x, y);
+}
+
+void calvrController::onSingleTouchUp(int pointer_num, float x, float y){
+    MouseInteractionEvent * mie = new MouseInteractionEvent();
+    mie->setInteraction(BUTTON_UP);
+    commonMouseEvent(mie, pointer_num, x, y);
 }
 
 void calvrController::onDoubleTouch(int pointer_num, float x, float y){
-//    _interactionManager->setMouseInteraction(pointer_num-1, screenToWorld(x,y));
-//    InteractionManager::instance()->createMouseDoubleClickEvent(1);
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOUBLE_CLICK);
-    mie->setButton(pointer_num - 1);
-    mie->setX(x);
-    mie->setY(y);
-    mie->setHand(0);
-    osg::Matrix m;
-    m.makeTranslate(screenToWorld(x,y));
-    mie->setTransform(m);
-    _tracking->setTouchEventMatrix(m);
-
-    _interactionManager->addEvent(mie);
+    commonMouseEvent(mie, pointer_num, x, y);
 }
 
-void calvrController::onTouchMove(int pointer_num, float srcx, float srcy, float destx, float desty) {
-    LOGE("=================TOUCHED MOVE HERE=======================");
+void calvrController::onTouchMove(int pointer_num, float destx, float desty) {
+    MouseInteractionEvent * mie = new MouseInteractionEvent();
+    mie->setInteraction(BUTTON_DRAG);
+    commonMouseEvent(mie, pointer_num, destx, desty);
 }

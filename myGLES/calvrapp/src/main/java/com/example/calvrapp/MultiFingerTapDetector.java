@@ -65,12 +65,11 @@ public abstract class MultiFingerTapDetector {
         if(distance > MIN_DISTANCE)
             onFling(pointerNum, downX, downY, upX, upY);
         else
-            onSingleTap(pointerNum, event);
+            onSingleTapUp(pointerNum, event);
     }
 
     public boolean onTouchEvent(MotionEvent event) {
         switch(event.getActionMasked()) {
-
             // ACTION_DOWN - when the first finger touches the screen
             case MotionEvent.ACTION_DOWN:
                 downX = event.getX(); downY = event.getY();
@@ -218,7 +217,7 @@ public abstract class MultiFingerTapDetector {
     public abstract void onOneFingerDown(MotionEvent event);
     public abstract void onOneFingerMove(MotionEvent event);
     public abstract void onFling(int pointerNum, float srcx, float srcy, float dstx, float dsty);
-    public abstract void onSingleTap(int pointerNum, MotionEvent event);
+    public abstract void onSingleTapUp(int pointerNum, MotionEvent event);
 
     public abstract void onMoreFingersDown(MotionEvent event);
     public abstract void onTwoFingersMove(MotionEvent event);

@@ -12,19 +12,25 @@ public class calvrGestureDetector{
         multiDetector = new MultiFingerTapDetector() {
             // Methods that need to be overridden
             //public abstract void testing();
-            public void onOneFingerDown(MotionEvent event){}
-            public void onOneFingerMove(MotionEvent event){}
+            public void onOneFingerDown(MotionEvent event){
+                JniInterfaceCalVR.JNIonSingleTouchDown(1,event.getX(), event.getY());
+            }
+            public void onOneFingerMove(MotionEvent event){
+                Log.e(TAG, "=============MOVINGGGGGGGGGGGG: ================");
+                JniInterfaceCalVR.JNIonTouchMove(1, event.getX(), event.getY());
+            }
 
             public  void onFling(int pointerNum, float srcx, float srcy, float dstx, float dsty){
                 Log.e(TAG, "=============onFling: ================"+pointerNum );
-                JniInterfaceCalVR.JNIonTouchMove(pointerNum,srcx,srcy,dstx,dsty);
+
             }
 
-            public  void onSingleTap(int pointerNum, MotionEvent event){
-                JniInterfaceCalVR.JNIonSingleTouch(pointerNum, event.getX(), event.getY());
+            public  void onSingleTapUp(int pointerNum, MotionEvent event){
+                JniInterfaceCalVR.JNIonSingleTouchUp(pointerNum, event.getX(), event.getY());
             }
 
             public void onMoreFingersDown(MotionEvent event){
+                JniInterfaceCalVR.JNIonSingleTouchDown(2,event.getX(), event.getY());
             }
 
             public void onTwoFingersMove(MotionEvent event){}
