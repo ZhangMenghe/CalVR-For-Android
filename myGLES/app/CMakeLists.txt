@@ -53,26 +53,18 @@ SET(KERNEL_LIBRARIES
     GLESv3
 )
 
-# Choose between static or build from origin
-#
-include(CMakeLists-staticDependencies.txt)
-include(CMakeLists-staticOSG.txt)
-include(CMakeLists-staticMXML.txt)
-include(CMakeLists-buildCALVR.txt)
-
-#IF(${REBUILD})
-    #include(CMakeLists-buildDependencies.txt)
+IF(${REBUILD})
+     include(CMakeLists-buildDependencies.txt)
     #include(CMakeLists-buildFreetype.txt)
- #   include(CMakeLists-buildMXML.txt)
-  #  include(CMakeLists-buildOSG.txt)
-   # include(CMakeLists-buildCALVR.txt)
-#ELSE()
- #   include(CMakeLists-staticFreetype.txt)
-  #  include(CMakeLists-staticOSG.txt)
-   # include(CMakeLists-staticMXML.txt)
-    #include(CMakeLists-staticCALVR.txt)
-#ENDIF()
-
+     include(CMakeLists-buildMXML.txt)
+     include(CMakeLists-buildOSG.txt)
+     include(CMakeLists-buildCALVR.txt)
+ELSE()
+    include(CMakeLists-staticDependencies.txt)
+    include(CMakeLists-staticOSG.txt)
+    include(CMakeLists-staticMXML.txt)
+ENDIF()
+include(CMakeLists-buildCALVR.txt)
 
 add_library(arcore SHARED IMPORTED)
 set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
@@ -89,24 +81,5 @@ set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
 #include(CMakeLists-osgScene.txt)
 
 #Build simple CalVR project
-#include(CMakeLists-simpleCalVR.txt)
+include(CMakeLists-simpleCalVR.txt)
 
-add_library(simpleCalVR
-            SHARED
-            src/main/cpp/utils.cpp
-            src/main/cpp/osg_utils.cpp
-            src/main/cpp/jni_interface_calvr.cpp
-            src/main/cpp/calvrController.cpp
-            src/main/cpp/SpatialViz.cpp)
-
-target_include_directories(simpleCalVR PRIVATE
-           src/main/cpp
-            ${ANDROID_NDK}/sources/third_party/vulkan/src/libs/glm)
-
-# add lib dependencies
-target_link_libraries(simpleCalVR
-                      MenuBasics
-                      android
-                      mediandk
-                      ${KERNEL_LIBRARIES}
-                      )
