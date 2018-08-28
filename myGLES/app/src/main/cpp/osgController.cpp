@@ -127,13 +127,13 @@ void osgController::onCreate(const char* res_path) {
         _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
     }
 
-    if(drawFreetype){
-        string font = string(res_path) + string("calvrAssets/resources/arial.ttf");
-        _textDrawable = new freetypeDrawable(font.c_str());
-        _textDrawable->addTargetString("Menu Title",-0.8f, 0.5f, 0.005);
-        _textDrawable->addTargetString("MenuButton",-0.2f, .0f, 0.005);
-        _sceneGroup->addChild(_textDrawable->createDrawableNode(_asset_manager, &glStateStack));
-    }
+//    if(drawFreetype){
+//        string font = string(res_path) + string("calvrAssets/resources/arial.ttf");
+//        _textDrawable = new freetypeDrawable(font.c_str());
+//        _textDrawable->addTargetString("Menu Title",-0.8f, 0.5f, 0.005);
+//        _textDrawable->addTargetString("MenuButton",-0.2f, .0f, 0.005);
+//        _sceneGroup->addChild(_textDrawable->createDrawableNode(_asset_manager, &glStateStack));
+//    }
 
     _root->addChild(_sceneGroup);
     _viewer->setSceneData(_root.get());

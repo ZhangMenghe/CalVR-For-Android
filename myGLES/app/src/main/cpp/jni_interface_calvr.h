@@ -7,11 +7,13 @@
 
 #include <jni.h>
 
-
-
 #define JNI_METHOD(returnType, funcName)\
     JNIEXPORT returnType JNICALL        \
-        Java_com_example_calvrapp_JniInterfaceCalVR_##funcName
+        Java_com_example_arcalvr_JniInterfaceCalVR_##funcName
+
+//#define JNI_METHOD(returnType, funcName)\
+//    JNIEXPORT returnType JNICALL        \
+//        Java_com_example_calvrapp_JniInterfaceCalVR_##funcName
 
 //define helper functions to provide access to Java from C via JNI
 extern "C"{
@@ -32,8 +34,6 @@ JNI_METHOD(void, JNIonSingleTouchUp)(JNIEnv*, jclass, jint pointer_num, jfloat x
 JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv*, jclass, jint pointer_num, jfloat x, jfloat y);
 
 JNI_METHOD(void, JNIonTouchMove)(JNIEnv*, jclass, jint pointer_num, jfloat destx, jfloat desty);
-
-JNIEnv * GetJniEnv();
 }
 
 

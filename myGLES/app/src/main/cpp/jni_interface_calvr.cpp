@@ -7,8 +7,6 @@
 #include "calvrController.h"
 
 namespace {
-    //maintain a reference to VM
-    static JavaVM *g_vm = nullptr;
     //global environment
     jlong nativeAppAddr = 0;
 
@@ -18,13 +16,6 @@ namespace {
     inline controller::calvrController * controllerNative(jlong ptr){
         return reinterpret_cast<controller::calvrController *>(ptr);
     }
-}
-
-
-//JNI Library function: call when native lib is load(System.loadLibrary)
-jint JNI_OnLoad(JavaVM *vm, void *) {
-    g_vm = vm;
-    return JNI_VERSION_1_6;
 }
 
 /*Native Application methods*/
@@ -73,10 +64,4 @@ JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv*, jclass, jint pointer_num, jfloat x, 
 
 JNI_METHOD(void, JNIonTouchMove)(JNIEnv*, jclass, jint pointer_num, jfloat destx, jfloat desty){
     controllerNative(nativeAppAddr)->onTouchMove(pointer_num, destx, desty);
-}
-
-JNIEnv *GetJniEnv() {
-    JNIEnv *env;
-    jint result = g_vm->AttachCurrentThread(&env, nullptr);
-    return result == JNI_OK ? env : nullptr;
 }

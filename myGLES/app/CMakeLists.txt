@@ -78,8 +78,8 @@ set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
 #include(CMakeLists-arTemplate.txt)
 
 #Build ARcore + osg + gl + ndk project
-#include(CMakeLists-osgScene.txt)
+include(CMakeLists-osgScene.txt)
 
 #Build simple CalVR project
-include(CMakeLists-simpleCalVR.txt)
+#include(CMakeLists-simpleCalVR.txt)
 

@@ -57,9 +57,6 @@ private:
     bool _install_requested = false;
     int last_point_num = 0;
 
-
-
-
 public:
     glm::mat4 view_mat;
     glm::mat4 proj_mat;

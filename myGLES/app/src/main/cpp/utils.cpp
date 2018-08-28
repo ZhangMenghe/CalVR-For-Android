@@ -7,7 +7,7 @@
 #include <string>
 #include <sstream>
 #include <GLES3/gl3.h>
-#include "jni_interface.h"
+#include "jni_interface_osg.h"
 
 using namespace std;
 namespace utils{

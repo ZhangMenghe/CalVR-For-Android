@@ -17,7 +17,7 @@
 #include <osgGA/KeySwitchMatrixManipulator>
 #include "planeDrawable.h"
 #include "bgDrawable.h"
-#include "freetypeDrawable.h"
+//#include "freetypeDrawable.h"
 #include "perfMonitor.h"
 
 #define MOVE_OSG_CAM true
@@ -31,7 +31,7 @@ namespace osg_controller{
         osg::ref_ptr<bgDrawable> _bgDrawable;
         osg::ref_ptr<pointDrawable> _pointcloudDrawable;
         std::vector<osg::ref_ptr<planeDrawable>> _planeDrawables;
-        osg::ref_ptr<freetypeDrawable> _textDrawable;
+//        osg::ref_ptr<freetypeDrawable> _textDrawable;
         osg_objectRenderer *_object_renderer;
 
         int _plane_num = 0;
