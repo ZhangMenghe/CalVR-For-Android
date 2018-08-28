@@ -28,4 +28,11 @@ public class JniInterfaceCalVR {
     public static native void JNIonDoubleTouch(int pointer_num, float x, float y);
 
     public static native void JNIonTouchMove(int pointer_num, float destx, float testy);
+
+    public static native void JNIonResume(Context context, Activity activity);
+
+    public static native void JNIonPause();
+
+    public static native void JNIonDestroy();
+
 }

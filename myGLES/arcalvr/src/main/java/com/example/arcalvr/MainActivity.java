@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity
         implements DisplayManager.DisplayListener{
     final static String TAG = "ARCalVR_Activity";
     private long controllerAddr;
-    private long osgAppAddr;
     private GLSurfaceView surfaceView;
     final static private String calvr_folder = "calvrAssets";
     String calvr_dest = null;
@@ -37,11 +36,9 @@ public class MainActivity extends AppCompatActivity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        JniInterfaceOSG.assetManager = getAssets();
         JniInterfaceCalVR.assetManager = getAssets();
 
         controllerAddr = JniInterfaceCalVR.JNIcreateController(JniInterfaceCalVR.assetManager);
-        osgAppAddr = JniInterfaceOSG.createController();
 
         setupResource();
         setupSurfaceView();
@@ -56,7 +53,7 @@ public class MainActivity extends AppCompatActivity
             CameraPermissionHelper.requestCameraPermission(this);
             return;
         }
-        JniInterfaceOSG.JNIonResume(getApplicationContext(), this);
+        JniInterfaceCalVR.JNIonResume(getApplicationContext(), this);
         // Listen to display changed events to detect 180° rotation, which does not cause a config
         // change or view resize.
         getSystemService(DisplayManager.class).registerDisplayListener(this, null);
@@ -66,7 +63,7 @@ public class MainActivity extends AppCompatActivity
     protected void onPause(){
         super.onPause();
         surfaceView.onPause();
-        JniInterfaceOSG.JNIonPause();
+        JniInterfaceCalVR.JNIonPause();
         getSystemService(DisplayManager.class).unregisterDisplayListener(this);
     }
     @Override
@@ -75,9 +72,8 @@ public class MainActivity extends AppCompatActivity
         //synchronized to avoid racing
         if(isFinishing()) {
             synchronized (this) {
-                JniInterfaceOSG.JNIonDestroy();
+                JniInterfaceCalVR.JNIonDestroy();
                 controllerAddr = 0;
-                osgAppAddr = 0;
             }
         }
     }
@@ -123,7 +119,7 @@ public class MainActivity extends AppCompatActivity
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             GLES30.glClearColor(1.0f, .0f, .0f, 1.0f);
             JniInterfaceCalVR.JNIonGlSurfaceCreated(calvr_dest);
-            JniInterfaceOSG.JNIonGlSurfaceCreated(resourceDest);
+//            JniInterfaceOSG.JNIonGlSurfaceCreated(resourceDest);
         }
 
         @Override
@@ -137,16 +133,16 @@ public class MainActivity extends AppCompatActivity
         public void onDrawFrame(GL10 gl) {
             // Synchronized to avoid racing onDestroy.
             synchronized (this) {
-                if (controllerAddr == 0 || osgAppAddr==0) {
+                if (controllerAddr == 0) {
                     return;
                 }
                 if (viewportChanged) {
                     int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
                     JniInterfaceCalVR.JNIonViewChanged(displayRotation, viewportWidth, viewportHeight);
-                    JniInterfaceOSG.JNIonViewChanged(displayRotation, viewportWidth, viewportHeight);
+//                    JniInterfaceOSG.JNIonViewChanged(displayRotation, viewportWidth, viewportHeight);
                     viewportChanged = false;
                 }
-                JniInterfaceOSG.JNIdrawFrame(true);
+//                JniInterfaceOSG.JNIdrawFrame(true);
                 JniInterfaceCalVR.JNIdrawFrame();
             }
         }

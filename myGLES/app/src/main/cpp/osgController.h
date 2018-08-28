@@ -54,9 +54,9 @@ namespace osg_controller{
         void _initialize_camera();
 
     public:
-        bool drawSphere = true; bool drawBackground = true;
-        bool drawPoints = true;bool drawPlane = true;
-        bool drawObj = true; bool drawFreetype = false;
+        bool drawSphere = false; bool drawBackground = true;
+        bool drawPoints = false; bool drawPlane = false;
+        bool drawObj = false; bool drawFreetype = false;
 
         osgController(AAssetManager * manager);
 
@@ -68,7 +68,7 @@ namespace osg_controller{
 
         void onResume(void * env, void* context, void* activity);
 
-        void onDrawFrame(bool btn_status_normal);
+        void onDrawFrame(bool btn_status_normal = true);
         void onViewChanged(int rot, int width, int height);
         void onTouched(float x, float y);
         bool hasDetectedPlane(){ return  _plane_num > 0;}

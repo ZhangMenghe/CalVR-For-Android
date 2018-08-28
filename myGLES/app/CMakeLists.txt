@@ -78,8 +78,39 @@ set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
 #include(CMakeLists-arTemplate.txt)
 
 #Build ARcore + osg + gl + ndk project
-include(CMakeLists-osgScene.txt)
+#include(CMakeLists-osgScene.txt)
 
 #Build simple CalVR project
 #include(CMakeLists-simpleCalVR.txt)
 
+add_library(ARCalVR
+            SHARED
+            src/main/cpp/utils.cpp
+            src/main/cpp/osg_utils.cpp
+            src/main/cpp/arcore_utils.cpp
+            src/main/cpp/perfMonitor.cpp
+
+            src/main/cpp/jni_interface_all.cpp
+            src/main/cpp/calvrController.cpp
+            src/main/cpp/SpatialViz.cpp
+
+            src/main/cpp/allController.cpp
+            src/main/cpp/arcoreController.cpp
+            src/main/cpp/glDrawable.cpp
+            src/main/cpp/bgDrawable.cpp
+            src/main/cpp/pointDrawable.cpp
+            src/main/cpp/planeDrawable.cpp
+            src/main/cpp/osg_objectRenderer.cpp
+            )
+
+target_include_directories(ARCalVR PRIVATE
+           src/main/cpp
+            ${ANDROID_NDK}/sources/third_party/vulkan/src/libs/glm)
+
+# add lib dependencies
+target_link_libraries(ARCalVR
+                      android
+                      mediandk
+                      arcore
+                      ${KERNEL_LIBRARIES}
+                      )

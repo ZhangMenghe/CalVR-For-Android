@@ -3,8 +3,8 @@
 //
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
-#include "jni_interface_calvr.h"
-#include "calvrController.h"
+#include "jni_interface_all.h"
+#include "allController.h"
 
 namespace {
     //maintain a reference to VM
@@ -12,11 +12,11 @@ namespace {
     //global environment
     jlong nativeAppAddr = 0;
 
-    inline jlong controllerPtr(controller::calvrController * native_controller){
+    inline jlong controllerPtr(controller::allController * native_controller){
         return reinterpret_cast<intptr_t>(native_controller);
     }
-    inline controller::calvrController * controllerNative(jlong ptr){
-        return reinterpret_cast<controller::calvrController *>(ptr);
+    inline controller::allController * controllerNative(jlong ptr){
+        return reinterpret_cast<controller::allController *>(ptr);
     }
 }
 
@@ -31,7 +31,7 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
 JNI_METHOD(jlong, JNIcreateController)
 (JNIEnv* env, jclass, jobject asset_manager){
     AAssetManager * cpp_asset_manager = AAssetManager_fromJava(env, asset_manager);
-    nativeAppAddr =  controllerPtr(new controller::calvrController(cpp_asset_manager));
+    nativeAppAddr =  controllerPtr(new controller::allController(cpp_asset_manager));
     return nativeAppAddr;
 }
 
@@ -74,7 +74,15 @@ JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv*, jclass, jint pointer_num, jfloat x, 
 JNI_METHOD(void, JNIonTouchMove)(JNIEnv*, jclass, jint pointer_num, jfloat destx, jfloat desty){
     controllerNative(nativeAppAddr)->onTouchMove(pointer_num, destx, desty);
 }
-
+JNI_METHOD(void, JNIonResume)(JNIEnv * env, jclass, jobject contex, jobject activitiy){
+    controllerNative(nativeAppAddr)->onResume(env, contex, activitiy);
+}
+JNI_METHOD(void, JNIonPause)(JNIEnv *, jclass){
+    controllerNative(nativeAppAddr)->onPause();
+}
+JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr){
+    delete controllerNative(controller_addr);
+}
 JNIEnv *GetJniEnv() {
     JNIEnv *env;
     jint result = g_vm->AttachCurrentThread(&env, nullptr);

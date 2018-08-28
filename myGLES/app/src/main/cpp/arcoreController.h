@@ -86,7 +86,7 @@ public:
             ArInstallStatus install_status;
             bool user_requested_install = !_install_requested;
 
-            CHECK(ArCoreApk_requestInstall(env, activity, user_requested_install,&install_status) == AR_SUCCESS);
+//            CHECK(ArCoreApk_requestInstall(env, activity, user_requested_install,&install_status) == AR_SUCCESS);
 
             switch (install_status) {
                 case AR_INSTALL_STATUS_INSTALLED:
