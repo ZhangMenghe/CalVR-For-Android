@@ -15,7 +15,7 @@
 extern "C"{
 JNI_METHOD(jlong, JNIcreateController)(JNIEnv* env, jclass, jobject asset_manager);
 
-JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass);
+JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass, jboolean moveCam);
 
 JNI_METHOD(void, JNIonGlSurfaceCreated)(JNIEnv *, jclass, jstring calvr_path);
 

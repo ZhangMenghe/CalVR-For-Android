@@ -36,8 +36,8 @@ JNI_METHOD(jlong, JNIcreateController)
 }
 
 JNI_METHOD(void, JNIdrawFrame)
-(JNIEnv *, jclass) {
-    controllerNative(nativeAppAddr)->onDrawFrame();
+(JNIEnv *, jclass,jboolean moveCam) {
+    controllerNative(nativeAppAddr)->onDrawFrame(moveCam);
 }
 
 JNI_METHOD(void, JNIonGlSurfaceCreated)

@@ -40,6 +40,11 @@ namespace controller{
         arcoreController * _ar_controller;
         std::stack<utils::glState> glStateStack;
 
+
+        ////
+        bool debug_flag = true;
+        float _distance = 1000;
+        /// \param pos
         void createDebugOSGSphere(osg::Vec3 pos);
         void initialize_camera();
         void setupDefaultEnvironment(const char* root_path);
@@ -57,7 +62,7 @@ namespace controller{
 
         void onResume(void * env, void* context, void* activity);
 
-        void onDrawFrame();
+        void onDrawFrame(bool moveCam);
 
         void onViewChanged(int rot, int width, int height);
 

@@ -100,12 +100,12 @@ void allController::initialize_camera() {
     osg::Vec3d up = osg::Vec3d(0,0,1);
     mainCam->setViewMatrixAsLookAt(eye,center,up); // usual up vector
     mainCam->setRenderOrder(osg::Camera::NESTED_RENDER);
-    mainCam->setCullingMode( osg::CullSettings::NO_CULLING );
+//    mainCam->setCullingMode( osg::CullSettings::NO_CULLING );
 }
 
 void allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-    shape->setShape(new osg::Sphere(pos, 0.2f));
+    shape->setShape(new osg::Cone(pos, 0.1f,0.2f));
     shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
     Program * program = osg_utils::createShaderProgram("shaders/lightingOSG.vert","shaders/lightingOSG.frag",_asset_manager);
@@ -118,10 +118,10 @@ void allController::createDebugOSGSphere(osg::Vec3 pos) {
                                            osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
     stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
 
-    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0.2,0.8,1)));
+    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
 
      node->addDrawable(shape.get());
-    _root->addChild(node);
+    _sceneGroup->addChild(node);
 }
 void allController::setupDefaultEnvironment(const char *root_path) {
     std::string homeDir = std::string(root_path) + "/";
@@ -141,7 +141,7 @@ void allController::onCreate(const char * calvr_path){
 //    }
     setupDefaultEnvironment(calvr_path);
 
-//    createDebugOSGSphere(osg::Vec3(.0f,0.1f,-0.5f));
+    createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
 
 
     //Initialization should follow a specific order
@@ -181,13 +181,25 @@ void allController::onCreate(const char * calvr_path){
     _viewer->setSceneData(_root.get());
 }
 
-void allController::onDrawFrame(){
+void allController::onDrawFrame(bool moveCam){
     _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
 
-//    glm::mat4 rotatemat = glm::rotate(glm::mat4(), glm::radians(-90.0f), glm::vec3(1.0,0,0))* _ar_controller->view_mat;
-//    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(rotatemat));
-//    _viewer->getCamera()->setViewMatrix(*mat);
+    if(moveCam){
+        osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(_ar_controller->view_mat));
+        Vec3d eye, center, up;
+        mat->getLookAt(eye, center, up);
+        _viewer->getCamera()->setViewMatrixAsLookAt(Vec3d(eye.x(), -eye.z(), eye.y()),
+                                                    Vec3d(center.x(), -center.z(), center.y()),
+                                                    Vec3d(up.x(), -up.z(), up.y()));
+        _distance = 1000;
+        debug_flag = true;
+    }
 
+    if(!moveCam && debug_flag){
+
+        _distance = 0;
+        debug_flag = false;
+    }
     float * transUV = _ar_controller->updateBackgroundRender();
     if(nullptr != transUV)
         _bgDrawable->updateOnFrame(transUV);
@@ -234,6 +246,21 @@ void allController::onResourceLoaded(const char *path) {
     }
 }
 osg::Vec3f allController::screenToWorld(float x, float y) {
+//    osg::Matrixd mat =_viewer->getCamera()->getViewMatrix() * _viewer->getCamera()->getProjectionMatrix();
+//    osg::Matrix::inverse(mat);
+//    Vec4f vIn = osg::Vec4f((2 *x /_screenWidth)-1,
+//                           0,
+//                           1-(2*_screenHeight /y),
+//                           1.0);
+//    osg::Vec4f pos = vIn * mat;
+//    float t1 = pos.x() / pos.w();
+//    float t2 = pos.z() / pos.w();
+//    float t3 = (x-_screenWidth/2)/_screen_ratio;
+//    float t4 = (_screenHeight/2 - y)/_screen_ratio;
+//    osg::Vec4f testPos = osg::Vec4f(t3,0,t4,1.0)
+//                        *_viewer->getCamera()->getProjectionMatrix()
+//                        *_viewer->getCamera()->getViewMatrix();
+//    testPos/=testPos.w();
     return osg::Vec3f((x-_screenWidth/2)/_screen_ratio, 0, (_screenHeight/2 - y)/_screen_ratio);
 }
 

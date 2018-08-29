@@ -19,7 +19,7 @@ public class JniInterfaceCalVR {
 
     public static native void JNIonViewChanged(int rot, int width, int height);
 
-    public static native void JNIdrawFrame();
+    public static native void JNIdrawFrame(boolean moveCam);
 
     public static native void JNIonSingleTouchDown(int pointer_num, float x, float y);
 

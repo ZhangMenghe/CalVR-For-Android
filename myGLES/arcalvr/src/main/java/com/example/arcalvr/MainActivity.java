@@ -1,5 +1,6 @@
 package com.example.arcalvr;
 
+import android.content.Intent;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 
 import java.io.File;
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity
     private int viewportWidth;
     private int viewportHeight;
 
+    private boolean moveCalvrCam = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity
 
         controllerAddr = JniInterfaceCalVR.JNIcreateController(JniInterfaceCalVR.assetManager);
 
+        setupButtons();
         setupResource();
         setupSurfaceView();
         setupTouchDetector();
@@ -76,6 +80,26 @@ public class MainActivity extends AppCompatActivity
                 controllerAddr = 0;
             }
         }
+    }
+    private void setupButtons(){
+        // add button actions
+        final Button restart_bnt = (Button)findViewById(R.id.restart_button);
+        restart_bnt.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent restartIntent = getBaseContext().getPackageManager()
+                        .getLaunchIntentForPackage(getBaseContext().getPackageName());
+                restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(restartIntent);
+            }
+        });
+
+        final Button debug_bnt = (Button)findViewById(R.id.debug_button);
+        debug_bnt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                moveCalvrCam=!moveCalvrCam;
+            }
+        });
     }
     private void setupSurfaceView(){
         surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
@@ -143,7 +167,7 @@ public class MainActivity extends AppCompatActivity
                     viewportChanged = false;
                 }
 //                JniInterfaceOSG.JNIdrawFrame(true);
-                JniInterfaceCalVR.JNIdrawFrame();
+                JniInterfaceCalVR.JNIdrawFrame(moveCalvrCam);
             }
         }
 
