@@ -93,6 +93,7 @@ add_library(ARCalVR
             src/main/cpp/jni_interface_all.cpp
             src/main/cpp/calvrController.cpp
             src/main/cpp/SpatialViz.cpp
+            src/main/cpp/Stroke.cpp
 
             src/main/cpp/allController.cpp
             src/main/cpp/arcoreController.cpp

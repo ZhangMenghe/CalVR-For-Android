@@ -184,7 +184,10 @@ public abstract class MultiFingerTapDetector {
 
                 // if we have just the one finger touching the screen
                 if (event.getPointerCount() == 1 && oneFingerDown){
-                    onOneFingerMove(event);
+                    if(event.getEventTime() - event.getDownTime() > LONG_PRESS_TIMEOUT)
+                        onOneFingerLongPress();
+                    else
+                        onOneFingerMove(event);
                     return true;
                 }
                 // if we have two fingers down and time is longer than the TIMEOUT

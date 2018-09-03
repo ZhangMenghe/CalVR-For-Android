@@ -10,7 +10,7 @@
 #include "osg_utils.h"
 #include <cvrUtil/AndroidGetenv.h>
 #include <cvrMenu/SubMenu.h>
-
+#include "Stroke.h"
 using namespace controller;
 using namespace osg;
 using namespace cvr;
@@ -33,6 +33,10 @@ allController::allController(AAssetManager *assetManager)
     _ar_controller = new arcoreController();
     _bgDrawable = new bgDrawable();
     _sceneGroup = new Group;
+    _rayNodeTrans = new MatrixTransform;
+
+    ////////////////////////////
+//    singleWindowMultipleCameras();
     initialize_camera();
 }
 
@@ -92,6 +96,23 @@ allController::~allController(){
     }*/
 }
 
+void allController::singleWindowMultipleCameras() {
+    ref_ptr<osg::Camera> staticaCamera = new Camera;
+    staticaCamera->setRenderOrder(osg::Camera::POST_RENDER);
+    osg::Vec3d eye = osg::Vec3d(0,-10,0);
+    osg::Vec3d center = osg::Vec3d(0,0,.0);
+    osg::Vec3d up = osg::Vec3d(0,0,1);
+    staticaCamera->setViewMatrixAsLookAt(eye,center,up); // usual up vector
+    staticaCamera->setRenderOrder(osg::Camera::NESTED_RENDER);
+    staticaCamera->setCullingMode( osg::CullSettings::NO_CULLING );
+
+//    staticaCamera->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
+//    _sceneGroup->addChild(staticaCamera);
+    _sceneGroup->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
+
+    createPointRay();
+}
+
 void allController::initialize_camera() {
     osg::ref_ptr<osg::Camera> mainCam = _viewer->getCamera();
     mainCam->setClearColor(osg::Vec4f(0.81, 0.77, 0.75,1.0));
@@ -100,10 +121,10 @@ void allController::initialize_camera() {
     osg::Vec3d up = osg::Vec3d(0,0,1);
     mainCam->setViewMatrixAsLookAt(eye,center,up); // usual up vector
     mainCam->setRenderOrder(osg::Camera::NESTED_RENDER);
-//    mainCam->setCullingMode( osg::CullSettings::NO_CULLING );
+    mainCam->setCullingMode( osg::CullSettings::NO_CULLING );
 }
 
-void allController::createDebugOSGSphere(osg::Vec3 pos) {
+ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
     shape->setShape(new osg::Cone(pos, 0.1f,0.2f));
     shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
@@ -120,9 +141,11 @@ void allController::createDebugOSGSphere(osg::Vec3 pos) {
 
     stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
 
-     node->addDrawable(shape.get());
-    _sceneGroup->addChild(node);
+    node->addDrawable(shape.get());
+
+    return node;
 }
+
 void allController::setupDefaultEnvironment(const char *root_path) {
     std::string homeDir = std::string(root_path) + "/";
     setenv("CALVR_HOST_NAME", "calvrHost");
@@ -133,6 +156,18 @@ void allController::setupDefaultEnvironment(const char *root_path) {
     setenv("CALVR_CONFIG_FILE", homeDir+"config/config.xml");
 }
 
+void allController::createPointRay() {
+    Geode * rayNode = new Geode;
+    Vec3f start_pos = osg::Vec3f(0,0,0);
+    Vec3f end_pos = osg::Vec3f(.0f, 1000.0f, 50.0f);
+    stroke = new Stroke(start_pos, end_pos);
+    rayNode->addDrawable(stroke);
+
+    _rayNodeTrans->addChild(rayNode);
+    _sceneGroup->addChild(_rayNodeTrans);
+    _rayNodeTrans->setNodeMask(0);
+}
+
 void allController::onCreate(const char * calvr_path){
 //    calvr = new cvr::CalVR();
 //    if(!calvr->init(calvr_path)){
@@ -140,9 +175,6 @@ void allController::onCreate(const char * calvr_path){
 //        return;
 //    }
     setupDefaultEnvironment(calvr_path);
-
-    createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
-
 
     //Initialization should follow a specific order
 
@@ -191,6 +223,13 @@ void allController::onDrawFrame(bool moveCam){
         _viewer->getCamera()->setViewMatrixAsLookAt(Vec3d(eye.x(), -eye.z(), eye.y()),
                                                     Vec3d(center.x(), -center.z(), center.y()),
                                                     Vec3d(up.x(), -up.z(), up.y()));
+//        LOGE("==EYE==%f===%f===%f", eye.x(), -eye.z(), eye.y());
+//        osg::Matrixd proj = _viewer->getCamera()->getProjectionMatrix();
+//
+//        osg::Matrix MVPW = _viewer->getCamera()->getViewMatrix() * proj;
+//        osg::Vec3f point = Vec3f(eye.x(), -eye.z(), eye.y()) * MVPW;
+//        LOGE("==Proj==%f===%f===%f", point.x(), point.y(), point.z());
+//        LOGE("==Proj2==%f===%f===%f", point.x()/point.z(), point.y())/point.z();
         _distance = 1000;
         debug_flag = true;
     }
@@ -221,6 +260,8 @@ void allController::onDrawFrame(bool moveCam){
     _viewer->renderingTraversals();
     if(_communication->getIsSyncError())
         LOGE("Sync error");
+    if(_pointerBntDown)
+        DrawRay(osg::Vec3f(0,0,0));
 }
 
 void allController::onViewChanged(int rot, int width, int height){
@@ -246,22 +287,23 @@ void allController::onResourceLoaded(const char *path) {
     }
 }
 osg::Vec3f allController::screenToWorld(float x, float y) {
-//    osg::Matrixd mat =_viewer->getCamera()->getViewMatrix() * _viewer->getCamera()->getProjectionMatrix();
-//    osg::Matrix::inverse(mat);
-//    Vec4f vIn = osg::Vec4f((2 *x /_screenWidth)-1,
-//                           0,
-//                           1-(2*_screenHeight /y),
-//                           1.0);
-//    osg::Vec4f pos = vIn * mat;
-//    float t1 = pos.x() / pos.w();
-//    float t2 = pos.z() / pos.w();
-//    float t3 = (x-_screenWidth/2)/_screen_ratio;
-//    float t4 = (_screenHeight/2 - y)/_screen_ratio;
-//    osg::Vec4f testPos = osg::Vec4f(t3,0,t4,1.0)
-//                        *_viewer->getCamera()->getProjectionMatrix()
-//                        *_viewer->getCamera()->getViewMatrix();
-//    testPos/=testPos.w();
-    return osg::Vec3f((x-_screenWidth/2)/_screen_ratio, 0, (_screenHeight/2 - y)/_screen_ratio);
+//    osg::Matrixd proj = _viewer->getCamera()->getProjectionMatrix();
+//
+//    osg::Viewport* viewport = _viewer->getCamera()->getViewport();
+//    double mx = viewport->x() + (int)((double )viewport->width()*(x*0.5+0.5));
+//    double my = viewport->y() + (int)((double )viewport->height()*(y*0.5+0.5));
+//
+//    osg::Matrix MVPW = _viewer->getCamera()->getViewMatrix() * proj;
+////    MVPW.postMult( _viewer->getCamera()->getViewport()->computeWindowMatrix() );
+//
+//
+//    osg::Vec3 nearPoint = osg::Vec3((x-_screenWidth/2)/_screen_ratio,
+//                                    0.f,
+//                                    (_screenHeight/2 - y)/_screen_ratio) * MVPW;
+//    LOGE("debug========%f=======%f=========%f", nearPoint[0], nearPoint[1], nearPoint[2]);
+//    LOGE("debug2========%f=======%f======%d======%d", x,y,_screenWidth,_screenHeight);
+//    return osg::Vec3f((x-_screenWidth/2)/_screen_ratio, 0, (_screenHeight/2 - y)/_screen_ratio);
+    return osg::Vec3f(0,0,0);
 }
 
 void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
@@ -281,12 +323,19 @@ void allController::onSingleTouchDown(int pointer_num, float x, float y) {
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOWN);
     commonMouseEvent(mie, pointer_num, x, y);
+    /////
+    _rayNodeTrans->setNodeMask(~0);
+    _pointerBntDown = true;
+//    DrawRay(screenToWorld(x,y));
 }
 
 void allController::onSingleTouchUp(int pointer_num, float x, float y){
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_UP);
     commonMouseEvent(mie, pointer_num, x, y);
+    //hide ray
+    _rayNodeTrans->setNodeMask(0);
+    _pointerBntDown = false;
 }
 
 void allController::onDoubleTouch(int pointer_num, float x, float y){
@@ -299,4 +348,13 @@ void allController::onTouchMove(int pointer_num, float destx, float desty) {
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DRAG);
     commonMouseEvent(mie, pointer_num, destx, desty);
+//    DrawRay(osg::Vec3f(.0,.0,.0));
+}
+
+void allController::DrawRay(osg::Vec3f pos){
+//    float * camera_pose  = _ar_controller->getCurrentCameraPose();
+////    LOGE("===============%f================%f=================%f==============", camera_pose[4], camera_pose[5], camera_pose[6]);
+//    _rayNodeTrans->setMatrix(osg::Matrixd::translate(osg::Vec3f(camera_pose[4], -camera_pose[6], camera_pose[5])));
+//    stroke->setBegin(camera_pose[4], camera_pose[5]);
+//    myPat->setPosition(osg::Vec3(camera_pose[4], 0, 0));
 }

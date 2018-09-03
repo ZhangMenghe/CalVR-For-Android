@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        ///setup debug button
         final Button debug_bnt = (Button)findViewById(R.id.debug_button);
         debug_bnt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +101,10 @@ public class MainActivity extends AppCompatActivity
                 moveCalvrCam=!moveCalvrCam;
             }
         });
+
+        //setup
+        MovableFloatingActionButton track_bnt = findViewById(R.id.fab);
+        track_bnt.bringToFront();
     }
     private void setupSurfaceView(){
         surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);

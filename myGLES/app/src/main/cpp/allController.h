@@ -12,6 +12,7 @@
 #include "SpatialViz.h"
 #include "bgDrawable.h"
 #include "arcoreController.h"
+#include "Stroke.h"
 #include <MenuBasics.h>
 namespace controller{
     class allController {
@@ -44,14 +45,23 @@ namespace controller{
         ////
         bool debug_flag = true;
         float _distance = 1000;
+
+        /////
+        MatrixTransform * _rayNodeTrans;
+        bool _pointerBntDown = false;
+        cvr::Stroke * stroke;
+        osg::ref_ptr<osg::PositionAttitudeTransform> myPat
+                = new osg::PositionAttitudeTransform;
         /// \param pos
-        void createDebugOSGSphere(osg::Vec3 pos);
+        ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
         void initialize_camera();
         void setupDefaultEnvironment(const char* root_path);
         osg::Vec3f screenToWorld(float x, float y);
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
                               int pointer_num, float x, float y);
-
+        void DrawRay(osg::Vec3f pos);
+        void createPointRay();
+        void singleWindowMultipleCameras();
     public:
         allController(AAssetManager *assetManager);
 

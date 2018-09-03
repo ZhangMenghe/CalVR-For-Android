@@ -56,7 +56,7 @@ private:
     int _height = 1;
     bool _install_requested = false;
     int last_point_num = 0;
-
+    float camera_pose_raw[7] = {0.f};
 public:
     glm::mat4 view_mat;
     glm::mat4 proj_mat;
@@ -251,6 +251,8 @@ public:
         plane_list = nullptr;
         return _planes;
     }
+
+    float* getCurrentCameraPose(){return camera_pose_raw;}
 
 };
 
