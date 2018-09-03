@@ -126,13 +126,20 @@ void allController::initialize_camera() {
 
 ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-    shape->setShape(new osg::Cone(pos, 0.1f,0.2f));
+    shape->setShape(new osg::Sphere(pos, 0.8f));
     shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
     Program * program = osg_utils::createShaderProgram("shaders/lightingOSG.vert","shaders/lightingOSG.frag",_asset_manager);
 
     osg::StateSet * stateSet = shape->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
+
+    stateSet->addUniform( new osg::Uniform("uProjMat",
+                                           *(new osg::RefMatrixf(_viewer->getCamera()->getProjectionMatrix()))));
+
+    stateSet->addUniform( new osg::Uniform("uViewMat",
+                                           *(new osg::RefMatrixf(_viewer->getCamera()->getViewMatrix()))));
+
     stateSet->addUniform( new osg::Uniform("lightDiffuse",
                                            osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
     stateSet->addUniform( new osg::Uniform("lightSpecular",
@@ -175,6 +182,8 @@ void allController::onCreate(const char * calvr_path){
 //        return;
 //    }
     setupDefaultEnvironment(calvr_path);
+
+    _sceneGroup->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
 
     //Initialization should follow a specific order
 
