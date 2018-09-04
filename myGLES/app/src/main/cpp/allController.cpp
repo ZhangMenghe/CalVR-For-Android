@@ -134,8 +134,11 @@ ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::StateSet * stateSet = shape->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
 
-    stateSet->addUniform( new osg::Uniform("uProjMat",
-                                           *(new osg::RefMatrixf(_viewer->getCamera()->getProjectionMatrix()))));
+    _projMat = new osg::Uniform(osg::Uniform::FLOAT_MAT4, "uProjMat");
+    stateSet->addUniform(_projMat);
+
+//    stateSet->addUniform( new osg::Uniform("uProjMat",
+//                                           *(new osg::RefMatrixf(_viewer->getCamera()->getProjectionMatrix()))));
 
     stateSet->addUniform( new osg::Uniform("uViewMat",
                                            *(new osg::RefMatrixf(_viewer->getCamera()->getViewMatrix()))));
@@ -182,8 +185,8 @@ void allController::onCreate(const char * calvr_path){
 //        return;
 //    }
     setupDefaultEnvironment(calvr_path);
-
     _sceneGroup->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
+
 
     //Initialization should follow a specific order
 
@@ -224,6 +227,7 @@ void allController::onCreate(const char * calvr_path){
 
 void allController::onDrawFrame(bool moveCam){
     _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
+
 
     if(moveCam){
         osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(_ar_controller->view_mat));
@@ -275,6 +279,12 @@ void allController::onDrawFrame(bool moveCam){
 
 void allController::onViewChanged(int rot, int width, int height){
     _viewer->setUpViewerAsEmbeddedInWindow(0,0,width,height);
+
+    double fovy, ratio, znear, zfar;
+    _viewer->getCamera()->getProjectionMatrixAsPerspective(fovy,ratio,znear,zfar);
+    _viewer->getCamera()->setProjectionMatrixAsPerspective(fovy, (float)width/height, znear, zfar);
+    _projMat->set(*(new osg::RefMatrixf(_viewer->getCamera()->getProjectionMatrix())));
+
     _screenWidth = width;
     _screenHeight = height;
     _screen_ratio = height/540;

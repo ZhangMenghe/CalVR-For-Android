@@ -40,6 +40,7 @@ namespace controller{
         osg::ref_ptr<osg::Group>  _sceneGroup;
         arcoreController * _ar_controller;
         std::stack<utils::glState> glStateStack;
+        osg::Uniform* _projMat;
 
 
         ////
