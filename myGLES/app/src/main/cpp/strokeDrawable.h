@@ -20,6 +20,7 @@ private:
 
     glm::vec4 _default_color= glm::vec4(1.0, 0.5, 0.0, 1.0);
     float _default_size = 30.0f;
+    float _default_line_width = 10.0f;
     glm::mat4 _ar_mvp = glm::mat4();
 
     float strokeData[8];

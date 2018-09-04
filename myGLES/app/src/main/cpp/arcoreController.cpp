@@ -25,8 +25,6 @@ void arcoreController::onDrawFrame(GLuint textureId) {
     ArCamera_getPose(_ar_session, camera, camera_pose);
 
     ArPose_getPoseRaw(_ar_session, camera_pose, camera_pose_raw);
-//    LOGE("ROTATION:====== %f === %f ==== %f === %f======", camera_pose_raw[0], camera_pose_raw[1], camera_pose_raw[2], camera_pose_raw[3]);
-//    LOGE("POSITION:====== %f === %f ==== %f === ", camera_pose_raw[4], camera_pose_raw[5], camera_pose_raw[6]);
 
     ArCamera_getTrackingState(_ar_session, camera, &cam_track_state);
     ArCamera_release(camera);

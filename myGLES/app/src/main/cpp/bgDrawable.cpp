@@ -56,12 +56,6 @@ void bgDrawable::updateOnFrame(float * new_uvs){
 void bgDrawable::drawImplementation(osg::RenderInfo&) const{
     PushAllState();
 
-//    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-//    glEnable(GL_CULL_FACE);
-//    glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_BLEND);
-//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     glUseProgram(_shader_program);
     // No need to test or write depth, the screen quad has arbitrary depth, and is
     // expected to be drawn first.
@@ -70,7 +64,6 @@ void bgDrawable::drawImplementation(osg::RenderInfo&) const{
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, _texture_id);
-
 
     glBindVertexArray(_VAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

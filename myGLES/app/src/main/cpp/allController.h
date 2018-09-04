@@ -12,7 +12,7 @@
 #include "SpatialViz.h"
 #include "bgDrawable.h"
 #include "arcoreController.h"
-#include "Stroke.h"
+#include "strokeDrawable.h"
 #include <MenuBasics.h>
 namespace controller{
     class allController {
@@ -40,7 +40,8 @@ namespace controller{
         osg::ref_ptr<osg::Group>  _sceneGroup;
         arcoreController * _ar_controller;
         std::stack<utils::glState> glStateStack;
-        osg::Uniform* _projMat;
+        osg::ref_ptr<strokeDrawable> _strokeDrawable;
+        osg::ref_ptr<pointDrawable> _cameraPoseDrawable;
 
 
         ////
@@ -48,11 +49,9 @@ namespace controller{
         float _distance = 1000;
 
         /////
-        MatrixTransform * _rayNodeTrans;
+
         bool _pointerBntDown = false;
-        cvr::Stroke * stroke;
-        osg::ref_ptr<osg::PositionAttitudeTransform> myPat
-                = new osg::PositionAttitudeTransform;
+        float _touchX, _touchY;
         /// \param pos
         ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
         void initialize_camera();
@@ -61,8 +60,7 @@ namespace controller{
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
                               int pointer_num, float x, float y);
         void DrawRay(osg::Vec3f pos);
-        void createPointRay();
-        void singleWindowMultipleCameras();
+
     public:
         allController(AAssetManager *assetManager);
 

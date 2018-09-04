@@ -17,6 +17,7 @@ protected:
     AAssetManager *_asset_manager;
     bool PushAllState() const;
     bool PopAllState() const;
+    osg::ref_ptr<osg::Geode> glNode;
 public:
     virtual void Initialization(AAssetManager *manager,std::stack<utils::glState>* stateStack){
             _stateStack = stateStack;
@@ -24,11 +25,12 @@ public:
     }
     osg::ref_ptr<osg::Geode> createDrawableNode(AAssetManager *manager,std::stack<utils::glState>* stateStack){
         Initialization(manager, stateStack);
-        osg::ref_ptr<osg::Geode> glNode = new osg::Geode;
+        glNode = new osg::Geode;
         glNode->addDrawable(this);
         setUseDisplayList(false);
         return glNode.get();
     }
+    osg::ref_ptr<osg::Geode> getGLNode(){return glNode;}
 };
 
 

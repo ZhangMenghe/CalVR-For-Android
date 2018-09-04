@@ -25,7 +25,6 @@ private:
     int _point_num = 0;
     float *pointCloudData;
 
-
 public:
     void updateVertices(const float *newData, int num_of_points){
         _point_num = num_of_points;

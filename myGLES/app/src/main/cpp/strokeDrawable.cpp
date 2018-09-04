@@ -32,6 +32,7 @@ void strokeDrawable::Initialization(AAssetManager *manager,std::stack<utils::glS
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glUseProgram(_shader_program);
+    glLineWidth(_default_line_width);
     glUniform4fv(glGetUniformLocation(_shader_program, "uColor"), 1, value_ptr(_default_color));
     glUniform1f(glGetUniformLocation(_shader_program, "uPointSize"), _default_size);
     glUseProgram(0);
@@ -46,6 +47,7 @@ void strokeDrawable::drawImplementation(osg::RenderInfo &) const {
 
     glBindVertexArray(_VAO);
     glDrawArrays(GL_LINES, 0, 2);
+    glDrawArrays(GL_POINTS, 0, 2);
     glBindVertexArray(0);
 
     glUseProgram(0);

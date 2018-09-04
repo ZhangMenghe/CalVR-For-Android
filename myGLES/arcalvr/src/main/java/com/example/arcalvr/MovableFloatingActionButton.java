@@ -60,7 +60,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                 float newY = motionEvent.getRawY() + dY;
                 newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
                 newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
-
+                RayMove(newX, newY);
                 view.animate()
                         .x(newX)
                         .y(newY)
@@ -87,7 +87,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
         }
         return true;
     }
-
+    private void RayMove(float x, float y){JniInterfaceCalVR.JNIonTouchMove(1, x, y);}
     private void RayCast(float x, float y){
         JniInterfaceCalVR.JNIonSingleTouchDown(1, x, y);
     }

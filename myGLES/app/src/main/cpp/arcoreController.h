@@ -16,6 +16,8 @@
 #include "planeDrawable.h"
 
 #include "pointDrawable.h"
+#include "strokeDrawable.h"
+
 namespace {
     constexpr size_t kMaxNumberOfAndroidsToRender = 20;
     constexpr int32_t kPlaneColorRgbaSize = 16;
@@ -129,6 +131,24 @@ public:
         }
         return nullptr;
     }
+
+    void renderStroke(strokeDrawable * drawable){
+        Vec3f objPose = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
+        objPose += osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]) * Vec3f(.0,.0,-0.5f);
+        Vec3f toPose = Vec3f(0.1, 0.1, -3);
+
+        drawable->setStrokePoints(objPose.ptr(), toPose.ptr());
+        drawable->updateARMatrix(proj_mat*view_mat);
+    }
+
+    void renderCameraPoint(pointDrawable * drawable){
+        Vec3f objPose = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
+        objPose += osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]) * Vec3f(.0,.0,-0.5f);
+
+        drawable->updateVertices(objPose.ptr(), 1);
+        drawable->updateARMatrix(proj_mat*view_mat);
+    }
+
     bool renderPointClouds(pointDrawable * drawable){
         ArPointCloud * pointCloud;
         ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
@@ -251,8 +271,6 @@ public:
         plane_list = nullptr;
         return _planes;
     }
-
-    float* getCurrentCameraPose(){return camera_pose_raw;}
 
 };
 

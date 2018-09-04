@@ -35,7 +35,7 @@ public:
     // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
     GLuint GetTextureId(){return _texture_id;}
     osg::ref_ptr<osg::Geode> createDrawableNode(AAssetManager *manager,std::stack<utils::glState>* stateStack){
-        osg::ref_ptr<osg::Geode> glNode = glDrawable::createDrawableNode(manager, stateStack);
+        glNode = glDrawable::createDrawableNode(manager, stateStack);
         glNode->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
         glNode->getOrCreateStateSet()->setRenderBinDetails(1,"RenderBin");
 //        osg::StateSet * stateset = glNode->getOrCreateStateSet();
