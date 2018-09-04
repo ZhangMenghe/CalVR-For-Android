@@ -51,7 +51,7 @@ namespace controller{
         /////
 
         bool _pointerBntDown = false;
-        float _touchX, _touchY;
+        float _touchX, _touchY, _deltaY;
         /// \param pos
         ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
         void initialize_camera();

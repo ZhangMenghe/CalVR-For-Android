@@ -60,7 +60,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                 float newY = motionEvent.getRawY() + dY;
                 newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
                 newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
-                RayMove(newX, newY);
+                RayMove(newX +viewWidth/2, newY+viewHeight/2);
                 view.animate()
                         .x(newX)
                         .y(newY)

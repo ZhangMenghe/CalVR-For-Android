@@ -17,7 +17,7 @@ public class calvrGestureDetector{
             }
             public void onOneFingerMove(MotionEvent event){
 //                Log.e(TAG, "=============MOVINGGGGGGGGGGGG: ================");
-                JniInterfaceCalVR.JNIonTouchMove(1, event.getX(), event.getY());
+//                JniInterfaceCalVR.JNIonTouchMove(1, event.getX(), event.getY());
             }
 
             public  void onFling(int pointerNum, float srcx, float srcy, float dstx, float dsty){

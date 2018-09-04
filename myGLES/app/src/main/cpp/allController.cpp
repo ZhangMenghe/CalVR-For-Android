@@ -286,17 +286,20 @@ void allController::onSingleTouchDown(int pointer_num, float x, float y) {
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOWN);
     commonMouseEvent(mie, pointer_num, x, y);
-    /////
+
+    if(pointer_num != 1)
+        return;
     _strokeDrawable->getGLNode()->setNodeMask(~0);
     _pointerBntDown = true;
-//    DrawRay(screenToWorld(x,y));
 }
 
 void allController::onSingleTouchUp(int pointer_num, float x, float y){
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_UP);
     commonMouseEvent(mie, pointer_num, x, y);
-    //hide ray
+
+    if(pointer_num != 1)
+        return;
     _strokeDrawable->getGLNode()->setNodeMask(0);
     _pointerBntDown = true;
 }
@@ -308,22 +311,24 @@ void allController::onDoubleTouch(int pointer_num, float x, float y){
 }
 
 void allController::onTouchMove(int pointer_num, float destx, float desty) {
-    _touchX = destx; _touchY = desty;
+    if(pointer_num != 1)
+        return;
+
+    _touchX = destx;  _touchY = desty;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DRAG);
     commonMouseEvent(mie, pointer_num, destx, desty);
-//    DrawRay(osg::Vec3f(.0,.0,.0));
 }
 
 void allController::DrawRay(osg::Vec3f pos){
-    _ar_controller->renderStroke(_strokeDrawable);
 
 
-//    osg::Matrixd proj = _viewer->getCamera()->getProjectionMatrix();
-//    osg::Matrix MVPW = _viewer->getCamera()->getViewMatrix() * proj;
-//    _ar_controller->getCurrentCameraPose(MVPW);
+    float offset[2];
+    offset[0] = (_touchX-_screenWidth/2) / _screenWidth;
+    offset[1] = (_screenHeight/2 - _touchY) / _screenHeight;
 
 
-//    stroke->setBegin(screenToWorld(_touchX, _touchY));
+    _ar_controller->renderStroke(_strokeDrawable, offset);
+
 
 }
