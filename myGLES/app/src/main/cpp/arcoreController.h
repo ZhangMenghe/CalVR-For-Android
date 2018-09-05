@@ -132,11 +132,16 @@ public:
         return nullptr;
     }
 
-    void renderStroke(strokeDrawable * drawable, const float * offset){
+    void renderStroke(strokeDrawable * drawable, const float * offset,bool pointReal = true){
         Vec3f objPose = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
-        objPose += osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]) * Vec3f(.0, 0,-0.5f);
-        Vec3f toPose = Vec3f(0.1, 0.1, -3);
-
+        objPose += osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]) * Vec3f(.0, -0.1f,-0.5f);
+        Vec3f toPose;
+        if(pointReal)
+            toPose = Vec3f(0.1, 0.1, -3);
+        else{
+            toPose = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
+            toPose += osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]) * Vec3f(.0, -0.1f,-100.0f);
+        }
         drawable->setStrokePoints(objPose.ptr(), toPose.ptr(),offset);
         drawable->updateARMatrix(proj_mat*view_mat);
     }

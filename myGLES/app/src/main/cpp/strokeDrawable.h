@@ -46,10 +46,13 @@ public:
         glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(float), offsetData);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+
     void updateARMatrix(glm::mat4 mvp){
         _ar_mvp = mvp;
     }
-    void Initialization(AAssetManager * manager,std::stack<utils::glState>* stateStack);
+
+    void Initialization(AAssetManager * manager, std::stack<utils::glState>* stateStack);
+
     void drawImplementation(osg::RenderInfo&) const;
 };
 

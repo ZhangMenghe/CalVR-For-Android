@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:text="getValue" />
+        android:text="switch" />
 
     <com.example.arcalvr.MovableFloatingActionButton
         android:id="@+id/fab"
