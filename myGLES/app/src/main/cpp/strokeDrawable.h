@@ -24,26 +24,21 @@ private:
     float _default_line_width = 10.0f;
     glm::mat4 _ar_mvp = glm::mat4();
 
+//    float last_strokeData[8];
     float strokeData[8];
-    float offsetData[4] = {.0};
+    float offsetData[4] = {1.0,.0,.0,1.0};
 
 public:
-    void setStrokePoints(const float *start_pos, const float* end_pos, const float * startOffset){
+    void setStrokePoints(const float *start_pos, const float* end_pos){
         for(int i=0;i<3;i++){
             strokeData[i] = start_pos[i];
             strokeData[4 + i] = end_pos[i];
         }
         strokeData[3] = 1.0; strokeData[7] = 1.0f;
-
-        offsetData[0] = startOffset[0];
-        offsetData[1] = startOffset[1];
+//        memcpy(last_strokeData, start_pos, 8* sizeof(float));
 
         glBindBuffer(GL_ARRAY_BUFFER, _VBO[0]);
         glBufferSubData(GL_ARRAY_BUFFER, 0, 8 * sizeof(float), strokeData);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO[1]);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(float), offsetData);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
@@ -54,6 +49,8 @@ public:
     void Initialization(AAssetManager * manager, std::stack<utils::glState>* stateStack);
 
     void drawImplementation(osg::RenderInfo&) const;
+
+//    float * getLastStrokeData(){return last_strokeData;}
 };
 
 #endif

@@ -30,11 +30,15 @@ void strokeDrawable::Initialization(AAssetManager *manager,std::stack<utils::glS
     glVertexAttribPointer(_attrib_vertices, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
     //dynamic feed data
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 2 * 2, nullptr, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(_attrib_offsets);
-    glVertexAttribPointer(_attrib_offsets, 2, GL_FLOAT, GL_FALSE, 0, 0);
+//    glBindBuffer(GL_ARRAY_BUFFER, _VBO[1]);
+//    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 2 * 2, nullptr, GL_DYNAMIC_DRAW);
+//    glEnableVertexAttribArray(_attrib_offsets);
+//    glVertexAttribPointer(_attrib_offsets, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 2 * 2, offsetData, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(_attrib_offsets);
+    glVertexAttribPointer(_attrib_offsets, 2, GL_FLOAT, GL_FALSE, 2* sizeof(float), 0);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 

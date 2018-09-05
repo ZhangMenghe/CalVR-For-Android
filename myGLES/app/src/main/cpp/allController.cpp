@@ -112,13 +112,22 @@ void allController::initialize_camera() {
 ref_ptr<osg::Geode> allController::createPointingStick(osg::Vec3f pos){
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-    shape->setShape(new osg::Box(pos, 0.1f, 0.01f, 0.01f));
+    shape->setShape(new osg::Box(pos, 0.01f, 0.5f, 0.01f));
     shape->setColor(osg::Vec4f(1.0f, .05f, .0f, 1.0f));
     Program * program = osg_utils::createShaderProgram("shaders/osgFollowCam.vert", "shaders/osgFollowCam.frag", _asset_manager);
     StateSet * stateSet = shape->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
     _uniform_mvp = new Uniform(osg::Uniform::FLOAT_MAT4, "uMVP");
-//    stateSet->addUniform(_uniform_mvp);
+    stateSet->addUniform(_uniform_mvp);
+
+    stateSet->addUniform( new osg::Uniform("lightDiffuse",
+                                           osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("lightSpecular",
+                                           osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
+
+    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
+
     node->addDrawable(shape);
     return node;
 }
@@ -149,7 +158,7 @@ void allController::setupDefaultEnvironment(const char *root_path) {
     std::string homeDir = std::string(root_path) + "/";
     setenv("CALVR_HOST_NAME", "calvrHost");
     setenv("CALVR_HOME", homeDir);
-    setenv("CALVR_ICON_DIR", homeDir + "icons/");
+    setenv("CALVR_ICON_DIR", homeDir+"icons/");
     setenv("CALVR_CONFIG_DIR", homeDir+"config/");
     setenv("CALVR_RESOURCE_DIR", homeDir+"resources/");
     setenv("CALVR_CONFIG_FILE", homeDir+"config/config.xml");
@@ -164,8 +173,8 @@ void allController::onCreate(const char * calvr_path){
     setupDefaultEnvironment(calvr_path);
 //    _sceneGroup->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
 
-    _sceneGroup->addChild(createPointingStick(osg::Vec3(.0f,.0f,.0f)));
-//    _sceneGroup->addChild( _strokeDrawable->createDrawableNode(_asset_manager,&glStateStack));
+
+    _sceneGroup->addChild( _strokeDrawable->createDrawableNode(_asset_manager,&glStateStack));
 //    _strokeDrawable->getGLNode()->setNodeMask(0);
 //    _sceneGroup->addChild(_cameraPoseDrawable->createDrawableNode(_asset_manager,&glStateStack));
     //Initialization should follow a specific order
@@ -194,6 +203,9 @@ void allController::onCreate(const char * calvr_path){
         LOGE("SPATIALVIZ INITIALIZATION FAIL");
 
     _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
+
+//    _bgDrawable->getGLNode()->addChild(createPointingStick(osg::Vec3(.0f,.0f,.0f)));
+
     //This will make sure camera always in the background
     _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
     _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
@@ -242,7 +254,7 @@ void allController::onDrawFrame(bool moveCam){
     _viewer->renderingTraversals();
     if(_communication->getIsSyncError())
         LOGE("Sync error");
-    if(moveCam)
+//    if(moveCam)
         DrawRay(osg::Vec3f(0,0,0));
 }
 
@@ -322,13 +334,13 @@ void allController::onDoubleTouch(int pointer_num, float x, float y){
 }
 
 void allController::onTouchMove(int pointer_num, float destx, float desty) {
-    if(pointer_num != 1)
-        return;
-
-    _touchX = destx;  _touchY = desty;
-    MouseInteractionEvent * mie = new MouseInteractionEvent();
-    mie->setInteraction(BUTTON_DRAG);
-    commonMouseEvent(mie, pointer_num, destx, desty);
+//    if(pointer_num != 1)
+//        return;
+//
+//    _touchX = destx;  _touchY = desty;
+//    MouseInteractionEvent * mie = new MouseInteractionEvent();
+//    mie->setInteraction(BUTTON_DRAG);
+//    commonMouseEvent(mie, pointer_num, destx, desty);
 }
 
 void allController::DrawRay(osg::Vec3f pos, bool pointReal){
@@ -336,5 +348,12 @@ void allController::DrawRay(osg::Vec3f pos, bool pointReal){
     offset[0] = (_touchX-_screenWidth/2) / _screenWidth;
     offset[1] = (_screenHeight/2 - _touchY) / _screenHeight;
 
+
     _ar_controller->renderStroke(_strokeDrawable, offset, pointReal);
+
+
+    /////////////
+//    glm::mat4 mvp = _ar_controller->getCameraMatrix();
+
+//    _uniform_mvp->set(*(new RefMatrixf(glm::value_ptr(mvp))));
 }

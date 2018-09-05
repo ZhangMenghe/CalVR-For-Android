@@ -132,17 +132,20 @@ public:
         return nullptr;
     }
 
-    void renderStroke(strokeDrawable * drawable, const float * offset,bool pointReal = true){
-        Vec3f objPose = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
-        objPose += osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]) * Vec3f(.0, -0.1f,-0.5f);
-        Vec3f toPose;
-        if(pointReal)
-            toPose = Vec3f(0.1, 0.1, -3);
-        else{
-            toPose = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
-            toPose += osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]) * Vec3f(.0, -0.1f,-100.0f);
-        }
-        drawable->setStrokePoints(objPose.ptr(), toPose.ptr(),offset);
+    void renderStroke(strokeDrawable * drawable, const float * offset,bool pointReal = false){
+        Vec3f camPos = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
+        osg::Quat camRot = osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]);
+
+        //let startpoint slightly offset
+        Vec3f objPose = camPos + osg::Vec3f(.0,-0.05f,.0f) + camRot * Vec3f(.0, .0f, -0.2f);
+        Vec3f toPose = objPose + camRot *  Vec3f(.0, 0.0f,-80.0f);
+
+        //rotate topose around camera
+//        toPose -= objPose;
+//        toPose = camRot * toPose;
+//        toPose += objPose;
+
+        drawable->setStrokePoints(objPose.ptr(), toPose.ptr());
         drawable->updateARMatrix(proj_mat*view_mat);
     }
 
@@ -275,6 +278,22 @@ public:
         ArTrackableList_destroy(plane_list);
         plane_list = nullptr;
         return _planes;
+    }
+
+    glm::mat4 getCameraMatrix(){
+        Vec3f objPose = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
+        objPose += osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]) * Vec3f(.0, 0.0f, -0.5f);
+        glm::mat4 modelMat = glm::translate(glm::mat4(), glm::vec3(objPose.x(), -objPose.z(), objPose.y()));
+        //decode quaternion
+        float angle = acos(camera_pose_raw[3]) * 2;
+        float sinAngle = sin(angle/2);
+        float ax = camera_pose_raw[0] / sinAngle;
+        float ay = camera_pose_raw[1] / sinAngle;
+        float az = camera_pose_raw[2] / sinAngle;
+        modelMat = glm::rotate(modelMat, angle, glm::vec3(ax, -az, ay));
+
+//        glm::mat4 modelMat = glm::translate(glm::mat4(), glm::vec3(0,0,0));
+        return modelMat;
     }
 
 };
