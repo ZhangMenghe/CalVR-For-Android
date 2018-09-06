@@ -14,6 +14,10 @@
 #include "arcoreController.h"
 #include "strokeDrawable.h"
 #include <MenuBasics.h>
+
+#define DEFAULT_CLICK_OFFSET -80
+#define DEFAULT_MENU_OFFSET 300
+
 namespace controller{
     class allController {
     private:
@@ -58,11 +62,11 @@ namespace controller{
         ref_ptr<osg::Geode> createPointingStick(osg::Vec3f pos);
         void initialize_camera();
         void setupDefaultEnvironment(const char* root_path);
-        osg::Vec3f screenToWorld(float x, float y);
-        void commonMouseEvent(cvr::MouseInteractionEvent * mie, int pointer_num);
+//        osg::Vec3f screenToWorld(float x, float y);
+
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
-                              int pointer_num, float x, float y);
-        void DrawRay(osg::Vec3f pos, bool pointReal = false);
+                              int pointer_num, float offset);
+        void DrawRay(osg::Vec3f pos);
 
     public:
         allController(AAssetManager *assetManager);
@@ -86,7 +90,7 @@ namespace controller{
 
         void onDoubleTouch(int pointer_num, float x, float y);
 
-        void onTouchMove(int pointer_num, float destx, float desty);
+        void onTouchMove(int pointer_num, float x, float y);
     };
 }
 

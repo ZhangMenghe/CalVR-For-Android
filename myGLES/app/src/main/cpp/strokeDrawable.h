@@ -25,20 +25,25 @@ private:
     glm::mat4 _ar_mvp = glm::mat4();
 
 //    float last_strokeData[8];
-    float strokeData[8];
-    float offsetData[4] = {1.0,.0,.0,1.0};
+    float strokeData[8] = {.0};
+    float offsetData[4] = {.0};
 
 public:
-    void setStrokePoints(const float *start_pos, const float* end_pos){
+    void setStrokePoints(const float *start_pos, const float* end_pos, const float* offset){
         for(int i=0;i<3;i++){
             strokeData[i] = start_pos[i];
             strokeData[4 + i] = end_pos[i];
         }
         strokeData[3] = 1.0; strokeData[7] = 1.0f;
-//        memcpy(last_strokeData, start_pos, 8* sizeof(float));
+
+        offsetData[0] = offset[0]; offsetData[1] = offset[1];
 
         glBindBuffer(GL_ARRAY_BUFFER, _VBO[0]);
         glBufferSubData(GL_ARRAY_BUFFER, 0, 8 * sizeof(float), strokeData);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO[1]);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(float), offsetData);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 

@@ -43,7 +43,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                 downRawY = motionEvent.getRawY();
                 dX = view.getX() - downRawX;
                 dY = view.getY() - downRawY;
-                RayCast(view.getX(), view.getY());
+                RayCast(motionEvent.getX(), motionEvent.getY());
                 break;
             case MotionEvent.ACTION_MOVE:
                 int viewWidth = view.getWidth();
@@ -68,7 +68,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                         .start();
                 break;
             case MotionEvent.ACTION_UP:
-                RayCastEnd(view.getX(), view.getY());
+                RayCastEnd(motionEvent.getX(), motionEvent.getY());
                 this.setImageResource(R.drawable.pokeball_empty);
                 float upRawX = motionEvent.getRawX();
                 float upRawY = motionEvent.getRawY();

@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
                 if (viewportChanged) {
                     int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
                     JniInterfaceCalVR.JNIonViewChanged(displayRotation, viewportWidth, viewportHeight);
-//                    JniInterfaceOSG.JNIonViewChanged(displayRotation, viewportWidth, viewportHeight);
+
                     viewportChanged = false;
                 }
 //                JniInterfaceOSG.JNIdrawFrame(true);

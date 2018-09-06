@@ -132,24 +132,20 @@ public:
         return nullptr;
     }
 
-    void renderStroke(strokeDrawable * drawable, const float * offset,bool pointReal = false){
+    void renderStroke(strokeDrawable * drawable, const float * offset){
         Vec3f camPos = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
         osg::Quat camRot = osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]);
 
         //let startpoint slightly offset
         Vec3f objPose = camPos + osg::Vec3f(.0,-0.025f,.0f) + camRot * Vec3f(.0, .0f, -0.1f);
         Vec3f toPose = objPose + camRot *  Vec3f(.0, 0.0f,-80.0f);
-        if(pointReal){
-            LOGE("===GL FROM: %f, %f, %f", objPose.x(), -objPose.z(), objPose.y());
-            LOGE("===GL TO: %f, %f, %f", toPose.x(), -toPose.z(), toPose.y());
-        }
 
         //rotate topose around camera
 //        toPose -= objPose;
 //        toPose = camRot * toPose;
 //        toPose += objPose;
 
-        drawable->setStrokePoints(objPose.ptr(), toPose.ptr());
+        drawable->setStrokePoints(objPose.ptr(), toPose.ptr(),offset);
         drawable->updateARMatrix(proj_mat*view_mat);
     }
 
