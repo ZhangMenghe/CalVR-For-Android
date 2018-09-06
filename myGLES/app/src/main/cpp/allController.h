@@ -59,6 +59,7 @@ namespace controller{
         void initialize_camera();
         void setupDefaultEnvironment(const char* root_path);
         osg::Vec3f screenToWorld(float x, float y);
+        void commonMouseEvent(cvr::MouseInteractionEvent * mie, int pointer_num);
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
                               int pointer_num, float x, float y);
         void DrawRay(osg::Vec3f pos, bool pointReal = false);

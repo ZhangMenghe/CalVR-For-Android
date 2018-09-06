@@ -137,8 +137,12 @@ public:
         osg::Quat camRot = osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]);
 
         //let startpoint slightly offset
-        Vec3f objPose = camPos + osg::Vec3f(.0,-0.05f,.0f) + camRot * Vec3f(.0, .0f, -0.2f);
+        Vec3f objPose = camPos + osg::Vec3f(.0,-0.025f,.0f) + camRot * Vec3f(.0, .0f, -0.1f);
         Vec3f toPose = objPose + camRot *  Vec3f(.0, 0.0f,-80.0f);
+        if(pointReal){
+            LOGE("===GL FROM: %f, %f, %f", objPose.x(), -objPose.z(), objPose.y());
+            LOGE("===GL TO: %f, %f, %f", toPose.x(), -toPose.z(), toPose.y());
+        }
 
         //rotate topose around camera
 //        toPose -= objPose;
@@ -280,20 +284,8 @@ public:
         return _planes;
     }
 
-    glm::mat4 getCameraMatrix(){
-        Vec3f objPose = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
-        objPose += osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]) * Vec3f(.0, 0.0f, -0.5f);
-        glm::mat4 modelMat = glm::translate(glm::mat4(), glm::vec3(objPose.x(), -objPose.z(), objPose.y()));
-        //decode quaternion
-        float angle = acos(camera_pose_raw[3]) * 2;
-        float sinAngle = sin(angle/2);
-        float ax = camera_pose_raw[0] / sinAngle;
-        float ay = camera_pose_raw[1] / sinAngle;
-        float az = camera_pose_raw[2] / sinAngle;
-        modelMat = glm::rotate(modelMat, angle, glm::vec3(ax, -az, ay));
-
-//        glm::mat4 modelMat = glm::translate(glm::mat4(), glm::vec3(0,0,0));
-        return modelMat;
+    float* getCameraPose(){
+        return camera_pose_raw;
     }
 
 };

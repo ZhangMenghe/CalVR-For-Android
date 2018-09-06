@@ -292,7 +292,25 @@ osg::Vec3f allController::screenToWorld(float x, float y) {
 }
 
 void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
-                                       int pointer_num, float x, float y){
+                                       int pointer_num){
+    mie->setButton(pointer_num - 1);
+    mie->setHand(0);
+
+    float * camera_pos = _ar_controller->getCameraPose();
+    osg::Quat camRot = osg::Quat(camera_pos[0],-camera_pos[2],camera_pos[1],camera_pos[3]);
+    Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]-0.025f) + camRot * Vec3f(.0f, 0.1f,-80.0f);
+
+    LOGE("===FROM: %f, %f, %f", hand_pose.x(), hand_pose.y(), hand_pose.z());
+
+    osg::Matrix m, n;
+    m.makeRotate(camRot);
+    n.makeTranslate(hand_pose);
+    mie->setTransform(m * n);
+    _tracking->setTouchEventMatrix(m*n);
+    _interactionManager->addEvent(mie);
+}
+void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
+                                     int pointer_num, float x, float y){
     mie->setButton(pointer_num - 1);
     mie->setX(x);
     mie->setY(y);
@@ -308,7 +326,26 @@ void allController::onSingleTouchDown(int pointer_num, float x, float y) {
     _touchX = x; _touchY = y;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOWN);
-    commonMouseEvent(mie, pointer_num, x, y);
+    commonMouseEvent(mie, pointer_num);
+//    if(pointer_num!=1)
+//        commonMouseEvent(mie, pointer_num, x, y);
+//    else{
+//        mie->setButton(0);
+//        mie->setHand(0);
+//
+//        float * camera_pos = _ar_controller->getCameraPose();
+//        osg::Quat camRot = osg::Quat(camera_pos[0],-camera_pos[2],camera_pos[1],camera_pos[3]);
+//        Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]-0.025f) + camRot * Vec3f(.0f, 0.1f,-0.1f);
+//
+//        LOGE("===FROM: %f, %f, %f", hand_pose.x(), hand_pose.y(), hand_pose.z());
+//
+//        osg::Matrix m, n;
+//        m.makeRotate(camRot);
+//        n.makeTranslate(hand_pose);
+//        mie->setTransform(m * n);
+//        _tracking->setTouchEventMatrix(m*n);
+//        _interactionManager->addEvent(mie);
+//    }
 
 //    if(pointer_num != 1)
 //        return;
@@ -319,7 +356,7 @@ void allController::onSingleTouchDown(int pointer_num, float x, float y) {
 void allController::onSingleTouchUp(int pointer_num, float x, float y){
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_UP);
-    commonMouseEvent(mie, pointer_num, x, y);
+    commonMouseEvent(mie, pointer_num);
 
 //    if(pointer_num != 1)
 //        return;
@@ -348,12 +385,9 @@ void allController::DrawRay(osg::Vec3f pos, bool pointReal){
     offset[0] = (_touchX-_screenWidth/2) / _screenWidth;
     offset[1] = (_screenHeight/2 - _touchY) / _screenHeight;
 
-
     _ar_controller->renderStroke(_strokeDrawable, offset, pointReal);
 
+    //shoot the ray to check the interaction with menu
 
-    /////////////
-//    glm::mat4 mvp = _ar_controller->getCameraMatrix();
 
-//    _uniform_mvp->set(*(new RefMatrixf(glm::value_ptr(mvp))));
 }
