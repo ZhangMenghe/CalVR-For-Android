@@ -388,6 +388,7 @@ void allController::DrawRay(osg::Vec3f pos, bool pointReal){
     _ar_controller->renderStroke(_strokeDrawable, offset, pointReal);
 
     //shoot the ray to check the interaction with menu
-
-
+    MouseInteractionEvent * mie = new MouseInteractionEvent();
+    mie->setInteraction(BUTTON_DRAG);
+    commonMouseEvent(mie, 1);
 }
