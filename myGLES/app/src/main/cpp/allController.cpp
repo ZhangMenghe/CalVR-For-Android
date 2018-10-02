@@ -211,7 +211,10 @@ void allController::onCreate(const char * calvr_path){
     _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
     _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
     _sceneGroup->addChild(_scene->getSceneRoot());
-    _root->addChild(_sceneGroup);
+    _sceneMatTrans = new MatrixTransform;
+    _sceneMatTrans->addChild(_sceneGroup);
+
+    _root->addChild(_sceneMatTrans);
     _viewer->setSceneData(_root.get());
 }
 
@@ -254,8 +257,8 @@ void allController::onDrawFrame(bool moveCam){
     _viewer->renderingTraversals();
     if(_communication->getIsSyncError())
         LOGE("Sync error");
-//    if(moveCam)
-        DrawRay(osg::Vec3f(0,0,0));
+
+    DrawRay();
 }
 
 void allController::onViewChanged(int rot, int width, int height){
@@ -269,7 +272,7 @@ void allController::onViewChanged(int rot, int width, int height){
 
     _screenWidth = width;
     _screenHeight = height;
-    _screen_ratio = height/540;
+//    _screen_ratio = height/540;
 //    calvr->onViewChanged(width, height);
 }
 void allController::onPause() {
@@ -299,14 +302,20 @@ void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
     osg::Quat camRot = osg::Quat(camera_pos[0],-camera_pos[2],camera_pos[1],camera_pos[3]);
     Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]-0.025f) + camRot * Vec3f(.0f, 0.1f, offset);
 
-//    LOGE("===FROM: %f, %f, %f", hand_pose.x(), hand_pose.y(), hand_pose.z());
-
     osg::Matrix m, n;
     m.makeRotate(camRot);
     n.makeTranslate(hand_pose);
     mie->setTransform(m * n);
+
+    _tracking->setCameraRotation(m);
     _tracking->setTouchEventMatrix(m*n);
     _interactionManager->addEvent(mie);
+
+//    if(pointer_num == 2) {
+//        osg::Matrix mat;
+//        mat.makeTranslate(Vec3f(0, 1000, 0));
+//        _sceneMatTrans->setMatrix(mat);
+//    }
 }
 
 void allController::onSingleTouchDown(int pointer_num, float x, float y) {
@@ -336,7 +345,7 @@ void allController::onTouchMove(int pointer_num, float x, float y) {
     commonMouseEvent(mie, pointer_num, DEFAULT_CLICK_OFFSET);
 }
 
-void allController::DrawRay(osg::Vec3f pos){
+void allController::DrawRay(){
     float offset[2];
     offset[0] = 2*(_touchX - _screenWidth/2) / _screenWidth;
     offset[1] = 2*(_screenHeight/2 - _touchY) / _screenHeight;

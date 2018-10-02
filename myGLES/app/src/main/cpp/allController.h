@@ -26,7 +26,7 @@ namespace controller{
 
         int _screenWidth;
         int _screenHeight;
-        float _screen_ratio;
+//        float _screen_ratio;
 
         cvr::CVRViewer * _viewer;
         cvr::SceneManager * _scene;
@@ -42,6 +42,7 @@ namespace controller{
         /////////////////
         osg::ref_ptr<bgDrawable> _bgDrawable;
         osg::ref_ptr<osg::Group>  _sceneGroup;
+        osg::ref_ptr<osg::MatrixTransform> _sceneMatTrans;
         arcoreController * _ar_controller;
         std::stack<utils::glState> glStateStack;
         osg::ref_ptr<strokeDrawable> _strokeDrawable;
@@ -66,7 +67,7 @@ namespace controller{
 
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
                               int pointer_num, float offset);
-        void DrawRay(osg::Vec3f pos);
+        void DrawRay();
 
     public:
         allController(AAssetManager *assetManager);
