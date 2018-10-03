@@ -53,6 +53,20 @@ SET(KERNEL_LIBRARIES
     GLESv3
 )
 
+# order matters
+SET(PHYSX_LIBS
+    PxPvdSDK
+	PsFastXml
+	PhysX3CharacterKinematic
+	PhysX3Extensions
+	PhysX3Cooking
+	PhysX3Vehicle
+	PhysX3
+	PhysX3Common
+	PxFoundation
+	cpufeatures
+)
+
 IF(${REBUILD})
      include(CMakeLists-buildDependencies.txt)
     #include(CMakeLists-buildFreetype.txt)
@@ -63,8 +77,14 @@ ELSE()
     include(CMakeLists-staticDependencies.txt)
     include(CMakeLists-staticOSG.txt)
     include(CMakeLists-staticMXML.txt)
+    include(CMakeLists-staticPhysX.txt)
 ENDIF()
 include(CMakeLists-buildCALVR.txt)
+
+# physx needs cpufeatures
+include_directories(${ANDROID_NDK}/sources/android/cpufeatures)
+add_library(cpufeatures ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c)
+target_link_libraries(cpufeatures dl)
 
 add_library(arcore SHARED IMPORTED)
 set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
@@ -92,7 +112,8 @@ add_library(ARCalVR
 
             src/main/cpp/jni_interface_all.cpp
             src/main/cpp/calvrController.cpp
-            src/main/cpp/SpatialViz.cpp
+            src/main/cpp/PhysxBall.cpp
+            src/main/cpp/plugins/MenuBasics/MenuBasics.cpp
             src/main/cpp/StrokeDrawable.cpp
 
             src/main/cpp/allController.cpp
@@ -108,10 +129,19 @@ target_include_directories(ARCalVR PRIVATE
            src/main/cpp
             ${ANDROID_NDK}/sources/third_party/vulkan/src/libs/glm)
 
+#add_library(MenuBasics
+#            SHARED
+#            src/main/cpp/plugins/MenuBasics/MenuBasics.cpp)
+
+include_directories(src/main/cpp/plugins/common)
+include_directories(src/main/cpp/plugins/MenuBasics)
+
 # add lib dependencies
 target_link_libraries(ARCalVR
+#                      MenuBasics
                       android
                       mediandk
                       arcore
+                      ${PHYSX_LIBS}
                       ${KERNEL_LIBRARIES}
                       )
