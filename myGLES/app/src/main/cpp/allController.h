@@ -5,15 +5,15 @@
 #ifndef MYGLES_ALL_CONTROLLER_H
 #define MYGLES_ALL_CONTROLLER_H
 
+#include <string>
 #include <android/asset_manager.h>
 #include <osgViewer/Viewer>
 #include <cvrKernel/CVRViewer.h>
 #include <cvrKernel/InteractionManager.h>
-#include "SpatialViz.h"
 #include "bgDrawable.h"
 #include "arcoreController.h"
 #include "strokeDrawable.h"
-#include <MenuBasics.h>
+
 
 #define DEFAULT_CLICK_OFFSET -80
 #define DEFAULT_MENU_OFFSET 300
@@ -36,37 +36,30 @@ namespace controller{
         cvr::ComController * _communication;
         cvr::TrackingManager * _tracking;
         cvr::Navigation * _navigation;
-        SpatialViz* _spatialViz;
-        MenuBasics* _menuBasics;
+        cvr::PluginManager * _plugins;
 
         /////////////////
         osg::ref_ptr<bgDrawable> _bgDrawable;
         osg::ref_ptr<osg::Group>  _sceneGroup;
-        osg::ref_ptr<osg::MatrixTransform> _sceneMatTrans;
+
         arcoreController * _ar_controller;
         std::stack<utils::glState> glStateStack;
         osg::ref_ptr<strokeDrawable> _strokeDrawable;
         osg::ref_ptr<pointDrawable> _cameraPoseDrawable;
 
-
-        ////
-        bool debug_flag = true;
-        float _distance = 1000;
-
-        /////
-
         bool _pointerBntDown = false;
         float _touchX, _touchY;
         osg::Uniform * _uniform_mvp;
-        /// \param pos
+        /// param pos
         ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
         ref_ptr<osg::Geode> createPointingStick(osg::Vec3f pos);
+
         void initialize_camera();
         void setupDefaultEnvironment(const char* root_path);
 //        osg::Vec3f screenToWorld(float x, float y);
 
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
-                              int pointer_num, float offset);
+                              int pointer_num, float x, float y, float offset);
         void DrawRay();
 
     public:

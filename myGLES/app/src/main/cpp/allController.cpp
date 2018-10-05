@@ -8,12 +8,18 @@
 #include "allController.h"
 #include "utils.h"
 #include "osg_utils.h"
-#include <cvrUtil/AndroidGetenv.h>
 #include <cvrMenu/SubMenu.h>
-
+#include <cvrKernel/PluginManager.h>
+#include <cvrInput/TrackingManager.h>
+#include <cvrKernel/ComController.h>
+#include <cvrUtil/AndroidPreloadPlugins.h>
+#include <MenuBasics.h>
+#include <PhysxBall.h>
 using namespace controller;
 using namespace osg;
 using namespace cvr;
+REGISTER(MenuBasics);
+REGISTER(PhysxBall);
 allController::allController(AAssetManager *assetManager)
 :_asset_manager(assetManager){
 //    _viewer = new osgViewer::Viewer();
@@ -27,8 +33,7 @@ allController::allController(AAssetManager *assetManager)
     _tracking = TrackingManager::instance();
     _navigation = cvr::Navigation::instance();
     _communication = cvr::ComController::instance();
-    _spatialViz = new SpatialViz();
-//    _menuBasics = new MenuBasics();
+    _plugins = cvr::PluginManager::instance();
 
     _ar_controller = new arcoreController;
     _bgDrawable = new bgDrawable();
@@ -43,10 +48,6 @@ allController::allController(AAssetManager *assetManager)
 }
 
 allController::~allController(){
-    if(_spatialViz)
-    {
-        delete _spatialViz;
-    }
     // should be friend class to call deconstructor
 //    if(_file)
 //    {
@@ -109,6 +110,7 @@ void allController::initialize_camera() {
     mainCam->setRenderOrder(osg::Camera::NESTED_RENDER);
     mainCam->setCullingMode( osg::CullSettings::NO_CULLING );
 }
+
 ref_ptr<osg::Geode> allController::createPointingStick(osg::Vec3f pos){
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
@@ -171,8 +173,8 @@ void allController::onCreate(const char * calvr_path){
 //        return;
 //    }
     setupDefaultEnvironment(calvr_path);
-//    _sceneGroup->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
 
+//    _sceneGroup->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
 
     _sceneGroup->addChild( _strokeDrawable->createDrawableNode(_asset_manager,&glStateStack));
 
@@ -196,11 +198,8 @@ void allController::onCreate(const char * calvr_path){
     if(!_menu->init())
         LOGE("==========MENU INITIALIZATION FAIL=========");
 
-//    if(!_menuBasics->init())
-//        LOGE("MENU BASICS");
-
-    if(!_spatialViz->init())
-        LOGE("SPATIALVIZ INITIALIZATION FAIL");
+    if(!_plugins->init(true))
+        LOGE("==========PLUG IN  FAIL=========");
 
     _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
@@ -211,10 +210,9 @@ void allController::onCreate(const char * calvr_path){
     _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
     _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
     _sceneGroup->addChild(_scene->getSceneRoot());
-    _sceneMatTrans = new MatrixTransform;
-    _sceneMatTrans->addChild(_sceneGroup);
+//    _scene->getSceneRoot()->addChild(createDebugOSGSphere(osg::Vec3(.0f,.0f,.0f)));
 
-    _root->addChild(_sceneMatTrans);
+    _root->addChild(_sceneGroup);
     _viewer->setSceneData(_root.get());
 }
 
@@ -227,19 +225,10 @@ void allController::onDrawFrame(bool moveCam){
     _viewer->getCamera()->setViewMatrixAsLookAt(Vec3d(eye.x(), -eye.z(), eye.y()),
                                                 Vec3d(center.x(), -center.z(), center.y()),
                                                 Vec3d(up.x(), -up.z(), up.y()));
-    _distance = 1000;
-    debug_flag = true;
 
-    if(!moveCam && debug_flag){
-
-        _distance = 0;
-        debug_flag = false;
-    }
     float * transUV = _ar_controller->updateBackgroundRender();
     if(nullptr != transUV)
         _bgDrawable->updateOnFrame(transUV);
-
-//    _ar_controller->renderStroke(_strokeDrawable);
 
     _viewer->frameStart();
     _viewer->advance(USE_REFERENCE_TIME);
@@ -252,12 +241,13 @@ void allController::onDrawFrame(bool moveCam){
 
     _navigation->update();
     _scene->postEventUpdate();
+    _plugins->preFrame();
 //    _viewer->frame();
     _viewer->updateTraversal();
     _viewer->renderingTraversals();
     if(_communication->getIsSyncError())
         LOGE("Sync error");
-
+    _plugins->postFrame();
     DrawRay();
 }
 
@@ -294,9 +284,11 @@ void allController::onResourceLoaded(const char *path) {
 //}
 
 void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
-                                     int pointer_num, float offset){
+                                     int pointer_num, float x, float y, float offset){
     mie->setButton(pointer_num - 1);
     mie->setHand(0);
+    mie->setX(x);
+    mie->setY(y);
 
     float * camera_pos = _ar_controller->getCameraPose();
     osg::Quat camRot = osg::Quat(camera_pos[0],-camera_pos[2],camera_pos[1],camera_pos[3]);
@@ -322,27 +314,27 @@ void allController::onSingleTouchDown(int pointer_num, float x, float y) {
 //    _touchX = x; _touchY = y;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOWN);
-    commonMouseEvent(mie, pointer_num, DEFAULT_CLICK_OFFSET);
+    commonMouseEvent(mie, pointer_num, x, y, DEFAULT_CLICK_OFFSET);
 }
 
 void allController::onSingleTouchUp(int pointer_num, float x, float y){
 //    _touchX = x; _touchY = y;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_UP);
-    commonMouseEvent(mie, pointer_num, DEFAULT_CLICK_OFFSET);
+    commonMouseEvent(mie, pointer_num, x, y, DEFAULT_CLICK_OFFSET);
 }
 
 void allController::onDoubleTouch(int pointer_num, float x, float y){
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOUBLE_CLICK);
-    commonMouseEvent(mie, pointer_num, DEFAULT_MENU_OFFSET);
+    commonMouseEvent(mie, pointer_num, x, y, DEFAULT_MENU_OFFSET);
 }
 
 void allController::onTouchMove(int pointer_num, float x, float y) {
     _touchX = x; _touchY = y;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DRAG);
-    commonMouseEvent(mie, pointer_num, DEFAULT_CLICK_OFFSET);
+    commonMouseEvent(mie, pointer_num, x, y, DEFAULT_CLICK_OFFSET);
 }
 
 void allController::DrawRay(){
@@ -355,5 +347,5 @@ void allController::DrawRay(){
     //shoot the ray to check the interaction with menu
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DRAG);
-    commonMouseEvent(mie, 1, DEFAULT_CLICK_OFFSET);
+    commonMouseEvent(mie, 1, _touchX, _touchY, DEFAULT_CLICK_OFFSET);
 }

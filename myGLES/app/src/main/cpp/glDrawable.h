@@ -19,11 +19,13 @@ protected:
     bool PopAllState() const;
     osg::ref_ptr<osg::Geode> glNode;
 public:
-    virtual void Initialization(AAssetManager *manager,std::stack<utils::glState>* stateStack){
-            _stateStack = stateStack;
-            _asset_manager = manager;
+    virtual void Initialization(AAssetManager *manager,
+                                std::stack<utils::glState>* stateStack){
+        _stateStack = stateStack;
+        _asset_manager = manager;
     }
-    osg::ref_ptr<osg::Geode> createDrawableNode(AAssetManager *manager,std::stack<utils::glState>* stateStack){
+    osg::ref_ptr<osg::Geode> createDrawableNode(AAssetManager *manager,
+                                                std::stack<utils::glState>* stateStack){
         Initialization(manager, stateStack);
         glNode = new osg::Geode;
         glNode->addDrawable(this);

@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 public class JniInterfaceCalVR {
     static {
         System.loadLibrary("ARCalVR");
+//        System.loadLibrary("MenuBasics");
     }
     private static final String TAG = "JniInterfaceCalVR";
     static AssetManager assetManager;

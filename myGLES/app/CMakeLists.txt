@@ -105,40 +105,34 @@ set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
 
 add_library(ARCalVR
             SHARED
-            src/main/cpp/utils.cpp
-            src/main/cpp/osg_utils.cpp
-            src/main/cpp/arcore_utils.cpp
-            src/main/cpp/perfMonitor.cpp
-
+            src/main/cpp/allController.cpp
             src/main/cpp/jni_interface_all.cpp
             src/main/cpp/calvrController.cpp
-            src/main/cpp/PhysxBall.cpp
-            src/main/cpp/plugins/MenuBasics/MenuBasics.cpp
             src/main/cpp/StrokeDrawable.cpp
-
-            src/main/cpp/allController.cpp
             src/main/cpp/arcoreController.cpp
             src/main/cpp/glDrawable.cpp
             src/main/cpp/bgDrawable.cpp
             src/main/cpp/pointDrawable.cpp
             src/main/cpp/planeDrawable.cpp
             src/main/cpp/osg_objectRenderer.cpp
+            src/main/cpp/utils.cpp
+            src/main/cpp/osg_utils.cpp
+            src/main/cpp/arcore_utils.cpp
+            src/main/cpp/perfMonitor.cpp
+           # src/main/cpp/plugins/common/AndroidPreloadPlugins.cpp
             )
+include_directories(src/main/cpp/plugins/common)
+include_directories(src/main/cpp/plugins/MenuBasics)
+include_directories(src/main/cpp/plugins/PhysxBall)
 
 target_include_directories(ARCalVR PRIVATE
            src/main/cpp
             ${ANDROID_NDK}/sources/third_party/vulkan/src/libs/glm)
 
-#add_library(MenuBasics
-#            SHARED
-#            src/main/cpp/plugins/MenuBasics/MenuBasics.cpp)
-
-include_directories(src/main/cpp/plugins/common)
-include_directories(src/main/cpp/plugins/MenuBasics)
-
 # add lib dependencies
 target_link_libraries(ARCalVR
-#                      MenuBasics
+                      PhysxBall
+                      MenuBasics
                       android
                       mediandk
                       arcore

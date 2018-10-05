@@ -48,12 +48,12 @@
     <ParticleDreams value="off">
       <DataDir value="/home/aprudhom/data/ParticleDreams" />
     </ParticleDreams>
-    <AlgebraInMotion value="on">
+    <AlgebraInMotion value="off">
       <DataDir value="/home/aprudhom/data/ParticleDreams" />
     </AlgebraInMotion>
     <Sketch value="off" />
     <GreenLight value="off" />
-    <OsgPdf value="on" />
+    <OsgPdf value="off" />
     <CullingMultiGPURender value="off" >
      <Width value="1024" />
      <Height value="768" />
@@ -79,11 +79,11 @@
      <DrawLines value="false" />
     </MultiGPURender>
 
-    <Points value="on" >
+    <Points value="off" >
       <ShaderPath value="/home/aprudhom/CVRPlugins/calit2/Points/shaders" />
     </Points>
 
-    <PointsWithPans value="on">
+    <PointsWithPans value="off">
       <Sets>
         <GalleryTest file="/home/aprudhom/trishPans/gal12NdrfFilterFilt-r8.xyb" scale="1000" x="0" y="0" z="0" moveTime="4.0" fadeTime="5.0" sphereRadius="250.0" selectDistance="2500.0" >
 	  <KGallery1 x="0" y="0" z="0" name="KGallery1" sphereRadius="250.0" selectDistance="2500.0" />
@@ -98,7 +98,7 @@
       </Sets>
     </PointsWithPans>
 
-    <PanoViewLOD value="on">
+    <PanoViewLOD value="off">
      <FloorOffset value="1500" />
      <PrintValues value="false" />
      <ShaderDir value="/home/aprudhom/data/Pans/PansLOD/glsl/" />
@@ -151,7 +151,7 @@
 
     <ArtifactVis value="off" />
 
-    <FuturePatient value="on">
+    <FuturePatient value="off">
       <PDFDir value="/home/aprudhom/data/FuturePatient/PDF" />
       <LayoutDir value="/home/aprudhom/data/FuturePatient/layouts" />
       <PointLineScale value="0.4" />
@@ -199,7 +199,7 @@
           vertex="/home/aprudhom/data/GreenLight/shaders/component.vert" />
     </GreenLight>
 
-    <StructView value="on">
+    <StructView value="off">
       <Layer0File value="/home/aprudhom/data/baybridge/T1_Block_01A_One_Quarter_wPiles_StructSteel01.WRL" />
       <Layer1File value="/home/aprudhom/data/baybridge/T1Block01B_One_Quarter_Struct_Steel.WRL" />
       <Layer2File value="/home/aprudhom/data/baybridge/T1Block02_OneQuarter_TopSlabRebar.wrl" />
@@ -249,7 +249,7 @@
       <DataDir value="/home/aprudhom/data/OsgPathRecorder" />
     </OsgPathRecorder>
 
-    <ModelLoader value="on" >
+    <ModelLoader value="off" >
       <ConfigDir value="/home/aprudhom/data/ModelLoader/" />
       <Files>
         <se_building path="/home/aprudhom/data/falko/se_building.obj" mask="1" />
@@ -257,7 +257,7 @@
       </Files>
     </ModelLoader>
 
-    <ImageViewer value="on" >
+    <ImageViewer value="off" >
       <DefaultPaths value="/home/aprudhom/data/TomsStereo4Kimages1" />
       <Files>
         <BeijingCraftShop fileLeft="BeijingCraftShopLeft_4096_4096.jpg" fileRight="BeijingCraftShopRight_4096_4096.jpg" />

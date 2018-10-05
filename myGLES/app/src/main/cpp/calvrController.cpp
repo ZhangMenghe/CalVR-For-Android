@@ -27,16 +27,16 @@ calvrController::calvrController(AAssetManager *assetManager)
     _tracking = TrackingManager::instance();
     _navigation = cvr::Navigation::instance();
     _communication = cvr::ComController::instance();
-    _spatialViz = new SpatialViz();
+//    _spatialViz = new SpatialViz();
 //    _menuBasics = new MenuBasics();
     initialize_camera();
 }
 
 calvrController::~calvrController(){
-    if(_spatialViz)
-    {
-        delete _spatialViz;
-    }
+//    if(_spatialViz)
+//    {
+//        delete _spatialViz;
+//    }
     // should be friend class to call deconstructor
 //    if(_file)
 //    {
@@ -164,8 +164,8 @@ void calvrController::onCreate(const char * calvr_path){
 //    if(!_menuBasics->init())
 //        LOGE("MENU BASICS");
 
-    if(!_spatialViz->init())
-        LOGE("SPATIALVIZ INITIALIZATION FAIL");
+//    if(!_spatialViz->init())
+//        LOGE("SPATIALVIZ INITIALIZATION FAIL");
 
     _viewer->setSceneData(_root.get());
 }
