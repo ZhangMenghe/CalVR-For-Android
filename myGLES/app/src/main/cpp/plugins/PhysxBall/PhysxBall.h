@@ -80,6 +80,7 @@ protected:
 public:
     bool init();
     void menuCallback(cvr::MenuItem * item);
+    void preFrame();
 //    void operator()( osg::Node* node, osg::NodeVisitor* nv );
 };
 

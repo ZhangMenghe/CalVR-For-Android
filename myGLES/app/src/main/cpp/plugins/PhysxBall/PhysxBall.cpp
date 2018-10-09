@@ -18,6 +18,7 @@ using namespace physx;
 
 physx::PxTolerancesScale _mToleranceScale;
 static PxPhysics * mPhysics;
+static PxReal myTimestep = 1.0f/60.0f;
 static PxDefaultErrorCallback gDefaultErrorCallback;
 static PxDefaultAllocator gDefaultAllocatorCallback;
 static PxSimulationFilterShader gDefaultFilterShader = PxDefaultSimulationFilterShader;
@@ -107,14 +108,15 @@ bool PhysxBall::initPhysX(){
 //    return true;
 }
 
-void PhysxBall::physxUpdate(double step){
+void PhysxBall::preFrame() {
 //    for ( SceneMap::iterator itr=_sceneMap.begin(); itr!=_sceneMap.end(); ++itr )
 //    {
 //        PxScene* scene = itr->second;
 //        scene->simulate( step );
 //        while( !scene->fetchResults() ) { /* do nothing but wait */ }
 //    }
-    gScene->simulate(step);
+    gScene->simulate(myTimestep);
+    while( !gScene->fetchResults() ) { /* do nothing but wait */ }
 }
 bool PhysxBall::init() {
     // --------------- create the menu ---------------
@@ -236,7 +238,7 @@ void PhysxBall::createBall(osg::Group* parent,osg::Vec3f pos, float radius) {
     PxTransform transform(PxVec3(pos.x(), pos.z(), -pos.y()), PxQuat(PxIDENTITY()));
     PxRigidDynamic *actor = PxCreateDynamic(*mPhysics, transform, geometrySphere, *mMaterial, density);
     actor->setAngularDamping(0.75);
-    actor->setLinearVelocity(PxVec3(0,0,0));
+    actor->setLinearVelocity(PxVec3(0.01f,0,0));
     actor->setSleepThreshold(0.0);
     if(!actor) return;
     gScene->addActor(*actor);
