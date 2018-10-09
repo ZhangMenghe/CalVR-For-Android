@@ -16,35 +16,42 @@ using namespace osg;
 using namespace cvr;
 using namespace physx;
 
+physx::PxTolerancesScale _mToleranceScale;
 static PxPhysics * mPhysics;
 static PxDefaultErrorCallback gDefaultErrorCallback;
 static PxDefaultAllocator gDefaultAllocatorCallback;
 static PxSimulationFilterShader gDefaultFilterShader = PxDefaultSimulationFilterShader;
 PxScene * gScene;
-bool PhysxBall::initPhysX(){
-    PxFoundation *mFoundation = NULL;
-    mFoundation = PxCreateFoundation( PX_PHYSICS_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
 
-    PxTolerancesScale mToleranceScale;
-    mToleranceScale.length = 50;//units in cm, 50cm
-    mToleranceScale.speed = 981;
-    mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, mToleranceScale);
+osg::Matrix physX2OSG( const PxMat44& m )
+{
+    PxVec3 pos = m.getPosition();
+    Matrix trans;
+    trans.makeTranslate(pos.x, -pos.z, pos.y);
 
-#if(PX_PHYSICS_VERSION >= 34)
-    // PX_C_EXPORT bool PX_CALL_CONV 	PxInitExtensions (physx::PxPhysics &physics, physx::PxPvd *pvd) since 3.4
-	if (!PxInitExtensions(*mPhysics, nullptr)) {
-        return false;
-    }
-#else
-    if (!PxInitExtensions(*mPhysics)){
-        return false;
-    }
+    Matrix rotMat;
+    double w = sqrt(1.0 + m(0,0) + m(1,1) + m(2,2)) / 2.0;
+    double w4 = (4.0 * w);
+    double x = (m(2,1) - m(1,2)) / w4 ;
+    double y = (m(0,2) - m(2,0)) / w4 ;
+    double z = (m(1,0) - m(0,1)) / w4 ;
+    rotMat.makeRotate(Quat(x,-z,y,w));
+    return trans;
 }
-#endif
-    if(!mPhysics) return false;
 
-    //------------------create physics scene-----------------
-    PxSceneDesc * _sceneDesc = new PxSceneDesc(mToleranceScale);
+void UpdateActorCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
+{
+    osg::MatrixTransform* mt = (node->asTransform() ? node->asTransform()->asMatrixTransform() : NULL);
+    if ( mt && _actor )
+    {
+        PxMat44 matrix( _actor->getGlobalPose() );
+        mt->setMatrix( physX2OSG(matrix) );
+    }
+    traverse( node, nv );
+}
+
+bool PhysxBall::initScene() {
+    PxSceneDesc * _sceneDesc = new PxSceneDesc(_mToleranceScale);
     _sceneDesc->gravity = PxVec3(.0f, -9.81f, .0f);
 
     if(!_sceneDesc->cpuDispatcher)
@@ -58,18 +65,56 @@ bool PhysxBall::initPhysX(){
 
     gScene = mPhysics->createScene(*_sceneDesc);
     if(!gScene) return false;
+
     gScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0);
     gScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
 
-    //---------------------create plane-------------------
-    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
-    PxTransform pose = PxTransform(PxVec3(0.0f, -0.25, 0.0f),PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
-    PxRigidStatic* plane = mPhysics->createRigidStatic(pose);
-    PxShape *shape = PxRigidActorExt::createExclusiveShape(*plane, PxPlaneGeometry(), *mMaterial);
-    if(!shape) return false;
-    gScene->addActor(*plane);
-
     return true;
+}
+
+bool PhysxBall::initPhysX(){
+    PxFoundation *mFoundation = NULL;
+    mFoundation = PxCreateFoundation( PX_PHYSICS_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
+
+    _mToleranceScale.length = 50;//units in cm, 50cm
+    _mToleranceScale.speed = 981;
+    mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, _mToleranceScale);
+
+#if(PX_PHYSICS_VERSION >= 34)
+    // PX_C_EXPORT bool PX_CALL_CONV 	PxInitExtensions (physx::PxPhysics &physics, physx::PxPvd *pvd) since 3.4
+	if (!PxInitExtensions(*mPhysics, nullptr)) {
+        return false;
+    }
+#else
+    if (!PxInitExtensions(*mPhysics)){
+        return false;
+    }
+}
+#endif
+    return (mPhysics!= nullptr);
+//    if(!mPhysics) return false;
+
+    //------------------create physics scene-----------------
+
+    //---------------------create plane-------------------
+//    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
+//    PxTransform pose = PxTransform(PxVec3(0.0f, -0.25, 0.0f),PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
+//    PxRigidStatic* plane = mPhysics->createRigidStatic(pose);
+//    PxShape *shape = PxRigidActorExt::createExclusiveShape(*plane, PxPlaneGeometry(), *mMaterial);
+//    if(!shape) return false;
+//    gScene->addActor(*plane);
+
+//    return true;
+}
+
+void PhysxBall::physxUpdate(double step){
+//    for ( SceneMap::iterator itr=_sceneMap.begin(); itr!=_sceneMap.end(); ++itr )
+//    {
+//        PxScene* scene = itr->second;
+//        scene->simulate( step );
+//        while( !scene->fetchResults() ) { /* do nothing but wait */ }
+//    }
+    gScene->simulate(step);
 }
 bool PhysxBall::init() {
     // --------------- create the menu ---------------
@@ -86,19 +131,25 @@ bool PhysxBall::init() {
     _root = new Group;
     _balls = new Group;
     _root->addChild(_balls);
+
     //--------------init physx-------------------
     if(!initPhysX())
         return false;
+    if(!initScene())
+        return false;
+//    _balls->addUpdateCallback(this);
+
+
 
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     Vec3f boardPos = Vec3f(0, 10.0f, 0);
-    createBall(_balls, osg::Vec3(.0f,0.5f,.0f), 0.05f);
-    createBoard(_root, boardPos);
-    createText(_root, boardPos + Vec3f(0.1f,-2,0.1f));
+    createBall(_balls, osg::Vec3(.0f, 0.5f ,.0f), 0.05f);
+//    createBoard(_root, boardPos);
+//    createText(_root, boardPos + Vec3f(0.1f,-2,0.1f));
 
     //bool navigation, bool movable, bool clip, bool contextMenu, bool showBounds
-    rootSO= new SceneObject("myPluginRoot", false, false, false, false, false);
+    rootSO= new SceneObject("myPluginRoot", false, false, false, false, true);
 
     rootSO->addChild(_root);
     PluginHelper::registerSceneObject(rootSO, "PhysxBallSceneObjset");
@@ -109,8 +160,9 @@ bool PhysxBall::init() {
 }
 
 void PhysxBall::menuCallback(cvr::MenuItem *item) {
-    if(item == _addButton)
-        createBall(_balls, Vec3(.0f,0.5f,.0f), 0.05f);
+//    rootSO->dirtyBounds();
+//    if(item == _addButton)
+//        createBall(_balls, Vec3(.0f,0.5f,.0f), 0.05f);
 }
 ref_ptr<Geometry> PhysxBall::_makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos) {
     ref_ptr<Geometry> geo = new osg::Geometry();
@@ -178,21 +230,21 @@ void PhysxBall::createBoard(Group* parent, osg::Vec3f pos) {
 }
 
 void PhysxBall::createBall(osg::Group* parent,osg::Vec3f pos, float radius) {
-//    PxReal density = 1.0f;
-//    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
-//    PxSphereGeometry geometrySphere(radius);
-//    PxTransform transform(pxPos, PxQuat(PxIDENTITY()));
-//    PxRigidDynamic *actor = PxCreateDynamic(*mPhysics, transform, geometrySphere, *mMaterial, density);
-//    actor->setAngularDamping(0.75);
-//    actor->setLinearVelocity(PxVec3(0,0,0));
-//    actor->setSleepThreshold(0.0);
-//    if(!actor) return;
-//    gScene->addActor(*actor);
-//    //TODO: should change to register, solve bounding problems
-    addSphere(parent, pos, radius);
+    PxReal density = 1.0f;
+    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
+    PxSphereGeometry geometrySphere(radius);
+    PxTransform transform(PxVec3(pos.x(), pos.z(), -pos.y()), PxQuat(PxIDENTITY()));
+    PxRigidDynamic *actor = PxCreateDynamic(*mPhysics, transform, geometrySphere, *mMaterial, density);
+    actor->setAngularDamping(0.75);
+    actor->setLinearVelocity(PxVec3(0,0,0));
+    actor->setSleepThreshold(0.0);
+    if(!actor) return;
+    gScene->addActor(*actor);
 
+    ref_ptr<osg::MatrixTransform> sphereTrans = addSphere(parent, pos, radius);
+    sphereTrans->addUpdateCallback(new UpdateActorCallback(actor));
 }
-void PhysxBall::addSphere(osg::Group*parent, osg::Vec3 pos, float radius)
+ref_ptr<MatrixTransform> PhysxBall::addSphere(osg::Group*parent, osg::Vec3 pos, float radius)
 {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable();
     shape->setShape(new osg::Sphere(pos, radius));
@@ -200,5 +252,10 @@ void PhysxBall::addSphere(osg::Group*parent, osg::Vec3 pos, float radius)
     shape->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
     node->addDrawable(shape.get());
-    parent->addChild(node.get());
+    ref_ptr<MatrixTransform> sphereTrans = new MatrixTransform;
+    sphereTrans->setMatrix(Matrixf());
+    sphereTrans->addChild(node.get());
+
+    parent->addChild(sphereTrans.get());
+    return sphereTrans.get();
 }

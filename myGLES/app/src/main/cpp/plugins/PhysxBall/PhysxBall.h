@@ -33,7 +33,24 @@
 #include <osg/PositionAttitudeTransform> 	// the transform of objects
 #include <foundation/PxVec3.h>
 #include <osgText/Text>
+#include <PxRigidActor.h>
 
+/** The callback to update the actor, should be applied to a matrix transform node */
+class UpdateActorCallback : public osg::NodeCallback
+{
+public:
+    UpdateActorCallback( physx::PxRigidActor* a=0 ) : _actor(a) {}
+
+    UpdateActorCallback( const UpdateActorCallback& copy, const osg::CopyOp& op=osg::CopyOp::SHALLOW_COPY )
+            : osg::NodeCallback(copy, op), _actor(copy._actor) {}
+
+    META_Object( osgPhysics, UpdateActorCallback );
+
+    virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
+
+protected:
+    physx::PxRigidActor* _actor;
+};
 
 class PhysxBall : public cvr::CVRPlugin, public cvr::MenuCallback
 {
@@ -42,7 +59,13 @@ private:
                              osg::Vec4 color, osgText::Text::AlignmentType align =
     osgText::Text::LEFT_CENTER);
     osg::ref_ptr<osg::Geometry> _makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos);
-  protected:
+
+    void createBall(osg::Group* parent,osg::Vec3f pos, float radius);
+    void createBoard(osg::Group* parent, osg::Vec3f pos);
+    void createText(osg::Group* parent, osg::Vec3f pos);
+
+    osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, osg::Vec3 pos, float radius);
+protected:
     cvr::SubMenu *_mainMenu;
     cvr::MenuButton * _addButton;
     osg::ref_ptr<osg::Group> _root, _balls;
@@ -50,16 +73,14 @@ private:
 //    osg::PositionAttitudeTransform *_ball;
 
     bool initPhysX();
+    bool initScene();
+    void physxUpdate(double step);
 
-    void createBall(osg::Group* parent,osg::Vec3f pos, float radius);
-    void createBoard(osg::Group* parent, osg::Vec3f pos);
-    void createText(osg::Group* parent, osg::Vec3f pos);
 
-    void addSphere(osg::Group*parent, osg::Vec3 pos, float radius);
 public:
     bool init();
     void menuCallback(cvr::MenuItem * item);
-
+//    void operator()( osg::Node* node, osg::NodeVisitor* nv );
 };
 
 #endif
