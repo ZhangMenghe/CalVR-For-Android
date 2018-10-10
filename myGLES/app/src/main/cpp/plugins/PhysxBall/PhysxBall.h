@@ -44,7 +44,7 @@ public:
     UpdateActorCallback( const UpdateActorCallback& copy, const osg::CopyOp& op=osg::CopyOp::SHALLOW_COPY )
             : osg::NodeCallback(copy, op), _actor(copy._actor) {}
 
-    META_Object( osgPhysics, UpdateActorCallback );
+//    META_Object( osgPhysics, UpdateActorCallback );
 
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
@@ -60,10 +60,11 @@ private:
     osgText::Text::LEFT_CENTER);
     osg::ref_ptr<osg::Geometry> _makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos);
 
-    void createBall(osg::Group* parent,osg::Vec3f pos, float radius);
-    void createBoard(osg::Group* parent, osg::Vec3f pos);
+    void createBall(osg::Group* parent, osg::Vec3f pos, float radius);
     void createText(osg::Group* parent, osg::Vec3f pos);
+    void createPlane(osg::Group* parent, osg::Vec3f pos);
 
+    void addBoard(osg::Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis = osg::Vec3f(.0f,.0f,.0f),float rotAngle = .0f );
     osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, osg::Vec3 pos, float radius);
 protected:
     cvr::SubMenu *_mainMenu;
@@ -74,7 +75,6 @@ protected:
 
     bool initPhysX();
     bool initScene();
-    void physxUpdate(double step);
 
 
 public:

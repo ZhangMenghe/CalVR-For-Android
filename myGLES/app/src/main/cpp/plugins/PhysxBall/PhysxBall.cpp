@@ -50,7 +50,17 @@ void UpdateActorCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     }
     traverse( node, nv );
 }
+void PhysxBall::createPlane(osg::Group* parent, osg::Vec3f pos) {
+    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
+    PxTransform pose = PxTransform(PxVec3(pos.x(),pos.y(),pos.z()),
+                                   PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
+    PxRigidStatic* plane = mPhysics->createRigidStatic(pose);
+    PxShape *shape = PxRigidActorExt::createExclusiveShape(*plane, PxPlaneGeometry(), *mMaterial);
+    if(!shape) return;
+    gScene->addActor(*plane);
 
+    addBoard(parent, pos, Vec3f(1.0f, .0f,.0f), PI_2f);
+}
 bool PhysxBall::initScene() {
     PxSceneDesc * _sceneDesc = new PxSceneDesc(_mToleranceScale);
     _sceneDesc->gravity = PxVec3(.0f, -9.81f, .0f);
@@ -93,28 +103,9 @@ bool PhysxBall::initPhysX(){
 }
 #endif
     return (mPhysics!= nullptr);
-//    if(!mPhysics) return false;
-
-    //------------------create physics scene-----------------
-
-    //---------------------create plane-------------------
-//    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
-//    PxTransform pose = PxTransform(PxVec3(0.0f, -0.25, 0.0f),PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
-//    PxRigidStatic* plane = mPhysics->createRigidStatic(pose);
-//    PxShape *shape = PxRigidActorExt::createExclusiveShape(*plane, PxPlaneGeometry(), *mMaterial);
-//    if(!shape) return false;
-//    gScene->addActor(*plane);
-
-//    return true;
 }
 
 void PhysxBall::preFrame() {
-//    for ( SceneMap::iterator itr=_sceneMap.begin(); itr!=_sceneMap.end(); ++itr )
-//    {
-//        PxScene* scene = itr->second;
-//        scene->simulate( step );
-//        while( !scene->fetchResults() ) { /* do nothing but wait */ }
-//    }
     gScene->simulate(myTimestep);
     while( !gScene->fetchResults() ) { /* do nothing but wait */ }
 }
@@ -140,7 +131,7 @@ bool PhysxBall::init() {
     if(!initScene())
         return false;
 //    _balls->addUpdateCallback(this);
-
+    createPlane(_root, Vec3f(.0f, -0.25f, .0f));
 
 
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
@@ -221,14 +212,25 @@ void PhysxBall::createText(Group* parent, osg::Vec3f pos) {
 //    geode->addDrawable(textNode);
     parent->addChild(geode);
 }
-void PhysxBall::createBoard(Group* parent, osg::Vec3f pos) {
+void PhysxBall::addBoard(Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis, float rotAngle) {
+    float boardWidth = 2, boardHeight = 2;
+
+    ref_ptr<MatrixTransform> nodeTrans = new MatrixTransform();
+    Matrixf transMat;
+    transMat.makeTranslate(-boardWidth/2, 0, -boardHeight/2);
+
     osg::Geode * geode = new osg::Geode();
 
     geode->addDrawable(
-            _makeQuad(2, 2, Vec4f(.0f,.0f,.0f,1.0f), pos));
-//    geode->addDrawable(
-//            _makeQuad(1, 1, Vec4f(1.0f, 1.0f, 1.0f, 1.0f), pos + Vec3f(0,-2,0)));
-    parent->addChild(geode);
+            _makeQuad(boardWidth, boardHeight, Vec4f(.0f,.0f,.0f,1.0f), pos));
+    if(rotAngle){
+        Matrixf rotMat;
+        rotMat.makeRotate(rotAngle, rotAxis);
+        nodeTrans->setMatrix(transMat * rotMat);
+    } else
+        nodeTrans->setMatrix(transMat);
+    nodeTrans->addChild(geode);
+    parent->addChild(nodeTrans);
 }
 
 void PhysxBall::createBall(osg::Group* parent,osg::Vec3f pos, float radius) {

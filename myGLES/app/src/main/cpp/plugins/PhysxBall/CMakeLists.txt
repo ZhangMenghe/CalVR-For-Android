@@ -2,18 +2,25 @@ SET(LIB_NAME PhysxBall)
 SET(PLUGIN_HEADERS
     PhysxBall.h
 )
+SET(PHYX_HEADERS
+    Engine.h)
+SET(PHYX_CPP
+    Engine.cpp)
+
 
 IF(ANDROID)
 	ADD_LIBRARY(${LIB_NAME}
 		STATIC
-		${PLUGIN_HEADERS}
 		PhysxBall.cpp
+		${PLUGIN_HEADERS}
+		${PHYX_CPP}
 	)
 ELSE(ANDROID)
 	ADD_LIBRARY(${LIB_NAME}
 		SHARE
-		${PLUGIN_HEADERS}
 		PhysxBall.cpp
+		${PLUGIN_HEADERS}
+		${PHYX_CPP}
 	)
 ENDIF(ANDROID)
 
