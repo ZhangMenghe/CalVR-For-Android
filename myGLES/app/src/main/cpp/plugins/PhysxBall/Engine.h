@@ -27,7 +27,7 @@ class Engine : public osg::Referenced
 {
 public:
     static Engine* instance();
-    
+    bool init();
     physx::PxPhysics* getPhysicsSDK() { return _physicsSDK; }
     const physx::PxPhysics* getPhysicsSDK() const { return _physicsSDK; }
     
@@ -35,6 +35,7 @@ public:
     const physx::PxMaterial* getDefaultMaterial() const { return _defaultMaterial; }
     
     /** Add scene to the engine */
+    bool addScene(const std::string& name);
     bool addScene( const std::string& name, physx::PxScene* s );
     bool removeScene( const std::string& name, bool doRelease );
     
@@ -66,6 +67,7 @@ public:
     void clear();
     
 protected:
+    static Engine * _myPtr;
     Engine();
     virtual ~Engine();
     
@@ -79,10 +81,10 @@ protected:
     physx::PxMaterial* _defaultMaterial;
 
     static physx::PxReal _defaultTimestep;
-    static physx::PxPhysics* _physicsSDK;
-    static physx::PxDefaultErrorCallback _defaultErrorCallback;
-    static physx::PxDefaultAllocator _defaultAllocatorCallback;
-    static physx::PxSimulationFilterShader _defaultFilterShader;// = physx::PxDefaultSimulationFilterShader;
+    physx::PxPhysics* _physicsSDK;
+    physx::PxDefaultErrorCallback _defaultErrorCallback;
+    physx::PxDefaultAllocator _defaultAllocatorCallback;
+    physx::PxSimulationFilterShader _defaultFilterShader;// = physx::PxDefaultSimulationFilterShader;
 
     physx::PxCooking* _cooking;
 };

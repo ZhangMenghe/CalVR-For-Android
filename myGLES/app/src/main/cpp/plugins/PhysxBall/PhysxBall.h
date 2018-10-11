@@ -35,6 +35,7 @@
 #include <osgText/Text>
 #include <PxRigidActor.h>
 
+#include "Engine.h"
 /** The callback to update the actor, should be applied to a matrix transform node */
 class UpdateActorCallback : public osg::NodeCallback
 {
@@ -67,6 +68,7 @@ private:
     void addBoard(osg::Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis = osg::Vec3f(.0f,.0f,.0f),float rotAngle = .0f );
     osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, osg::Vec3 pos, float radius);
 protected:
+    osgPhysx::Engine * _phyEngine;
     cvr::SubMenu *_mainMenu;
     cvr::MenuButton * _addButton;
     osg::ref_ptr<osg::Group> _root, _balls;

@@ -8,42 +8,18 @@ using namespace osgPhysx;
 using namespace physx;
 
 PxReal Engine::_defaultTimestep = 1.0f/60.0f;
+Engine * Engine::_myPtr = nullptr;
 
 Engine* Engine::instance()
 {
-    static osg::ref_ptr<Engine> s_registry = new Engine;
-    return s_registry.get();
+    if(!_myPtr) _myPtr = new Engine;
+    return _myPtr;
 }
 
 Engine::Engine()
-:   _cooking(NULL)
 {
-    PxFoundation* foundation = PxCreateFoundation( PX_PHYSICS_VERSION, _defaultAllocatorCallback, _defaultErrorCallback );
-    if ( !foundation )
-    {
-        OSG_WARN << "Unable to initialize PhysX foundation." << std::endl;
-        return;
-    }
-    
-    _physicsSDK = PxCreatePhysics( PX_PHYSICS_VERSION, *foundation, PxTolerancesScale() );
-    if ( !_physicsSDK ) 
-    {
-        OSG_WARN << "Unable to initialize PhysX SDK." << std::endl;
-        return;
-    }
-    _defaultMaterial = _physicsSDK->createMaterial( 0.5, 0.5, 0.5 );
-
-#if(PX_PHYSICS_VERSION >= 34)
-    // PX_C_EXPORT bool PX_CALL_CONV 	PxInitExtensions (physx::PxPhysics &physics, physx::PxPvd *pvd) since 3.4
-    if (!PxInitExtensions(*_physicsSDK, nullptr)) {
-        return;
-    }
-#else
-    if (!PxInitExtensions(*mPhysics)){
-        return;
-    }
-}
-#endif
+    _physicsSDK = nullptr;
+    _cooking = nullptr;
 }
 
 Engine::~Engine()
@@ -54,6 +30,42 @@ Engine::~Engine()
     _physicsSDK->release();
     if ( _cooking ) _cooking->release();
 }
+
+bool Engine::init()
+{
+    PxFoundation* foundation = nullptr;
+    foundation = PxCreateFoundation( PX_PHYSICS_VERSION, _defaultAllocatorCallback, _defaultErrorCallback );
+    if ( !foundation )
+    {
+        OSG_WARN << "Unable to initialize PhysX foundation." << std::endl;
+        return false;
+    }
+
+    _defaultToleranceScale.length = 50;//units in cm, 50cm
+    _defaultToleranceScale.speed = 981;
+
+    _physicsSDK = PxCreatePhysics( PX_PHYSICS_VERSION, *foundation, PxTolerancesScale() );
+    if ( !_physicsSDK ) 
+    {
+        OSG_WARN << "Unable to initialize PhysX SDK." << std::endl;
+        return false;
+    }
+    _defaultMaterial = _physicsSDK->createMaterial( 0.5, 0.5, 0.5 );
+
+#if(PX_PHYSICS_VERSION >= 34)
+    // PX_C_EXPORT bool PX_CALL_CONV 	PxInitExtensions (physx::PxPhysics &physics, physx::PxPvd *pvd) since 3.4
+    if (!PxInitExtensions(*_physicsSDK, nullptr)) {
+        return false;
+    }
+#else
+    if (!PxInitExtensions(*mPhysics)){
+        return false;
+    }
+}
+#endif
+    return true;
+}
+
 
 bool Engine::addScene( const std::string& name, PxScene* s )
 {
@@ -98,25 +110,6 @@ bool Engine::addActor( const std::string& s, PxActor* actor )
     _actorMap[scene].push_back( actor );
     return true;
 }
-
-//bool Engine::addActor( const std::string& s, PxRigidActor* actor, const PxFilterData& filter )
-//{
-//    if ( addActor(s, actor) )
-//        return createSimulationFilter(actor, filter);
-//    else
-//        return false;
-//}
-//
-//bool Engine::addActor( const std::string& s, physx::PxParticleBase* ps, const physx::PxFilterData& filter )
-//{
-//    if ( addActor(s, ps) )
-//    {
-//        ps->setSimulationFilterData( filter );
-//        return true;
-//    }
-//    else
-//        return false;
-//}
 
 bool Engine::removeActor( const std::string& s, PxActor* actor )
 {
@@ -191,4 +184,25 @@ void Engine::releaseActors( PxScene* scene )
         scene->removeActor( *(actors[i]) );
     }
     _actorMap.erase( itr );
+}
+
+bool Engine::addScene(const std::string& name) {
+    PxSceneDesc * _sceneDesc = new PxSceneDesc(_defaultToleranceScale);
+    _sceneDesc->gravity = PxVec3(.0f, -9.81f, .0f);
+
+    if(!_sceneDesc->cpuDispatcher)
+    {
+        PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
+        if(!mCpuDispatcher) return false;
+        _sceneDesc->cpuDispatcher = mCpuDispatcher;
+    }
+    if(!_sceneDesc->filterShader)
+        _sceneDesc->filterShader  = _defaultFilterShader;
+
+    PxScene * scene = _physicsSDK->createScene(*_sceneDesc);
+    if(!scene) return false;
+
+    scene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0);
+    scene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
+    return addScene(name, scene);
 }

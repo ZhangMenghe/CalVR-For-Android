@@ -15,14 +15,14 @@
 using namespace osg;
 using namespace cvr;
 using namespace physx;
-
-physx::PxTolerancesScale _mToleranceScale;
-static PxPhysics * mPhysics;
-static PxReal myTimestep = 1.0f/60.0f;
-static PxDefaultErrorCallback gDefaultErrorCallback;
-static PxDefaultAllocator gDefaultAllocatorCallback;
-static PxSimulationFilterShader gDefaultFilterShader = PxDefaultSimulationFilterShader;
-PxScene * gScene;
+using namespace osgPhysx;
+//physx::PxTolerancesScale _mToleranceScale;
+//static PxPhysics * mPhysics;
+//static PxReal myTimestep = 1.0f/60.0f;
+//static PxDefaultErrorCallback gDefaultErrorCallback;
+//static PxDefaultAllocator gDefaultAllocatorCallback;
+//static PxSimulationFilterShader gDefaultFilterShader = PxDefaultSimulationFilterShader;
+//PxScene * gScene;
 
 osg::Matrix physX2OSG( const PxMat44& m )
 {
@@ -51,64 +51,68 @@ void UpdateActorCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     traverse( node, nv );
 }
 void PhysxBall::createPlane(osg::Group* parent, osg::Vec3f pos) {
-    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
-    PxTransform pose = PxTransform(PxVec3(pos.x(),pos.y(),pos.z()),
-                                   PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
-    PxRigidStatic* plane = mPhysics->createRigidStatic(pose);
-    PxShape *shape = PxRigidActorExt::createExclusiveShape(*plane, PxPlaneGeometry(), *mMaterial);
-    if(!shape) return;
-    gScene->addActor(*plane);
-
-    addBoard(parent, pos, Vec3f(1.0f, .0f,.0f), PI_2f);
+//    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
+//    PxTransform pose = PxTransform(PxVec3(pos.x(),pos.y(),pos.z()),
+//                                   PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
+//    PxRigidStatic* plane = mPhysics->createRigidStatic(pose);
+//    PxShape *shape = PxRigidActorExt::createExclusiveShape(*plane, PxPlaneGeometry(), *mMaterial);
+//    if(!shape) return;
+//    gScene->addActor(*plane);
+//
+//    addBoard(parent, pos, Vec3f(1.0f, .0f,.0f), PI_2f);
 }
 bool PhysxBall::initScene() {
-    PxSceneDesc * _sceneDesc = new PxSceneDesc(_mToleranceScale);
-    _sceneDesc->gravity = PxVec3(.0f, -9.81f, .0f);
-
-    if(!_sceneDesc->cpuDispatcher)
-    {
-        PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
-        if(!mCpuDispatcher) return false;
-        _sceneDesc->cpuDispatcher = mCpuDispatcher;
-    }
-    if(!_sceneDesc->filterShader)
-        _sceneDesc->filterShader  = gDefaultFilterShader;
-
-    gScene = mPhysics->createScene(*_sceneDesc);
-    if(!gScene) return false;
-
-    gScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0);
-    gScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
-
     return true;
+//    PxSceneDesc * _sceneDesc = new PxSceneDesc(_mToleranceScale);
+//    _sceneDesc->gravity = PxVec3(.0f, -9.81f, .0f);
+//
+//    if(!_sceneDesc->cpuDispatcher)
+//    {
+//        PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
+//        if(!mCpuDispatcher) return false;
+//        _sceneDesc->cpuDispatcher = mCpuDispatcher;
+//    }
+//    if(!_sceneDesc->filterShader)
+//        _sceneDesc->filterShader  = gDefaultFilterShader;
+//
+//    gScene = mPhysics->createScene(*_sceneDesc);
+//    if(!gScene) return false;
+//
+//    gScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0);
+//    gScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
+//
+//    return true;
 }
 
 bool PhysxBall::initPhysX(){
-    PxFoundation *mFoundation = NULL;
-    mFoundation = PxCreateFoundation( PX_PHYSICS_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
-
-    _mToleranceScale.length = 50;//units in cm, 50cm
-    _mToleranceScale.speed = 981;
-    mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, _mToleranceScale);
-
-#if(PX_PHYSICS_VERSION >= 34)
-    // PX_C_EXPORT bool PX_CALL_CONV 	PxInitExtensions (physx::PxPhysics &physics, physx::PxPvd *pvd) since 3.4
-	if (!PxInitExtensions(*mPhysics, nullptr)) {
-        return false;
-    }
-#else
-    if (!PxInitExtensions(*mPhysics)){
-        return false;
-    }
-}
-#endif
-    return (mPhysics!= nullptr);
+    return true;
+//    PxFoundation *mFoundation = NULL;
+//    mFoundation = PxCreateFoundation( PX_PHYSICS_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
+//
+//    _mToleranceScale.length = 50;//units in cm, 50cm
+//    _mToleranceScale.speed = 981;
+//    mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, _mToleranceScale);
+//
+//#if(PX_PHYSICS_VERSION >= 34)
+//    // PX_C_EXPORT bool PX_CALL_CONV 	PxInitExtensions (physx::PxPhysics &physics, physx::PxPvd *pvd) since 3.4
+//	if (!PxInitExtensions(*mPhysics, nullptr)) {
+//        return false;
+//    }
+//#else
+//    if (!PxInitExtensions(*mPhysics)){
+//        return false;
+//    }
+//}
+//#endif
+//    return (mPhysics!= nullptr);
 }
 
 void PhysxBall::preFrame() {
-    gScene->simulate(myTimestep);
-    while( !gScene->fetchResults() ) { /* do nothing but wait */ }
+    _phyEngine->update();
+//    gScene->simulate(myTimestep);
+//    while( !gScene->fetchResults() ) { /* do nothing but wait */ }
 }
+
 bool PhysxBall::init() {
     // --------------- create the menu ---------------
     _mainMenu = new SubMenu("PhysxBall", "PhysxBall");
@@ -126,11 +130,15 @@ bool PhysxBall::init() {
     _root->addChild(_balls);
 
     //--------------init physx-------------------
-    if(!initPhysX())
+//    if(!initPhysX())
+//        return false;
+//    if(!initScene())
+//        return false;
+    _phyEngine = Engine::instance();
+    if(!_phyEngine->init())
         return false;
-    if(!initScene())
-        return false;
-//    _balls->addUpdateCallback(this);
+    _phyEngine->addScene("main");
+    ////////////////////////////////////////////////
     createPlane(_root, Vec3f(.0f, -0.25f, .0f));
 
 
@@ -235,15 +243,15 @@ void PhysxBall::addBoard(Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis, floa
 
 void PhysxBall::createBall(osg::Group* parent,osg::Vec3f pos, float radius) {
     PxReal density = 1.0f;
-    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
+    PxMaterial* mMaterial = _phyEngine->getPhysicsSDK()->createMaterial(0.1,0.2,0.5);
     PxSphereGeometry geometrySphere(radius);
     PxTransform transform(PxVec3(pos.x(), pos.z(), -pos.y()), PxQuat(PxIDENTITY()));
-    PxRigidDynamic *actor = PxCreateDynamic(*mPhysics, transform, geometrySphere, *mMaterial, density);
+    PxRigidDynamic *actor = PxCreateDynamic(* _phyEngine->getPhysicsSDK(), transform, geometrySphere, *mMaterial, density);
     actor->setAngularDamping(0.75);
     actor->setLinearVelocity(PxVec3(0.01f,0,0));
     actor->setSleepThreshold(0.0);
     if(!actor) return;
-    gScene->addActor(*actor);
+    _phyEngine->getScene("main")->addActor(*actor);
 
     ref_ptr<osg::MatrixTransform> sphereTrans = addSphere(parent, pos, radius);
     sphereTrans->addUpdateCallback(new UpdateActorCallback(actor));
