@@ -51,15 +51,15 @@ void UpdateActorCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     traverse( node, nv );
 }
 void PhysxBall::createPlane(osg::Group* parent, osg::Vec3f pos) {
-//    PxMaterial* mMaterial = mPhysics->createMaterial(0.1,0.2,0.5);
-//    PxTransform pose = PxTransform(PxVec3(pos.x(),pos.y(),pos.z()),
-//                                   PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
-//    PxRigidStatic* plane = mPhysics->createRigidStatic(pose);
-//    PxShape *shape = PxRigidActorExt::createExclusiveShape(*plane, PxPlaneGeometry(), *mMaterial);
-//    if(!shape) return;
-//    gScene->addActor(*plane);
-//
-//    addBoard(parent, pos, Vec3f(1.0f, .0f,.0f), PI_2f);
+    PxMaterial* mMaterial = _phyEngine->getPhysicsSDK()->createMaterial(0.1,0.2,0.5);
+    PxTransform pose = PxTransform(PxVec3(pos.x(),pos.y(),pos.z()),
+                                   PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
+    PxRigidStatic* plane = _phyEngine->getPhysicsSDK()->createRigidStatic(pose);
+    PxShape *shape = PxRigidActorExt::createExclusiveShape(*plane, PxPlaneGeometry(), *mMaterial);
+    if(!shape) return;
+    _phyEngine->getScene("main")->addActor(*plane);
+
+    addBoard(parent, pos, Vec3f(1.0f, .0f,.0f), PI_2f);
 }
 bool PhysxBall::initScene() {
     return true;

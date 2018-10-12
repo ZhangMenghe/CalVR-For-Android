@@ -8,12 +8,15 @@ using namespace osgPhysx;
 using namespace physx;
 
 PxReal Engine::_defaultTimestep = 1.0f/60.0f;
-Engine * Engine::_myPtr = nullptr;
+
+static physx::PxDefaultErrorCallback _defaultErrorCallback;
+static physx::PxDefaultAllocator _defaultAllocatorCallback;
+static physx::PxSimulationFilterShader _defaultFilterShader = physx::PxDefaultSimulationFilterShader;
 
 Engine* Engine::instance()
 {
-    if(!_myPtr) _myPtr = new Engine;
-    return _myPtr;
+    static osg::ref_ptr<Engine> s_registry = new Engine;
+    return s_registry.get();
 }
 
 Engine::Engine()

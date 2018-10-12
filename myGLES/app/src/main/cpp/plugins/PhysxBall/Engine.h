@@ -67,7 +67,6 @@ public:
     void clear();
     
 protected:
-    static Engine * _myPtr;
     Engine();
     virtual ~Engine();
     
@@ -82,9 +81,6 @@ protected:
 
     static physx::PxReal _defaultTimestep;
     physx::PxPhysics* _physicsSDK;
-    physx::PxDefaultErrorCallback _defaultErrorCallback;
-    physx::PxDefaultAllocator _defaultAllocatorCallback;
-    physx::PxSimulationFilterShader _defaultFilterShader;// = physx::PxDefaultSimulationFilterShader;
 
     physx::PxCooking* _cooking;
 };
