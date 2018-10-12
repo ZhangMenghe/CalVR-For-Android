@@ -29,7 +29,6 @@ Engine::~Engine()
 {
     clear();
     PxCloseExtensions();
-    _defaultMaterial->release();
     _physicsSDK->release();
     if ( _cooking ) _cooking->release();
 }
@@ -53,8 +52,6 @@ bool Engine::init()
         OSG_WARN << "Unable to initialize PhysX SDK." << std::endl;
         return false;
     }
-    _defaultMaterial = _physicsSDK->createMaterial( 0.5, 0.5, 0.5 );
-
 #if(PX_PHYSICS_VERSION >= 34)
     // PX_C_EXPORT bool PX_CALL_CONV 	PxInitExtensions (physx::PxPhysics &physics, physx::PxPvd *pvd) since 3.4
     if (!PxInitExtensions(*_physicsSDK, nullptr)) {
@@ -113,7 +110,13 @@ bool Engine::addActor( const std::string& s, PxActor* actor )
     _actorMap[scene].push_back( actor );
     return true;
 }
+PxActor * Engine::getActorAt(const std::string & s, int loc){
+    PxScene* scene = getScene(s);
 
+    ActorMap::iterator itr = _actorMap.find( scene );
+    if ( itr==_actorMap.end() ) return nullptr;
+    return itr->second[loc];
+}
 bool Engine::removeActor( const std::string& s, PxActor* actor )
 {
     PxScene* scene = getScene(s);
@@ -180,7 +183,7 @@ void Engine::releaseActors( PxScene* scene )
 {
     ActorMap::iterator itr = _actorMap.find( scene );
     if ( itr==_actorMap.end() ) return;
-    
+
     ActorList& actors = itr->second;
     for ( unsigned int i=0; i<actors.size(); ++i )
     {

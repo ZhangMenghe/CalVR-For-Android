@@ -71,12 +71,10 @@ protected:
     osgPhysx::Engine * _phyEngine;
     cvr::SubMenu *_mainMenu;
     cvr::MenuButton * _addButton;
-    osg::ref_ptr<osg::Group> _root, _balls;
-    cvr::SceneObject *rootSO;
+    osg::ref_ptr<osg::Group> _menu, _scene;
+    cvr::SceneObject *rootSO, *sceneSO, *menuSo;
+//    osg::ref_ptr<osg::MatrixTransform> sphereTrans;
 //    osg::PositionAttitudeTransform *_ball;
-
-    bool initPhysX();
-    bool initScene();
 
 
 public:

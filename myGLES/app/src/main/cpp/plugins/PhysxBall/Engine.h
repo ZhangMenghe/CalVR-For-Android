@@ -7,18 +7,6 @@
 #include <vector>
 #include <map>
 
-#if PX_PHYSICS_VERSION_MAJOR==3
-#   if PX_PHYSICS_VERSION_MINOR<3
-#       define USE_PHYSX_32 1
-#       define USE_PHYSX_33 0
-#   else
-#       define USE_PHYSX_32 0
-#       define USE_PHYSX_33 1
-#   endif
-#else
-#   error "Unsupport PhysX version"
-#endif
-
 namespace osgPhysx
 {
 
@@ -29,11 +17,7 @@ public:
     static Engine* instance();
     bool init();
     physx::PxPhysics* getPhysicsSDK() { return _physicsSDK; }
-    const physx::PxPhysics* getPhysicsSDK() const { return _physicsSDK; }
-    
-    physx::PxMaterial* getDefaultMaterial() { return _defaultMaterial; }
-    const physx::PxMaterial* getDefaultMaterial() const { return _defaultMaterial; }
-    
+
     /** Add scene to the engine */
     bool addScene(const std::string& name);
     bool addScene( const std::string& name, physx::PxScene* s );
@@ -55,8 +39,8 @@ public:
     typedef std::vector<physx::PxActor*> ActorList;
     typedef std::map<physx::PxScene*, ActorList> ActorMap;
     ActorMap& getAllActors() { return _actorMap; }
-    const ActorMap& getAllActors() const { return _actorMap; }
-    
+    physx::PxActor * getActorAt(const std::string & scene, int loc);
+
     /** Get or create a new cooking object */
     physx::PxCooking* getOrCreateCooking( physx::PxCookingParams* params=0, bool forceCreating=false );
 
@@ -76,8 +60,6 @@ protected:
     ActorMap _actorMap;
 
     physx::PxTolerancesScale _defaultToleranceScale;
-
-    physx::PxMaterial* _defaultMaterial;
 
     static physx::PxReal _defaultTimestep;
     physx::PxPhysics* _physicsSDK;
