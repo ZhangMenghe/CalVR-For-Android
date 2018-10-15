@@ -140,11 +140,6 @@ public:
         Vec3f objPose = camPos + osg::Vec3f(.0,-0.025f,.0f) + camRot * Vec3f(.0, .0f, -0.1f);
         Vec3f toPose = objPose + camRot *  Vec3f(.0, 0.0f,-80.0f);
 
-        //rotate topose around camera
-//        toPose -= objPose;
-//        toPose = camRot * toPose;
-//        toPose += objPose;
-
         drawable->setStrokePoints(objPose.ptr(), toPose.ptr(),offset);
         drawable->updateARMatrix(proj_mat*view_mat);
     }

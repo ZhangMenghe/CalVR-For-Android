@@ -13,13 +13,18 @@
 #include <cvrInput/TrackingManager.h>
 #include <cvrKernel/ComController.h>
 #include <cvrUtil/AndroidPreloadPlugins.h>
+//#include <MenuBasics.h>
+#include <osg/ComputeBoundsVisitor>
+#include <plugins/PhysxBall/PhysxBall.h>
+#include <osg/PolygonMode>
 #include <MenuBasics.h>
-#include <PhysxBall.h>
+
 using namespace controller;
 using namespace osg;
 using namespace cvr;
-REGISTER(MenuBasics);
 REGISTER(PhysxBall);
+REGISTER(MenuBasics);
+
 allController::allController(AAssetManager *assetManager)
 :_asset_manager(assetManager){
 //    _viewer = new osgViewer::Viewer();
@@ -173,8 +178,8 @@ void allController::onCreate(const char * calvr_path){
 //        return;
 //    }
     setupDefaultEnvironment(calvr_path);
-
-//    _sceneGroup->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
+//    ref_ptr<Geode> sphereNode = createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
+//    _sceneGroup->addChild(sphereNode.get());
 
     _sceneGroup->addChild( _strokeDrawable->createDrawableNode(_asset_manager,&glStateStack));
 
@@ -193,7 +198,8 @@ void allController::onCreate(const char * calvr_path){
         LOGE("=========NAVIGATION FAIL===========");
     if(!_scene->init())
         LOGE("==========SCENE INITIALIZATION FAIL=========");
-
+    _scene->setViewerScene(_viewer);
+    _viewer->setReleaseContextAtEndOfFrameHint(false);
 
     if(!_menu->init())
         LOGE("==========MENU INITIALIZATION FAIL=========");
@@ -201,6 +207,7 @@ void allController::onCreate(const char * calvr_path){
     if(!_plugins->init(true))
         LOGE("==========PLUG IN  FAIL=========");
 
+//    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
     _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
 
 //    _bgDrawable->getGLNode()->addChild(createPointingStick(osg::Vec3(.0f,.0f,.0f)));
@@ -210,7 +217,7 @@ void allController::onCreate(const char * calvr_path){
     _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
     _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
     _sceneGroup->addChild(_scene->getSceneRoot());
-//    _scene->getSceneRoot()->addChild(createDebugOSGSphere(osg::Vec3(.0f,.0f,.0f)));
+//    _scene->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
 
     _root->addChild(_sceneGroup);
     _viewer->setSceneData(_root.get());
@@ -282,6 +289,25 @@ void allController::onResourceLoaded(const char *path) {
 //osg::Vec3f allController::screenToWorld(float x, float y) {
 //    return osg::Vec3f((x-_screenWidth/2)/_screen_ratio, 0, (_screenHeight/2 - y)/_screen_ratio);
 //}
+void toEulerAngle(const osg::Quat& q, double& roll, double& pitch, double& yaw)
+{
+    // roll (x-axis rotation)
+    double sinr_cosp = +2.0 * (q.w() * q.x() + q.y() * q.z());
+    double cosr_cosp = +1.0 - 2.0 * (q.x() * q.x() + q.y() * q.y());
+    roll = atan2(sinr_cosp, cosr_cosp);
+
+    // pitch (y-axis rotation)
+    double sinp = +2.0 * (q.w() * q.y() - q.z() * q.x());
+    if (fabs(sinp) >= 1)
+        pitch = copysign(M_PI / 2, sinp); // use 90 degrees if out of range
+    else
+        pitch = asin(sinp);
+
+    // yaw (z-axis rotation)
+    double siny_cosp = +2.0 * (q.w() * q.z() + q.x() * q.y());
+    double cosy_cosp = +1.0 - 2.0 * (q.y() * q.y() + q.z() * q.z());
+    yaw = atan2(siny_cosp, cosy_cosp);
+}
 
 void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
                                      int pointer_num, float x, float y, float offset){
@@ -289,25 +315,22 @@ void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
     mie->setHand(0);
     mie->setX(x);
     mie->setY(y);
-
+    
     float * camera_pos = _ar_controller->getCameraPose();
     osg::Quat camRot = osg::Quat(camera_pos[0],-camera_pos[2],camera_pos[1],camera_pos[3]);
     Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]-0.025f) + camRot * Vec3f(.0f, 0.1f, offset);
-
     osg::Matrix m, n;
     m.makeRotate(camRot);
+
     n.makeTranslate(hand_pose);
     mie->setTransform(m * n);
 
-    _tracking->setCameraRotation(m);
+    double roll, pitch, yaw;
+    toEulerAngle(osg::Quat(camera_pos[0],camera_pos[1],camera_pos[2],camera_pos[3]), roll, pitch, yaw);
+
+    _tracking->setCameraRotation(m, roll, -yaw, pitch);
     _tracking->setTouchEventMatrix(m*n);
     _interactionManager->addEvent(mie);
-
-//    if(pointer_num == 2) {
-//        osg::Matrix mat;
-//        mat.makeTranslate(Vec3f(0, 1000, 0));
-//        _sceneMatTrans->setMatrix(mat);
-//    }
 }
 
 void allController::onSingleTouchDown(int pointer_num, float x, float y) {
