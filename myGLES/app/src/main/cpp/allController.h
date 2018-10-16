@@ -22,7 +22,6 @@ namespace controller{
 
         int _screenWidth;
         int _screenHeight;
-//        float _screen_ratio;
 
         cvr::CVRViewer * _viewer;
         cvr::SceneManager * _scene;
@@ -41,18 +40,13 @@ namespace controller{
         arcoreController * _ar_controller;
         std::stack<utils::glState> glStateStack;
         osg::ref_ptr<strokeDrawable> _strokeDrawable;
-        osg::ref_ptr<pointDrawable> _cameraPoseDrawable;
 
-        bool _pointerBntDown = false;
         float _touchX, _touchY;
-        osg::Uniform * _uniform_mvp;
         /// param pos
         ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
-        ref_ptr<osg::Geode> createPointingStick(osg::Vec3f pos);
 
         void initialize_camera();
         void setupDefaultEnvironment(const char* root_path);
-//        osg::Vec3f screenToWorld(float x, float y);
 
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
                               int pointer_num, float x, float y);

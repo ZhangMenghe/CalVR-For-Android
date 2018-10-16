@@ -27,7 +27,6 @@ REGISTER(MenuBasics);
 
 allController::allController(AAssetManager *assetManager)
         :_asset_manager(assetManager){
-//    _viewer = new osgViewer::Viewer();
     _viewer = new cvr::CVRViewer();
     _viewer->setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
     _root = new Group;
@@ -45,9 +44,8 @@ allController::allController(AAssetManager *assetManager)
     _sceneGroup = new Group;
 
     ////////////////////////////
-//    stroke = new Stroke;
+
     _strokeDrawable = new strokeDrawable;
-    _cameraPoseDrawable = new pointDrawable;
 
     initialize_camera();
 }
@@ -113,31 +111,9 @@ void allController::initialize_camera() {
     osg::Vec3d up = osg::Vec3d(0,0,1);
     mainCam->setViewMatrixAsLookAt(eye,center,up); // usual up vector
     mainCam->setRenderOrder(osg::Camera::NESTED_RENDER);
-    mainCam->setCullingMode( osg::CullSettings::NO_CULLING );
+//    mainCam->setCullingMode( osg::CullSettings::NO_CULLING );
 }
 
-ref_ptr<osg::Geode> allController::createPointingStick(osg::Vec3f pos){
-    osg::ref_ptr<osg::Geode> node = new osg::Geode;
-    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-    shape->setShape(new osg::Box(pos, 0.01f, 0.5f, 0.01f));
-    shape->setColor(osg::Vec4f(1.0f, .05f, .0f, 1.0f));
-    Program * program = osg_utils::createShaderProgram("shaders/osgFollowCam.vert", "shaders/osgFollowCam.frag", _asset_manager);
-    StateSet * stateSet = shape->getOrCreateStateSet();
-    stateSet->setAttributeAndModes(program);
-    _uniform_mvp = new Uniform(osg::Uniform::FLOAT_MAT4, "uMVP");
-    stateSet->addUniform(_uniform_mvp);
-
-    stateSet->addUniform( new osg::Uniform("lightDiffuse",
-                                           osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
-    stateSet->addUniform( new osg::Uniform("lightSpecular",
-                                           osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
-    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
-
-    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
-
-    node->addDrawable(shape);
-    return node;
-}
 ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
     shape->setShape(new osg::Sphere(pos, 0.05f));
@@ -178,12 +154,11 @@ void allController::onCreate(const char * calvr_path){
 //        return;
 //    }
     setupDefaultEnvironment(calvr_path);
-//    ref_ptr<Geode> sphereNode = createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
-//    _sceneGroup->addChild(sphereNode.get());
+    ref_ptr<Geode> sphereNode = createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
+    _sceneGroup->addChild(sphereNode.get());
 
     _sceneGroup->addChild( _strokeDrawable->createDrawableNode(_asset_manager,&glStateStack));
 
-//    _sceneGroup->addChild(_cameraPoseDrawable->createDrawableNode(_asset_manager,&glStateStack));
     //Initialization should follow a specific order
 
     if(!_config->init())
@@ -209,8 +184,6 @@ void allController::onCreate(const char * calvr_path){
 
 //    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
     _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
-
-//    _bgDrawable->getGLNode()->addChild(createPointingStick(osg::Vec3(.0f,.0f,.0f)));
 
     //This will make sure camera always in the background
     _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
@@ -262,15 +235,7 @@ void allController::onViewChanged(int rot, int width, int height){
     _viewer->setUpViewerAsEmbeddedInWindow(0,0,width,height);
     _ar_controller->onViewChanged(rot, width, height);
     _touchX = width/2; _touchY = height/2;
-//    double fovy, ratio, znear, zfar;
-//    _viewer->getCamera()->getProjectionMatrixAsPerspective(fovy,ratio,znear,zfar);
-//    _viewer->getCamera()->setProjectionMatrixAsPerspective(fovy, (float)width/height, znear, zfar);
-//    stroke->onViewChange(_viewer->getCamera()->getProjectionMatrix());
-
-    _screenWidth = width;
-    _screenHeight = height;
-//    _screen_ratio = height/540;
-//    calvr->onViewChanged(width, height);
+    _screenWidth = width;   _screenHeight = height;
 }
 void allController::onPause() {
     _ar_controller->onPause();
@@ -286,9 +251,6 @@ void allController::onResourceLoaded(const char *path) {
         return;
     }
 }
-//osg::Vec3f allController::screenToWorld(float x, float y) {
-//    return osg::Vec3f((x-_screenWidth/2)/_screen_ratio, 0, (_screenHeight/2 - y)/_screen_ratio);
-//}
 void toEulerAngle(const osg::Quat& q, double& roll, double& pitch, double& yaw)
 {
     // roll (x-axis rotation)
@@ -334,14 +296,12 @@ void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
 }
 
 void allController::onSingleTouchDown(int pointer_num, float x, float y) {
-//    _touchX = x; _touchY = y;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOWN);
     commonMouseEvent(mie, pointer_num, x, y);
 }
 
 void allController::onSingleTouchUp(int pointer_num, float x, float y){
-//    _touchX = x; _touchY = y;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_UP);
     commonMouseEvent(mie, pointer_num, x, y);
