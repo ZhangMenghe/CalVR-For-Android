@@ -22,7 +22,7 @@
 #include <cvrMenu/MenuRangeValue.h>
 #include <cvrConfig/ConfigManager.h>
 #include <cvrKernel/FileHandler.h>
-
+#include <cvrUtil/AndroidHelper.h>
 // OSG
 #include <osg/Group>
 #include <osg/Vec3>
@@ -56,15 +56,11 @@ protected:
 class PhysxBall : public cvr::CVRPlugin, public cvr::MenuCallback
 {
 private:
-    osgText::Text * _makeText(std::string text, float size, osg::Vec3 pos,
-                             osg::Vec4 color, osgText::Text::AlignmentType align =
-    osgText::Text::LEFT_CENTER);
+
     osg::ref_ptr<osg::Geometry> _makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos);
 
     void createBall(osg::Group* parent, osg::Vec3f pos, float radius);
-    void createText(osg::Group* parent, osg::Vec3f pos);
     void createPlane(osg::Group* parent, osg::Vec3f pos);
-
     void addBoard(osg::Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis = osg::Vec3f(.0f,.0f,.0f),float rotAngle = .0f );
     osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, osg::Vec3 pos, float radius);
 protected:
@@ -73,15 +69,14 @@ protected:
     cvr::MenuButton * _addButton;
     osg::ref_ptr<osg::Group> _menu, _scene;
     cvr::SceneObject *rootSO, *sceneSO, *menuSo;
+    cvr::assetLoader* _assetHelper;
 //    osg::ref_ptr<osg::MatrixTransform> sphereTrans;
 //    osg::PositionAttitudeTransform *_ball;
-
 
 public:
     bool init();
     void menuCallback(cvr::MenuItem * item);
     void preFrame();
-//    void operator()( osg::Node* node, osg::NodeVisitor* nv );
 };
 
 #endif

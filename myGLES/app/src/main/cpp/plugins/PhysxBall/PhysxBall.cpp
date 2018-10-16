@@ -46,10 +46,6 @@ void PhysxBall::createPlane(osg::Group* parent, osg::Vec3f pos) {
 
 void PhysxBall::preFrame() {
     _phyEngine->update();
-//    PxRigidActor * ball = static_cast<PxRigidActor * >(_phyEngine->getActorAt("main", 1));
-//    PxMat44 matrix( ball->getGlobalPose() );
-//    sphereTrans->setMatrix( physX2OSG(matrix) );
-
 }
 
 bool PhysxBall::init() {
@@ -72,6 +68,7 @@ bool PhysxBall::init() {
     if(!_phyEngine->init())
         return false;
     _phyEngine->addScene("main");
+    _assetHelper = new assetLoader(_asset_manager);
 
     createPlane(_scene, Vec3f(.0f, .0f, -0.25f));
 
@@ -137,31 +134,7 @@ ref_ptr<Geometry> PhysxBall::_makeQuad(float width, float height, osg::Vec4f col
 
     return geo.get();
 }
-osgText::Text * PhysxBall::_makeText(std::string text, float size,
-                                            osg::Vec3 pos, osg::Vec4 color, osgText::Text::AlignmentType align)
-{
-    osgText::Text * textNode = new osgText::Text();
-    textNode->setCharacterSize(size);
-    textNode->setAlignment(align);
-    textNode->setPosition(pos);
-    textNode->setColor(color);
-    textNode->setBackdropColor(osg::Vec4(0,0,0,0));
-    textNode->setAxisAlignment(osgText::Text::XZ_PLANE);
-    textNode->setText(text);
-    return textNode;
-}
 
-void PhysxBall::createText(Group* parent, osg::Vec3f pos) {
-    osg::Geode * geode = new osg::Geode();
-    for(int i=0; i<5; i++)
-        geode->addDrawable(_makeText("Line " + std::to_string(i+1),
-                                     0.1,
-                                     pos+Vec3f(.0f, .0f, 0.2f * i),
-                                     Vec4f(1.0f,0.6f,0.2f,1.0f)));
-//    osgText::Text * textNode = _makeText("Line 1", 0.1, pos, _textColor);
-//    geode->addDrawable(textNode);
-    parent->addChild(geode);
-}
 void PhysxBall::addBoard(Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis, float rotAngle) {
     float boardWidth = 5, boardHeight = 5;
 
@@ -195,10 +168,9 @@ void PhysxBall::createBall(osg::Group* parent,osg::Vec3f pos, float radius) {
                                             geometrySphere,
                                             *mMaterial,
                                             density);
-//    actor->setAngularDamping(0.75);
+
     actor->setLinearVelocity(PxVec3(.0f, .0f ,0));
     actor->setSleepThreshold(0.0);
-//    actor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
     if(!actor) return;
     _phyEngine->addActor("main", actor);
 
@@ -212,6 +184,19 @@ ref_ptr<MatrixTransform> PhysxBall::addSphere(osg::Group*parent, osg::Vec3 pos, 
     shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
     shape->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
+    ///////use shader
+    Program * program =_assetHelper->createShaderProgramFromFile("shaders/lightingOSG.vert","shaders/lightingOSG.frag");
+    osg::StateSet * stateSet = shape->getOrCreateStateSet();
+    stateSet->setAttributeAndModes(program);
+
+    stateSet->addUniform( new osg::Uniform("lightDiffuse",
+                                           osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("lightSpecular",
+                                           osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
+
+    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
+
     node->addDrawable(shape.get());
     ref_ptr<MatrixTransform> sphereTrans = new MatrixTransform;
     Matrixf m;
