@@ -1,4 +1,4 @@
-#include <cvrUtil/AndroidGetenv.h>
+#include <cvrUtil/AndroidHelper.h>
 #include <osgGA/TrackballManipulator>
 #include <osg/ShapeDrawable>
 #include <cvrMenu/MenuManager.h>
@@ -8,7 +8,6 @@
 #include "calvrController.h"
 #include "utils.h"
 #include "osg_utils.h"
-#include <cvrUtil/AndroidGetenv.h>
 #include <cvrMenu/SubMenu.h>
 #include <cvrInput/TrackingManager.h>
 #include <cvrKernel/ComController.h>
