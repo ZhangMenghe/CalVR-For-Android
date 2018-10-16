@@ -3,8 +3,10 @@ SET(PLUGIN_HEADERS
     PhysxBall.h
 )
 SET(PHYX_HEADERS
+    PhysicsUtils.h
     Engine.h)
 SET(PHYX_CPP
+    PhysicsUtils.cpp
     Engine.cpp)
 
 

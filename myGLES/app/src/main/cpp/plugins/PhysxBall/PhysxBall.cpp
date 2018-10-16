@@ -11,27 +11,12 @@
 #include <foundation/PxFoundation.h>
 #include <osg/ShapeDrawable>
 #include <cvrMenu/BoardMenu/BoardMenuGeometry.h>
+#include "PhysicsUtils.h"
 
 using namespace osg;
 using namespace cvr;
 using namespace physx;
 using namespace osgPhysx;
-
-osg::Matrix physX2OSG( const PxMat44& m )
-{
-    PxVec3 pos = m.getPosition();
-    Matrix trans;
-    trans.makeTranslate(pos.x, -pos.z, pos.y);
-
-    Matrix rotMat;
-    double w = sqrt(1.0 + m(0,0) + m(1,1) + m(2,2)) / 2.0;
-    double w4 = (4.0 * w);
-    double x = (m(2,1) - m(1,2)) / w4 ;
-    double y = (m(0,2) - m(2,0)) / w4 ;
-    double z = (m(1,0) - m(0,1)) / w4 ;
-    rotMat.makeRotate(Quat(x,-z,y,w));
-    return trans;
-}
 
 void UpdateActorCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
@@ -39,7 +24,7 @@ void UpdateActorCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     if ( mt && _actor )
     {
         PxMat44 matrix( _actor->getGlobalPose() );
-        mt->setMatrix( physX2OSG(matrix) );
+        mt->setMatrix( physX2OSG_Rotation(matrix) );
     }
     traverse( node, nv );
 }
@@ -94,7 +79,7 @@ bool PhysxBall::init() {
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     Vec3f boardPos = Vec3f(0, 10.0f, 0);
-    createBall(_scene, osg::Vec3(.0f, 0.5, 0.5), 0.01f);
+//    createBall(_scene, osg::Vec3(.0f, 0.5, 0.5), 0.01f);
 
 //    addBoard(_menu, boardPos);
 //    createText(_menu, boardPos + Vec3f(0.1f,-2,0.1f));
@@ -119,8 +104,8 @@ bool PhysxBall::init() {
 
 void PhysxBall::menuCallback(cvr::MenuItem *item) {
 //    rootSO->dirtyBounds();
-//    if(item == _addButton)
-//        createBall(_balls, Vec3(.0f,0.5f,.0f), 0.05f);
+    if(item == _addButton)
+        createBall(_scene, osg::Vec3(.0f, 0.5, 0.5), 0.01f);
 }
 ref_ptr<Geometry> PhysxBall::_makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos) {
     ref_ptr<Geometry> geo = new osg::Geometry();
