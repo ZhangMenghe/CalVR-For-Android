@@ -178,7 +178,7 @@ void PhysxBall::createText(Group* parent, osg::Vec3f pos) {
     parent->addChild(geode);
 }
 void PhysxBall::addBoard(Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis, float rotAngle) {
-    float boardWidth = 10, boardHeight = 10;
+    float boardWidth = 5, boardHeight = 5;
 
     ref_ptr<MatrixTransform> nodeTrans = new MatrixTransform();
     Matrixf transMat;

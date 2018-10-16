@@ -10,6 +10,8 @@
 #include "osg_utils.h"
 #include <cvrUtil/AndroidGetenv.h>
 #include <cvrMenu/SubMenu.h>
+#include <cvrInput/TrackingManager.h>
+#include <cvrKernel/ComController.h>
 
 using namespace controller;
 using namespace osg;

@@ -3,8 +3,7 @@ add_library(simpleCalVR
             src/main/cpp/utils.cpp
             src/main/cpp/osg_utils.cpp
             src/main/cpp/jni_interface_calvr.cpp
-            src/main/cpp/calvrController.cpp
-            src/main/cpp/SpatialViz.cpp)
+            src/main/cpp/calvrController.cpp)
 
 target_include_directories(simpleCalVR PRIVATE
            src/main/cpp

@@ -9,7 +9,6 @@
 #include <osgViewer/Viewer>
 #include <cvrKernel/CVRViewer.h>
 #include <cvrKernel/InteractionManager.h>
-#include "SpatialViz.h"
 //#include <MenuBasics.h>
 namespace controller{
     class calvrController {
