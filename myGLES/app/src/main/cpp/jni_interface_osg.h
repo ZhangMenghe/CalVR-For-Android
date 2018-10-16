@@ -7,10 +7,6 @@
 
 #include <jni.h>
 
-//#define JNI_METHOD(returnType, funcName)\
-//    JNIEXPORT returnType JNICALL        \
-//        Java_com_example_arcalvr_JniInterfaceOSG_##funcName
-
 #define JNI_METHOD(returnType, funcName)\
     JNIEXPORT returnType JNICALL        \
         Java_com_example_menghe_mygles_JniInterfaceOSG_##funcName

@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -21,18 +22,24 @@ public class MainActivity extends AppCompatActivity
         implements DisplayManager.DisplayListener{
     final static String TAG = "ARCalVR_Activity";
     private long controllerAddr;
-    private GLSurfaceView surfaceView;
-    final static private String calvr_folder = "calvrAssets";
-    String calvr_dest = null;
-    String resourceDest = null;
-    //For touch event
-    private calvrGestureDetector gestureDetector;
 
+    //Surface view
+    private GLSurfaceView surfaceView;
     private boolean viewportChanged = false;
     private int viewportWidth;
     private int viewportHeight;
 
-    private boolean moveCalvrCam = true;
+    // Resource
+    final static private String calvr_folder = "calvrAssets";
+    String calvr_dest = null;
+    String resourceDest = null;
+
+    //For touch event
+    private calvrGestureDetector gestureDetector;
+
+    //Label
+    TextView FPSlabel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +50,7 @@ public class MainActivity extends AppCompatActivity
 
         controllerAddr = JniInterfaceCalVR.JNIcreateController(JniInterfaceCalVR.assetManager);
 
-        setupButtons();
+        setupLabelandButton();
         setupResource();
         setupSurfaceView();
         setupTouchDetector();
@@ -81,30 +88,32 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-    private void setupButtons(){
+    private void setupLabelandButton(){
         // add button actions
-        final Button restart_bnt = (Button)findViewById(R.id.restart_button);
-        restart_bnt.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Intent restartIntent = getBaseContext().getPackageManager()
-                        .getLaunchIntentForPackage(getBaseContext().getPackageName());
-                restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(restartIntent);
-            }
-        });
-
-        ///setup debug button
-        final Button debug_bnt = (Button)findViewById(R.id.debug_button);
-        debug_bnt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                moveCalvrCam=!moveCalvrCam;
-            }
-        });
+//        final Button restart_bnt = (Button)findViewById(R.id.restart_button);
+//        restart_bnt.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v){
+//                Intent restartIntent = getBaseContext().getPackageManager()
+//                        .getLaunchIntentForPackage(getBaseContext().getPackageName());
+//                restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(restartIntent);
+//            }
+//        });
+//
+//        ///setup debug button
+//        final Button debug_bnt = (Button)findViewById(R.id.debug_button);
+//        debug_bnt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                moveCalvrCam=!moveCalvrCam;
+//            }
+//        });
 
         //setup
         MovableFloatingActionButton track_bnt = findViewById(R.id.fab);
         track_bnt.bringToFront();
+
+        FPSlabel = (TextView) findViewById(R.id.textViewFPS);
     }
     private void setupSurfaceView(){
         surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
@@ -148,7 +157,6 @@ public class MainActivity extends AppCompatActivity
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             GLES30.glClearColor(1.0f, .0f, .0f, 1.0f);
             JniInterfaceCalVR.JNIonGlSurfaceCreated(calvr_dest);
-//            JniInterfaceOSG.JNIonGlSurfaceCreated(resourceDest);
         }
 
         @Override
@@ -171,8 +179,8 @@ public class MainActivity extends AppCompatActivity
 
                     viewportChanged = false;
                 }
-//                JniInterfaceOSG.JNIdrawFrame(true);
-                JniInterfaceCalVR.JNIdrawFrame(moveCalvrCam);
+                JniInterfaceCalVR.JNIdrawFrame();
+                updateFPS(JniInterfaceCalVR.JNIgetFPS());
             }
         }
 
@@ -186,4 +194,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDisplayChanged(int displayId) {viewportChanged = true;}
+
+    public void updateFPS(final float fFPS)
+    {
+        if( FPSlabel == null )
+            return;
+        this.runOnUiThread(new Runnable()  {
+            @Override
+            public void run()  {
+                FPSlabel.setText(String.format("%2.2f FPS", fFPS));
+
+            }});
+    }
 }

@@ -13,19 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top" />
-
-    <Button
-        android:id="@+id/restart-button"
-        android:layout_width="98dp"
-        android:layout_height="wrap_content"
-        android:text="Restart" />
-    <Button
-        android:id="@+id/debug-button"
+    <TextView
+        android:id="@+id/textViewFPS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="switch" />
-
+        android:gravity="end"
+        android:text="@string/fps"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white" />
     <com.example.arcalvr.MovableFloatingActionButton
         android:id="@+id/fab"
         android:layout_width="80dp"

@@ -15,7 +15,7 @@
 extern "C"{
 JNI_METHOD(jlong, JNIcreateController)(JNIEnv* env, jclass, jobject asset_manager);
 
-JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass, jboolean moveCam);
+JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass);
 
 JNI_METHOD(void, JNIonGlSurfaceCreated)(JNIEnv *, jclass, jstring calvr_path);
 
@@ -32,8 +32,12 @@ JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv*, jclass, jint pointer_num, jfloat x, 
 JNI_METHOD(void, JNIonTouchMove)(JNIEnv*, jclass, jint pointer_num, jfloat destx, jfloat desty);
 
 JNI_METHOD(void, JNIonResume)(JNIEnv * env, jclass, jobject contex, jobject activitiy);
+
 JNI_METHOD(void, JNIonPause)(JNIEnv *, jclass);
+
 JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr);
+
+JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass);
 
 JNIEnv * GetJniEnv();
 }

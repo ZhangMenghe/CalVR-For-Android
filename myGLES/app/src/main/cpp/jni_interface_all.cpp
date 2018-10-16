@@ -36,8 +36,8 @@ JNI_METHOD(jlong, JNIcreateController)
 }
 
 JNI_METHOD(void, JNIdrawFrame)
-(JNIEnv *, jclass,jboolean moveCam) {
-    controllerNative(nativeAppAddr)->onDrawFrame(moveCam);
+(JNIEnv *, jclass) {
+    controllerNative(nativeAppAddr)->onDrawFrame();
 }
 
 JNI_METHOD(void, JNIonGlSurfaceCreated)
@@ -83,6 +83,10 @@ JNI_METHOD(void, JNIonPause)(JNIEnv *, jclass){
 JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr){
     delete controllerNative(controller_addr);
 }
+JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass){
+    return controllerNative(nativeAppAddr)->getFPS();
+}
+
 JNIEnv *GetJniEnv() {
     JNIEnv *env;
     jint result = g_vm->AttachCurrentThread(&env, nullptr);

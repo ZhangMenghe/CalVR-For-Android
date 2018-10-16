@@ -196,7 +196,7 @@ void allController::onCreate(const char * calvr_path){
     _viewer->setSceneData(_root.get());
 }
 
-void allController::onDrawFrame(bool moveCam){
+void allController::onDrawFrame(){
     _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
 
     osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(_ar_controller->view_mat));

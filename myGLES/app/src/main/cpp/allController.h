@@ -62,7 +62,7 @@ namespace controller{
 
         void onResume(void * env, void* context, void* activity);
 
-        void onDrawFrame(bool moveCam);
+        void onDrawFrame();
 
         void onViewChanged(int rot, int width, int height);
 
@@ -75,6 +75,8 @@ namespace controller{
         void onDoubleTouch(int pointer_num, float x, float y);
 
         void onTouchMove(int pointer_num, float x, float y);
+
+        float getFPS(){return 60.0f;}
     };
 }
 

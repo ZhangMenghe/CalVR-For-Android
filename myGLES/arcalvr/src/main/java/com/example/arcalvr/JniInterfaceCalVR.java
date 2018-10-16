@@ -3,11 +3,16 @@ package com.example.arcalvr;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.opengl.GLUtils;
+import android.util.Log;
+
+import java.io.IOException;
 
 public class JniInterfaceCalVR {
     static {
         System.loadLibrary("ARCalVR");
-//        System.loadLibrary("MenuBasics");
     }
     private static final String TAG = "JniInterfaceCalVR";
     static AssetManager assetManager;
@@ -20,7 +25,7 @@ public class JniInterfaceCalVR {
 
     public static native void JNIonViewChanged(int rot, int width, int height);
 
-    public static native void JNIdrawFrame(boolean moveCam);
+    public static native void JNIdrawFrame();
 
     public static native void JNIonSingleTouchDown(int pointer_num, float x, float y);
 
@@ -36,4 +41,19 @@ public class JniInterfaceCalVR {
 
     public static native void JNIonDestroy();
 
+    public static native float JNIgetFPS();
+
+    public static Bitmap loadImage(String imageName) {
+
+        try {
+            return BitmapFactory.decodeStream(assetManager.open(imageName));
+        } catch (IOException e) {
+            Log.e(TAG, "Cannot open image " + imageName);
+            return null;
+        }
+    }
+
+    public static void loadTexture(int target, Bitmap bitmap) {
+        GLUtils.texImage2D(target, 0, bitmap, 0);
+    }
 }
