@@ -42,10 +42,8 @@ allController::allController(AAssetManager *assetManager)
     _ar_controller = new arcoreController;
     _bgDrawable = new bgDrawable();
     _sceneGroup = new Group;
-
-    ////////////////////////////
-
     _strokeDrawable = new strokeDrawable;
+    _fpsMonitor = new perfMonitor();
 
     initialize_camera();
 }
@@ -114,29 +112,6 @@ void allController::initialize_camera() {
 //    mainCam->setCullingMode( osg::CullSettings::NO_CULLING );
 }
 
-ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
-    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-    shape->setShape(new osg::Sphere(pos, 0.05f));
-    shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
-    osg::ref_ptr<osg::Geode> node = new osg::Geode;
-    Program * program = osg_utils::createShaderProgram("shaders/lightingOSG.vert","shaders/lightingOSG.frag",_asset_manager);
-
-    osg::StateSet * stateSet = shape->getOrCreateStateSet();
-    stateSet->setAttributeAndModes(program);
-
-    stateSet->addUniform( new osg::Uniform("lightDiffuse",
-                                           osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
-    stateSet->addUniform( new osg::Uniform("lightSpecular",
-                                           osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
-    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
-
-    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
-
-    node->addDrawable(shape.get());
-
-    return node;
-}
-
 void allController::setupDefaultEnvironment(const char *root_path) {
     std::string homeDir = std::string(root_path) + "/";
     setenv("CALVR_HOST_NAME", "calvrHost");
@@ -154,10 +129,10 @@ void allController::onCreate(const char * calvr_path){
 //        return;
 //    }
     setupDefaultEnvironment(calvr_path);
-    ref_ptr<Geode> sphereNode = createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
-    _sceneGroup->addChild(sphereNode.get());
+//    ref_ptr<Geode> sphereNode = createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
+//    _sceneGroup->addChild(sphereNode.get());
 
-    _sceneGroup->addChild( _strokeDrawable->createDrawableNode(_asset_manager,&glStateStack));
+    _sceneGroup->addChild( _strokeDrawable->createDrawableNode(_asset_manager,&_glStateStack));
 
     //Initialization should follow a specific order
 
@@ -182,8 +157,8 @@ void allController::onCreate(const char * calvr_path){
     if(!_plugins->init(true))
         LOGE("==========PLUG IN  FAIL=========");
 
-//    _bgDrawable->createDrawableNode(_asset_manager, &glStateStack);
-    _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &glStateStack));
+//    _bgDrawable->createDrawableNode(_asset_manager, &_glStateStack);
+    _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &_glStateStack));
 
     //This will make sure camera always in the background
     _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
@@ -339,4 +314,26 @@ void allController::DrawRay(){
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DRAG);
     commonMouseEvent(mie, 1, _touchX, _touchY);
+}
+ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
+    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
+    shape->setShape(new osg::Sphere(pos, 0.05f));
+    shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
+    osg::ref_ptr<osg::Geode> node = new osg::Geode;
+    Program * program = osg_utils::createShaderProgram("shaders/lightingOSG.vert","shaders/lightingOSG.frag",_asset_manager);
+
+    osg::StateSet * stateSet = shape->getOrCreateStateSet();
+    stateSet->setAttributeAndModes(program);
+
+    stateSet->addUniform( new osg::Uniform("lightDiffuse",
+                                           osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("lightSpecular",
+                                           osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
+
+    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
+
+    node->addDrawable(shape.get());
+
+    return node;
 }

@@ -13,16 +13,17 @@
 #include "bgDrawable.h"
 #include "arcoreController.h"
 #include "strokeDrawable.h"
+#include "perfMonitor.h"
 
 namespace controller{
     class allController {
-    private:
+    protected:
+        //Utils
         AAssetManager *const _asset_manager;
-        osg::ref_ptr<osg::Group>  _root;
+        arcoreController * _ar_controller;
+        perfMonitor * _fpsMonitor;
 
-        int _screenWidth;
-        int _screenHeight;
-
+        // CalVR
         cvr::CVRViewer * _viewer;
         cvr::SceneManager * _scene;
         cvr::ConfigManager * _config;
@@ -33,19 +34,20 @@ namespace controller{
         cvr::Navigation * _navigation;
         cvr::PluginManager * _plugins;
 
-        /////////////////
+        // AUX OSG Node & drawable
+        osg::ref_ptr<osg::Group>  _root, _sceneGroup;
+        std::stack<utils::glState> _glStateStack;
         osg::ref_ptr<bgDrawable> _bgDrawable;
-        osg::ref_ptr<osg::Group>  _sceneGroup;
-
-        arcoreController * _ar_controller;
-        std::stack<utils::glState> glStateStack;
         osg::ref_ptr<strokeDrawable> _strokeDrawable;
 
+        // Other factors
+        int _screenWidth, _screenHeight;
         float _touchX, _touchY;
-        /// param pos
+
         ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
 
         void initialize_camera();
+
         void setupDefaultEnvironment(const char* root_path);
 
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
@@ -56,6 +58,7 @@ namespace controller{
         allController(AAssetManager *assetManager);
 
         ~allController();
+
         void onCreate(const char * calvr_path);
 
         void onPause();
@@ -76,7 +79,7 @@ namespace controller{
 
         void onTouchMove(int pointer_num, float x, float y);
 
-        float getFPS(){return 60.0f;}
+        float getFPS(){return _fpsMonitor->Update();}
     };
 }
 
