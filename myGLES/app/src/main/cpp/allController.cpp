@@ -26,7 +26,7 @@ REGISTER(PhysxBall);
 REGISTER(MenuBasics);
 
 allController::allController(AAssetManager *assetManager)
-:_asset_manager(assetManager){
+        :_asset_manager(assetManager){
 //    _viewer = new osgViewer::Viewer();
     _viewer = new cvr::CVRViewer();
     _viewer->setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
@@ -318,7 +318,7 @@ void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
 
     float * camera_pos = _ar_controller->getCameraPose();
     osg::Quat camRot = osg::Quat(camera_pos[0],-camera_pos[2],camera_pos[1],camera_pos[3]);
-    Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]);// + camRot * Vec3f(.0f, 0.1f, offset);
+    Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]);
     osg::Matrix m, n;
     m.makeRotate(camRot);
 
@@ -365,8 +365,16 @@ void allController::DrawRay(){
     offset[0] = 2*(_touchX - _screenWidth/2) / _screenWidth;
     offset[1] = 2*(_screenHeight/2 - _touchY) / _screenHeight;
 
-    _ar_controller->renderStroke(_strokeDrawable, TrackingManager::instance()->getHandMat(0), offset);
-
+    Vec3f isPoint;
+    if(TrackingManager::instance()->getIsPoint(isPoint)){
+        _strokeDrawable->getGLNode()->setNodeMask(0xFFFFFF);
+        _ar_controller->renderStroke(_strokeDrawable,
+                                     TrackingManager::instance()->getHandMat(0).getTrans(),
+                                     isPoint,
+                                     offset);
+    }
+    else
+        _strokeDrawable->getGLNode()->setNodeMask(0x0);
     //shoot the ray to check the interaction with menu
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DRAG);

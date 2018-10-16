@@ -132,15 +132,11 @@ public:
         return nullptr;
     }
 
-    void renderStroke(strokeDrawable * drawable, const osg::Matrix handMat, const float * offset){
+    void renderStroke(strokeDrawable * drawable, const osg::Vec3f from, const osg::Vec3f to, const float * offset){
         Vec3f camPos = Vec3f(camera_pose_raw[4],camera_pose_raw[5],camera_pose_raw[6]);
         osg::Quat camRot = osg::Quat(camera_pose_raw[0],camera_pose_raw[1],camera_pose_raw[2],camera_pose_raw[3]);
-        Vec3f objPose = handMat.getTrans();
-        Vec3f toPose = Vec3f(.0f, 10000.0f, .0f) * handMat;
-        objPose = Vec3f(objPose.x(), objPose.z(), -objPose.y());
-        toPose = Vec3f(toPose.x(), toPose.z(), -toPose.y());
-
-        drawable->setStrokePoints(objPose.ptr(), toPose.ptr(),offset);
+        Vec3f fromPose = Vec3f(from.x(), from.z(), -from.y());
+        drawable->setStrokePoints(fromPose.ptr(), to.ptr(),offset);
         drawable->updateARMatrix(proj_mat*view_mat);
     }
 
