@@ -310,15 +310,15 @@ void toEulerAngle(const osg::Quat& q, double& roll, double& pitch, double& yaw)
 }
 
 void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
-                                     int pointer_num, float x, float y, float offset){
+                                     int pointer_num, float x, float y){
     mie->setButton(pointer_num - 1);
     mie->setHand(0);
     mie->setX(x);
     mie->setY(y);
-    
+
     float * camera_pos = _ar_controller->getCameraPose();
     osg::Quat camRot = osg::Quat(camera_pos[0],-camera_pos[2],camera_pos[1],camera_pos[3]);
-    Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]-0.025f) + camRot * Vec3f(.0f, 0.1f, offset);
+    Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]);// + camRot * Vec3f(.0f, 0.1f, offset);
     osg::Matrix m, n;
     m.makeRotate(camRot);
 
@@ -337,27 +337,27 @@ void allController::onSingleTouchDown(int pointer_num, float x, float y) {
 //    _touchX = x; _touchY = y;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOWN);
-    commonMouseEvent(mie, pointer_num, x, y, DEFAULT_CLICK_OFFSET);
+    commonMouseEvent(mie, pointer_num, x, y);
 }
 
 void allController::onSingleTouchUp(int pointer_num, float x, float y){
 //    _touchX = x; _touchY = y;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_UP);
-    commonMouseEvent(mie, pointer_num, x, y, DEFAULT_CLICK_OFFSET);
+    commonMouseEvent(mie, pointer_num, x, y);
 }
 
 void allController::onDoubleTouch(int pointer_num, float x, float y){
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DOUBLE_CLICK);
-    commonMouseEvent(mie, pointer_num, x, y, DEFAULT_MENU_OFFSET);
+    commonMouseEvent(mie, pointer_num, x, y);
 }
 
 void allController::onTouchMove(int pointer_num, float x, float y) {
     _touchX = x; _touchY = y;
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DRAG);
-    commonMouseEvent(mie, pointer_num, x, y, DEFAULT_CLICK_OFFSET);
+    commonMouseEvent(mie, pointer_num, x, y);
 }
 
 void allController::DrawRay(){
@@ -365,10 +365,10 @@ void allController::DrawRay(){
     offset[0] = 2*(_touchX - _screenWidth/2) / _screenWidth;
     offset[1] = 2*(_screenHeight/2 - _touchY) / _screenHeight;
 
-    _ar_controller->renderStroke(_strokeDrawable, offset);
+    _ar_controller->renderStroke(_strokeDrawable, TrackingManager::instance()->getHandMat(0), offset);
 
     //shoot the ray to check the interaction with menu
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DRAG);
-    commonMouseEvent(mie, 1, _touchX, _touchY, DEFAULT_CLICK_OFFSET);
+    commonMouseEvent(mie, 1, _touchX, _touchY);
 }

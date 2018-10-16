@@ -14,10 +14,6 @@
 #include "arcoreController.h"
 #include "strokeDrawable.h"
 
-
-#define DEFAULT_CLICK_OFFSET -80
-#define DEFAULT_MENU_OFFSET 300
-
 namespace controller{
     class allController {
     private:
@@ -59,7 +55,7 @@ namespace controller{
 //        osg::Vec3f screenToWorld(float x, float y);
 
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
-                              int pointer_num, float x, float y, float offset);
+                              int pointer_num, float x, float y);
         void DrawRay();
 
     public:
