@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class JniInterfaceCalVR {
     static {
-        System.loadLibrary("ARCalVR");
+        System.loadLibrary("ARCalVRd");
     }
     private static final String TAG = "JniInterfaceCalVR";
     static AssetManager assetManager;
