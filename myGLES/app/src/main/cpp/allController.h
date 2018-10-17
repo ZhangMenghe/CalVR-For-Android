@@ -40,10 +40,13 @@ namespace controller{
         osg::ref_ptr<bgDrawable> _bgDrawable;
         osg::ref_ptr<strokeDrawable> _strokeDrawable;
         osg::ref_ptr<pointDrawable> _pointcloudDrawable;
+        std::vector<osg::ref_ptr<planeDrawable>> _planeDrawables;
 
         // Other factors
         int _screenWidth, _screenHeight;
         float _touchX, _touchY;
+        int _plane_num = 0;
+        float _color_correction[4] = {1.f, 1.f, 1.f, 1.f};
 
         ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
 
@@ -54,6 +57,8 @@ namespace controller{
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
                               int pointer_num, float x, float y);
         void DrawRay();
+
+        void DrawRealWorld();
 
     public:
         allController(AAssetManager *assetManager);

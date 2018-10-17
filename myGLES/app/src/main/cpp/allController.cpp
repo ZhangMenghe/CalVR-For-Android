@@ -173,8 +173,7 @@ void allController::onCreate(const char * calvr_path){
     _root->addChild(_sceneGroup);
     _viewer->setSceneData(_root.get());
 }
-
-void allController::onDrawFrame(){
+void allController::DrawRealWorld(){
     _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
 
     osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(_ar_controller->view_mat));
@@ -188,9 +187,43 @@ void allController::onDrawFrame(){
     if(nullptr != transUV)
         _bgDrawable->updateOnFrame(transUV);
 
-    //update pointcloud: TEST
-//    _ar_controller->updateFeaturePoints();
-    _ar_controller->renderPointClouds(_pointcloudDrawable);
+    if(ARcoreHelper::instance()->getPointCloudStatus()){
+        _ar_controller->renderPointClouds(_pointcloudDrawable);
+        _pointcloudDrawable->getGLNode()->setNodeMask(0xFFFFFF);
+    } else
+        _pointcloudDrawable->getGLNode()->setNodeMask(0x0);
+
+    if(ARcoreHelper::instance()->getPlaneStatus()){
+        if(!_ar_controller->isTracking())
+            return;
+        _ar_controller->doLightEstimation();
+
+        PlaneParams planes = _ar_controller->doPlaneDetection();
+        if(_plane_num < planes.plane_color_map.size()){
+            LOGE("=== %f",planes.plane_color_map.size());
+            for(int i= _plane_num; i<planes.plane_color_map.size();i++){
+                planeDrawable * pd = new planeDrawable();
+                _sceneGroup->addChild(pd->createDrawableNode(_asset_manager, &_glStateStack));
+                _planeDrawables.push_back(pd);
+            }
+            _plane_num = planes.plane_color_map.size();
+        }
+        auto planeIt = planes.plane_color_map.begin();
+        for(int i=0; i<_plane_num; i++,planeIt++){
+            LOGE("=== %f, %f, %f",planeIt->second[0], planeIt->second[1], planeIt->second[2]);
+            _planeDrawables[i]->updateOnFrame(_ar_controller->getSession(), planeIt->first,
+                                              _ar_controller->proj_mat, _ar_controller->view_mat,
+                                              planeIt->second);
+            _planeDrawables[i]->getGLNode()->setNodeMask(0xFFFFFF);
+        }
+
+    }else{
+        for(int i=0; i<_plane_num; i++)
+            _planeDrawables[i]->getGLNode()->setNodeMask(0x0);
+    }
+}
+void allController::onDrawFrame(){
+    DrawRealWorld();
 
     _viewer->frameStart();
     _viewer->advance(USE_REFERENCE_TIME);

@@ -23,7 +23,7 @@
 #include <cvrConfig/ConfigManager.h>
 #include <cvrKernel/FileHandler.h>
 #include <cvrUtil/AndroidHelper.h>
-#include "pointDrawable.h"
+//#include "pointDrawable.h"
 // OSG
 #include <osg/Group>
 #include <osg/Vec3>
@@ -65,14 +65,16 @@ private:
     void createPlane(osg::Group* parent, osg::Vec3f pos);
     void addBoard(osg::Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis = osg::Vec3f(.0f,.0f,.0f),float rotAngle = .0f );
     osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, osg::Vec3 pos, float radius);
+    void initMenuButtons();
 protected:
     osgPhysx::Engine * _phyEngine;
     cvr::SubMenu *_mainMenu;
-    cvr::MenuButton * _addButton;
+    cvr::MenuButton * _addButton, *_pointButton, *_planeButton, *_addAndyButton, *_delAndyButton;
     osg::ref_ptr<osg::Group> _menu, _scene;
     cvr::SceneObject *rootSO, *sceneSO, *menuSo;
     cvr::assetLoader* _assetHelper;
-    std::stack<cvr::glState> _glStateStack;
+
+//    std::stack<cvr::glState> _glStateStack;
 
 //    osg::ref_ptr<cvr::pointDrawable> _pointcloudDrawable;
 
@@ -83,6 +85,7 @@ public:
     bool init();
     void menuCallback(cvr::MenuItem * item);
     void preFrame();
+//    void postFrame();
 };
 
 #endif

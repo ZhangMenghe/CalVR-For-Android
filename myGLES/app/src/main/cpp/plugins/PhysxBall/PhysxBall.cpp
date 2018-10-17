@@ -46,24 +46,50 @@ void PhysxBall::createPlane(osg::Group* parent, osg::Vec3f pos) {
 
 void PhysxBall::preFrame() {
     _phyEngine->update();
-    //use ar controller to render
-    const float* pointCloudData;
-    int32_t num_of_points = 0;
-//    _pointcloudDrawable->updateARMatrix(cvr::ARcoreHelper::instance()->getMVPMatrix());
-    cvr::ARcoreHelper::instance()->getPointCloudData(pointCloudData, num_of_points);
-//    _pointcloudDrawable->updateVertices(pointCloudData, num_of_points);
-}
 
+}
+//void PhysxBall::postFrame() {
+    //use ar controller to render
+//    const float* pointCloudData;
+//    int32_t num_of_points = 0;
+//    if(!cvr::ARcoreHelper::instance()->getActiveState())
+//        return;
+//
+//    cvr::ARcoreHelper::instance()->getPointCloudData(pointCloudData, num_of_points);
+//    if(!pointCloudData)
+//        return;
+//    _pointcloudDrawable->updateVertices(pointCloudData, num_of_points);
+//    _pointcloudDrawable->updateARMatrix(cvr::ARcoreHelper::instance()->getMVPMatrix());
+//}
+
+void PhysxBall::initMenuButtons() {
+    _addButton = new MenuButton("Add Ball");
+    _addButton->setCallback(this);
+    _mainMenu->addItem(_addButton);
+
+    _pointButton = new MenuButton("Show PointCloud");
+    _pointButton->setCallback(this);
+    _mainMenu->addItem(_pointButton);
+
+    _planeButton = new MenuButton("Do Plane Detection");
+    _planeButton->setCallback(this);
+    _mainMenu->addItem(_planeButton);
+
+    _addAndyButton = new MenuButton("Add an Andy");
+    _addAndyButton->setCallback(this);
+    _mainMenu->addItem(_addAndyButton);
+
+    _delAndyButton = new MenuButton("Remove an Andy");
+    _delAndyButton->setCallback(this);
+    _mainMenu->addItem(_delAndyButton);
+}
 bool PhysxBall::init() {
     // --------------- create the menu ---------------
     _mainMenu = new SubMenu("PhysxBall", "PhysxBall");
     _mainMenu->setCallback(this);
     MenuSystem::instance()->addMenuItem(_mainMenu);
 
-    //---------------create the button------------
-    _addButton = new MenuButton("Add Ball");
-    _addButton->setCallback(this);
-    _mainMenu->addItem(_addButton);
+    initMenuButtons();
 
     //--------------init scene node--------------
     _menu = new Group;
@@ -82,7 +108,8 @@ bool PhysxBall::init() {
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     Vec3f boardPos = Vec3f(0, 10.0f, 0);
-    createPointCloud(_menu);
+    //TEST: NO USE TEMPORATELY
+//    createPointCloud(SceneManager::instance()->getSceneRoot());
 //    createBall(_scene, osg::Vec3(.0f, 0.5, 0.5), 0.01f);
 
 //    addBoard(_menu, boardPos);
@@ -107,9 +134,12 @@ bool PhysxBall::init() {
 }
 
 void PhysxBall::menuCallback(cvr::MenuItem *item) {
-//    rootSO->dirtyBounds();
     if(item == _addButton)
         createBall(_scene, osg::Vec3(.0f, 0.5, 0.5), 0.01f);
+    else if(item == _pointButton)
+        ARcoreHelper::instance()->changePointCloudStatus();
+    else if(item == _planeButton)
+        ARcoreHelper::instance()->changePlaneStatus();
 }
 void PhysxBall::createPointCloud(osg::Group *parent) {
 //    _pointcloudDrawable = new pointDrawable();

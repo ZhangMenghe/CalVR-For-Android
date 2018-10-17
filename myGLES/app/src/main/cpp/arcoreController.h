@@ -40,13 +40,13 @@ typedef  struct{
     float intensity = 0.8f;
     float color_correction[4] = {1.f, 1.f, 1.f, 1.f};
 }LightSrc;
+
 typedef struct {
     std::unordered_map<ArPlane*, glm::vec3> plane_color_map;
     bool this_is_the_first_plane = true;
 }PlaneParams;
-class
 
-arcoreController {
+class arcoreController {
 private:
     ArSession * _ar_session = nullptr;
     ArFrame * _ar_frame = nullptr;//get frame state
@@ -183,13 +183,10 @@ public:
         ArPointCloud_getNumberOfPoints(_ar_session, pointCloud, &num_of_points);
         if(num_of_points <= 0)
             return false;
-//        last_point_num = num_of_points;
 
         //point cloud data with 4 params (x,y,z, confidence)
         ArPointCloud_getData(_ar_session, pointCloud, &pointCloudData);
-//        for(int i=0;i<num_of_points;i++){
-//            LOGE("%f, %f, %f ", pointCloudData[4*i], pointCloudData[4*i+1], pointCloudData[4*i+2]);
-//        }
+
         drawable->updateVertices(pointCloudData, num_of_points);
         drawable->updateARMatrix(proj_mat*view_mat);
         ArPointCloud_release(pointCloud);
@@ -273,10 +270,13 @@ public:
                 continue;
             glm::vec3 plane_color;
             //Find if the plane already in the dic with specific color. Or add into dic
+
             auto iter = _planes.plane_color_map.find(ar_plane);
+
             if(iter!=_planes.plane_color_map.end()){
                 plane_color = iter->second;
                 ArTrackable_release(ar_trackable);
+                LOGE("FIND  THE PLANE");
             }else{
                 if(_planes.this_is_the_first_plane){
                     _planes.this_is_the_first_plane = false;
@@ -284,10 +284,9 @@ public:
                 }else{
                     plane_color = GetRandomPlaneColor();
                 }
-                _planes.plane_color_map.insert({ar_plane, plane_color});
+                _planes.plane_color_map[ar_plane] =  plane_color;
+                LOGE("NOT FIND  THE PLANE");
             }
-//            drawable->updateARMatrix(proj_mat, view_mat);
-//            drawable->updateVertices(_ar_session, ar_plane, plane_color);
         }
         ArTrackableList_destroy(plane_list);
         plane_list = nullptr;
