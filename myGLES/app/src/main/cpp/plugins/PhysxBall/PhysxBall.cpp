@@ -46,6 +46,8 @@ void PhysxBall::createPlane(osg::Group* parent, osg::Vec3f pos) {
 
 void PhysxBall::preFrame() {
     _phyEngine->update();
+    //use ar controller to render
+    ///_ar_controller->renderPointClouds(_pointcloudDrawable);
 }
 
 bool PhysxBall::init() {
@@ -76,6 +78,7 @@ bool PhysxBall::init() {
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     Vec3f boardPos = Vec3f(0, 10.0f, 0);
+    createPointCloud(_menu);
 //    createBall(_scene, osg::Vec3(.0f, 0.5, 0.5), 0.01f);
 
 //    addBoard(_menu, boardPos);
@@ -103,6 +106,10 @@ void PhysxBall::menuCallback(cvr::MenuItem *item) {
 //    rootSO->dirtyBounds();
     if(item == _addButton)
         createBall(_scene, osg::Vec3(.0f, 0.5, 0.5), 0.01f);
+}
+void PhysxBall::createPointCloud(osg::Group *parent) {
+    _pointcloudDrawable = new pointDrawable();
+    parent->addChild(_pointcloudDrawable->createDrawableNode(_assetHelper, &_glStateStack));
 }
 ref_ptr<Geometry> PhysxBall::_makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos) {
     ref_ptr<Geometry> geo = new osg::Geometry();

@@ -23,6 +23,7 @@
 #include <cvrConfig/ConfigManager.h>
 #include <cvrKernel/FileHandler.h>
 #include <cvrUtil/AndroidHelper.h>
+#include "pointDrawable.h"
 // OSG
 #include <osg/Group>
 #include <osg/Vec3>
@@ -59,6 +60,7 @@ private:
 
     osg::ref_ptr<osg::Geometry> _makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos);
 
+    void createPointCloud(osg::Group*parent);
     void createBall(osg::Group* parent, osg::Vec3f pos, float radius);
     void createPlane(osg::Group* parent, osg::Vec3f pos);
     void addBoard(osg::Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis = osg::Vec3f(.0f,.0f,.0f),float rotAngle = .0f );
@@ -70,6 +72,10 @@ protected:
     osg::ref_ptr<osg::Group> _menu, _scene;
     cvr::SceneObject *rootSO, *sceneSO, *menuSo;
     cvr::assetLoader* _assetHelper;
+    std::stack<cvr::glState> _glStateStack;
+
+    osg::ref_ptr<pointDrawable> _pointcloudDrawable;
+
 //    osg::ref_ptr<osg::MatrixTransform> sphereTrans;
 //    osg::PositionAttitudeTransform *_ball;
 
