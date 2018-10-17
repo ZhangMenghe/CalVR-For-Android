@@ -1,7 +1,6 @@
 SET(LIB_NAME PhysxBall)
 SET(PLUGIN_HEADERS
     PhysxBall.h
-    pointDrawable.h
 )
 SET(PHYX_HEADERS
     PhysicsUtils.h
@@ -13,7 +12,6 @@ SET(PHYX_CPP
 ADD_LIBRARY(${LIB_NAME}
     STATIC
     PhysxBall.cpp
-    pointDrawable.cpp
     ${PLUGIN_HEADERS}
     ${PHYX_CPP}
 )

@@ -17,7 +17,7 @@
 
 #include "pointDrawable.h"
 #include "strokeDrawable.h"
-
+#include <cvrUtil/ARCoreHelper.h>
 namespace {
     constexpr size_t kMaxNumberOfAndroidsToRender = 20;
     constexpr int32_t kPlaneColorRgbaSize = 16;
@@ -44,12 +44,13 @@ typedef struct {
     std::unordered_map<ArPlane*, glm::vec3> plane_color_map;
     bool this_is_the_first_plane = true;
 }PlaneParams;
-class arcoreController {
+class
+
+arcoreController {
 private:
     ArSession * _ar_session = nullptr;
     ArFrame * _ar_frame = nullptr;//get frame state
     ArTrackingState cam_track_state;
-
     LightSrc _light;
     PlaneParams _planes;
 
@@ -148,6 +149,28 @@ public:
         drawable->updateARMatrix(proj_mat*view_mat);
     }
 
+    void updateFeaturePoints(){
+        ArPointCloud * pointCloud;
+        ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);
+        if(pointcloud_Status != AR_SUCCESS){
+            cvr::ARcoreHelper::instance()->setPointCloudActiveState(false);
+            return;
+        }
+        int32_t num_of_points = 0;
+        const float* pointCloudData;
+
+        ArPointCloud_getNumberOfPoints(_ar_session, pointCloud, &num_of_points);
+        if(num_of_points <= 0){
+            cvr::ARcoreHelper::instance()->setPointCloudActiveState(false);
+            return;
+        }
+        cvr::ARcoreHelper::instance()->setPointCloudActiveState(true);
+        ArPointCloud_getData(_ar_session, pointCloud, &pointCloudData);
+        cvr::ARcoreHelper::instance()->setPointCloudData(pointCloudData, num_of_points);
+        cvr::ARcoreHelper::instance()->view_mat = view_mat;
+        cvr::ARcoreHelper::instance()->proj_mat = proj_mat;
+        ArPointCloud_release(pointCloud);
+    }
     bool renderPointClouds(pointDrawable * drawable){
         ArPointCloud * pointCloud;
         ArStatus  pointcloud_Status = ArFrame_acquirePointCloud(_ar_session, _ar_frame, &pointCloud);

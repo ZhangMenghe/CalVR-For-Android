@@ -74,7 +74,7 @@ protected:
     cvr::assetLoader* _assetHelper;
     std::stack<cvr::glState> _glStateStack;
 
-    osg::ref_ptr<pointDrawable> _pointcloudDrawable;
+//    osg::ref_ptr<cvr::pointDrawable> _pointcloudDrawable;
 
 //    osg::ref_ptr<osg::MatrixTransform> sphereTrans;
 //    osg::PositionAttitudeTransform *_ball;

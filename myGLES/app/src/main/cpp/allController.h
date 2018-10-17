@@ -39,6 +39,7 @@ namespace controller{
         std::stack<utils::glState> _glStateStack;
         osg::ref_ptr<bgDrawable> _bgDrawable;
         osg::ref_ptr<strokeDrawable> _strokeDrawable;
+        osg::ref_ptr<pointDrawable> _pointcloudDrawable;
 
         // Other factors
         int _screenWidth, _screenHeight;

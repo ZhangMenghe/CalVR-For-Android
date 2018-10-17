@@ -12,7 +12,7 @@
 #include <osg/ShapeDrawable>
 #include <cvrMenu/BoardMenu/BoardMenuGeometry.h>
 #include "PhysicsUtils.h"
-
+#include <cvrUtil/ARCoreHelper.h>
 using namespace osg;
 using namespace cvr;
 using namespace physx;
@@ -47,7 +47,11 @@ void PhysxBall::createPlane(osg::Group* parent, osg::Vec3f pos) {
 void PhysxBall::preFrame() {
     _phyEngine->update();
     //use ar controller to render
-    ///_ar_controller->renderPointClouds(_pointcloudDrawable);
+    const float* pointCloudData;
+    int32_t num_of_points = 0;
+//    _pointcloudDrawable->updateARMatrix(cvr::ARcoreHelper::instance()->getMVPMatrix());
+    cvr::ARcoreHelper::instance()->getPointCloudData(pointCloudData, num_of_points);
+//    _pointcloudDrawable->updateVertices(pointCloudData, num_of_points);
 }
 
 bool PhysxBall::init() {
@@ -108,8 +112,8 @@ void PhysxBall::menuCallback(cvr::MenuItem *item) {
         createBall(_scene, osg::Vec3(.0f, 0.5, 0.5), 0.01f);
 }
 void PhysxBall::createPointCloud(osg::Group *parent) {
-    _pointcloudDrawable = new pointDrawable();
-    parent->addChild(_pointcloudDrawable->createDrawableNode(_assetHelper, &_glStateStack));
+//    _pointcloudDrawable = new pointDrawable();
+//    parent->addChild(_pointcloudDrawable->createDrawableNode(_assetHelper, &_glStateStack));
 }
 ref_ptr<Geometry> PhysxBall::_makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos) {
     ref_ptr<Geometry> geo = new osg::Geometry();

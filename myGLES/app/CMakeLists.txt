@@ -110,6 +110,7 @@ add_library(ARCalVR
             src/main/cpp/StrokeDrawable.cpp
             src/main/cpp/arcoreController.cpp
             src/main/cpp/glDrawable.cpp
+            src/main/cpp/pointDrawable.cpp
             src/main/cpp/bgDrawable.cpp
             src/main/cpp/utils.cpp
             src/main/cpp/arcore_utils.cpp

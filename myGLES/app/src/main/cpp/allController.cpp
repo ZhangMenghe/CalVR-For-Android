@@ -45,6 +45,8 @@ allController::allController(AAssetManager *assetManager)
     _strokeDrawable = new strokeDrawable;
     _fpsMonitor = new perfMonitor();
 
+    _pointcloudDrawable = new pointDrawable();
+
     initialize_camera();
 }
 
@@ -166,6 +168,7 @@ void allController::onCreate(const char * calvr_path){
     _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
     _sceneGroup->addChild(_scene->getSceneRoot());
 //    _scene->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
+    _sceneGroup->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &_glStateStack));
 
     _root->addChild(_sceneGroup);
     _viewer->setSceneData(_root.get());
@@ -184,6 +187,10 @@ void allController::onDrawFrame(){
     float * transUV = _ar_controller->updateBackgroundRender();
     if(nullptr != transUV)
         _bgDrawable->updateOnFrame(transUV);
+
+    //update pointcloud: TEST
+//    _ar_controller->updateFeaturePoints();
+    _ar_controller->renderPointClouds(_pointcloudDrawable);
 
     _viewer->frameStart();
     _viewer->advance(USE_REFERENCE_TIME);
