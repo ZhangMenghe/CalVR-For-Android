@@ -64,6 +64,7 @@ private:
     void createBall(osg::Group* parent, osg::Vec3f pos, float radius);
     void createPlane(osg::Group* parent, osg::Vec3f pos);
     void addBoard(osg::Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis = osg::Vec3f(.0f,.0f,.0f),float rotAngle = .0f );
+    void createObject(osg::Group * parent, osg::Vec3f pos);
     osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, osg::Vec3 pos, float radius);
     void initMenuButtons();
 protected:
@@ -73,6 +74,10 @@ protected:
     osg::ref_ptr<osg::Group> _menu, _scene;
     cvr::SceneObject *rootSO, *sceneSO, *menuSo;
     cvr::assetLoader* _assetHelper;
+    bool _planeTurnedOn;
+    std::vector<osg::Uniform *> _uniform_mvps;
+    int _sphereNum = 0;
+
 
 //    std::stack<cvr::glState> _glStateStack;
 

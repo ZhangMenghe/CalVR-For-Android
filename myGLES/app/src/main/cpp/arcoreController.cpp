@@ -19,6 +19,7 @@ void arcoreController::onDrawFrame(GLuint textureId) {
 
     ArCamera_getViewMatrix(_ar_session, camera, value_ptr(view_mat));
     ArCamera_getProjectionMatrix(_ar_session,camera, 0.1f, 100.0f, value_ptr(proj_mat));
+    cvr::ARcoreHelper::instance()->setMVPmat(proj_mat * view_mat);
 
     ArPose* camera_pose = nullptr;
     ArPose_create(_ar_session, nullptr, &camera_pose);

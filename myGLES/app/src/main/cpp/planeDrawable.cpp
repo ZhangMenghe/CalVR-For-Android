@@ -33,6 +33,10 @@ void planeDrawable::_update_plane_vertices(const ArSession *arSession, const ArP
     ArPlane_getCenterPose(arSession, arPlane, arPose);
     ArPose_getMatrix(arSession, arPose, value_ptr(_model_mat));
 
+    float raw_center_pose[7] = {.0f};
+    ArPose_getPoseRaw(arSession, arPose, raw_center_pose);
+    _planeCenter = osg::Vec3f(raw_center_pose[4], -raw_center_pose[6], raw_center_pose[5]);
+
     _normal_vec = getPlaneNormal(*arSession, *arPose);
 
     // Feather distance 0.2 meters.
@@ -178,3 +182,11 @@ void planeDrawable::drawImplementation(osg::RenderInfo&) const{
 
     PopAllState();
 }
+//const float * const planeDrawable::getPlaneData(int & numOfVertices) const{
+//    numOfVertices =  _vertices.size();
+//    int memsize= numOfVertices* sizeof(glm::vec3);
+//    float* data = (float*)malloc(memsize);
+//    std::memcpy(data, _vertices.data(), memsize);
+//    const float * ptr = &data[0];
+//    return ptr;
+//}

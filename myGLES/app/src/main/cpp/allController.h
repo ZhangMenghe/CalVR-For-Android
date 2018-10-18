@@ -46,6 +46,7 @@ namespace controller{
         int _screenWidth, _screenHeight;
         float _touchX, _touchY;
         int _plane_num = 0;
+        int _plane_num_update = 0;
         float _color_correction[4] = {1.f, 1.f, 1.f, 1.f};
 
         ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);

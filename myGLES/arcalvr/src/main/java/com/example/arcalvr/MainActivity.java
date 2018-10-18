@@ -143,9 +143,9 @@ public class MainActivity extends AppCompatActivity
     private void copyFromAssets(){
         calvr_dest = resourceDest + calvr_folder;
         //Skip copying if files exist
-        File destDir = new File(calvr_dest);
-        if(destDir.exists())
-            return;
+//        File destDir = new File(calvr_dest);
+//        if(destDir.exists())
+//            return;
         try{
             fileUtils.copyFromAsset(getAssets(), calvr_folder, calvr_dest);
         }catch (Exception e){

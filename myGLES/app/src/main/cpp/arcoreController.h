@@ -167,8 +167,7 @@ public:
         cvr::ARcoreHelper::instance()->setPointCloudActiveState(true);
         ArPointCloud_getData(_ar_session, pointCloud, &pointCloudData);
         cvr::ARcoreHelper::instance()->setPointCloudData(pointCloudData, num_of_points);
-        cvr::ARcoreHelper::instance()->view_mat = view_mat;
-        cvr::ARcoreHelper::instance()->proj_mat = proj_mat;
+//        cvr::ARcoreHelper::instance()->setMVPmat(proj_mat * view_mat);
         ArPointCloud_release(pointCloud);
     }
     bool renderPointClouds(pointDrawable * drawable){
@@ -186,6 +185,7 @@ public:
 
         //point cloud data with 4 params (x,y,z, confidence)
         ArPointCloud_getData(_ar_session, pointCloud, &pointCloudData);
+        cvr::ARcoreHelper::instance()->setPointCloudData(pointCloudData, num_of_points);
 
         drawable->updateVertices(pointCloudData, num_of_points);
         drawable->updateARMatrix(proj_mat*view_mat);

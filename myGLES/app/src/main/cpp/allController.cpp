@@ -189,6 +189,7 @@ void allController::DrawRealWorld(){
 
     if(ARcoreHelper::instance()->getPointCloudStatus()){
         _ar_controller->renderPointClouds(_pointcloudDrawable);
+
         _pointcloudDrawable->getGLNode()->setNodeMask(0xFFFFFF);
     } else
         _pointcloudDrawable->getGLNode()->setNodeMask(0x0);
@@ -200,7 +201,7 @@ void allController::DrawRealWorld(){
 
         PlaneParams planes = _ar_controller->doPlaneDetection();
         if(_plane_num < planes.plane_color_map.size()){
-            LOGE("=== %f",planes.plane_color_map.size());
+            _plane_num_update = _plane_num;
             for(int i= _plane_num; i<planes.plane_color_map.size();i++){
                 planeDrawable * pd = new planeDrawable();
                 _sceneGroup->addChild(pd->createDrawableNode(_asset_manager, &_glStateStack));
@@ -214,6 +215,8 @@ void allController::DrawRealWorld(){
             _planeDrawables[i]->updateOnFrame(_ar_controller->getSession(), planeIt->first,
                                               _ar_controller->proj_mat, _ar_controller->view_mat,
                                               planeIt->second);
+            ARcoreHelper::instance()->updatePlaneData(_planeDrawables[i]->getPlaneCenter(), i);
+
             _planeDrawables[i]->getGLNode()->setNodeMask(0xFFFFFF);
         }
 
