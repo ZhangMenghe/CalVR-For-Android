@@ -16,7 +16,7 @@ private:
     std::vector<GLushort> _triangles;
     glm::mat4 _model_mat = glm::mat4(1.0f);
     glm::vec3 _normal_vec = glm::vec3(.0f);
-    osg::Vec3f _planeCenter;
+    glm::vec3 _planeCenter;
 
     GLuint _texture_id;
     GLuint _shader_program;
@@ -41,7 +41,7 @@ public:
                        const  glm::vec3 & color);
     void Initialization(AAssetManager * manager,std::stack<utils::glState>* stateStack);
     void drawImplementation(osg::RenderInfo&) const;
-    osg::Vec3f getPlaneCenter(){return _planeCenter;}
+    glm::vec3 getPlaneCenter(){return _planeCenter;}
 //    const float * const getPlaneData(int & numOfVertices) const;
 };
 

@@ -35,7 +35,7 @@ void planeDrawable::_update_plane_vertices(const ArSession *arSession, const ArP
 
     float raw_center_pose[7] = {.0f};
     ArPose_getPoseRaw(arSession, arPose, raw_center_pose);
-    _planeCenter = osg::Vec3f(raw_center_pose[4], -raw_center_pose[6], raw_center_pose[5]);
+    _planeCenter = glm::vec3(raw_center_pose[4], raw_center_pose[5], raw_center_pose[6]);
 
     _normal_vec = getPlaneNormal(*arSession, *arPose);
 
