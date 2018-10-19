@@ -1,0 +1,64 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.4.1)
+
+# Specify critical Calvr build variables.
+SET(DYNAMIC_LINKING OFF CACHE BOOL "Build statically")
+# Build and reference OpenSceneGraph.
+SET(MXML_INCLUDE_DIR "${MXML_SOURCE_DIR}")
+SET(MXML_LIBRARY_DIR "${MXML_BUILD_DIR}/lib")
+SET(MXML_LIBRARY "${MXML_LIBRARY_DIR}/libmxmld.a")
+SET(OSG_HOME "${OSG_BUILD_DIR}")
+SET(OSG_INCLUDE_DIR "${OSG_BUILD_DIR}/include")
+SET(OSG_LIBRARY_DIR "${OSG_BUILD_DIR}/lib")
+SET(OSG_LIBRARY "${OSG_LIBRARY_DIR}/libosgd.a")
+
+
+SET(OPENTHREADS_LIBRARY "${OSG_LIBRARY_DIR}/libOpenThreadsd.a")
+SET(OSGANIMATION_LIBRARY "${OSG_LIBRARY_DIR}/libosgAnimationd.a")
+SET(OSGDB_LIBRARY "${OSG_LIBRARY_DIR}/libosgdb_osgd.a")
+SET(OSGFX_LIBRARY "${OSG_LIBRARY_DIR}/libosgFXd.a")
+SET(OSGGA_LIBRARY "${OSG_LIBRARY_DIR}/libosgGAd.a")
+SET(OSGMANIPULATOR_LIBRARY "${OSG_LIBRARY_DIR}/libosgManipulatord.a")
+SET(OSGPARTICLE_LIBRARY "${OSG_LIBRARY_DIR}/libosgParticled.a")
+SET(OSGPRESENTATION_LIBRARY "${OSG_LIBRARY_DIR}/libosgPresentationd.a")
+SET(OSGSHADOW_LIBRARY "${OSG_LIBRARY_DIR}/libosgShadowd.a")
+SET(OSGSIM_LIBRARY "${OSG_LIBRARY_DIR}/libosgSimd.a")
+SET(OSGTERRAIN_LIBRARY "${OSG_LIBRARY_DIR}/libosgTerraind.a")
+SET(OSGTEXT_LIBRARY "${OSG_LIBRARY_DIR}/libosgTextd.a")
+SET(OSGUTIL_LIBRARY "${OSG_LIBRARY_DIR}/libosgUtild.a")
+SET(OSGVIEWER_LIBRARY "${OSG_LIBRARY_DIR}/libosgViewerd.a")
+SET(OSGVOLUME_LIBRARY "${OSG_LIBRARY_DIR}/libosgVolumed.a")
+SET(OSGWIDGET_LIBRARY "${OSG_LIBRARY_DIR}/libosgWidgetd.a")
+
+SET(CALVR_SOURCE_DIR "${EXT_PROJ_DIR}/calvr")
+SET(CALVR_BUILD_DIR "${EXT_PROJ_DIR}/calvr/build/${ANDROID_ABI}")
+
+add_library(cvrKernel STATIC IMPORTED)
+set_target_properties(cvrKernel PROPERTIES IMPORTED_LOCATION
+                      ${CALVR_BUILD_DIR}/lib/libcvrKerneld.a)
+
+add_library(cvrMenu STATIC IMPORTED)
+set_target_properties(cvrMenu PROPERTIES IMPORTED_LOCATION
+                      ${CALVR_BUILD_DIR}/lib/libcvrMenud.a)
+
+add_library(cvrUtil STATIC IMPORTED)
+set_target_properties(cvrUtil PROPERTIES IMPORTED_LOCATION
+                      ${CALVR_BUILD_DIR}/lib/libcvrUtild.a)
+
+add_library(cvrInput STATIC IMPORTED)
+set_target_properties(cvrInput PROPERTIES IMPORTED_LOCATION
+                      ${CALVR_BUILD_DIR}/lib/libcvrInputd.a)
+
+add_library(cvrConfig STATIC IMPORTED)
+set_target_properties(cvrConfig PROPERTIES IMPORTED_LOCATION
+                      ${CALVR_BUILD_DIR}/lib/libcvrConfigd.a)
+
+add_library(cvrCollaborative STATIC IMPORTED)
+set_target_properties(cvrCollaborative PROPERTIES IMPORTED_LOCATION
+                      ${CALVR_BUILD_DIR}/lib/libcvrCollaboratived.a)
+
+INCLUDE_DIRECTORIES(${CALVR_SOURCE_DIR}/include)
+INCLUDE_DIRECTORIES(${CALVR_BUILD_DIR}/include)
+
+
+
+
