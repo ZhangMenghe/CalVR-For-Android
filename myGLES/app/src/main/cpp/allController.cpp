@@ -47,6 +47,7 @@ allController::allController(AAssetManager *assetManager)
 
     _pointcloudDrawable = new pointDrawable();
 
+    _object_renderer = new osg_objectRenderer();
     initialize_camera();
 }
 
@@ -170,6 +171,8 @@ void allController::onCreate(const char * calvr_path){
 //    _scene->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
     _sceneGroup->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &_glStateStack));
 
+    _sceneGroup->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
+
     _root->addChild(_sceneGroup);
     _viewer->setSceneData(_root.get());
 }
@@ -224,6 +227,11 @@ void allController::DrawRealWorld(){
         for(int i=0; i<_plane_num; i++)
             _planeDrawables[i]->getGLNode()->setNodeMask(0x0);
     }
+    if(_plane_num!=0)
+        _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
+                           glm::translate(glm::mat4(), _planeDrawables[0]->getPlaneCenter()),
+                               _color_correction, 1);
+
 }
 void allController::onDrawFrame(){
     DrawRealWorld();

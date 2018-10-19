@@ -14,6 +14,7 @@
 #include "arcoreController.h"
 #include "strokeDrawable.h"
 #include "perfMonitor.h"
+#include "osg_objectRenderer.h"
 
 namespace controller{
     class allController {
@@ -41,6 +42,7 @@ namespace controller{
         osg::ref_ptr<strokeDrawable> _strokeDrawable;
         osg::ref_ptr<pointDrawable> _pointcloudDrawable;
         std::vector<osg::ref_ptr<planeDrawable>> _planeDrawables;
+        osg_objectRenderer *_object_renderer;
 
         // Other factors
         int _screenWidth, _screenHeight;
