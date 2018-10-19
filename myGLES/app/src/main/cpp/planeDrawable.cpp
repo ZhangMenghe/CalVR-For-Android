@@ -179,7 +179,7 @@ void planeDrawable::drawImplementation(osg::RenderInfo&) const{
 
     glUseProgram(0);
     checkGlError("Draw point cloud");
-
+    glDepthMask(GL_TRUE);
     PopAllState();
 }
 //const float * const planeDrawable::getPlaneData(int & numOfVertices) const{
