@@ -57,13 +57,13 @@ void UpdateActorCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     }
     traverse( node, nv );
 }
-void PhysxBall::createPlane(osg::Group* parent, glm::vec3 pos) {
+void PhysxBall::createPlane(osg::Group* parent, osg::Vec3f pos) {
     PxMaterial* mMaterial = _phyEngine->getPhysicsSDK()->createMaterial(0.1, 0.2, 0.5);
-    PxTransform pose = PxTransform(PxVec3(.0f, pos[1], .0f),
+    PxTransform pose = PxTransform(PxVec3(.0f, pos.z(), .0f),
                                    PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
     PxRigidStatic* plane = PxCreateStatic(*_phyEngine->getPhysicsSDK(), pose, PxPlaneGeometry(), *mMaterial);
     _phyEngine->addActor("main", plane);
-    _planeHeight = pos[1];
+//    _planeHeight = pos[1];
 //    addBoard(parent, pos, Vec3f(1.0f, .0f,.0f), PI_2f);
 }
 
@@ -141,7 +141,7 @@ bool PhysxBall::init() {
     _phyEngine->addScene("main");
     _assetHelper = new assetLoader(_asset_manager);
     _planeTurnedOn = ARcoreHelper::instance()->getPlaneStatus();
-//    createPlane(_scene, Vec3f(.0f, .0f, -500.0f));
+    createPlane(_scene, Vec3f(.0f, .0f, -0.25f));
 
 
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
@@ -156,8 +156,8 @@ bool PhysxBall::init() {
 
     //bool navigation, bool movable, bool clip, bool contextMenu, bool showBounds
     rootSO= new SceneObject("myPluginRoot", false, false, false, false, false);
-    sceneSO= new SceneObject("myPluginScene", false, false, false, false, false);
-    menuSo= new SceneObject("myPluginMenu", false, false, false, false, false);
+    sceneSO= new SceneObject("myPluginScene", false, false, false, false, true);
+    menuSo= new SceneObject("myPluginMenu", false, false, false, false, true);
 
     rootSO->addChild(sceneSO);
     rootSO->addChild(menuSo);
@@ -173,18 +173,20 @@ bool PhysxBall::init() {
 }
 
 void PhysxBall::menuCallback(cvr::MenuItem *item) {
-    if(item == _addButton){
-        glm::vec3 featurePoint = ARcoreHelper::instance()->getRandomPointPos();
-        if(planeCreated)
-            createBall(_scene, glm::vec3(featurePoint[0], _planeHeight + 0.1f, featurePoint[2]), 0.5f);
-        else{
-            planeCreated = true;
-            createPlane(_scene, featurePoint);
-            createBall(_scene, featurePoint + glm::vec3(.0f, 0.01f, .0f), 0.01f);
-        }
-
-
-    }
+    if(item == _addButton)
+        createBall(_scene, osg::Vec3(.0f, 0.5, 0.5), 0.01f);
+//    {
+//        glm::vec3 featurePoint = ARcoreHelper::instance()->getRandomPointPos();
+//        if(planeCreated)
+//            createBall(_scene, glm::vec3(featurePoint[0], _planeHeight + 0.1f, featurePoint[2]), 0.5f);
+//        else{
+//            planeCreated = true;
+//            createPlane(_scene, featurePoint);
+//            createBall(_scene, featurePoint + glm::vec3(.0f, 0.01f, .0f), 0.01f);
+//        }
+//
+//
+//    }
 //        createBall(_scene, osg::Vec3(std::rand() % 10 * 0.05f-0.25f, std::rand() % 10 * 0.1f, 0.5), 0.01f);
     else if(item == _pointButton)
         ARcoreHelper::instance()->changePointCloudStatus();
@@ -297,68 +299,53 @@ void PhysxBall::createObject(osg::Group *parent, glm::vec3 pos) {
     parent->addChild(objectTrans.get());
 }
 
-void PhysxBall::createBall(osg::Group* parent, glm::vec3 pos, float radius) {
-//    PxReal density = 1.0f;
-//    PxMaterial* mMaterial = _phyEngine->getPhysicsSDK()->createMaterial(0.1,0.2,0.5);
+void PhysxBall::createBall(osg::Group* parent,osg::Vec3f pos, float radius) {
+    PxReal density = 1.0f;
+    PxMaterial* mMaterial = _phyEngine->getPhysicsSDK()->createMaterial(0.1,0.2,0.5);
 //    mMaterial->setRestitution(1.0f);
-////    mMaterial->setStaticFriction(0);
-//    PxSphereGeometry geometrySphere(radius);
-//    PxTransform transform(PxVec3(pos[0], pos[1], pos[2]), PxQuat(PxIDENTITY()));
-//    PxRigidDynamic *actor = PxCreateDynamic(* _phyEngine->getPhysicsSDK(),
-//                                            transform,
-//                                            geometrySphere,
-//                                            *mMaterial,
-//                                            density);
-//    if(!actor) return;
-//
-//    actor->setLinearVelocity(PxVec3(.0f, .0f ,0));
-//    actor->setSleepThreshold(0.0);
-//    _phyEngine->addActor("main", actor);
+//    mMaterial->setStaticFriction(0);
+    PxSphereGeometry geometrySphere(radius);
+    PxTransform transform(PxVec3(pos.x(), pos.z(), -pos.y()), PxQuat(PxIDENTITY()));
+    PxRigidDynamic *actor = PxCreateDynamic(* _phyEngine->getPhysicsSDK(),
+                                            transform,
+                                            geometrySphere,
+                                            *mMaterial,
+                                            density);
 
-    osg::ref_ptr<osg::MatrixTransform> sphereTrans = addSphere(parent, pos, radius, nullptr);
+    actor->setLinearVelocity(PxVec3(.0f, .0f ,0));
+    actor->setSleepThreshold(0.0);
+    if(!actor) return;
+    _phyEngine->addActor("main", actor);
+
+    osg::ref_ptr<osg::MatrixTransform> sphereTrans = addSphere(parent, pos, radius);
+    sphereTrans->addUpdateCallback(new UpdateActorCallback(actor));
 }
-ref_ptr<MatrixTransform> PhysxBall::addSphere(osg::Group*parent, glm::vec3 pos, float radius, PxRigidDynamic *actor)
+
+ref_ptr<MatrixTransform> PhysxBall::addSphere(osg::Group*parent, Vec3f pos, float radius)
 {
-//    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable();
-//    shape->setShape(new osg::Sphere(Vec3f(.0,.0,.0), radius));
-//    shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
-//    shape->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-//    osg::ref_ptr<osg::Geode> node = new osg::Geode;
-
-    std::string fhead(getenv("CALVR_RESOURCE_DIR"));
-    osg::ref_ptr<Node> node = osgDB::readNodeFile(fhead + "models/box.osgt");
-
+    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable();
+    shape->setShape(new osg::Sphere(Vec3f(.0,.0,.0), radius));
+    shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
+    shape->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    osg::ref_ptr<osg::Geode> node = new osg::Geode;
     ///////use shader
-    Program * program =_assetHelper->createShaderProgramFromFile("shaders/lightingOSG_test.vert","shaders/lightingOSG.frag");
-    osg::StateSet * stateSet = node->getOrCreateStateSet();
+    Program * program =_assetHelper->createShaderProgramFromFile("shaders/lightingOSG.vert","shaders/lightingOSG.frag");
+    osg::StateSet * stateSet = shape->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
 
     stateSet->addUniform( new osg::Uniform("lightDiffuse",
                                            osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
     stateSet->addUniform( new osg::Uniform("lightSpecular",
                                            osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
-    stateSet->addUniform( new osg::Uniform("shininess",
-                                           64.0f) );
-    stateSet->addUniform( new osg::Uniform("lightPosition",
-                                           osg::Vec3(0,0,1)));
-    stateSet->addUniform(new osg::Uniform("uScale", 0.1f));
+    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
 
-    Uniform * mvpUniform = new Uniform(Uniform::FLOAT_MAT4, "uarMVP");
-    mvpUniform->setUpdateCallback(new mvpCallback);
-    stateSet->addUniform(mvpUniform);
+    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
 
-    //uModel
-    Uniform * modelUniform = new Uniform(Uniform::FLOAT_MAT4, "uModel");
-    modelUniform->set(Matrixf(glm::value_ptr(glm::translate(glm::mat4(), pos))));
-//    mvpUniform->setUpdateCallback(new modelCallback(actor));
-
-    stateSet->addUniform(modelUniform);
-
-//    node->addDrawable(shape.get());
+    node->addDrawable(shape.get());
     ref_ptr<MatrixTransform> sphereTrans = new MatrixTransform;
-//    Matrixf m;
-//    m.makeTranslate(pos);
-//    sphereTrans->setMatrix(m);
+    Matrixf m;
+    m.makeTranslate(pos);
+    sphereTrans->setMatrix(m);
     sphereTrans->addChild(node.get());
 
     parent->addChild(sphereTrans.get());

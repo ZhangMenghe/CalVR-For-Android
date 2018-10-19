@@ -62,11 +62,11 @@ private:
     osg::ref_ptr<osg::Geometry> _makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos);
 
     void createPointCloud(osg::Group*parent);
-    void createBall(osg::Group* parent, glm::vec3 pos, float radius);
-    void createPlane(osg::Group* parent, glm::vec3 pos);
+    void createBall(osg::Group* parent, osg::Vec3f pos, float radius);
+    void createPlane(osg::Group* parent, osg::Vec3f pos);
     void addBoard(osg::Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis = osg::Vec3f(.0f,.0f,.0f),float rotAngle = .0f );
     void createObject(osg::Group * parent, glm::vec3 pos);
-    osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, glm::vec3 pos, float radius,physx::PxRigidDynamic *actor);
+    osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, osg::Vec3f pos, float radius);
     void initMenuButtons();
 protected:
     osgPhysx::Engine * _phyEngine;
