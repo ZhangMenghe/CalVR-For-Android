@@ -21,6 +21,24 @@ using namespace cvr;
 using namespace physx;
 using namespace osgPhysx;
 
+osg::Matrix toMatrix( const PxMat44& pmatrix )
+{
+    double m[16];
+    for ( int i=0; i<16; ++i ) m[i] = *(pmatrix.front() + i);
+    return osg::Matrix(&m[0]);
+}
+
+class modelCallback:public osg::UniformCallback{
+    protected: physx::PxRigidDynamic * _actor;
+public:
+    modelCallback(PxRigidDynamic * actor):_actor(actor){}
+    virtual void operator()(Uniform *uf, NodeVisitor *nv){
+        PxMat44 matrix( _actor->getGlobalPose() );
+        uf->set(toMatrix(matrix));
+        uf->dirty();
+    }
+};
+
 class mvpCallback:public osg::UniformCallback{
 public:
     virtual void operator()(Uniform *uf, NodeVisitor *nv){
@@ -39,13 +57,13 @@ void UpdateActorCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     }
     traverse( node, nv );
 }
-void PhysxBall::createPlane(osg::Group* parent, osg::Vec3f pos) {
+void PhysxBall::createPlane(osg::Group* parent, glm::vec3 pos) {
     PxMaterial* mMaterial = _phyEngine->getPhysicsSDK()->createMaterial(0.1, 0.2, 0.5);
-    PxTransform pose = PxTransform(PxVec3(.0f, pos.z() * ConfigManager::UNIT_ALIGN_FACTOR, .0f),
+    PxTransform pose = PxTransform(PxVec3(.0f, pos[1], .0f),
                                    PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
     PxRigidStatic* plane = PxCreateStatic(*_phyEngine->getPhysicsSDK(), pose, PxPlaneGeometry(), *mMaterial);
     _phyEngine->addActor("main", plane);
-
+    _planeHeight = pos[1];
 //    addBoard(parent, pos, Vec3f(1.0f, .0f,.0f), PI_2f);
 }
 
@@ -123,7 +141,7 @@ bool PhysxBall::init() {
     _phyEngine->addScene("main");
     _assetHelper = new assetLoader(_asset_manager);
     _planeTurnedOn = ARcoreHelper::instance()->getPlaneStatus();
-    createPlane(_scene, Vec3f(.0f, .0f, -500.0f));
+//    createPlane(_scene, Vec3f(.0f, .0f, -500.0f));
 
 
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
@@ -155,8 +173,18 @@ bool PhysxBall::init() {
 }
 
 void PhysxBall::menuCallback(cvr::MenuItem *item) {
-    if(item == _addButton)
-        createBall(_scene, Vec3f(.0f,.0f,.0f), 0.01f);
+    if(item == _addButton){
+        glm::vec3 featurePoint = ARcoreHelper::instance()->getRandomPointPos();
+        if(planeCreated)
+            createBall(_scene, glm::vec3(featurePoint[0], _planeHeight + 0.1f, featurePoint[2]), 0.5f);
+        else{
+            planeCreated = true;
+            createPlane(_scene, featurePoint);
+            createBall(_scene, featurePoint + glm::vec3(.0f, 0.01f, .0f), 0.01f);
+        }
+
+
+    }
 //        createBall(_scene, osg::Vec3(std::rand() % 10 * 0.05f-0.25f, std::rand() % 10 * 0.1f, 0.5), 0.01f);
     else if(item == _pointButton)
         ARcoreHelper::instance()->changePointCloudStatus();
@@ -164,8 +192,12 @@ void PhysxBall::menuCallback(cvr::MenuItem *item) {
         ARcoreHelper::instance()->turnOnPlane();
         _planeTurnedOn = true;
     }
-    else if(item == _addAndyButton)
-        createObject(_scene, Vec3f(.0f,.0f,.0f));
+    else if(item == _addAndyButton){
+        std::vector<glm::vec3> planes = ARcoreHelper::instance()->getPlaneCenters();
+        for(int i=0;i<planes.size();i++)
+            createObject(_scene, planes[i]);
+    }
+
 
 }
 void PhysxBall::createPointCloud(osg::Group *parent) {
@@ -224,7 +256,7 @@ void PhysxBall::addBoard(Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis, floa
     parent->addChild(nodeTrans);
 }
 
-void PhysxBall::createObject(osg::Group *parent, osg::Vec3f pos) {
+void PhysxBall::createObject(osg::Group *parent, glm::vec3 pos) {
     osg::ref_ptr<osg::MatrixTransform> objectTrans = new MatrixTransform;
 
     std::string fhead(getenv("CALVR_RESOURCE_DIR"));
@@ -239,7 +271,7 @@ void PhysxBall::createObject(osg::Group *parent, osg::Vec3f pos) {
     objTexture->setImage(osgDB::readImageFile(fhead+"models/cow_skin.jpg"));
 
     ///////use shader
-    Program * program =_assetHelper->createShaderProgramFromFile("shaders/lightingOSG_test.vert","shaders/lightingOSG.frag");
+    Program * program =_assetHelper->createShaderProgramFromFile("shaders/lightingOSG_test.vert","shaders/osgLightTexture.frag");
     osg::StateSet * stateSet = objNode->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
 
@@ -251,7 +283,7 @@ void PhysxBall::createObject(osg::Group *parent, osg::Vec3f pos) {
                                            64.0f) );
     stateSet->addUniform( new osg::Uniform("lightPosition",
                                            osg::Vec3(0,0,1)));
-    stateSet->addUniform(new osg::Uniform("uScale", 0.01f));
+    stateSet->addUniform(new osg::Uniform("uScale", 0.1f));
 
     Uniform * mvpUniform = new Uniform(Uniform::FLOAT_MAT4, "uarMVP");
     mvpUniform->setUpdateCallback(new mvpCallback);
@@ -259,20 +291,19 @@ void PhysxBall::createObject(osg::Group *parent, osg::Vec3f pos) {
 
     //uModel
     Uniform * modelUniform = new Uniform(Uniform::FLOAT_MAT4, "uModel");
-    modelUniform->set(Matrixf(glm::value_ptr(glm::translate(glm::mat4(),
-                                                            ARcoreHelper::instance()->getRandomPointPos()))) );
+    modelUniform->set(Matrixf(glm::value_ptr(glm::translate(glm::mat4(), pos ))) );
     stateSet->addUniform(modelUniform);
     objectTrans->addChild(objNode.get());
     parent->addChild(objectTrans.get());
 }
 
-void PhysxBall::createBall(osg::Group* parent,osg::Vec3f pos, float radius) {
+void PhysxBall::createBall(osg::Group* parent, glm::vec3 pos, float radius) {
 //    PxReal density = 1.0f;
 //    PxMaterial* mMaterial = _phyEngine->getPhysicsSDK()->createMaterial(0.1,0.2,0.5);
-////    mMaterial->setRestitution(1.0f);
+//    mMaterial->setRestitution(1.0f);
 ////    mMaterial->setStaticFriction(0);
 //    PxSphereGeometry geometrySphere(radius);
-//    PxTransform transform(PxVec3(pos.x(), pos.z(), -pos.y()), PxQuat(PxIDENTITY()));
+//    PxTransform transform(PxVec3(pos[0], pos[1], pos[2]), PxQuat(PxIDENTITY()));
 //    PxRigidDynamic *actor = PxCreateDynamic(* _phyEngine->getPhysicsSDK(),
 //                                            transform,
 //                                            geometrySphere,
@@ -284,10 +315,9 @@ void PhysxBall::createBall(osg::Group* parent,osg::Vec3f pos, float radius) {
 //    actor->setSleepThreshold(0.0);
 //    _phyEngine->addActor("main", actor);
 
-    osg::ref_ptr<osg::MatrixTransform> sphereTrans = addSphere(parent, pos, radius);
-//    sphereTrans->addUpdateCallback(new UpdateActorCallback(actor));
+    osg::ref_ptr<osg::MatrixTransform> sphereTrans = addSphere(parent, pos, radius, nullptr);
 }
-ref_ptr<MatrixTransform> PhysxBall::addSphere(osg::Group*parent, osg::Vec3 pos, float radius)
+ref_ptr<MatrixTransform> PhysxBall::addSphere(osg::Group*parent, glm::vec3 pos, float radius, PxRigidDynamic *actor)
 {
 //    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable();
 //    shape->setShape(new osg::Sphere(Vec3f(.0,.0,.0), radius));
@@ -311,7 +341,7 @@ ref_ptr<MatrixTransform> PhysxBall::addSphere(osg::Group*parent, osg::Vec3 pos, 
                                            64.0f) );
     stateSet->addUniform( new osg::Uniform("lightPosition",
                                            osg::Vec3(0,0,1)));
-    stateSet->addUniform(new osg::Uniform("uScale", 0.01f));
+    stateSet->addUniform(new osg::Uniform("uScale", 0.1f));
 
     Uniform * mvpUniform = new Uniform(Uniform::FLOAT_MAT4, "uarMVP");
     mvpUniform->setUpdateCallback(new mvpCallback);
@@ -319,8 +349,9 @@ ref_ptr<MatrixTransform> PhysxBall::addSphere(osg::Group*parent, osg::Vec3 pos, 
 
     //uModel
     Uniform * modelUniform = new Uniform(Uniform::FLOAT_MAT4, "uModel");
-    modelUniform->set(Matrixf(glm::value_ptr(glm::translate(glm::mat4(),
-                                                            ARcoreHelper::instance()->getRandomPointPos()))) );
+    modelUniform->set(Matrixf(glm::value_ptr(glm::translate(glm::mat4(), pos))));
+//    mvpUniform->setUpdateCallback(new modelCallback(actor));
+
     stateSet->addUniform(modelUniform);
 
 //    node->addDrawable(shape.get());

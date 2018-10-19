@@ -2,7 +2,6 @@ uniform vec4 lightDiffuse;
 uniform vec4 lightSpecular;
 uniform float shininess;
 uniform sampler2D uSampler;
-uniform float width;
 
 varying vec3 normal, eyeVec, lightDir;
 varying vec2 texCoord;

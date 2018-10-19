@@ -35,6 +35,7 @@
 #include <foundation/PxVec3.h>
 #include <osgText/Text>
 #include <PxRigidActor.h>
+#include <vec3.hpp>
 
 #include "Engine.h"
 /** The callback to update the actor, should be applied to a matrix transform node */
@@ -61,11 +62,11 @@ private:
     osg::ref_ptr<osg::Geometry> _makeQuad(float width, float height, osg::Vec4f color, osg::Vec3 pos);
 
     void createPointCloud(osg::Group*parent);
-    void createBall(osg::Group* parent, osg::Vec3f pos, float radius);
-    void createPlane(osg::Group* parent, osg::Vec3f pos);
+    void createBall(osg::Group* parent, glm::vec3 pos, float radius);
+    void createPlane(osg::Group* parent, glm::vec3 pos);
     void addBoard(osg::Group* parent, osg::Vec3f pos, osg::Vec3f rotAxis = osg::Vec3f(.0f,.0f,.0f),float rotAngle = .0f );
-    void createObject(osg::Group * parent, osg::Vec3f pos);
-    osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, osg::Vec3 pos, float radius);
+    void createObject(osg::Group * parent, glm::vec3 pos);
+    osg::ref_ptr<osg::MatrixTransform> addSphere(osg::Group*parent, glm::vec3 pos, float radius,physx::PxRigidDynamic *actor);
     void initMenuButtons();
 protected:
     osgPhysx::Engine * _phyEngine;
@@ -77,6 +78,8 @@ protected:
     bool _planeTurnedOn;
     std::vector<osg::Uniform *> _uniform_mvps;
     int _sphereNum = 0;
+    bool planeCreated = false;
+    float _planeHeight;
 
 
 //    std::stack<cvr::glState> _glStateStack;
