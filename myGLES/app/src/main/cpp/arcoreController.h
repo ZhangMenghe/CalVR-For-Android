@@ -60,6 +60,7 @@ private:
     bool _install_requested = false;
     int last_point_num = 0;
     float camera_pose_raw[7] = {0.f};
+    std::vector<ArAnchor*> _anchors;
 public:
     glm::mat4 view_mat;
     glm::mat4 proj_mat;
@@ -292,9 +293,24 @@ public:
         plane_list = nullptr;
         return _planes;
     }
-
+    void updateHitTest(float x, float y);
     float* getCameraPose(){
         return camera_pose_raw;
+    }
+    size_t getAnchorSize(){return _anchors.size();}
+    void getAnchorModelMatrixFrom(std::vector<glm::mat4>& models, int from){
+        for (size_t i=from; i<_anchors.size(); i++) {
+            glm::mat4 model_mat(1.0f);
+            ArTrackingState tracking_state = AR_TRACKING_STATE_STOPPED;
+            ArAnchor_getTrackingState(_ar_session, _anchors[i],
+                                      &tracking_state);
+            if (tracking_state == AR_TRACKING_STATE_TRACKING) {
+                // Render object only if the tracking state is AR_TRACKING_STATE_TRACKING.
+                arcore_utils::getTransformMatrixFromAnchor(*_anchors[i], _ar_session,
+                                                           &model_mat);
+                models.push_back(model_mat);
+            }
+        }
     }
 
 };

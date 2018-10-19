@@ -42,13 +42,13 @@ namespace controller{
         osg::ref_ptr<strokeDrawable> _strokeDrawable;
         osg::ref_ptr<pointDrawable> _pointcloudDrawable;
         std::vector<osg::ref_ptr<planeDrawable>> _planeDrawables;
-        osg_objectRenderer *_object_renderer;
-
+        std::vector<osg_objectRenderer *>_object_renderers;
+        std::vector<glm::mat4>_andy_Model_Mats;
         // Other factors
         int _screenWidth, _screenHeight;
         float _touchX, _touchY;
         int _plane_num = 0;
-        int _plane_num_update = 0;
+        int _andy_num = 0;
         float _color_correction[4] = {1.f, 1.f, 1.f, 1.f};
 
         ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
@@ -62,6 +62,8 @@ namespace controller{
         void DrawRay();
 
         void DrawRealWorld();
+
+        void onSingleFingerDoubleTouch(float x, float y);
 
     public:
         allController(AAssetManager *assetManager);

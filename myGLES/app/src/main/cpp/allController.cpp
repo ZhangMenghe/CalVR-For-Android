@@ -47,7 +47,6 @@ allController::allController(AAssetManager *assetManager)
 
     _pointcloudDrawable = new pointDrawable();
 
-    _object_renderer = new osg_objectRenderer();
     initialize_camera();
 }
 
@@ -171,8 +170,6 @@ void allController::onCreate(const char * calvr_path){
 //    _scene->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
     _sceneGroup->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &_glStateStack));
 
-    _sceneGroup->addChild(_object_renderer->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
-
     _root->addChild(_sceneGroup);
     _viewer->setSceneData(_root.get());
 }
@@ -204,7 +201,6 @@ void allController::DrawRealWorld(){
 
         PlaneParams planes = _ar_controller->doPlaneDetection();
         if(_plane_num < planes.plane_color_map.size()){
-            _plane_num_update = _plane_num;
             for(int i= _plane_num; i<planes.plane_color_map.size();i++){
                 planeDrawable * pd = new planeDrawable();
                 _sceneGroup->addChild(pd->createDrawableNode(_asset_manager, &_glStateStack));
@@ -227,10 +223,23 @@ void allController::DrawRealWorld(){
         for(int i=0; i<_plane_num; i++)
             _planeDrawables[i]->getGLNode()->setNodeMask(0x0);
     }
-    if(_plane_num!=0)
-        _object_renderer->Draw(_ar_controller->proj_mat,_ar_controller->view_mat,
-                           glm::translate(glm::mat4(), _planeDrawables[0]->getPlaneCenter()),
-                               _color_correction, 1);
+    size_t anchor_num = _ar_controller->getAnchorSize();
+    if( anchor_num != 0){
+        if(_andy_num < anchor_num){
+            for(int i=_andy_num; i<anchor_num; i++){
+                osg_objectRenderer * obj_render = new osg_objectRenderer;
+                _sceneGroup->addChild(obj_render->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
+                _object_renderers.push_back(obj_render);
+            }
+
+        }
+        _ar_controller->getAnchorModelMatrixFrom(_andy_Model_Mats, _andy_num);
+
+        _andy_num = anchor_num;
+    }
+    for(int i=0; i<_object_renderers.size(); i++){
+        _object_renderers[i]->Draw(_ar_controller->proj_mat,_ar_controller->view_mat, _andy_Model_Mats[i],_color_correction, 1);
+    }
 
 }
 void allController::onDrawFrame(){
@@ -334,9 +343,13 @@ void allController::onSingleTouchUp(int pointer_num, float x, float y){
 }
 
 void allController::onDoubleTouch(int pointer_num, float x, float y){
-    MouseInteractionEvent * mie = new MouseInteractionEvent();
-    mie->setInteraction(BUTTON_DOUBLE_CLICK);
-    commonMouseEvent(mie, pointer_num, x, y);
+    if(pointer_num == 1){
+        onSingleFingerDoubleTouch(x,y);
+    }else{
+        MouseInteractionEvent * mie = new MouseInteractionEvent();
+        mie->setInteraction(BUTTON_DOUBLE_CLICK);
+        commonMouseEvent(mie, pointer_num, x, y);
+    }
 }
 
 void allController::onTouchMove(int pointer_num, float x, float y) {
@@ -344,6 +357,11 @@ void allController::onTouchMove(int pointer_num, float x, float y) {
     MouseInteractionEvent * mie = new MouseInteractionEvent();
     mie->setInteraction(BUTTON_DRAG);
     commonMouseEvent(mie, pointer_num, x, y);
+}
+
+void allController::onSingleFingerDoubleTouch(float x, float y){
+    LOGE("===onSingleFingerDoubleTouch==");
+    _ar_controller->updateHitTest(x,y);
 }
 
 void allController::DrawRay(){
