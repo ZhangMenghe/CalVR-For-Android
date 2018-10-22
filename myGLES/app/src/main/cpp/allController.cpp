@@ -27,17 +27,6 @@ REGISTER(MenuBasics);
 
 allController::allController(AAssetManager *assetManager)
         :_asset_manager(assetManager){
-//    _viewer = new cvr::CVRViewer();
-//    _viewer->setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
-//
-//    _menu =  cvr::MenuManager::instance();
-//    _scene = cvr::SceneManager::instance();
-//    _config = cvr::ConfigManager::instance();
-//    _interactionManager = cvr::InteractionManager::instance();
-//    _tracking = TrackingManager::instance();
-//    _navigation = cvr::Navigation::instance();
-//    _communication = cvr::ComController::instance();
-//    _plugins = cvr::PluginManager::instance();
     _CalVR = new CalVR;
     _root = new Group;
     _ar_controller = new arcoreController;
@@ -131,36 +120,9 @@ void allController::onCreate(const char * calvr_path){
         return;
     }
     initialize_camera();
-//    setupDefaultEnvironment(calvr_path);
-//    ref_ptr<Geode> sphereNode = createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
-//    _sceneGroup->addChild(sphereNode.get());
 
     _sceneGroup->addChild( _strokeDrawable->createDrawableNode(_asset_manager,&_glStateStack));
 
-    //Initialization should follow a specific order
-
-//    if(!_config->init())
-//        LOGE("==========CONFIG INITIALIZATION FAIL========");
-//    if(!_communication->init())
-//        LOGE("==========INTERACTION MANAGER FAIL=========");
-//    if(!_tracking->init())
-//        LOGE("==========TRACKING MANAGER FAIL=========");
-//    if(!_interactionManager->init())
-//        LOGE("==========INTERACTION MANAGER FAIL=========");
-//    if(!_navigation->init())
-//        LOGE("=========NAVIGATION FAIL===========");
-//    if(!_scene->init())
-//        LOGE("==========SCENE INITIALIZATION FAIL=========");
-//    _scene->setViewerScene(_viewer);
-//    _viewer->setReleaseContextAtEndOfFrameHint(false);
-//
-//    if(!_menu->init())
-//        LOGE("==========MENU INITIALIZATION FAIL=========");
-//
-//    if(!_plugins->init(_asset_manager))
-//        LOGE("==========PLUG IN  FAIL=========");
-
-//    _bgDrawable->createDrawableNode(_asset_manager, &_glStateStack);
     _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &_glStateStack));
 
     //This will make sure camera always in the background
@@ -172,7 +134,8 @@ void allController::onCreate(const char * calvr_path){
     _sceneGroup->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &_glStateStack));
 
     _root->addChild(_sceneGroup);
-    _CalVR->getViewer()->setSceneData(_root.get());
+    _CalVR->setSceneData(_root.get());
+
 }
 void allController::DrawRealWorld(){
     _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
@@ -246,30 +209,12 @@ void allController::DrawRealWorld(){
 void allController::onDrawFrame(){
     DrawRealWorld();
     _CalVR->frame();
-
-//    _viewer->frameStart();
-//    _viewer->advance(USE_REFERENCE_TIME);
-////    _viewer->eventTraversal();
-//
-//    _tracking->update();
-//    _scene->update();
-//    _menu->update();
-//    _interactionManager->update();
-//
-//    _navigation->update();
-//    _scene->postEventUpdate();
-//    _plugins->preFrame();
-////    _viewer->frame();
-//    _viewer->updateTraversal();
-//    _viewer->renderingTraversals();
-//    if(_communication->getIsSyncError())
-//        LOGE("Sync error");
-//    _plugins->postFrame();
     DrawRay();
 }
 
 void allController::onViewChanged(int rot, int width, int height){
-    _CalVR->getViewer()->setUpViewerAsEmbeddedInWindow(0,0,width,height);
+    _CalVR->onViewChanged(rot, width, height);
+
     _ar_controller->onViewChanged(rot, width, height);
     _touchX = width/2; _touchY = height/2;
     _screenWidth = width;   _screenHeight = height;
