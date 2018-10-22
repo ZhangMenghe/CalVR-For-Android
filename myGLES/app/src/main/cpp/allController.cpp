@@ -27,18 +27,19 @@ REGISTER(MenuBasics);
 
 allController::allController(AAssetManager *assetManager)
         :_asset_manager(assetManager){
-    _viewer = new cvr::CVRViewer();
-    _viewer->setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
+//    _viewer = new cvr::CVRViewer();
+//    _viewer->setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
+//
+//    _menu =  cvr::MenuManager::instance();
+//    _scene = cvr::SceneManager::instance();
+//    _config = cvr::ConfigManager::instance();
+//    _interactionManager = cvr::InteractionManager::instance();
+//    _tracking = TrackingManager::instance();
+//    _navigation = cvr::Navigation::instance();
+//    _communication = cvr::ComController::instance();
+//    _plugins = cvr::PluginManager::instance();
+    _CalVR = new CalVR;
     _root = new Group;
-    _menu =  cvr::MenuManager::instance();
-    _scene = cvr::SceneManager::instance();
-    _config = cvr::ConfigManager::instance();
-    _interactionManager = cvr::InteractionManager::instance();
-    _tracking = TrackingManager::instance();
-    _navigation = cvr::Navigation::instance();
-    _communication = cvr::ComController::instance();
-    _plugins = cvr::PluginManager::instance();
-
     _ar_controller = new arcoreController;
     _bgDrawable = new bgDrawable();
     _sceneGroup = new Group;
@@ -47,7 +48,6 @@ allController::allController(AAssetManager *assetManager)
 
     _pointcloudDrawable = new pointDrawable();
 
-    initialize_camera();
 }
 
 allController::~allController(){
@@ -104,7 +104,7 @@ allController::~allController(){
 
 
 void allController::initialize_camera() {
-    osg::ref_ptr<osg::Camera> mainCam = _viewer->getCamera();
+    osg::ref_ptr<osg::Camera> mainCam = _CalVR->getViewer()->getCamera();
     mainCam->setClearColor(osg::Vec4f(0.81, 0.77, 0.75,1.0));
     osg::Vec3d eye = osg::Vec3d(0,-10,0);
     osg::Vec3d center = osg::Vec3d(0,0,.0);
@@ -126,11 +126,12 @@ void allController::setupDefaultEnvironment(const char *root_path) {
 
 void allController::onCreate(const char * calvr_path){
 //    calvr = new cvr::CalVR();
-//    if(!calvr->init(calvr_path)){
-//        delete calvr;
-//        return;
-//    }
-    setupDefaultEnvironment(calvr_path);
+    if(!_CalVR->init(calvr_path, _asset_manager)){
+        delete _CalVR;
+        return;
+    }
+    initialize_camera();
+//    setupDefaultEnvironment(calvr_path);
 //    ref_ptr<Geode> sphereNode = createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
 //    _sceneGroup->addChild(sphereNode.get());
 
@@ -138,26 +139,26 @@ void allController::onCreate(const char * calvr_path){
 
     //Initialization should follow a specific order
 
-    if(!_config->init())
-        LOGE("==========CONFIG INITIALIZATION FAIL========");
-    if(!_communication->init())
-        LOGE("==========INTERACTION MANAGER FAIL=========");
-    if(!_tracking->init())
-        LOGE("==========TRACKING MANAGER FAIL=========");
-    if(!_interactionManager->init())
-        LOGE("==========INTERACTION MANAGER FAIL=========");
-    if(!_navigation->init())
-        LOGE("=========NAVIGATION FAIL===========");
-    if(!_scene->init())
-        LOGE("==========SCENE INITIALIZATION FAIL=========");
-    _scene->setViewerScene(_viewer);
-    _viewer->setReleaseContextAtEndOfFrameHint(false);
-
-    if(!_menu->init())
-        LOGE("==========MENU INITIALIZATION FAIL=========");
-
-    if(!_plugins->init(_asset_manager))
-        LOGE("==========PLUG IN  FAIL=========");
+//    if(!_config->init())
+//        LOGE("==========CONFIG INITIALIZATION FAIL========");
+//    if(!_communication->init())
+//        LOGE("==========INTERACTION MANAGER FAIL=========");
+//    if(!_tracking->init())
+//        LOGE("==========TRACKING MANAGER FAIL=========");
+//    if(!_interactionManager->init())
+//        LOGE("==========INTERACTION MANAGER FAIL=========");
+//    if(!_navigation->init())
+//        LOGE("=========NAVIGATION FAIL===========");
+//    if(!_scene->init())
+//        LOGE("==========SCENE INITIALIZATION FAIL=========");
+//    _scene->setViewerScene(_viewer);
+//    _viewer->setReleaseContextAtEndOfFrameHint(false);
+//
+//    if(!_menu->init())
+//        LOGE("==========MENU INITIALIZATION FAIL=========");
+//
+//    if(!_plugins->init(_asset_manager))
+//        LOGE("==========PLUG IN  FAIL=========");
 
 //    _bgDrawable->createDrawableNode(_asset_manager, &_glStateStack);
     _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &_glStateStack));
@@ -166,12 +167,12 @@ void allController::onCreate(const char * calvr_path){
     _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
     _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
     _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
-    _sceneGroup->addChild(_scene->getSceneRoot());
+    _sceneGroup->addChild(_CalVR->getSceneRoot());
 //    _scene->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
     _sceneGroup->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &_glStateStack));
 
     _root->addChild(_sceneGroup);
-    _viewer->setSceneData(_root.get());
+    _CalVR->getViewer()->setSceneData(_root.get());
 }
 void allController::DrawRealWorld(){
     _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
@@ -179,7 +180,7 @@ void allController::DrawRealWorld(){
     osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(_ar_controller->view_mat));
     Vec3d eye, center, up;
     mat->getLookAt(eye, center, up);
-    _viewer->getCamera()->setViewMatrixAsLookAt(Vec3d(eye.x(), -eye.z(), eye.y()),
+    _CalVR->getViewer()->getCamera()->setViewMatrixAsLookAt(Vec3d(eye.x(), -eye.z(), eye.y()),
                                                 Vec3d(center.x(), -center.z(), center.y()),
                                                 Vec3d(up.x(), -up.z(), up.y()));
 
@@ -244,30 +245,31 @@ void allController::DrawRealWorld(){
 }
 void allController::onDrawFrame(){
     DrawRealWorld();
+    _CalVR->frame();
 
-    _viewer->frameStart();
-    _viewer->advance(USE_REFERENCE_TIME);
-//    _viewer->eventTraversal();
-
-    _tracking->update();
-    _scene->update();
-    _menu->update();
-    _interactionManager->update();
-
-    _navigation->update();
-    _scene->postEventUpdate();
-    _plugins->preFrame();
-//    _viewer->frame();
-    _viewer->updateTraversal();
-    _viewer->renderingTraversals();
-    if(_communication->getIsSyncError())
-        LOGE("Sync error");
-    _plugins->postFrame();
+//    _viewer->frameStart();
+//    _viewer->advance(USE_REFERENCE_TIME);
+////    _viewer->eventTraversal();
+//
+//    _tracking->update();
+//    _scene->update();
+//    _menu->update();
+//    _interactionManager->update();
+//
+//    _navigation->update();
+//    _scene->postEventUpdate();
+//    _plugins->preFrame();
+////    _viewer->frame();
+//    _viewer->updateTraversal();
+//    _viewer->renderingTraversals();
+//    if(_communication->getIsSyncError())
+//        LOGE("Sync error");
+//    _plugins->postFrame();
     DrawRay();
 }
 
 void allController::onViewChanged(int rot, int width, int height){
-    _viewer->setUpViewerAsEmbeddedInWindow(0,0,width,height);
+    _CalVR->getViewer()->setUpViewerAsEmbeddedInWindow(0,0,width,height);
     _ar_controller->onViewChanged(rot, width, height);
     _touchX = width/2; _touchY = height/2;
     _screenWidth = width;   _screenHeight = height;
@@ -325,9 +327,9 @@ void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
     double roll, pitch, yaw;
     toEulerAngle(osg::Quat(camera_pos[0],camera_pos[1],camera_pos[2],camera_pos[3]), roll, pitch, yaw);
 
-    _tracking->setCameraRotation(m, roll, -yaw, pitch);
-    _tracking->setTouchEventMatrix(m*n);
-    _interactionManager->addEvent(mie);
+//    _tracking->setCameraRotation(m, roll, -yaw, pitch);
+//    _tracking->setTouchEventMatrix(m*n);
+//    _interactionManager->addEvent(mie);
 }
 
 void allController::onSingleTouchDown(int pointer_num, float x, float y) {

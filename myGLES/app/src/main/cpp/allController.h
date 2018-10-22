@@ -24,16 +24,17 @@ namespace controller{
         arcoreController * _ar_controller;
         perfMonitor * _fpsMonitor;
 
+        cvr::CalVR *_CalVR;
         // CalVR
-        cvr::CVRViewer * _viewer;
-        cvr::SceneManager * _scene;
-        cvr::ConfigManager * _config;
-        cvr::MenuManager * _menu;
-        cvr::InteractionManager * _interactionManager;
-        cvr::ComController * _communication;
-        cvr::TrackingManager * _tracking;
-        cvr::Navigation * _navigation;
-        cvr::PluginManager * _plugins;
+//        cvr::CVRViewer * _viewer;
+//        cvr::SceneManager * _scene;
+//        cvr::ConfigManager * _config;
+//        cvr::MenuManager * _menu;
+//        cvr::InteractionManager * _interactionManager;
+//        cvr::ComController * _communication;
+//        cvr::TrackingManager * _tracking;
+//        cvr::Navigation * _navigation;
+//        cvr::PluginManager * _plugins;
 
         // AUX OSG Node & drawable
         osg::ref_ptr<osg::Group>  _root, _sceneGroup;
