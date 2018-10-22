@@ -1,17 +1,45 @@
+#include <cvrUtil/AndroidStdio.h>
 #include "allController.h"
-allController::allController(AAssetManager *assetManager){}
+using namespace cvr;
+using namespace osg;
 
-allController::~allController(){}
+allController::allController(AAssetManager *assetManager)
+        :_asset_manager(assetManager){
+    _CalVR = new CalVR();
+    _root = nullptr;
+    _sceneGroup = nullptr;
+}
 
-void allController::onCreate(const char * calvr_path){}
+allController::~allController(){
+    delete _CalVR;
+}
+
+void allController::onCreate(const char * calvr_path){
+    if(!_CalVR->init(calvr_path, _asset_manager))
+        LOGE("Failed to init calvr kernel");
+    _root = new Group;
+    _sceneGroup = new Group;
+    _root->addChild(_sceneGroup);
+//    _root->addChild(_CalVR->getBackground());
+    _sceneGroup->addChild(_CalVR->getSceneRoot());
+
+    _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
+    _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
+    _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+    _CalVR->setSceneData(_root.get());
+}
 
 void allController::onPause(){}
 
 void allController::onResume(void * env, void* context, void* activity){}
 
-void allController::onDrawFrame(){}
+void allController::onDrawFrame(){
+    _CalVR->frame();
+}
 
-void allController::onViewChanged(int rot, int width, int height){}
+void allController::onViewChanged(int rot, int width, int height){
+    _CalVR->onViewChanged(width, height);
+}
 
 void allController::onResourceLoaded(const char* path){}
 

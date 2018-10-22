@@ -47,7 +47,7 @@ allController::allController(AAssetManager *assetManager)
 
     _pointcloudDrawable = new pointDrawable();
 
-    initialize_camera();
+//    initialize_camera();
 }
 
 allController::~allController(){

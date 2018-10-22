@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
     private int viewportHeight;
 
     // Resource
-    final static private String calvr_folder = "preloadAssets";
+    final static private String calvr_folder = "calvrAssets";
     String calvr_dest = null;
     String resourceDest = null;
 

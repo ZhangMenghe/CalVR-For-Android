@@ -3,13 +3,16 @@
 
 #include <string>
 #include <android/asset_manager.h>
-#include <osgViewer/Viewer>
-#include <cvrKernel/CVRViewer.h>
-#include <cvrKernel/InteractionManager.h>
+
+#include <cvrKernel/CalVR.h>
 
 class allController {
 protected:
+    cvr::CalVR *_CalVR;
+    AAssetManager * _asset_manager;
 
+    // AUX OSG Node & drawable
+    osg::ref_ptr<osg::Group>  _root, _sceneGroup;
 public:
     allController(AAssetManager *assetManager);
 

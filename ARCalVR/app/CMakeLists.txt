@@ -6,7 +6,6 @@ SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAG
 SET( CMAKE_SHARED_LINKER_FLAGS  "${CMAKE_SHARED_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
 SET( CMAKE_STATIC_LINKER_FLAGS  "${CMAKE_STATIC_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
 SET( OSG_CPP_EXCEPTIONS_AVAILABLE "Yes")
-SET( MAKEFILE_FOLDER "makefiles")
 
 SET(KERNEL_LIBRARIES
     cvrKernel                     # For cvr, Kernel > Menu > Util
@@ -65,11 +64,11 @@ SET(PHYSX_LIBS
 	cpufeatures
 )
 
-include(${MAKEFILE_FOLDER}/CMakeLists-staticDependencies.txt)
-include(${MAKEFILE_FOLDER}/CMakeLists-staticOSG.txt)
-include(${MAKEFILE_FOLDER}/CMakeLists-staticMXML.txt)
-include(${MAKEFILE_FOLDER}/CMakeLists-staticPhysX.txt)
-include(${MAKEFILE_FOLDER}/CMakeLists-buildCALVR.txt)
+include(CMakeLists-staticDependencies.txt)
+include(CMakeLists-staticOSG.txt)
+include(CMakeLists-staticMXML.txt)
+include(CMakeLists-staticPhysX.txt)
+include(CMakeLists-buildCALVR.txt)
 
 # physx needs cpufeatures
 include_directories(${ANDROID_NDK}/sources/android/cpufeatures)
