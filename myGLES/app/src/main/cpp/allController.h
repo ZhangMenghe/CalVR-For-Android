@@ -21,7 +21,7 @@ namespace controller{
     protected:
         //Utils
         AAssetManager *const _asset_manager;
-        arcoreController * _ar_controller;
+//        arcoreController * _ar_controller;
         perfMonitor * _fpsMonitor;
 
         cvr::CalVR *_CalVR;
@@ -45,8 +45,6 @@ namespace controller{
         ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
 
         void initialize_camera();
-
-        void setupDefaultEnvironment(const char* root_path);
 
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,
                               int pointer_num, float x, float y);
