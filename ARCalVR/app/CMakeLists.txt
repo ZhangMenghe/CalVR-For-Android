@@ -87,6 +87,7 @@ add_library(ARCalVR
             SHARED
             src/main/cpp/jni_interface.cpp
             src/main/cpp/allController.cpp
+            src/main/cpp/bgDrawable.cpp
             )
 
 target_link_libraries(ARCalVR

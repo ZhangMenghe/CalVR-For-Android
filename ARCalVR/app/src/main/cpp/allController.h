@@ -5,7 +5,7 @@
 #include <android/asset_manager.h>
 
 #include <cvrKernel/CalVR.h>
-
+#include "bgDrawable.h"
 class allController {
 protected:
     cvr::CalVR *_CalVR;
@@ -13,6 +13,11 @@ protected:
 
     // AUX OSG Node & drawable
     osg::ref_ptr<osg::Group>  _root, _sceneGroup;
+
+    std::stack<cvr::glState> _glStateStack;
+    cvr::bgDrawable *_bgDrawable;
+
+    osg::ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3f pos);
 public:
     allController(AAssetManager *assetManager);
 
