@@ -11,10 +11,7 @@
 #include <cvrKernel/CVRViewer.h>
 #include <cvrKernel/InteractionManager.h>
 #include "bgDrawable.h"
-#include "arcoreController.h"
-#include "strokeDrawable.h"
 #include "perfMonitor.h"
-#include "osg_objectRenderer.h"
 
 namespace controller{
     class allController {
@@ -27,14 +24,14 @@ namespace controller{
 
         // AUX OSG Node & drawable
         osg::ref_ptr<osg::Group>  _root, _sceneGroup;
-        std::stack<utils::glState> _glStateStack;
+        std::stack<cvr::glState> _glStateStack;
         osg::ref_ptr<bgDrawable> _bgDrawable;
 
         // Other factors
         int _screenWidth, _screenHeight;
         float _touchX, _touchY;
 
-        ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
+        osg::ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3 pos);
 
 
         void commonMouseEvent(cvr::MouseInteractionEvent * mie,

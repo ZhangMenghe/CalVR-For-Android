@@ -7,9 +7,9 @@
 
 #include <osg/BlendFunc>
 #include <osg/MatrixTransform>
-#include "glDrawable.h"
+#include "glTestDrawable.h"
 
-class bgDrawable: public glDrawable {
+class bgDrawable: public glTestDrawable {
 private:
     GLuint _shader_program;
     GLuint _texture_id;
@@ -29,13 +29,13 @@ private:
             0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
     };
 public:
-    void Initialization(AAssetManager * manager,std::stack<utils::glState>* stateStack);
+    void Initialization(AAssetManager * manager,std::stack<cvr::glState>* stateStack);
     void updateOnFrame(float * new_uvs);
     void drawImplementation(osg::RenderInfo&) const;
     // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
     GLuint GetTextureId(){return _texture_id;}
-    osg::ref_ptr<osg::Geode> createDrawableNode(AAssetManager *manager,std::stack<utils::glState>* stateStack){
-        glNode = glDrawable::createDrawableNode(manager, stateStack);
+    osg::ref_ptr<osg::Geode> createDrawableNode(AAssetManager *manager,std::stack<cvr::glState>* stateStack){
+        glNode = glTestDrawable::createDrawableNode(manager, stateStack);
         glNode->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
         glNode->getOrCreateStateSet()->setRenderBinDetails(1,"RenderBin");
 //        osg::StateSet * stateset = glNode->getOrCreateStateSet();

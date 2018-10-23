@@ -107,16 +107,8 @@ add_library(ARCalVR
             SHARED
             src/main/cpp/allController.cpp
             src/main/cpp/jni_interface_all.cpp
-            src/main/cpp/StrokeDrawable.cpp
-            src/main/cpp/arcoreController.cpp
-            src/main/cpp/osg_objectRenderer.cpp     #can be del after osg_obj succeed
-            src/main/cpp/glDrawable.cpp
-            src/main/cpp/pointDrawable.cpp
-            src/main/cpp/planeDrawable.cpp
             src/main/cpp/bgDrawable.cpp
-            src/main/cpp/osg_utils.cpp              #can be del after removing objRenderer
-            src/main/cpp/utils.cpp
-            src/main/cpp/arcore_utils.cpp
+            src/main/cpp/glTestDrawable.cpp
             src/main/cpp/perfMonitor.cpp
             )
 include_directories(src/main/cpp/plugins/common)
