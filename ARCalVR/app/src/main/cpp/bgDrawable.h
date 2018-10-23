@@ -2,8 +2,8 @@
 // Created by menghe on 8/1/2018.
 //
 
-#ifndef MYGLES_BGDRAWABLE_H
-#define MYGLES_BGDRAWABLE_H
+#ifndef ARCALVR_BGDRAWABLE_H
+#define ARCALVR_BGDRAWABLE_H
 
 #include <osg/BlendFunc>
 #include <osg/MatrixTransform>

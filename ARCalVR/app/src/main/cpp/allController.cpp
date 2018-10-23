@@ -4,13 +4,14 @@
 #include <osg/ShapeDrawable>
 #include <cvrUtil/AndroidPreloadPlugins.h>
 #include <MenuBasics.h>
-
+#include <PhysxBall.h>
+#include <drawablesEntrance.h>
 using namespace cvr;
 using namespace osg;
 
 REGISTER(MenuBasics);
-
-
+REGISTER(PhysxBall)
+REGISTER(GlesDrawables);
 
 allController::allController(AAssetManager *assetManager)
         :_asset_manager(assetManager){
@@ -33,12 +34,14 @@ void allController::onCreate(const char * calvr_path){
 
     _root->addChild(_bgDrawable->createDrawableNode(&_glStateStack));
     ARCoreManager::instance()->setCameraTextureTarget(_bgDrawable->GetTextureId());
+
     _root->addChild(_sceneGroup);
+
     _sceneGroup->addChild(_CalVR->getSceneRoot());
 //    _sceneGroup->addChild(createDebugOSGSphere(Vec3f(.0f, 0.5f, .0f)));
     _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
     _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
-//    _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+    _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
     _CalVR->setSceneData(_root.get());
 }
 

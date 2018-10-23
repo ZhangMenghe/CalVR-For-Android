@@ -45,7 +45,8 @@
    </Input>
     
    <Plugin>
-    <PhysxBall value = "off" />
+    <PhysxBall value = "on" />
+    <GlesDrawables value = "on" />
     <ParticleDreams value="off">
       <DataDir value="/home/aprudhom/data/ParticleDreams" />
     </ParticleDreams>

@@ -82,8 +82,8 @@ set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
 
 include_directories(src/main/cpp/plugins/common)
 include_directories(src/main/cpp/plugins/MenuBasics)
-#include_directories(src/main/cpp/plugins/PhysxBall)
-
+include_directories(src/main/cpp/plugins/PhysxBall)
+include_directories(src/main/cpp/plugins/GlesDrawables)
 add_library(ARCalVR
             SHARED
             src/main/cpp/jni_interface.cpp
@@ -92,8 +92,10 @@ add_library(ARCalVR
             )
 
 target_link_libraries(ARCalVR
-                      android
+                      GlesDrawables
+                      PhysxBall
                       MenuBasics
+                      android
                       mediandk
                       arcore
                       ${PHYSX_LIBS}
