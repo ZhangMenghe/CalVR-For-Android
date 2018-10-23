@@ -1,42 +1,42 @@
-#ifndef BACKGROUND_DRAWABLE_H
-#define BACKGROUND_DRAWABLE_H
+//
+// Created by menghe on 8/1/2018.
+//
+
+#ifndef MYGLES_BGDRAWABLE_H
+#define MYGLES_BGDRAWABLE_H
 
 #include <osg/BlendFunc>
 #include <osg/MatrixTransform>
 #include <cvrUtil/glesDrawable.h>
-namespace cvr {
-    class bgDrawable : public cvr::glesDrawable {
-    private:
-        GLuint _shader_program;
-        GLuint _texture_id;
 
-        GLuint _attrib_vertices;
-        GLuint _attrib_uvs;
+class bgDrawable: public cvr::glesDrawable {
+private:
+    GLuint _shader_program;
+    GLuint _texture_id;
 
-        GLuint _VAO;
-        GLuint _VBO[2];
+    GLuint _attrib_vertices;
+    GLuint _attrib_uvs;
 
-        const GLfloat _vertices[12] = {
-                -1.0f, -1.0f, 0.0f, +1.0f, -1.0f, 0.0f,
-                -1.0f, +1.0f, 0.0f, +1.0f, +1.0f, 0.0f,
-        };
-        void Initialization();
-    public:
-        bgDrawable(std::stack<cvr::glState> *stateStack);
+    GLuint _VAO;
+    GLuint _VBO[2];
 
-        osg::ref_ptr<osg::Geode> createDrawableNode();
-
-        // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
-        GLuint GetTextureId() { return _texture_id; }
-
-        void updateOnFrame(float *new_uvs);
-
-        void drawImplementation(osg::RenderInfo &) const;
-
-
-
-
+    const GLfloat _vertices[12] = {
+            -1.0f, -1.0f, 0.0f, +1.0f, -1.0f, 0.0f,
+            -1.0f, +1.0f, 0.0f, +1.0f, +1.0f, 0.0f,
     };
-}
+public:
+    void Initialization(std::stack<cvr::glState>* stateStack);
+    void updateOnFrame(float * new_uvs);
+    void drawImplementation(osg::RenderInfo&) const;
+    // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
+    GLuint GetTextureId(){return _texture_id;}
+    osg::ref_ptr<osg::Geode> createDrawableNode(std::stack<cvr::glState>* stateStack){
+        glNode = cvr::glesDrawable::createDrawableNode(stateStack);
+        glNode->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+        glNode->getOrCreateStateSet()->setRenderBinDetails(1,"RenderBin");
+        return glNode.get();
+    }
+};
 
-#endif
+
+#endif //MYGLES_BGDRAWABLE_H

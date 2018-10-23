@@ -1,28 +1,22 @@
+//
+// Created by menghe on 8/1/2018.
+//
+
 #include <GLES3/gl3.h>
 #include <GLES2/gl2ext.h>
 #include "bgDrawable.h"
-using namespace cvr;
+#include <cvrUtil/AndroidHelper.h>
+void bgDrawable::Initialization(std::stack<cvr::glState>* stateStack){
+    cvr::glesDrawable::Initialization(stateStack);
 
-bgDrawable::bgDrawable(std::stack<cvr::glState> *stateStack):glesDrawable(stateStack){}
+    _shader_program = cvr::assetLoader::instance()->createGLShaderProgramFromFile("shaders/screenquad.vert", "shaders/screenquad.frag");
+    if(!_shader_program)
+        LOGE("Failed to create shader program");
 
-osg::ref_ptr<osg::Geode> bgDrawable::createDrawableNode() {
-//    glNode = glesDrawable::createDrawableNode();
-
-        Initialization();
-        glNode = new osg::Geode;
-        glNode->addDrawable(this);
-        setUseDisplayList(false);
-
-
-    glNode->getOrCreateStateSet()->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
-    glNode->getOrCreateStateSet()->setRenderBinDetails(1, "RenderBin");
-    return glNode.get();
-}
-
-void bgDrawable::Initialization() {
-    glesDrawable::createShaderProgram("shaders/screenquad.vert", "shaders/screenquad.frag");
     _attrib_vertices = glGetAttribLocation(_shader_program, "a_Position");
     _attrib_uvs = glGetAttribLocation(_shader_program, "a_TexCoord");
+
+
     glGenTextures(1, &_texture_id);
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, _texture_id);
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -55,8 +49,6 @@ void bgDrawable::Initialization() {
 }
 
 void bgDrawable::updateOnFrame(float * new_uvs){
-    if(!new_uvs)
-        return;
     glBindBuffer(GL_ARRAY_BUFFER, _VBO[1]);
     glBufferSubData(GL_ARRAY_BUFFER, 0, 8* sizeof(float), new_uvs);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -66,6 +58,8 @@ void bgDrawable::drawImplementation(osg::RenderInfo&) const{
     PushAllState();
 
     glUseProgram(_shader_program);
+    // No need to test or write depth, the screen quad has arbitrary depth, and is
+    // expected to be drawn first.
     glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
 
@@ -80,6 +74,5 @@ void bgDrawable::drawImplementation(osg::RenderInfo&) const{
     // Restore the depth state for further drawing.
     glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
-
     PopAllState();
 }

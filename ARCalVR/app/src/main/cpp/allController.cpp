@@ -11,7 +11,7 @@ allController::allController(AAssetManager *assetManager)
     _CalVR = new CalVR();
     _root = nullptr;
     _sceneGroup = nullptr;
-    _bgDrawable = new bgDrawable(&_glStateStack);
+    _bgDrawable = new bgDrawable();
 }
 
 allController::~allController(){
@@ -26,7 +26,7 @@ void allController::onCreate(const char * calvr_path){
     _sceneGroup = new Group;
 
 
-    _root->addChild(_bgDrawable->createDrawableNode());
+    _root->addChild(_bgDrawable->createDrawableNode(&_glStateStack));
     ARCoreManager::instance()->setCameraTextureTarget(_bgDrawable->GetTextureId());
 //    _root->addChild(_sceneGroup);
 //    _sceneGroup->addChild(_CalVR->getSceneRoot());
