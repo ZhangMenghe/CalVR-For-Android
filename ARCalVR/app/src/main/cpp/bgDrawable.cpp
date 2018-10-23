@@ -48,7 +48,7 @@ void bgDrawable::Initialization(std::stack<cvr::glState>* stateStack){
     glUseProgram(0);
 }
 
-void bgDrawable::updateOnFrame(float * new_uvs){
+void bgDrawable::updateOnFrame(const float * new_uvs){
     glBindBuffer(GL_ARRAY_BUFFER, _VBO[1]);
     glBufferSubData(GL_ARRAY_BUFFER, 0, 8* sizeof(float), new_uvs);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -56,23 +56,20 @@ void bgDrawable::updateOnFrame(float * new_uvs){
 
 void bgDrawable::drawImplementation(osg::RenderInfo&) const{
     PushAllState();
-
     glUseProgram(_shader_program);
-    // No need to test or write depth, the screen quad has arbitrary depth, and is
-    // expected to be drawn first.
+
     glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, _texture_id);
-
     glBindVertexArray(_VAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
-    glUseProgram(0);
 
-    // Restore the depth state for further drawing.
     glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
+
+    glUseProgram(0);
     PopAllState();
 }

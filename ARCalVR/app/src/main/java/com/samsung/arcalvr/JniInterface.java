@@ -21,8 +21,6 @@ public class JniInterface {
 
     public static native void JNIonGlSurfaceCreated(String calvr_path);
 
-    public static native void JNIonResourceLoaded(String path);
-
     public static native void JNIonViewChanged(int rot, int width, int height);
 
     public static native void JNIdrawFrame();

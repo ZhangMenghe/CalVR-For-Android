@@ -26,7 +26,7 @@ private:
     };
 public:
     void Initialization(std::stack<cvr::glState>* stateStack);
-    void updateOnFrame(float * new_uvs);
+    void updateOnFrame(const float * new_uvs);
     void drawImplementation(osg::RenderInfo&) const;
     // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
     GLuint GetTextureId(){return _texture_id;}

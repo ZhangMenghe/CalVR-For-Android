@@ -44,13 +44,6 @@ JNI_METHOD(void, JNIonGlSurfaceCreated)
     env->ReleaseStringUTFChars(calvr_path, cpath);
 }
 
-JNI_METHOD(void, JNIonResourceLoaded)
-(JNIEnv* env, jclass, jstring path){
-    const char* cpath = env->GetStringUTFChars(path, JNI_FALSE);
-    controllerNative(nativeAppAddr)->onResourceLoaded(cpath);
-    env->ReleaseStringUTFChars(path, cpath);
-}
-
 JNI_METHOD(void, JNIonViewChanged)
 (JNIEnv*, jclass, jint rotation, jint width, jint height){
     controllerNative(nativeAppAddr)->onViewChanged(rotation, width, height);

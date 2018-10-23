@@ -15,8 +15,6 @@ JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass);
 
 JNI_METHOD(void, JNIonGlSurfaceCreated)(JNIEnv *, jclass, jstring calvr_path);
 
-JNI_METHOD(void, JNIonResourceLoaded)(JNIEnv*, jclass, jstring path);
-
 JNI_METHOD(void, JNIonViewChanged)(JNIEnv*, jclass, jint rotation, jint width, jint height);
 
 JNI_METHOD(void, JNIonSingleTouchDown)(JNIEnv*, jclass, jint pointer_num, jfloat x, jfloat y);

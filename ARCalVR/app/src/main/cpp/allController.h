@@ -5,6 +5,7 @@
 #include <android/asset_manager.h>
 
 #include <cvrKernel/CalVR.h>
+#include <cvrKernel/InteractionEvent.h>
 #include "bgDrawable.h"
 
 class allController {
@@ -19,6 +20,9 @@ protected:
     bgDrawable *_bgDrawable;
 
     osg::ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3f pos);
+
+    void onSingleFingerDoubleTouch(float x, float y);
+
 public:
     allController(AAssetManager *assetManager);
 
@@ -33,8 +37,6 @@ public:
     void onDrawFrame();
 
     void onViewChanged(int rot, int width, int height);
-
-    void onResourceLoaded(const char* path);
 
     void onSingleTouchDown(int pointer_num, float x, float y);
 

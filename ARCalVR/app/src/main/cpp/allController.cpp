@@ -25,14 +25,13 @@ void allController::onCreate(const char * calvr_path){
     _root = new Group;
     _sceneGroup = new Group;
 
-
     _root->addChild(_bgDrawable->createDrawableNode(&_glStateStack));
     ARCoreManager::instance()->setCameraTextureTarget(_bgDrawable->GetTextureId());
-//    _root->addChild(_sceneGroup);
-//    _sceneGroup->addChild(_CalVR->getSceneRoot());
-//    _root->addChild(createDebugOSGSphere(Vec3f(.0f, 0.5f, .0f)));
-//    _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
-//    _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
+    _root->addChild(_sceneGroup);
+    _sceneGroup->addChild(_CalVR->getSceneRoot());
+//    _sceneGroup->addChild(createDebugOSGSphere(Vec3f(.0f, 0.5f, .0f)));
+    _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
+    _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
 //    _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
     _CalVR->setSceneData(_root.get());
 }
@@ -47,20 +46,30 @@ void allController::onResume(void * env, void* context, void* activity){
 
 void allController::onDrawFrame(){
     _CalVR->frame();
-    _bgDrawable->updateOnFrame(ARCoreManager::instance()->getTransformedUVs());
+    _bgDrawable->updateOnFrame(ARCoreManager::instance()->getCameraTransformedUVs());
 }
 
 void allController::onViewChanged(int rot, int width, int height){
     _CalVR->onViewChanged(rot, width, height);
 }
 
-void allController::onResourceLoaded(const char* path){}
+void allController::onSingleFingerDoubleTouch(float x, float y){
+
+}
 
 void allController::onSingleTouchDown(int pointer_num, float x, float y){}
 
 void allController::onSingleTouchUp(int pointer_num, float x, float y){}
 
-void allController::onDoubleTouch(int pointer_num, float x, float y){}
+void allController::onDoubleTouch(int pointer_num, float x, float y){
+    if(pointer_num == 1){
+        onSingleFingerDoubleTouch(x,y);
+    }else{
+        MouseInteractionEvent * mie = new MouseInteractionEvent();
+        mie->setInteraction(BUTTON_DOUBLE_CLICK);
+        _CalVR->setMouseEvent(mie, pointer_num, x, y);
+    }
+}
 
 void allController::onTouchMove(int pointer_num, float x, float y){}
 
