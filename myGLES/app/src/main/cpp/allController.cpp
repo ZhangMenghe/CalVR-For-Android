@@ -92,7 +92,7 @@ void allController::onCreate(const char * calvr_path){
         return;
     }
 
-    _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &_glStateStack));
+    _root->addChild(_bgDrawable->createDrawableNode(&_glStateStack));
     ARCoreManager::instance()->setCameraTextureTarget(_bgDrawable->GetTextureId());
 
     //This will make sure camera always in the background

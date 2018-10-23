@@ -6,8 +6,8 @@
 #include <GLES2/gl2ext.h>
 #include "bgDrawable.h"
 #include <cvrUtil/AndroidHelper.h>
-void bgDrawable::Initialization(AAssetManager * manager,std::stack<cvr::glState>* stateStack){
-    glTestDrawable::Initialization(manager, stateStack);
+void bgDrawable::Initialization(std::stack<cvr::glState>* stateStack){
+    cvr::glesDrawable::Initialization(stateStack);
 
     _shader_program = cvr::assetLoader::instance()->createGLShaderProgramFromFile("shaders/screenquad.vert", "shaders/Texture.frag");
     if(!_shader_program)

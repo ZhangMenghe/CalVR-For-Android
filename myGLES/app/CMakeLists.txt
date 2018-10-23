@@ -108,7 +108,6 @@ add_library(ARCalVR
             src/main/cpp/allController.cpp
             src/main/cpp/jni_interface_all.cpp
             src/main/cpp/bgDrawable.cpp
-            src/main/cpp/glTestDrawable.cpp
             src/main/cpp/perfMonitor.cpp
             )
 include_directories(src/main/cpp/plugins/common)
