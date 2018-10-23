@@ -80,8 +80,9 @@ add_library(arcore SHARED IMPORTED)
 set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
                       ${ARCORE_LIBPATH}/${ANDROID_ABI}/libarcore_sdk_c.so)
 
-#glm
-include_directories(${ANDROID_NDK}/sources/third_party/vulkan/src/libs/glm)
+include_directories(src/main/cpp/plugins/common)
+include_directories(src/main/cpp/plugins/MenuBasics)
+#include_directories(src/main/cpp/plugins/PhysxBall)
 
 add_library(ARCalVR
             SHARED
@@ -92,6 +93,7 @@ add_library(ARCalVR
 
 target_link_libraries(ARCalVR
                       android
+                      MenuBasics
                       mediandk
                       arcore
                       ${PHYSX_LIBS}

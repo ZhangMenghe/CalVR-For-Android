@@ -2,9 +2,15 @@
 #include "allController.h"
 #include <cvrUtil/AndroidHelper.h>
 #include <osg/ShapeDrawable>
+#include <cvrUtil/AndroidPreloadPlugins.h>
+#include <MenuBasics.h>
 
 using namespace cvr;
 using namespace osg;
+
+REGISTER(MenuBasics);
+
+
 
 allController::allController(AAssetManager *assetManager)
         :_asset_manager(assetManager){
