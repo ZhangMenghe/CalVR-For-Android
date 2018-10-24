@@ -1,8 +1,11 @@
 #include <cvrUtil/AndroidStdio.h>
 #include <osg/LineWidth>
 #include <osgUtil/Tessellator>
+#include <osg/Texture>
 #include "drawablesEntrance.h"
 #include "planeDrawable.h"
+#include <osg/Texture2D>
+#include <cvrUtil/AndroidHelper.h>
 
 using namespace osg;
 using namespace cvr;
@@ -43,7 +46,7 @@ bool GlesDrawables::init() {
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
 //    createConvexPolygon(_root, Vec3f(.0,.0,.0));
-//    createObject(_root, Vec3f(.0,.0,-0.1f)); // opengl coordinate
+    createObject(_root, Vec3f(.0,.0,-0.1f)); // opengl coordinate
     return true;
 }
 
@@ -66,6 +69,7 @@ void GlesDrawables::postFrame() {
         _planeDrawables[i]->updateOnFrame(planeIt->first, planeIt->second);
 }
 
+
 void GlesDrawables::createObject(osg::Group *parent, Vec3f pos) {
     osg::ref_ptr<osg::MatrixTransform> objectTrans = new MatrixTransform;
 
@@ -87,14 +91,34 @@ void GlesDrawables::createObject(osg::Group *parent, Vec3f pos) {
                                            osg::Vec3(0,0,1)));
     stateSet->addUniform(new osg::Uniform("uScale", 0.1f));
 
-    Uniform * mvpUniform = new Uniform(Uniform::FLOAT_MAT4, "uarMVP");
-    mvpUniform->setUpdateCallback(new mvpCallback);
-    stateSet->addUniform(mvpUniform);
+//    Uniform * mvpUniform = new Uniform(Uniform::FLOAT_MAT4, "uarMVP");
+//    mvpUniform->setUpdateCallback(new mvpCallback);
+//    stateSet->addUniform(mvpUniform);
+
+    Uniform * viewUniform = new Uniform(Uniform::FLOAT_MAT4, "uView");
+    viewUniform->setUpdateCallback(new viewMatrixCallback);
+    stateSet->addUniform(viewUniform);
+
+    Uniform * projUniform = new Uniform(Uniform::FLOAT_MAT4, "uProj");
+    projUniform->setUpdateCallback(new projMatrixCallback);
+    stateSet->addUniform(projUniform);
 
     //uModel
     Uniform * modelUniform = new Uniform(Uniform::FLOAT_MAT4, "uModel");
     modelUniform->set(Matrixf::translate(pos));
     stateSet->addUniform(modelUniform);
+
+
+    osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+    texture->setImage( osgDB::readImageFile(fhead+"textures/test.png") );
+    texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
+    texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
+    texture->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR );
+    texture->setFilter( osg::Texture::MAG_FILTER, osg::Texture::LINEAR );
+
+
+    stateSet->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
+    stateSet->addUniform(new osg::Uniform("uSampler", 0));
 
     objectTrans->addChild(objNode.get());
     parent->addChild(objectTrans.get());

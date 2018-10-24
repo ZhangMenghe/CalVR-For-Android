@@ -1,14 +1,19 @@
+uniform mat4 uModel, uView, uProj;
 uniform vec3 lightPosition;
-varying vec3 normal, eyeVec, lightDir;
-varying vec2 texCoord;
-uniform mat4 uarMVP;
-uniform mat4 uModel;
 uniform float uScale;
+
+varying vec3 normal, eyeVec, lightDir;
+varying vec2 vTexCoord;
+
 void main(){
-    texCoord = gl_Vertex.xy;
-    vec4 vertextInEye = gl_ModelViewMatrix * gl_Vertex;
+    vTexCoord = vec2(0.5,0.5);//gl_Vertex.xz;
+    vec4 aPosition = vec4(gl_Vertex.x* uScale, gl_Vertex.z* uScale, -gl_Vertex.y*uScale, gl_Vertex.w);
+
+    mat4 modelViewMat = uView * uModel;
+    vec4 vertextInEye = modelViewMat * aPosition;
     eyeVec = -vertextInEye.xyz;
     lightDir = vec3(lightPosition - vertextInEye.xyz);
+
     normal = gl_NormalMatrix * gl_Normal;
-    gl_Position =  uarMVP *uModel* vec4(gl_Vertex.x* uScale, gl_Vertex.z* uScale, -gl_Vertex.y*uScale, gl_Vertex.w);
+    gl_Position =  uProj * uView *uModel* aPosition;
 }

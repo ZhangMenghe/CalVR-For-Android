@@ -98,8 +98,6 @@ void planeDrawable::updateOnFrame(ArPlane* plane, osg::Vec3f color) {
 
     _update_plane_vertices();
 
-    LOGE("DRAW PLANE: %d", _vertices.size());
-
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)*_vertices.size()*3, _vertices.data());
     glBindBuffer(GL_ARRAY_BUFFER, 0);
