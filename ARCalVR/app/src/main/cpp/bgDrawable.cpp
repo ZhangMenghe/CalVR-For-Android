@@ -6,8 +6,8 @@
 #include <GLES2/gl2ext.h>
 #include "bgDrawable.h"
 #include <cvrUtil/AndroidHelper.h>
-void bgDrawable::Initialization(std::stack<cvr::glState>* stateStack){
-    cvr::glesDrawable::Initialization(stateStack);
+void bgDrawable::Initialization(){
+    cvr::glesDrawable::Initialization();
 
     _shader_program = cvr::assetLoader::instance()->createGLShaderProgramFromFile("shaders/screenquad.vert", "shaders/screenquad.frag");
     if(!_shader_program)
@@ -55,7 +55,7 @@ void bgDrawable::updateOnFrame(const float * new_uvs){
 }
 
 void bgDrawable::drawImplementation(osg::RenderInfo&) const{
-    PushAllState();
+    cvr::glStateStack::instance()->PushAllState();
     glUseProgram(_shader_program);
 
     glDisable(GL_DEPTH_TEST);
@@ -71,5 +71,5 @@ void bgDrawable::drawImplementation(osg::RenderInfo&) const{
     glEnable(GL_DEPTH_TEST);
 
     glUseProgram(0);
-    PopAllState();
+    cvr::glStateStack::instance()->PopAllState();
 }

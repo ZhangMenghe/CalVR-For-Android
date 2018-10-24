@@ -15,8 +15,6 @@ protected:
 
     // AUX OSG Node & drawable
     osg::ref_ptr<osg::Group>  _root, _sceneGroup;
-
-    std::stack<cvr::glState> _glStateStack;
     bgDrawable *_bgDrawable;
 
     osg::ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3f pos);

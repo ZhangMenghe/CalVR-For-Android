@@ -32,7 +32,7 @@ void allController::onCreate(const char * calvr_path){
     _root = new Group;
     _sceneGroup = new Group;
 
-    _root->addChild(_bgDrawable->createDrawableNode(&_glStateStack));
+    _root->addChild(_bgDrawable->createDrawableNode());
     ARCoreManager::instance()->setCameraTextureTarget(_bgDrawable->GetTextureId());
 
     _root->addChild(_sceneGroup);

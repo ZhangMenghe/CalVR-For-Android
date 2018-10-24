@@ -25,13 +25,13 @@ private:
             -1.0f, +1.0f, 0.0f, +1.0f, +1.0f, 0.0f,
     };
 public:
-    void Initialization(std::stack<cvr::glState>* stateStack);
+    void Initialization();
     void updateOnFrame(const float * new_uvs);
     void drawImplementation(osg::RenderInfo&) const;
     // Returns the generated texture name for the GL_TEXTURE_EXTERNAL_OES target.
     GLuint GetTextureId(){return _texture_id;}
-    osg::ref_ptr<osg::Geode> createDrawableNode(std::stack<cvr::glState>* stateStack){
-        glNode = cvr::glesDrawable::createDrawableNode(stateStack);
+    osg::ref_ptr<osg::Geode> createDrawableNode(){
+        glNode = cvr::glesDrawable::createDrawableNode();
         glNode->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
         glNode->getOrCreateStateSet()->setRenderBinDetails(1,"RenderBin");
         return glNode.get();
