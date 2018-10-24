@@ -31,6 +31,7 @@
 #include <osgDB/FileUtils>
 
 #include "pointDrawable.h"
+#include "planeDrawable.h"
 
 class GlesDrawables : public cvr::CVRPlugin, public cvr::MenuCallback
 {
@@ -42,13 +43,17 @@ protected:
     osg::ref_ptr<osg::Group> _root;
     cvr::SceneObject *rootSO;
     osg::ref_ptr<pointDrawable> _pointcloudDrawable;
+    int _plane_num = 0;
+    std::vector<planeDrawable*> _planeDrawables;
 
     void initMenuButtons();
     void createObject(osg::Group *parent, osg::Vec3f pos);
+    void createConvexPolygon(osg::Group *parent, osg::Vec3f pos);
 public:
     bool init();
     void menuCallback(cvr::MenuItem * item);
     void preFrame();
+    void postFrame();
 };
 
 #endif

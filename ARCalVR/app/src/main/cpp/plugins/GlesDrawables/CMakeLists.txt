@@ -3,6 +3,7 @@ SET(LIB_NAME GlesDrawables)
 ADD_LIBRARY(${LIB_NAME}
     STATIC
     drawablesEntrance.cpp
+    planeDrawable.cpp
     pointDrawable.cpp)
 
 add_definitions(-DNDEBUG)
