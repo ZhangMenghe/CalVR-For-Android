@@ -22,7 +22,7 @@ private:
     float *pointCloudData;
 
 public:
-    void Initialization(std::stack<cvr::glState>* stateStack);
+    void Initialization();
     void updateOnFrame();
     void drawImplementation(osg::RenderInfo&) const;
 };

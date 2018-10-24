@@ -41,10 +41,10 @@ protected:
     cvr::MenuButton *_pointButton, *_planeButton, *_strokeButton;
     osg::ref_ptr<osg::Group> _root;
     cvr::SceneObject *rootSO;
-    std::stack<cvr::glState> _glStateStack;
     osg::ref_ptr<pointDrawable> _pointcloudDrawable;
 
     void initMenuButtons();
+    void createObject(osg::Group *parent, osg::Vec3f pos);
 public:
     bool init();
     void menuCallback(cvr::MenuItem * item);

@@ -6,6 +6,8 @@
 #include <GLES2/gl2ext.h>
 #include "bgDrawable.h"
 #include <cvrUtil/AndroidHelper.h>
+#include <cvrUtil/AndroidStdio.h>
+
 void bgDrawable::Initialization(){
     cvr::glesDrawable::Initialization();
 

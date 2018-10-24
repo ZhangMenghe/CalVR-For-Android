@@ -72,7 +72,7 @@ protected:
     cvr::MenuButton * _addButton, *_pointButton, *_planeButton, *_addAndyButton, *_delAndyButton;
     osg::ref_ptr<osg::Group> _menu, _scene;
     cvr::SceneObject *rootSO, *sceneSO, *menuSo;
-    cvr::assetLoader* _assetHelper;
+
     bool _planeTurnedOn;
     std::vector<osg::Uniform *> _uniform_mvps;
     int _sphereNum = 0;

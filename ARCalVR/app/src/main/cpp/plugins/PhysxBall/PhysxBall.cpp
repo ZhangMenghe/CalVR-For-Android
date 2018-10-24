@@ -39,13 +39,13 @@ public:
     }
 };
 
-class mvpCallback:public osg::UniformCallback{
-public:
-    virtual void operator()(Uniform *uf, NodeVisitor *nv){
-        uf->set(Matrixf(glm::value_ptr(ARcoreHelper::instance()->getMVPMatrix())));
-        uf->dirty();
-    }
-};
+//class mvpCallback:public osg::UniformCallback{
+//public:
+//    virtual void operator()(Uniform *uf, NodeVisitor *nv){
+//        uf->set(Matrixf(glm::value_ptr(ARcoreHelper::instance()->getMVPMatrix())));
+//        uf->dirty();
+//    }
+//};
 
 void UpdateActorCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
@@ -139,7 +139,7 @@ bool PhysxBall::init() {
     if(!_phyEngine->init())
         return false;
     _phyEngine->addScene("main");
-    _assetHelper = new assetLoader(_asset_manager);
+
     _planeTurnedOn = ARcoreHelper::instance()->getPlaneStatus();
     createPlane(_scene, Vec3f(.0f, .0f, -0.5f));
 
@@ -274,7 +274,7 @@ void PhysxBall::createObject(osg::Group *parent, Vec3f pos) {
     osg::ref_ptr<Node> objNode = osgDB::readNodeFile(fhead + "models/cow.osgt");
 
     ///////use shader
-    Program * program =_assetHelper->createShaderProgramFromFile("shaders/lightingOSG_test.vert","shaders/osgLightTexture.frag");
+    Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/lightingOSG_test.vert","shaders/osgLightTexture.frag");
     osg::StateSet * stateSet = objNode->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
 
@@ -336,7 +336,7 @@ ref_ptr<MatrixTransform> PhysxBall::addSphere(osg::Group*parent, Vec3f pos, floa
     shape->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
     ///////use shader
-    Program * program =_assetHelper->createShaderProgramFromFile("shaders/lightingOSG.vert","shaders/lightingOSG.frag");
+    Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/lightingOSG.vert","shaders/lightingOSG.frag");
     osg::StateSet * stateSet = shape->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
 

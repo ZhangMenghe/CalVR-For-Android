@@ -2,10 +2,11 @@
 #include <stack>
 #include <GLES3/gl3.h>
 #include <cvrUtil/ARCoreManager.h>
+#include <cvrUtil/AndroidHelper.h>
 
 
-void pointDrawable::Initialization(std::stack<cvr::glState>* stateStack){
-    cvr::glesDrawable::Initialization(stateStack);
+void pointDrawable::Initialization(){
+    cvr::glesDrawable::Initialization();
     _shader_program = cvr::assetLoader::instance()->createGLShaderProgramFromFile("shaders/point.vert", "shaders/point.frag");
 
     _attrib_vertices = glGetAttribLocation(_shader_program,"vPosition");
@@ -33,7 +34,7 @@ void pointDrawable::Initialization(std::stack<cvr::glState>* stateStack){
 }
 
 void pointDrawable::drawImplementation(osg::RenderInfo&) const{
-    PushAllState();
+    cvr::glStateStack::instance()->PushAllState();
 
     glUseProgram(_shader_program);
     glUniformMatrix4fv(_uniform_arMVP_mat, 1, GL_FALSE, _mvpMat.ptr());
@@ -42,7 +43,7 @@ void pointDrawable::drawImplementation(osg::RenderInfo&) const{
     glBindVertexArray(0);
     glUseProgram(0);
 
-    PopAllState();
+    cvr::glStateStack::instance()->PopAllState();
 }
 void pointDrawable::updateOnFrame() {
     _mvpMat = cvr::ARCoreManager::instance()->getMVPMatrix();
