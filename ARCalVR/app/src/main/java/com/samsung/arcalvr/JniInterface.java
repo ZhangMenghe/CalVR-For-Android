@@ -40,18 +40,4 @@ public class JniInterface {
     public static native void JNIonDestroy();
 
     public static native float JNIgetFPS();
-
-    public static Bitmap loadImage(String imageName) {
-
-        try {
-            return BitmapFactory.decodeStream(assetManager.open(imageName));
-        } catch (IOException e) {
-            Log.e(TAG, "Cannot open image " + imageName);
-            return null;
-        }
-    }
-
-    public static void loadTexture(int target, Bitmap bitmap) {
-        GLUtils.texImage2D(target, 0, bitmap, 0);
-    }
 }

@@ -1,5 +1,6 @@
 package com.samsung.arcalvr;
 
+import android.content.Intent;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.File;
@@ -89,6 +91,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
     private void setupLabelandButton(){
+// add button actions
+        final Button restart_bnt = (Button)findViewById(R.id.restart_button);
+        restart_bnt.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent restartIntent = getBaseContext().getPackageManager()
+                        .getLaunchIntentForPackage(getBaseContext().getPackageName());
+                restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                finish();
+                JniInterface.JNIonDestroy();
+                startActivity(restartIntent);
+            }
+        });
         MovableFloatingActionButton track_bnt = findViewById(R.id.fab);
         track_bnt.bringToFront();
 
