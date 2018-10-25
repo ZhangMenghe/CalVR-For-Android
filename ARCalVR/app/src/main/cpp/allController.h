@@ -16,6 +16,8 @@ protected:
     // AUX OSG Node & drawable
     osg::ref_ptr<osg::Group>  _root, _sceneGroup;
     bgDrawable *_bgDrawable;
+    float _touchX, _touchY;
+    bool _detectStart = false;
 
     osg::ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3f pos);
 

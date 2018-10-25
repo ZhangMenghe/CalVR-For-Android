@@ -42,6 +42,9 @@ bool GlesDrawables::init() {
     rootSO->dirtyBounds();
     rootSO->attachToScene();
 
+    _strokeDrawable = new strokeDrawable;
+    _root->addChild(_strokeDrawable->createDrawableNode());
+
     _pointcloudDrawable = new pointDrawable;
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
@@ -67,6 +70,14 @@ void GlesDrawables::postFrame() {
     auto planeIt = map.begin();
     for(int i=0; i<_plane_num; i++,planeIt++)
         _planeDrawables[i]->updateOnFrame(planeIt->first, planeIt->second);
+    Vec3f isPoint;Vec2f offset;
+    if(TrackingManager::instance()->getIsPoint(isPoint)){
+        TrackingManager::instance()->getTouchOffset(offset);
+        _strokeDrawable->updateOnFrame(TrackingManager::instance()->getHandMat(0).getTrans(),
+                                       isPoint, offset);
+        _strokeDrawable->getGLNode()->setNodeMask(0xFFFFFF);
+    } else
+        _strokeDrawable->getGLNode()->setNodeMask(0x0);
 }
 
 

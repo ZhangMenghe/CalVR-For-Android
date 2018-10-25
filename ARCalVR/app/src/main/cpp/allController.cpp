@@ -56,9 +56,18 @@ void allController::onResume(void * env, void* context, void* activity){
 void allController::onDrawFrame(){
     _CalVR->frame();
     _bgDrawable->updateOnFrame(ARCoreManager::instance()->getCameraTransformedUVs());
+
+    if(_detectStart){
+        //shoot the ray to check the interaction with menu
+        MouseInteractionEvent * mie = new MouseInteractionEvent();
+        mie->setInteraction(BUTTON_DRAG);
+        _CalVR->setMouseEvent(mie, 1, _touchX, _touchY);
+        TrackingManager::instance()->setTouchMovePosition(_touchX,_touchY);
+    }
 }
 
 void allController::onViewChanged(int rot, int width, int height){
+    _touchX = width/2; _touchY = height/2;
     _CalVR->onViewChanged(rot, width, height);
 }
 
@@ -66,9 +75,17 @@ void allController::onSingleFingerDoubleTouch(float x, float y){
 
 }
 
-void allController::onSingleTouchDown(int pointer_num, float x, float y){}
+void allController::onSingleTouchDown(int pointer_num, float x, float y){
+    MouseInteractionEvent * mie = new MouseInteractionEvent();
+    mie->setInteraction(BUTTON_DOWN);
+    _CalVR->setMouseEvent(mie, pointer_num, x, y);
+}
 
-void allController::onSingleTouchUp(int pointer_num, float x, float y){}
+void allController::onSingleTouchUp(int pointer_num, float x, float y){
+    MouseInteractionEvent * mie = new MouseInteractionEvent();
+    mie->setInteraction(BUTTON_UP);
+    _CalVR->setMouseEvent(mie, pointer_num, x, y);
+}
 
 void allController::onDoubleTouch(int pointer_num, float x, float y){
     if(pointer_num == 1){
@@ -80,7 +97,13 @@ void allController::onDoubleTouch(int pointer_num, float x, float y){
     }
 }
 
-void allController::onTouchMove(int pointer_num, float x, float y){}
+void allController::onTouchMove(int pointer_num, float x, float y){
+    _detectStart = true;
+    _touchX = x; _touchY = y;
+    MouseInteractionEvent * mie = new MouseInteractionEvent();
+    mie->setInteraction(BUTTON_DRAG);
+    _CalVR->setMouseEvent(mie, pointer_num, x, y);
+}
 
 float allController::getFPS(){return 60.0f;}
 

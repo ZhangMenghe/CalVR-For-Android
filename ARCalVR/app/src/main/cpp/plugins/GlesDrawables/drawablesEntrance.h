@@ -32,6 +32,7 @@
 
 #include "pointDrawable.h"
 #include "planeDrawable.h"
+#include "strokeDrawable.h"
 
 class GlesDrawables : public cvr::CVRPlugin, public cvr::MenuCallback
 {
@@ -45,6 +46,7 @@ protected:
     osg::ref_ptr<pointDrawable> _pointcloudDrawable;
     int _plane_num = 0;
     std::vector<planeDrawable*> _planeDrawables;
+    osg::ref_ptr<strokeDrawable> _strokeDrawable;
 
     void initMenuButtons();
     void createObject(osg::Group *parent, osg::Vec3f pos);
