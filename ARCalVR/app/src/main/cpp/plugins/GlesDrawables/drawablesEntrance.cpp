@@ -46,7 +46,7 @@ bool GlesDrawables::init() {
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
 //    createConvexPolygon(_root, Vec3f(.0,.0,.0));
-    createObject(_root, Vec3f(.0,.0,-0.1f)); // opengl coordinate
+//    createObject(_root, Vec3f(.0,.0,-0.1f)); // opengl coordinate
     return true;
 }
 
@@ -90,10 +90,6 @@ void GlesDrawables::createObject(osg::Group *parent, Vec3f pos) {
     stateSet->addUniform( new osg::Uniform("lightPosition",
                                            osg::Vec3(0,0,1)));
     stateSet->addUniform(new osg::Uniform("uScale", 0.1f));
-
-//    Uniform * mvpUniform = new Uniform(Uniform::FLOAT_MAT4, "uarMVP");
-//    mvpUniform->setUpdateCallback(new mvpCallback);
-//    stateSet->addUniform(mvpUniform);
 
     Uniform * viewUniform = new Uniform(Uniform::FLOAT_MAT4, "uView");
     viewUniform->setUpdateCallback(new viewMatrixCallback);

@@ -8,8 +8,6 @@ void planeDrawable::_update_plane_vertices() {
     for(int32_t i=0; i<_vertices_num; i++)
         _vertices.push_back(osg::Vec3f(raw_vertices[2*i], raw_vertices[2*i+1], .0f));
 
-//    _normal_vec = getPlaneNormal(*arSession, *arPose);
-
     // Feather distance 0.2 meters.
     const float kFeatherLength = 0.2f;
     // Feather scale over the distance between plane center and vertices.
@@ -62,10 +60,27 @@ void planeDrawable::Initialization(){
     //Init attribs & uniforms
     _attrib_vertices = glGetAttribLocation(_shader_program, "vPosition");
     _uniform_model_mat = glGetUniformLocation(_shader_program, "uModel");
-//    _uniform_normal_vec = glGetUniformLocation(_shader_program, "uNormal");
+    _uniform_normal_vec = glGetUniformLocation(_shader_program, "uNormal");
     _uniform_mvp_mat = glGetUniformLocation(_shader_program, "uMVP");
     _uniform_tex_sampler = glGetUniformLocation(_shader_program, "uTexture");
     _uniform_color = glGetUniformLocation(_shader_program, "uColor");
+
+
+    std::string fhead(getenv("CALVR_RESOURCE_DIR"));
+    osg::Image * img = osgDB::readImageFile(fhead+"textures/trigrid.png");
+    GLuint texture_map;
+    glGenTextures(1, &texture_map);
+    glBindTexture(GL_TEXTURE_2D, texture_map);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 200, 200, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->getDataPointer());
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
 
     //Generate VAO and bind
     glGenVertexArrays(1, &_VAO);
@@ -91,7 +106,9 @@ void planeDrawable::Initialization(){
 }
 
 void planeDrawable::updateOnFrame(ArPlane* plane, osg::Vec3f color) {
-    if(cvr::ARCoreManager::instance()->getPlaneData(plane, raw_vertices, _model_mat, _vertices_num))
+    if(cvr::ARCoreManager::instance()->getPlaneData(plane, raw_vertices,
+                                                    _model_mat, _normal_vec,
+                                                    _vertices_num))
         _update_plane_vertices();
 
     _view_proj_mat = cvr::ARCoreManager::instance()->getMVPMatrix();
@@ -124,7 +141,7 @@ void planeDrawable::drawImplementation(osg::RenderInfo&) const{
     glBindTexture(GL_TEXTURE_2D, _texture_id);
 
     glUniformMatrix4fv(_uniform_mvp_mat, 1, GL_FALSE, _view_proj_mat.ptr());
-//    glUniform3f(_uniform_normal_vec, _normal_vec.x(), _normal_vec.y(), _normal_vec.z());
+    glUniform3f(_uniform_normal_vec, _normal_vec.x(), _normal_vec.y(), _normal_vec.z());
     glUniformMatrix4fv(_uniform_model_mat, 1, GL_FALSE, _model_mat.ptr());
 
     glBindVertexArray(_VAO);
