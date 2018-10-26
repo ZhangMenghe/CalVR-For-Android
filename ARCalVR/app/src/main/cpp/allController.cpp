@@ -125,6 +125,9 @@ ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
 
     stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
 
+    Uniform * baseColor = new osg::Uniform("uBaseColor", osg::Vec4f(1.0f, .0f, .0f, 1.0f));
+    stateSet->addUniform(baseColor);
+
     node->addDrawable(shape.get());
 
     return node;

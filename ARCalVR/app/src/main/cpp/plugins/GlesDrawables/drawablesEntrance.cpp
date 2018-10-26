@@ -6,10 +6,25 @@
 #include "planeDrawable.h"
 #include <osg/Texture2D>
 #include <cvrUtil/AndroidHelper.h>
+#include <osg/ShapeDrawable>
 
 using namespace osg;
 using namespace cvr;
+void GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection result ){
+    for(auto itr = result.drawable->getParents().begin(); itr!=result.drawable->getParents().end(); itr++){
+       auto got = _obj_color_map.find((*itr)->getName());
 
+        if(got!=_obj_color_map.end()){
+            IsectInfo isect;
+            isect.point = result.getWorldIntersectPoint();
+            isect.normal = result.getWorldIntersectNormal();
+            isect.geode = dynamic_cast<Geode*>(*itr);
+            TrackingManager::instance()->setIntersectPoint(isect.point);
+            _obj_color_map[isect.geode->getName()]->set(Vec4f(.0f,1.0f,.0f,1.0f));
+            return;
+        }
+    }
+}
 void GlesDrawables::initMenuButtons() {
     _pointButton = new MenuButton("Show PointCloud");
     _pointButton->setCallback(this);
@@ -32,6 +47,9 @@ bool GlesDrawables::init() {
     initMenuButtons();
 
     _root = new Group;
+    _objects = new Group;
+    _root->addChild(_objects);
+
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     //bool navigation, bool movable, bool clip, bool contextMenu, bool showBounds
@@ -49,13 +67,30 @@ bool GlesDrawables::init() {
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
 //    createConvexPolygon(_root, Vec3f(.0,.0,.0));
-//    createObject(_root, Vec3f(.0,.0,-0.1f)); // opengl coordinate
+//    createObject(_objects, Vec3f(.0,.0,-0.1f)); // opengl coordinate
+    createDebugOSGSphere(_objects, Vec3f(.0,0.5f,.0f));
     return true;
 }
 
 void GlesDrawables::menuCallback(cvr::MenuItem *item) {
 }
-void GlesDrawables::preFrame() {}
+void GlesDrawables::preFrame() {
+    //TODO:MAKE IT AVIALIABLE IN CALVR
+    osg::Vec3 pointerStart, pointerEnd;
+    pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
+    pointerEnd.set(0.0f,10000.0f,0.0f);
+    pointerEnd = pointerEnd * TrackingManager::instance()->getHandMat(0);
+    //Add intersection detector
+
+    osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
+    osgUtil::IntersectionVisitor iv( handseg.get() );
+    _objects->accept( iv );
+    if ( handseg->containsIntersections()){
+//        osgUtil::LineSegmentIntersector::Intersection &result = *(handseg->getIntersections().begin());
+        for(auto itr=handseg->getIntersections().begin(); itr!=handseg->getIntersections().end(); itr++)
+            tackleHitted(*itr);
+    }
+}
 void GlesDrawables::postFrame() {
     _pointcloudDrawable->updateOnFrame();
     cvr::planeMap map = ARCoreManager::instance()->getPlaneMap();
@@ -82,15 +117,18 @@ void GlesDrawables::postFrame() {
 
 
 void GlesDrawables::createObject(osg::Group *parent, Vec3f pos) {
-    osg::ref_ptr<osg::MatrixTransform> objectTrans = new MatrixTransform;
+    Transform objectTrans = new MatrixTransform;
 
     std::string fhead(getenv("CALVR_RESOURCE_DIR"));
     osg::ref_ptr<Node> objNode = osgDB::readNodeFile(fhead + "models/box.osgt");
-
+    objectTrans->setName("miemiemie");
     ///////use shader
     Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/object.vert","shaders/object.frag");
     osg::StateSet * stateSet = objNode->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
+
+    Uniform * baseColor = new osg::Uniform("uBaseColor", osg::Vec4f(1.0f, .0f, .0f, 1.0f));
+    stateSet->addUniform(baseColor);
 
     stateSet->addUniform( new osg::Uniform("lightDiffuse",
                                            osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
@@ -129,6 +167,7 @@ void GlesDrawables::createObject(osg::Group *parent, Vec3f pos) {
 
     objectTrans->addChild(objNode.get());
     parent->addChild(objectTrans.get());
+    _obj_color_map[objectTrans->getName()] = baseColor;
 }
 void GlesDrawables::createConvexPolygon(osg::Group *parent, osg::Vec3f pos){
     // The vertex array shared by both the polygon and the border
@@ -191,4 +230,30 @@ void GlesDrawables::createConvexPolygon(osg::Group *parent, osg::Vec3f pos){
     stateSet->addUniform(modelUniform);
 
     parent->addChild(geode);
+}
+void GlesDrawables::createDebugOSGSphere(osg::Group *parent,osg::Vec3 pos) {
+    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
+    shape->setShape(new osg::Sphere(pos, 0.05f));
+    shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
+    osg::ref_ptr<osg::Geode> node = new osg::Geode;
+    Program * program = assetLoader::instance()->createShaderProgramFromFile("shaders/lighting.vert","shaders/lighting.frag");
+
+    osg::StateSet * stateSet = shape->getOrCreateStateSet();
+    stateSet->setAttributeAndModes(program);
+
+    stateSet->addUniform( new osg::Uniform("lightDiffuse",
+                                           osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("lightSpecular",
+                                           osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
+
+    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
+
+    Uniform * baseColor = new osg::Uniform("uBaseColor", osg::Vec4f(1.0f, .0f, .0f, 1.0f));
+    stateSet->addUniform(baseColor);
+
+    node->addDrawable(shape.get());
+    node->setName("miemie");
+    _obj_color_map[node->getName()] = baseColor;
+    parent->addChild(node);
 }
