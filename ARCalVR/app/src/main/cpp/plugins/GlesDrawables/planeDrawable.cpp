@@ -77,7 +77,8 @@ void planeDrawable::Initialization(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 200, 200, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->getDataPointer());
+//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img->getsize, 200, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->getDataPointer());
+    glTexImage2D(GL_TEXTURE_2D,0,0,0,img->s(),img->t(),img->getPixelFormat(),img->getDataType(),img->getDataPointer());
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 

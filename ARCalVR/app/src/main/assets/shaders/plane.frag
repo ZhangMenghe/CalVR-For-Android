@@ -1,6 +1,6 @@
-//uniform sampler2D uTexture;
+uniform sampler2D uTexture;
 uniform vec3 uColor;
-//varying vec2 v_textureCoords;
+varying vec2 v_textureCoords;
 varying float v_alpha;
 
 void main() {

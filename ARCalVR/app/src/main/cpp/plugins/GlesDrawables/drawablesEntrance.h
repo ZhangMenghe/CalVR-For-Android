@@ -48,6 +48,10 @@ protected:
     osg::ref_ptr<strokeDrawable> _strokeDrawable;
     std::unordered_map<std::string, osg::Uniform*> _obj_color_map;
 
+    int _hitTimes = 0;
+    const osg::Vec4f _switchColor[2] = {osg::Vec4f(.0f,1.0f,.0f,1.0f),
+                                        osg::Vec4f(1.0f,.0f,.0f,1.0f)};
+
     void initMenuButtons();
     void createObject(osg::Group *parent, osg::Vec3f pos);
     void createConvexPolygon(osg::Group *parent, osg::Vec3f pos);

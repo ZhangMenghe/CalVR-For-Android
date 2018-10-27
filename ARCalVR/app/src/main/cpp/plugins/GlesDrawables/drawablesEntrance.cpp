@@ -13,14 +13,15 @@ using namespace cvr;
 void GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection result ){
     for(auto itr = result.drawable->getParents().begin(); itr!=result.drawable->getParents().end(); itr++){
        auto got = _obj_color_map.find((*itr)->getName());
-
+        LOGE("====%s", (*itr)->getName().c_str());
         if(got!=_obj_color_map.end()){
             IsectInfo isect;
             isect.point = result.getWorldIntersectPoint();
             isect.normal = result.getWorldIntersectNormal();
             isect.geode = dynamic_cast<Geode*>(*itr);
             TrackingManager::instance()->setIntersectPoint(isect.point);
-            _obj_color_map[isect.geode->getName()]->set(Vec4f(.0f,1.0f,.0f,1.0f));
+            _obj_color_map[isect.geode->getName()]->set(Vec4f(.0f, 1.0f, .0f, 1.0f));
+
             return;
         }
     }
@@ -67,8 +68,9 @@ bool GlesDrawables::init() {
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
 //    createConvexPolygon(_root, Vec3f(.0,.0,.0));
-//    createObject(_objects, Vec3f(.0,.0,-0.1f)); // opengl coordinate
-    createDebugOSGSphere(_objects, Vec3f(.0,0.5f,.0f));
+    createObject(_objects, Vec3f(.0,.0,-0.1f)); // opengl coordinate
+//    createDebugOSGSphere(_objects, Vec3f(.0,0.5f,.0f));
+
     return true;
 }
 
@@ -86,7 +88,6 @@ void GlesDrawables::preFrame() {
     osgUtil::IntersectionVisitor iv( handseg.get() );
     _objects->accept( iv );
     if ( handseg->containsIntersections()){
-//        osgUtil::LineSegmentIntersector::Intersection &result = *(handseg->getIntersections().begin());
         for(auto itr=handseg->getIntersections().begin(); itr!=handseg->getIntersections().end(); itr++)
             tackleHitted(*itr);
     }
@@ -120,8 +121,8 @@ void GlesDrawables::createObject(osg::Group *parent, Vec3f pos) {
     Transform objectTrans = new MatrixTransform;
 
     std::string fhead(getenv("CALVR_RESOURCE_DIR"));
-    osg::ref_ptr<Node> objNode = osgDB::readNodeFile(fhead + "models/box.osgt");
-    objectTrans->setName("miemiemie");
+    osg::ref_ptr<Node> objNode = osgDB::readNodeFile(fhead + "models/andy.obj");
+    objNode->setName("Andy_GEO");
     ///////use shader
     Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/object.vert","shaders/object.frag");
     osg::StateSet * stateSet = objNode->getOrCreateStateSet();
@@ -167,7 +168,7 @@ void GlesDrawables::createObject(osg::Group *parent, Vec3f pos) {
 
     objectTrans->addChild(objNode.get());
     parent->addChild(objectTrans.get());
-    _obj_color_map[objectTrans->getName()] = baseColor;
+    _obj_color_map[objNode->getName()] = baseColor;
 }
 void GlesDrawables::createConvexPolygon(osg::Group *parent, osg::Vec3f pos){
     // The vertex array shared by both the polygon and the border

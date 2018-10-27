@@ -39,8 +39,8 @@ void allController::onCreate(const char * calvr_path){
 
     _sceneGroup->addChild(_CalVR->getSceneRoot());
 //    _sceneGroup->addChild(createDebugOSGSphere(Vec3f(.0f, 0.5f, .0f)));
-    _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
-    _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
+    _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2, "RenderBin");
+    _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
     _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
     _CalVR->setSceneData(_root.get());
 }
@@ -71,9 +71,7 @@ void allController::onViewChanged(int rot, int width, int height){
     _CalVR->onViewChanged(rot, width, height);
 }
 
-void allController::onSingleFingerDoubleTouch(float x, float y){
-
-}
+void allController::onSingleFingerDoubleTouch(float x, float y){}
 
 void allController::onSingleTouchDown(int pointer_num, float x, float y){
     MouseInteractionEvent * mie = new MouseInteractionEvent();
@@ -83,6 +81,7 @@ void allController::onSingleTouchDown(int pointer_num, float x, float y){
 
 void allController::onSingleTouchUp(int pointer_num, float x, float y){
     MouseInteractionEvent * mie = new MouseInteractionEvent();
+
     mie->setInteraction(BUTTON_UP);
     _CalVR->setMouseEvent(mie, pointer_num, x, y);
 }
