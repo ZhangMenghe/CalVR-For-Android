@@ -121,7 +121,7 @@ void GlesDrawables::postFrame() {
                 Matrixf modelMat;
                 if(!ARCoreManager::instance()->getAnchorModelMatrixAt(modelMat, i))
                     break;
-                createObject(_root,"models/andy.obj", "textures/andy.png", modelMat);
+                createObject(_objects,"models/andy.obj", "textures/andy.png", modelMat);
             }
 
         }
@@ -177,6 +177,10 @@ void GlesDrawables::createObject(osg::Group *parent,
     stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
     stateSet->addUniform( new osg::Uniform("lightPosition",
                                            osg::Vec3(0,0,1)));
+
+    Uniform * envColorUniform = new Uniform(Uniform::FLOAT_VEC4, "uColorCorrection");
+    envColorUniform->setUpdateCallback(new envLightCallback);
+    stateSet->addUniform(envColorUniform);
 
     Uniform * viewUniform = new Uniform(Uniform::FLOAT_MAT4, "uView");
     viewUniform->setUpdateCallback(new viewMatrixCallback);
