@@ -54,10 +54,8 @@ protected:
                                         osg::Vec4f(1.0f,.0f,.0f,1.0f)};
 
     void initMenuButtons();
-    void createObject(osg::Group *parent, osg::Matrixf);
-    void createConvexPolygon(osg::Group *parent, osg::Vec3f pos);
+    void createObject(osg::Group *parent, const char* obj_file_name, const char* png_file_name, osg::Matrixf);
     void tackleHitted(osgUtil::LineSegmentIntersector::Intersection result );
-    void createDebugOSGSphere(osg::Group *parent,osg::Vec3 pos);
 public:
     bool init();
     void menuCallback(cvr::MenuItem * item);

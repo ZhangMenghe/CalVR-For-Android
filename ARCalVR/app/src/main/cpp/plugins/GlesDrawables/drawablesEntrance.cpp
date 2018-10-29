@@ -68,7 +68,7 @@ bool GlesDrawables::init() {
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
 //    createConvexPolygon(_root, Vec3f(.0,.0,.0));
-//    createObject(_objects, Vec3f(.0,.0,-0.1f)); // opengl coordinate
+//    createObject(_objects,"models/andy.obj", "textures/andy.png", Matrixf::translate(Vec3f(.0f, .0f, -0.2f)));
 //    createDebugOSGSphere(_objects, Vec3f(.0,0.5f,.0f));
 
     return true;
@@ -123,7 +123,7 @@ void GlesDrawables::postFrame() {
                 Matrixf modelMat;
                 if(!ARCoreManager::instance()->getAnchorModelMatrixAt(modelMat, i))
                     break;
-                createObject(_objects, modelMat);
+                createObject(_objects,"models/andy.obj", "textures/andy.png", modelMat);
             }
 
         }
@@ -132,28 +132,53 @@ void GlesDrawables::postFrame() {
 }
 
 
-void GlesDrawables::createObject(osg::Group *parent, Matrixf modelMat) {
+void GlesDrawables::createObject(osg::Group *parent,
+                                 const char* obj_file_name, const char* png_file_name,
+                                 Matrixf modelMat) {
     Transform objectTrans = new MatrixTransform;
+    ref_ptr<Geometry>_geometry = new osg::Geometry();
+    ref_ptr<Geode> _node = new osg::Geode;
+    _node->addDrawable(_geometry.get());
+
+    ref_ptr<Vec3Array> vertices = new Vec3Array();
+    ref_ptr<Vec3Array> normals = new Vec3Array();
+
+    ref_ptr<Vec2Array> uvs = new Vec2Array();
+
+    std::vector<GLfloat> _vertices;
+    std::vector<GLfloat > _uvs;
+    std::vector<GLfloat > _normals;
+    std::vector<GLushort > _indices;
+
+    assetLoader::instance()->LoadObjFile(obj_file_name, &_vertices, &_normals, &_uvs, &_indices);
+
+
+    for(int i=0; i<_uvs.size()/2; i++){
+        vertices->push_back(Vec3f(_vertices[3*i], _vertices[3*i+1], _vertices[3*i+2]));
+        normals->push_back(Vec3f(_normals[3*i], _normals[3*i+1], _normals[3*i+2]));
+        uvs->push_back(Vec2f(_uvs[2*i], _uvs[2*i+1]));
+    }
+
+    _geometry->setVertexArray(vertices.get());
+    _geometry->setNormalArray(normals.get());
+    _geometry->setTexCoordArray(0, uvs.get());
+    _geometry->addPrimitiveSet(new DrawElementsUShort(GL_TRIANGLES, _indices.size(), _indices.data()));
+    _geometry->setUseVertexBufferObjects(true);
+    _geometry->setUseDisplayList(false);
 
     std::string fhead(getenv("CALVR_RESOURCE_DIR"));
-    osg::ref_ptr<Node> objNode = osgDB::readNodeFile(fhead + "models/andy.obj");
 
     Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/object.vert","shaders/object.frag");
-    osg::StateSet * stateSet = objNode->getOrCreateStateSet();
+    osg::StateSet * stateSet = _node->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
-
-    Uniform * baseColor = new osg::Uniform("uBaseColor", osg::Vec4f(1.0f, .0f, .0f, 1.0f));
-    stateSet->addUniform(baseColor);
 
     stateSet->addUniform( new osg::Uniform("lightDiffuse",
                                            osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
     stateSet->addUniform( new osg::Uniform("lightSpecular",
                                            osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
-    stateSet->addUniform( new osg::Uniform("shininess",
-                                           64.0f) );
+    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
     stateSet->addUniform( new osg::Uniform("lightPosition",
                                            osg::Vec3(0,0,1)));
-    stateSet->addUniform(new osg::Uniform("uScale", 0.1f));
 
     Uniform * viewUniform = new Uniform(Uniform::FLOAT_MAT4, "uView");
     viewUniform->setUpdateCallback(new viewMatrixCallback);
@@ -170,105 +195,17 @@ void GlesDrawables::createObject(osg::Group *parent, Matrixf modelMat) {
 
 
     osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
-    texture->setImage( osgDB::readImageFile(fhead+"textures/andy.png") );
+    texture->setImage( osgDB::readImageFile(fhead+png_file_name) );
     texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
     texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
     texture->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR );
     texture->setFilter( osg::Texture::MAG_FILTER, osg::Texture::LINEAR );
 
 
-    stateSet->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
+    stateSet->setTextureAttributeAndModes(0, texture.get());
     stateSet->addUniform(new osg::Uniform("uSampler", 0));
+    stateSet->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
-    objectTrans->addChild(objNode.get());
+    objectTrans->addChild(_node.get());
     parent->addChild(objectTrans.get());
-    _obj_color_map[objNode->getName()] = baseColor;
-}
-void GlesDrawables::createConvexPolygon(osg::Group *parent, osg::Vec3f pos){
-    // The vertex array shared by both the polygon and the border
-    osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array(8);
-    (*vertices)[0].set( 0.0f, 0.0f, 0.0f );
-    (*vertices)[1].set( 3.0f, 0.0f, 0.0f );
-    (*vertices)[2].set( 3.0f, 0.0f, 3.0f );
-    (*vertices)[3].set( 0.0f, 0.0f, 3.0f );
-    (*vertices)[4].set( 1.0f, 0.0f, 1.0f );
-    (*vertices)[5].set( 2.0f, 0.0f, 1.0f );
-    (*vertices)[6].set( 2.0f, 0.0f, 2.0f );
-    (*vertices)[7].set( 1.0f, 0.0f, 2.0f );
-
-    // The normal array
-    osg::ref_ptr<osg::Vec3Array> normals = new osg::Vec3Array(1);
-    (*normals)[0].set( 0.0f,-1.0f, 0.0f );
-
-    // Construct the polygon geometry
-    osg::ref_ptr<osg::Geometry> polygon = new osg::Geometry;
-    polygon->setVertexArray( vertices.get() );
-    polygon->setNormalArray( normals.get() );
-    polygon->setNormalBinding( osg::Geometry::BIND_OVERALL );
-    polygon->addPrimitiveSet( new osg::DrawArrays(GL_QUADS, 0, 4) );
-    polygon->addPrimitiveSet( new osg::DrawArrays(GL_QUADS, 4, 4) );
-
-    osgUtil::Tessellator tessellator;
-    tessellator.setTessellationType( osgUtil::Tessellator::TESS_TYPE_GEOMETRY );
-    tessellator.setWindingType( osgUtil::Tessellator::TESS_WINDING_ODD );
-    tessellator.retessellatePolygons( *polygon );
-
-    // Construct the borderlines geometry
-    osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(1);
-    (*colors)[0].set( 1.0f, 1.0f, 0.0f, 1.0f );
-
-    osg::ref_ptr<osg::Geometry> border = new osg::Geometry;
-    border->setVertexArray( vertices.get() );
-    border->setColorArray( colors.get() );
-    border->setColorBinding( osg::Geometry::BIND_OVERALL );
-    border->addPrimitiveSet( new osg::DrawArrays(GL_LINE_LOOP, 0, 4) );
-    border->addPrimitiveSet( new osg::DrawArrays(GL_LINE_LOOP, 4, 4) );
-    border->getOrCreateStateSet()->setAttribute( new osg::LineWidth(5.0f) );
-
-    // Add them to the scene graph
-    osg::ref_ptr<osg::Geode> geode = new osg::Geode;
-    geode->addDrawable( polygon.get() );
-    geode->addDrawable( border.get() );
-
-    ///////use shader
-    Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/polygon.vert","shaders/polygon.frag");
-    osg::StateSet * stateSet = geode->getOrCreateStateSet();
-    stateSet->setAttributeAndModes(program);
-
-    Uniform * mvpUniform = new Uniform(Uniform::FLOAT_MAT4, "uarMVP");
-    mvpUniform->setUpdateCallback(new mvpCallback);
-    stateSet->addUniform(mvpUniform);
-
-    //uModel
-    Uniform * modelUniform = new Uniform(Uniform::FLOAT_MAT4, "uModel");
-    modelUniform->set(Matrixf::translate(pos));
-    stateSet->addUniform(modelUniform);
-
-    parent->addChild(geode);
-}
-void GlesDrawables::createDebugOSGSphere(osg::Group *parent,osg::Vec3 pos) {
-    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
-    shape->setShape(new osg::Sphere(pos, 0.05f));
-    shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
-    osg::ref_ptr<osg::Geode> node = new osg::Geode;
-    Program * program = assetLoader::instance()->createShaderProgramFromFile("shaders/lighting.vert","shaders/lighting.frag");
-
-    osg::StateSet * stateSet = shape->getOrCreateStateSet();
-    stateSet->setAttributeAndModes(program);
-
-    stateSet->addUniform( new osg::Uniform("lightDiffuse",
-                                           osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
-    stateSet->addUniform( new osg::Uniform("lightSpecular",
-                                           osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
-    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
-
-    stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
-
-    Uniform * baseColor = new osg::Uniform("uBaseColor", osg::Vec4f(1.0f, .0f, .0f, 1.0f));
-    stateSet->addUniform(baseColor);
-
-    node->addDrawable(shape.get());
-    node->setName("miemie");
-    _obj_color_map[node->getName()] = baseColor;
-    parent->addChild(node);
 }
