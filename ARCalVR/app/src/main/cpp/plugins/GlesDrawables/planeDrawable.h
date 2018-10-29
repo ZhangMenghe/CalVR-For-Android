@@ -4,6 +4,7 @@
 #include <cvrUtil/glesDrawable.h>
 #include <cvrUtil/ARCoreManager.h>
 #define MAX_PLANE_VERTICES 100
+#define BUFFER_OFFSET(i) ((GLushort *)NULL + (i))
 
 class planeDrawable: public cvr::glesDrawable {
 private:
@@ -26,6 +27,9 @@ private:
     GLint _uniform_model_mat;
     GLint _uniform_color;
 
+    GLuint _VAO;
+    GLuint _VBO;
+    GLuint _EBO;
     void _update_plane_vertices();
 public:
     void updateOnFrame(ArPlane* plane, osg::Vec3f color);
