@@ -67,9 +67,7 @@ bool GlesDrawables::init() {
     _pointcloudDrawable = new pointDrawable;
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
-//    createConvexPolygon(_root, Vec3f(.0,.0,.0));
-//    createObject(_objects,"models/andy.obj", "textures/andy.png", Matrixf::translate(Vec3f(.0f, .0f, -0.2f)));
-//    createDebugOSGSphere(_objects, Vec3f(.0,0.5f,.0f));
+//    createObject(_root,"models/andy.obj", "textures/andy.png", Matrixf::translate(Vec3f(.0f, .0f, -0.2f)));
 
     return true;
 }
@@ -78,19 +76,19 @@ void GlesDrawables::menuCallback(cvr::MenuItem *item) {
 }
 void GlesDrawables::preFrame() {
     //TODO:MAKE IT AVIALIABLE IN CALVR
-    osg::Vec3 pointerStart, pointerEnd;
-    pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
-    pointerEnd.set(0.0f,10000.0f,0.0f);
-    pointerEnd = pointerEnd * TrackingManager::instance()->getHandMat(0);
-    //Add intersection detector
-
-    osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
-    osgUtil::IntersectionVisitor iv( handseg.get() );
-    _objects->accept( iv );
-    if ( handseg->containsIntersections()){
-        for(auto itr=handseg->getIntersections().begin(); itr!=handseg->getIntersections().end(); itr++)
-            tackleHitted(*itr);
-    }
+//    osg::Vec3 pointerStart, pointerEnd;
+//    pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
+//    pointerEnd.set(0.0f,10000.0f,0.0f);
+//    pointerEnd = pointerEnd * TrackingManager::instance()->getHandMat(0);
+//    //Add intersection detector
+//
+//    osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
+//    osgUtil::IntersectionVisitor iv( handseg.get() );
+//    _objects->accept( iv );
+//    if ( handseg->containsIntersections()){
+//        for(auto itr=handseg->getIntersections().begin(); itr!=handseg->getIntersections().end(); itr++)
+//            tackleHitted(*itr);
+//    }
 }
 void GlesDrawables::postFrame() {
     _pointcloudDrawable->updateOnFrame();
@@ -123,7 +121,7 @@ void GlesDrawables::postFrame() {
                 Matrixf modelMat;
                 if(!ARCoreManager::instance()->getAnchorModelMatrixAt(modelMat, i))
                     break;
-                createObject(_objects,"models/andy.obj", "textures/andy.png", modelMat);
+                createObject(_root,"models/andy.obj", "textures/andy.png", modelMat);
             }
 
         }
@@ -202,8 +200,8 @@ void GlesDrawables::createObject(osg::Group *parent,
     texture->setFilter( osg::Texture::MAG_FILTER, osg::Texture::LINEAR );
 
 
-    stateSet->setTextureAttributeAndModes(0, texture.get());
-    stateSet->addUniform(new osg::Uniform("uSampler", 0));
+    stateSet->setTextureAttributeAndModes(1, texture.get());
+    stateSet->addUniform(new osg::Uniform("uSampler", 1));
     stateSet->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     objectTrans->addChild(_node.get());
