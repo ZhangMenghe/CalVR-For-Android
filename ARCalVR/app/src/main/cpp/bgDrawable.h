@@ -8,6 +8,7 @@
 #include <osg/BlendFunc>
 #include <osg/MatrixTransform>
 #include <cvrUtil/glesDrawable.h>
+#include <osg/Depth>
 
 class bgDrawable: public cvr::glesDrawable {
 private:
@@ -32,9 +33,13 @@ public:
     GLuint GetTextureId(){return _texture_id;}
     osg::ref_ptr<osg::Geode> createDrawableNode(){
         glNode = cvr::glesDrawable::createDrawableNode();
-        glNode->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
-        glNode->getOrCreateStateSet()->setRenderBinDetails(1,"RenderBin");
+        glNode->getOrCreateStateSet()->setAttributeAndModes( new osg::Depth(
+            osg::Depth::LEQUAL, 1.0, 1.0) );
+//        glNode->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+//        glNode->getOrCreateStateSet()->setRenderBinDetails(1,"RenderBin");
         return glNode.get();
+
+
     }
 };
 
