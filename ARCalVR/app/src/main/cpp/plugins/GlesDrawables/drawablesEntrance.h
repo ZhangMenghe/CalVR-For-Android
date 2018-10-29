@@ -43,7 +43,8 @@ protected:
     osg::Group *_root, *_objects;
     cvr::SceneObject *rootSO;
     osg::ref_ptr<pointDrawable> _pointcloudDrawable;
-    int _plane_num = 0;
+    int _plane_num = 0, _objNum = 0;
+
     std::vector<planeDrawable*> _planeDrawables;
     osg::ref_ptr<strokeDrawable> _strokeDrawable;
     std::unordered_map<std::string, osg::Uniform*> _obj_color_map;
@@ -53,7 +54,7 @@ protected:
                                         osg::Vec4f(1.0f,.0f,.0f,1.0f)};
 
     void initMenuButtons();
-    void createObject(osg::Group *parent, osg::Vec3f pos);
+    void createObject(osg::Group *parent, osg::Matrixf);
     void createConvexPolygon(osg::Group *parent, osg::Vec3f pos);
     void tackleHitted(osgUtil::LineSegmentIntersector::Intersection result );
     void createDebugOSGSphere(osg::Group *parent,osg::Vec3 pos);

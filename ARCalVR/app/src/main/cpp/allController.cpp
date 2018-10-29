@@ -71,7 +71,9 @@ void allController::onViewChanged(int rot, int width, int height){
     _CalVR->onViewChanged(rot, width, height);
 }
 
-void allController::onSingleFingerDoubleTouch(float x, float y){}
+void allController::onSingleFingerDoubleTouch(float x, float y){
+    ARCoreManager::instance()->updatePlaneHittest(x,y);
+}
 
 void allController::onSingleTouchDown(int pointer_num, float x, float y){
     MouseInteractionEvent * mie = new MouseInteractionEvent();

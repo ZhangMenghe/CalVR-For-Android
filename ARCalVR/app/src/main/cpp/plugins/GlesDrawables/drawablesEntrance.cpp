@@ -68,7 +68,7 @@ bool GlesDrawables::init() {
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
 //    createConvexPolygon(_root, Vec3f(.0,.0,.0));
-    createObject(_objects, Vec3f(.0,.0,-0.1f)); // opengl coordinate
+//    createObject(_objects, Vec3f(.0,.0,-0.1f)); // opengl coordinate
 //    createDebugOSGSphere(_objects, Vec3f(.0,0.5f,.0f));
 
     return true;
@@ -114,16 +114,30 @@ void GlesDrawables::postFrame() {
         _strokeDrawable->getGLNode()->setNodeMask(0xFFFFFF);
     } else
         _strokeDrawable->getGLNode()->setNodeMask(0x0);
+
+
+    size_t anchor_num = ARCoreManager::instance()->getAnchorSize();
+    if( anchor_num != 0){
+        if(_objNum < anchor_num){
+            for(int i=_objNum; i<anchor_num; i++){
+                Matrixf modelMat;
+                if(!ARCoreManager::instance()->getAnchorModelMatrixAt(modelMat, i))
+                    break;
+                createObject(_objects, modelMat);
+            }
+
+        }
+        _objNum = anchor_num;
+    }
 }
 
 
-void GlesDrawables::createObject(osg::Group *parent, Vec3f pos) {
+void GlesDrawables::createObject(osg::Group *parent, Matrixf modelMat) {
     Transform objectTrans = new MatrixTransform;
 
     std::string fhead(getenv("CALVR_RESOURCE_DIR"));
     osg::ref_ptr<Node> objNode = osgDB::readNodeFile(fhead + "models/andy.obj");
-    objNode->setName("Andy_GEO");
-    ///////use shader
+
     Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/object.vert","shaders/object.frag");
     osg::StateSet * stateSet = objNode->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
@@ -151,12 +165,12 @@ void GlesDrawables::createObject(osg::Group *parent, Vec3f pos) {
 
     //uModel
     Uniform * modelUniform = new Uniform(Uniform::FLOAT_MAT4, "uModel");
-    modelUniform->set(Matrixf::translate(pos));
+    modelUniform->set(modelMat);
     stateSet->addUniform(modelUniform);
 
 
     osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
-    texture->setImage( osgDB::readImageFile(fhead+"textures/test.png") );
+    texture->setImage( osgDB::readImageFile(fhead+"textures/andy.png") );
     texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
     texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
     texture->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR );
