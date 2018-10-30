@@ -67,7 +67,8 @@ bool GlesDrawables::init() {
     _pointcloudDrawable = new pointDrawable;
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
-//    createObject(_root,"models/andy.obj", "textures/andy.png", Matrixf::translate(Vec3f(.0f, .0f, -0.2f)));
+    createObject(_root,"models/jigglypuff.obj", "textures/jigglypuff/body.png",
+                 Matrixf::translate(Vec3f(.0f, .0f, -0.2f)), 0.001f);
 
     return true;
 }
@@ -132,7 +133,7 @@ void GlesDrawables::postFrame() {
 
 void GlesDrawables::createObject(osg::Group *parent,
                                  const char* obj_file_name, const char* png_file_name,
-                                 Matrixf modelMat) {
+                                 Matrixf modelMat, float scalef) {
     Transform objectTrans = new MatrixTransform;
     ref_ptr<Geometry>_geometry = new osg::Geometry();
     ref_ptr<Geode> _node = new osg::Geode;
@@ -192,7 +193,7 @@ void GlesDrawables::createObject(osg::Group *parent,
 
     //uModel
     Uniform * modelUniform = new Uniform(Uniform::FLOAT_MAT4, "uModel");
-    modelUniform->set(modelMat);
+    modelUniform->set(modelMat * Matrixf::scale(Vec3f(scalef,scalef,scalef)));
     stateSet->addUniform(modelUniform);
 
 

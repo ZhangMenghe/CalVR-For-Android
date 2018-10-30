@@ -54,7 +54,8 @@ protected:
                                         osg::Vec4f(1.0f,.0f,.0f,1.0f)};
 
     void initMenuButtons();
-    void createObject(osg::Group *parent, const char* obj_file_name, const char* png_file_name, osg::Matrixf);
+    void createObject(osg::Group *parent, const char* obj_file_name, const char* png_file_name, osg::Matrixf,
+                      float scalef = 1);
     void tackleHitted(osgUtil::LineSegmentIntersector::Intersection result );
 public:
     bool init();
