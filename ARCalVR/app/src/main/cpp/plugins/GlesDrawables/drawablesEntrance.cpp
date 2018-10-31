@@ -11,16 +11,18 @@
 using namespace osg;
 using namespace cvr;
 void GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection result ){
+    LOGE("==== parent Num: %d", result.drawable->getNumParents());
+
     for(auto itr = result.drawable->getParents().begin(); itr!=result.drawable->getParents().end(); itr++){
        auto got = _obj_color_map.find((*itr)->getName());
-        LOGE("====%s", (*itr)->getName().c_str());
+
         if(got!=_obj_color_map.end()){
             IsectInfo isect;
             isect.point = result.getWorldIntersectPoint();
             isect.normal = result.getWorldIntersectNormal();
             isect.geode = dynamic_cast<Geode*>(*itr);
             TrackingManager::instance()->setIntersectPoint(isect.point);
-            _obj_color_map[isect.geode->getName()]->set(Vec4f(.0f, 1.0f, .0f, 1.0f));
+//            _obj_color_map[isect.geode->getName()]->set(Vec4f(.0f, 1.0f, .0f, 1.0f));
 
             return;
         }
@@ -56,6 +58,10 @@ bool GlesDrawables::init() {
     //bool navigation, bool movable, bool clip, bool contextMenu, bool showBounds
     rootSO= new SceneObject("glesRoot", false, false, false, false, false);
     rootSO->addChild(_root);
+//    objSO = new SceneObject("testBoundObj", false, false, false, false, false);
+//    rootSO->addChild(objSO);
+//    objSO->addChild(_objects);
+//    objSO->dirtyBounds();
 
     PluginHelper::registerSceneObject(rootSO, "GlesDrawablesPlugin");
     rootSO->dirtyBounds();
@@ -67,8 +73,9 @@ bool GlesDrawables::init() {
     _pointcloudDrawable = new pointDrawable;
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
-    createObject(_root,"models/jigglypuff.obj", "textures/jigglypuff/body.png",
-                 Matrixf::translate(Vec3f(.0f, .0f, -0.2f)), 0.001f);
+//    createObject(_root,"models/jigglypuff.obj", "textures/jigglypuff/body.png",
+//                 Matrixf::translate(Vec3f(.0f, .0f, -0.2f)), 0.001f);
+//    createObject(_objects, "models/andy-origin.obj", "textures/andy.png", Matrixf::translate(Vec3f(.0f, .0f, -0.1f)));
 
     return true;
 }
@@ -93,6 +100,8 @@ void GlesDrawables::preFrame() {
 }
 void GlesDrawables::postFrame() {
     _pointcloudDrawable->updateOnFrame();
+
+
     cvr::planeMap map = ARCoreManager::instance()->getPlaneMap();
     if(_plane_num < map.size()){
         for(int i= _plane_num; i<map.size();i++){
@@ -105,6 +114,8 @@ void GlesDrawables::postFrame() {
     auto planeIt = map.begin();
     for(int i=0; i<_plane_num; i++,planeIt++)
         _planeDrawables[i]->updateOnFrame(planeIt->first, planeIt->second);
+
+
     Vec3f isPoint;Vec2f offset;
     if(TrackingManager::instance()->getIsPoint(isPoint)){
         TrackingManager::instance()->getTouchOffset(offset);
@@ -122,7 +133,7 @@ void GlesDrawables::postFrame() {
                 Matrixf modelMat;
                 if(!ARCoreManager::instance()->getAnchorModelMatrixAt(modelMat, i))
                     break;
-                createObject(_objects,"models/andy.obj", "textures/andy.png", modelMat);
+                createObject(_objects,"models/andy-origin.obj", "textures/andy.png", modelMat);
             }
 
         }
@@ -135,6 +146,7 @@ void GlesDrawables::createObject(osg::Group *parent,
                                  const char* obj_file_name, const char* png_file_name,
                                  Matrixf modelMat, float scalef) {
     Transform objectTrans = new MatrixTransform;
+    objectTrans->setMatrix(modelMat);
     ref_ptr<Geometry>_geometry = new osg::Geometry();
     ref_ptr<Geode> _node = new osg::Geode;
     _node->addDrawable(_geometry.get());
@@ -183,19 +195,13 @@ void GlesDrawables::createObject(osg::Group *parent,
     envColorUniform->setUpdateCallback(new envLightCallback);
     stateSet->addUniform(envColorUniform);
 
-    Uniform * viewUniform = new Uniform(Uniform::FLOAT_MAT4, "uView");
-    viewUniform->setUpdateCallback(new viewMatrixCallback);
-    stateSet->addUniform(viewUniform);
-
     Uniform * projUniform = new Uniform(Uniform::FLOAT_MAT4, "uProj");
     projUniform->setUpdateCallback(new projMatrixCallback);
     stateSet->addUniform(projUniform);
 
-    //uModel
-    Uniform * modelUniform = new Uniform(Uniform::FLOAT_MAT4, "uModel");
-    modelUniform->set(modelMat * Matrixf::scale(Vec3f(scalef,scalef,scalef)));
-    stateSet->addUniform(modelUniform);
-
+    Uniform * modelViewUniform = new Uniform(Uniform::FLOAT_MAT4, "uModelView");
+    modelViewUniform->setUpdateCallback(new modelViewCallBack(modelMat * Matrixf::scale(Vec3f(scalef,scalef,scalef))));
+    stateSet->addUniform(modelViewUniform);
 
     osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
     texture->setImage( osgDB::readImageFile(fhead+png_file_name) );
