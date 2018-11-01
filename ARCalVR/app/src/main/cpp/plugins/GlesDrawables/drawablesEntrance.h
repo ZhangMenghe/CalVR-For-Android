@@ -41,10 +41,9 @@ protected:
     cvr::SubMenu *_mainMenu;
     cvr::MenuButton *_pointButton, *_planeButton, *_strokeButton;
     osg::Group *_root, *_objects;
-    cvr::SceneObject *rootSO;
+    cvr::SceneObject *rootSO, *objSO;
     osg::ref_ptr<pointDrawable> _pointcloudDrawable;
     int _plane_num = 0, _objNum = 0;
-    int frame_count = 0;
     std::vector<planeDrawable*> _planeDrawables;
     osg::ref_ptr<strokeDrawable> _strokeDrawable;
     std::unordered_map<std::string, osg::Uniform*> _obj_color_map;
@@ -54,8 +53,8 @@ protected:
                                         osg::Vec4f(1.0f,.0f,.0f,1.0f)};
 
     void initMenuButtons();
-    void createObject(osg::Group *parent, const char* obj_file_name, const char* png_file_name, osg::Matrixf,
-                      float scalef = 1);
+    void createObject(osg::Group *, const char*, const char*, osg::Matrixf);
+    void createObject(osg::Group *, const char*, const char*, osg::Matrixf, bool opengl);
     void tackleHitted(osgUtil::LineSegmentIntersector::Intersection result );
 public:
     bool init();

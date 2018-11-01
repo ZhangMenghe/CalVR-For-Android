@@ -51,17 +51,17 @@ bool GlesDrawables::init() {
 
     _root = new Group;
     _objects = new Group;
-    _root->addChild(_objects);
+//    _root->addChild(_objects);
 
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     //bool navigation, bool movable, bool clip, bool contextMenu, bool showBounds
     rootSO= new SceneObject("glesRoot", false, false, false, false, false);
     rootSO->addChild(_root);
-//    objSO = new SceneObject("testBoundObj", false, false, false, false, false);
-//    rootSO->addChild(objSO);
-//    objSO->addChild(_objects);
-//    objSO->dirtyBounds();
+    objSO = new SceneObject("testBoundObj", false, false, false, false, true);
+    rootSO->addChild(objSO);
+    objSO->addChild(_objects);
+    objSO->dirtyBounds();
 
     PluginHelper::registerSceneObject(rootSO, "GlesDrawablesPlugin");
     rootSO->dirtyBounds();
@@ -75,7 +75,9 @@ bool GlesDrawables::init() {
 
 //    createObject(_root,"models/jigglypuff.obj", "textures/jigglypuff/body.png",
 //                 Matrixf::translate(Vec3f(.0f, .0f, -0.2f)), 0.001f);
-    createObject(_objects, "models/andy-origin.obj", "textures/andy.png", Matrixf::translate(Vec3f(.0f, .0f, -0.1f)));
+    createObject(_objects,
+                 "models/andy.obj", "textures/andy.png",
+                 Matrixf::rotate(PI_2f, Vec3f(.0,.0,1.0)) * Matrixf::translate(Vec3f(.0f, 0.5f, .0f)));
 
     return true;
 }
@@ -100,9 +102,6 @@ void GlesDrawables::preFrame() {
 }
 void GlesDrawables::postFrame() {
     _pointcloudDrawable->updateOnFrame();
-
-//    if(frame_count++ == 1)
-//        createObject(_objects,"models/andy-origin.obj", "textures/andy.png", osg::Matrixf::translate(Vec3f(0.01f * (rand()%10), .0f, -0.2f )));
     cvr::planeMap map = ARCoreManager::instance()->getPlaneMap();
     if(_plane_num < map.size()){
         for(int i= _plane_num; i<map.size();i++){
@@ -145,7 +144,77 @@ void GlesDrawables::postFrame() {
 
 void GlesDrawables::createObject(osg::Group *parent,
                                  const char* obj_file_name, const char* png_file_name,
-                                 Matrixf modelMat, float scalef) {
+                                 Matrixf modelMat) {
+    Transform objectTrans = new MatrixTransform;
+    objectTrans->setMatrix(modelMat);
+
+    ref_ptr<Geometry>_geometry = new osg::Geometry();
+    ref_ptr<Geode> _node = new osg::Geode;
+    _node->addDrawable(_geometry.get());
+
+    ref_ptr<Vec3Array> vertices = new Vec3Array();
+    ref_ptr<Vec3Array> normals = new Vec3Array();
+
+    ref_ptr<Vec2Array> uvs = new Vec2Array();
+
+    std::vector<GLfloat> _vertices;
+    std::vector<GLfloat > _uvs;
+    std::vector<GLfloat > _normals;
+    std::vector<GLushort > _indices;
+
+    assetLoader::instance()->LoadObjFile(obj_file_name, &_vertices, &_normals, &_uvs, &_indices);
+
+
+    //REstore in OSG Coord
+    for(int i=0; i<_uvs.size()/2; i++){
+        vertices->push_back(Vec3f(_vertices[3*i], -_vertices[3*i+2], _vertices[3*i+1]));
+        normals->push_back(Vec3f(_normals[3*i], -_normals[3*i+2], _normals[3*i+1]));
+        uvs->push_back(Vec2f(_uvs[2*i], _uvs[2*i+1]));
+    }
+
+    _geometry->setVertexArray(vertices.get());
+    _geometry->setNormalArray(normals.get());
+    _geometry->setTexCoordArray(0, uvs.get());
+    _geometry->addPrimitiveSet(new DrawElementsUShort(GL_TRIANGLES, (unsigned int)_indices.size(), _indices.data()));
+    _geometry->setUseVertexBufferObjects(true);
+    _geometry->setUseDisplayList(false);
+
+    std::string fhead(getenv("CALVR_RESOURCE_DIR"));
+
+    Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/objectOSG.vert","shaders/object.frag");
+    osg::StateSet * stateSet = _node->getOrCreateStateSet();
+    stateSet->setAttributeAndModes(program);
+
+    stateSet->addUniform( new osg::Uniform("lightDiffuse",
+                                           osg::Vec4(0.8f, 0.8f, 0.8f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("lightSpecular",
+                                           osg::Vec4(1.0f, 1.0f, 0.4f, 1.0f)) );
+    stateSet->addUniform( new osg::Uniform("shininess", 64.0f) );
+    stateSet->addUniform( new osg::Uniform("lightPosition",
+                                           osg::Vec3(0,0,1)));
+
+    Uniform * envColorUniform = new Uniform(Uniform::FLOAT_VEC4, "uColorCorrection");
+    envColorUniform->setUpdateCallback(new envLightCallback);
+    stateSet->addUniform(envColorUniform);
+
+    osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+    texture->setImage( osgDB::readImageFile(fhead+png_file_name) );
+    texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
+    texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
+    texture->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR );
+    texture->setFilter( osg::Texture::MAG_FILTER, osg::Texture::LINEAR );
+
+
+    stateSet->setTextureAttributeAndModes(1, texture.get());
+    stateSet->addUniform(new osg::Uniform("uSampler", 1));
+
+    objectTrans->addChild(_node.get());
+    parent->addChild(objectTrans.get());
+}
+
+void GlesDrawables::createObject(osg::Group *parent,
+                                 const char* obj_file_name, const char* png_file_name,
+                                 Matrixf modelMat, bool opengl) {
     Transform objectTrans = new MatrixTransform;
     objectTrans->setMatrix(modelMat);
     ref_ptr<Geometry>_geometry = new osg::Geometry();
@@ -201,7 +270,7 @@ void GlesDrawables::createObject(osg::Group *parent,
     stateSet->addUniform(projUniform);
 
     Uniform * modelViewUniform = new Uniform(Uniform::FLOAT_MAT4, "uModelView");
-    modelViewUniform->setUpdateCallback(new modelViewCallBack(modelMat * Matrixf::scale(Vec3f(scalef,scalef,scalef))));
+    modelViewUniform->setUpdateCallback(new modelViewCallBack(modelMat));
     stateSet->addUniform(modelViewUniform);
 
     osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
