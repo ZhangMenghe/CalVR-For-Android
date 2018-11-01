@@ -10,7 +10,10 @@ private:
     std::vector<osg::Vec3f> _vertices;
     std::vector<GLushort> _triangles;
     int32_t _vertices_num;
-
+    osg::Vec3f _color;
+    GLuint _VAO;
+    GLuint _VBO;
+    GLuint _EBO;
     float* raw_vertices;
     osg::Matrixf _model_mat;
     osg::Matrixf _view_proj_mat;

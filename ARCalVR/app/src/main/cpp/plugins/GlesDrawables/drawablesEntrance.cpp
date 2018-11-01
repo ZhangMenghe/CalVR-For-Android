@@ -75,7 +75,7 @@ bool GlesDrawables::init() {
 
 //    createObject(_root,"models/jigglypuff.obj", "textures/jigglypuff/body.png",
 //                 Matrixf::translate(Vec3f(.0f, .0f, -0.2f)), 0.001f);
-//    createObject(_objects, "models/andy-origin.obj", "textures/andy.png", Matrixf::translate(Vec3f(.0f, .0f, -0.1f)));
+    createObject(_objects, "models/andy-origin.obj", "textures/andy.png", Matrixf::translate(Vec3f(.0f, .0f, -0.1f)));
 
     return true;
 }
@@ -101,7 +101,8 @@ void GlesDrawables::preFrame() {
 void GlesDrawables::postFrame() {
     _pointcloudDrawable->updateOnFrame();
 
-
+//    if(frame_count++ == 1)
+//        createObject(_objects,"models/andy-origin.obj", "textures/andy.png", osg::Matrixf::translate(Vec3f(0.01f * (rand()%10), .0f, -0.2f )));
     cvr::planeMap map = ARCoreManager::instance()->getPlaneMap();
     if(_plane_num < map.size()){
         for(int i= _plane_num; i<map.size();i++){
@@ -173,7 +174,7 @@ void GlesDrawables::createObject(osg::Group *parent,
     _geometry->setVertexArray(vertices.get());
     _geometry->setNormalArray(normals.get());
     _geometry->setTexCoordArray(0, uvs.get());
-    _geometry->addPrimitiveSet(new DrawElementsUShort(GL_TRIANGLES, _indices.size(), _indices.data()));
+    _geometry->addPrimitiveSet(new DrawElementsUShort(GL_TRIANGLES, (unsigned int)_indices.size(), _indices.data()));
     _geometry->setUseVertexBufferObjects(true);
     _geometry->setUseDisplayList(false);
 
@@ -213,7 +214,6 @@ void GlesDrawables::createObject(osg::Group *parent,
 
     stateSet->setTextureAttributeAndModes(1, texture.get());
     stateSet->addUniform(new osg::Uniform("uSampler", 1));
-    stateSet->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     objectTrans->addChild(_node.get());
     parent->addChild(objectTrans.get());

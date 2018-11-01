@@ -2,8 +2,7 @@
 #include <cvrUtil/AndroidStdio.h>
 #include "planeDrawable.h"
 void planeDrawable::_update_plane_vertices() {
-    _vertices.clear();
-    _triangles.clear();
+
 
     for(int32_t i=0; i<_vertices_num; i++)
         _vertices.push_back(osg::Vec3f(raw_vertices[2*i], raw_vertices[2*i+1], .0f));
@@ -80,28 +79,57 @@ void planeDrawable::Initialization(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    //Generate VAO and bind
+    glGenVertexArrays(1, &_VAO);
+    glBindVertexArray(_VAO);
+
+    //Generate VBO and bind
+    glGenBuffers(1, &_VBO);
+
+    //dynamic feed data
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * MAX_PLANE_VERTICES * 3, nullptr, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(_attrib_vertices);
+    glVertexAttribPointer(_attrib_vertices, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    //Generate EBO
+    glGenBuffers(1, &_EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * MAX_PLANE_VERTICES*5, nullptr, GL_STATIC_DRAW);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void planeDrawable::updateOnFrame(ArPlane* plane, osg::Vec3f color) {
+    _vertices.clear();
+    _triangles.clear();
+
     if(cvr::ARCoreManager::instance()->getPlaneData(plane, raw_vertices,
                                                     _model_mat, _normal_vec,
                                                     _vertices_num))
         _update_plane_vertices();
 
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)*_vertices.size()*3, _vertices.data());
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLushort) * _triangles.size(), _triangles.data());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
     _view_proj_mat = cvr::ARCoreManager::instance()->getMVPMatrix();
 
-    _update_plane_vertices();
-
-    glUseProgram(_shader_program);
-    glUniform3f(_uniform_color, color.x(), color.y(), color.z());
-    glUseProgram(0);
+    _color = color;
 }
 
 void planeDrawable::drawImplementation(osg::RenderInfo&) const{
     cvr::glStateStack::instance()->PushAllState();
-
-    glUseProgram(_shader_program);
     glDepthMask(GL_FALSE);
+    glUseProgram(_shader_program);
+
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(_uniform_tex_sampler, 0);
@@ -110,13 +138,17 @@ void planeDrawable::drawImplementation(osg::RenderInfo&) const{
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glUniform3f(_uniform_color, _color.x(), _color.y(), _color.z());
     glUniformMatrix4fv(_uniform_mvp_mat, 1, GL_FALSE, _view_proj_mat.ptr());
     glUniform3f(_uniform_normal_vec, _normal_vec.x(), _normal_vec.y(), _normal_vec.z());
     glUniformMatrix4fv(_uniform_model_mat, 1, GL_FALSE, _model_mat.ptr());
 
-    glEnableVertexAttribArray(_attrib_vertices);
-    glVertexAttribPointer(_attrib_vertices, 3, GL_FLOAT, GL_FALSE, 0, _vertices.data());
-    glDrawElements(GL_TRIANGLES, _triangles.size(), GL_UNSIGNED_SHORT,  _triangles.data());
+//    glEnableVertexAttribArray(_attrib_vertices);
+//    glVertexAttribPointer(_attrib_vertices, 3, GL_FLOAT, GL_FALSE, 0, _vertices.data());
+//    glDrawElements(GL_TRIANGLES, _triangles.size(), GL_UNSIGNED_SHORT,  _triangles.data());
+    glBindVertexArray(_VAO);
+    glDrawElements(GL_TRIANGLES, _triangles.size(), GL_UNSIGNED_SHORT, nullptr);
+    glBindVertexArray(0);
 
     glUseProgram(0);
     glDepthMask(GL_TRUE);

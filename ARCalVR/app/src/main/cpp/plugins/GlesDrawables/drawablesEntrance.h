@@ -44,7 +44,7 @@ protected:
     cvr::SceneObject *rootSO;
     osg::ref_ptr<pointDrawable> _pointcloudDrawable;
     int _plane_num = 0, _objNum = 0;
-
+    int frame_count = 0;
     std::vector<planeDrawable*> _planeDrawables;
     osg::ref_ptr<strokeDrawable> _strokeDrawable;
     std::unordered_map<std::string, osg::Uniform*> _obj_color_map;
