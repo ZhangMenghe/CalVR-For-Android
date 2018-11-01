@@ -10,22 +10,15 @@
 
 using namespace osg;
 using namespace cvr;
+
 void GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection result ){
-    LOGE("==== parent Num: %d", result.drawable->getNumParents());
-
+//    LOGE("==== parent Num: %d", result.drawable->getNumParents());
     for(auto itr = result.drawable->getParents().begin(); itr!=result.drawable->getParents().end(); itr++){
-       auto got = _obj_color_map.find((*itr)->getName());
-
-        if(got!=_obj_color_map.end()){
-            IsectInfo isect;
-            isect.point = result.getWorldIntersectPoint();
-            isect.normal = result.getWorldIntersectNormal();
-            isect.geode = dynamic_cast<Geode*>(*itr);
-            TrackingManager::instance()->setIntersectPoint(isect.point);
-//            _obj_color_map[isect.geode->getName()]->set(Vec4f(.0f, 1.0f, .0f, 1.0f));
-
-            return;
-        }
+        IsectInfo isect;
+        isect.point = result.getWorldIntersectPoint();
+        isect.normal = result.getWorldIntersectNormal();
+        isect.geode = dynamic_cast<Geode*>(*itr);
+        TrackingManager::instance()->setIntersectPoint(isect.point);
     }
 }
 void GlesDrawables::initMenuButtons() {
@@ -73,8 +66,6 @@ bool GlesDrawables::init() {
     _pointcloudDrawable = new pointDrawable;
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
-//    createObject(_root,"models/jigglypuff.obj", "textures/jigglypuff/body.png",
-//                 Matrixf::translate(Vec3f(.0f, .0f, -0.2f)), 0.001f);
     createObject(_objects,
                  "models/andy.obj", "textures/andy.png",
                  Matrixf::rotate(PI_2f, Vec3f(.0,.0,1.0)) * Matrixf::translate(Vec3f(.0f, 0.5f, .0f)));
@@ -86,19 +77,19 @@ void GlesDrawables::menuCallback(cvr::MenuItem *item) {
 }
 void GlesDrawables::preFrame() {
     //TODO:MAKE IT AVIALIABLE IN CALVR
-//    osg::Vec3 pointerStart, pointerEnd;
-//    pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
-//    pointerEnd.set(0.0f,10000.0f,0.0f);
-//    pointerEnd = pointerEnd * TrackingManager::instance()->getHandMat(0);
-//    //Add intersection detector
-//
-//    osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
-//    osgUtil::IntersectionVisitor iv( handseg.get() );
-//    _objects->accept( iv );
-//    if ( handseg->containsIntersections()){
-//        for(auto itr=handseg->getIntersections().begin(); itr!=handseg->getIntersections().end(); itr++)
-//            tackleHitted(*itr);
-//    }
+    osg::Vec3 pointerStart, pointerEnd;
+    pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
+    pointerEnd.set(0.0f, 10000.0f, 0.0f);
+    pointerEnd = pointerEnd * TrackingManager::instance()->getHandMat(0);
+    //Add intersection detector
+
+    osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
+    osgUtil::IntersectionVisitor iv( handseg.get() );
+    _objects->accept( iv );
+    if ( handseg->containsIntersections()){
+        for(auto itr=handseg->getIntersections().begin(); itr!=handseg->getIntersections().end(); itr++)
+            tackleHitted(*itr);
+    }
 }
 void GlesDrawables::postFrame() {
     _pointcloudDrawable->updateOnFrame();
@@ -165,7 +156,7 @@ void GlesDrawables::createObject(osg::Group *parent,
     assetLoader::instance()->LoadObjFile(obj_file_name, &_vertices, &_normals, &_uvs, &_indices);
 
 
-    //REstore in OSG Coord
+    //REstore in OSG Coord or pass REAL_TO_OSG_COORD matrix to shader to flip
     for(int i=0; i<_uvs.size()/2; i++){
         vertices->push_back(Vec3f(_vertices[3*i], -_vertices[3*i+2], _vertices[3*i+1]));
         normals->push_back(Vec3f(_normals[3*i], -_normals[3*i+2], _normals[3*i+1]));
