@@ -17,24 +17,18 @@ void main(){
 
     vec3 N = normalize(normal);
     vec3 L = normalize(lightDir);
-    float lambert = dot(N,L);
-//    if (lambert > 0.0)
-//    {
-        finalColor += lightDiffuse * abs(lambert);
-        vec3 E = normalize(eyeVec);
-        vec3 R = reflect(-L, N);
-        float specular = pow(max(dot(R, E), 0.0), shininess);
-        finalColor += lightSpecular * specular;
+    float lambert = max(dot(N,L), 0.0);
+    vec3 E = normalize(eyeVec);
+    vec3 R = reflect(-L, N);
+    float specular = pow(max(dot(R, E), 0.0), shininess);
+    finalColor += lightSpecular * specular;
 
-        vec3 color = finalColor.rgb;
-            // Apply SRGB gamma before writing the fragment color.
-            color.rgb = pow(color, vec3(kGamma));
-            // Apply average pixel intensity and color shift
-            color *= uColorCorrection.rgb * (uColorCorrection.a/kMiddleGrayGamma);
-        gl_FragColor = vec4(color.rgb, finalColor.a);
-    gl_FragColor = finalColor;
-//    }else{
-//        gl_FragColor = vec4(1.0 ,.0 ,.0 ,1.0);
-//    }
+    vec3 color = finalColor.rgb;
+        // Apply SRGB gamma before writing the fragment color.
+        color.rgb = pow(color, vec3(kGamma));
+        // Apply average pixel intensity and color shift
+        color *= uColorCorrection.rgb * (uColorCorrection.a/kMiddleGrayGamma);
+    gl_FragColor = vec4(color.rgb, finalColor.a);
+
 
 }
