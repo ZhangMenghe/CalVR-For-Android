@@ -80,9 +80,17 @@ void GlesDrawables::preFrame() {
     if(!ARCoreManager::instance()->getHitPosition(touchPos))
         return;
     osg::Vec3 pointerStart, pointerEnd;
-    pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
+    Matrixf vpMat = ARCoreManager::instance()->getMVPMatrix();
+    vpMat.inverse(vpMat);
+    TrackingManager::instance()->getScreenToClientPos(touchPos);
+    Vec4f vIn(touchPos.x(),touchPos.y(), 1.0f, 1.0f);
+    Vec4f pos = vIn * vpMat;
+    float inv_w = 1.0f / pos.w() * ConfigManager::UNIT_ALIGN_FACTOR;
+    pointerStart = Vec3f(pos.x() * inv_w, -pos.z()*inv_w, pos.y()*inv_w);
+
+    
     pointerEnd.set(0.0f, 10000.0f, 0.0f);
-    pointerEnd = pointerEnd * TrackingManager::instance()->getHandMat(0);
+    pointerEnd = pointerEnd* TrackingManager::instance()->getHandMat(0) + pointerStart;
 
     osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
 
