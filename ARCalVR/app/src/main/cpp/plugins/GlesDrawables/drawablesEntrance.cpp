@@ -12,13 +12,13 @@ using namespace osg;
 using namespace cvr;
 
 void GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection result ){
-//    LOGE("==== parent Num: %d", result.drawable->getNumParents());
-    for(auto itr = result.drawable->getParents().begin(); itr!=result.drawable->getParents().end(); itr++){
-        IsectInfo isect;
-        isect.point = result.getWorldIntersectPoint();
-        isect.normal = result.getWorldIntersectNormal();
-        isect.geode = dynamic_cast<Geode*>(*itr);
-        TrackingManager::instance()->setIntersectPoint(isect.point);
+    LOGE("==== parent Num: %d", result.drawable->getNumParents());
+    osg::Node* parent = dynamic_cast<Node*>(result.drawable->getParent(0));
+    if(_map.empty() || _map.find(parent) ==_map.end()){
+        _map[parent] = parent->getOrCreateStateSet()->getUniform("uTextureChoice");
+        bool textureChoice;
+        _map[parent]->get(textureChoice);
+        _map[parent]->set(!textureChoice);
     }
 }
 void GlesDrawables::initMenuButtons() {
@@ -76,20 +76,24 @@ bool GlesDrawables::init() {
 void GlesDrawables::menuCallback(cvr::MenuItem *item) {
 }
 void GlesDrawables::preFrame() {
-    //TODO:MAKE IT AVIALIABLE IN CALVR
+    Vec2f touchPos;
+    if(!ARCoreManager::instance()->getHitPosition(touchPos))
+        return;
     osg::Vec3 pointerStart, pointerEnd;
     pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
     pointerEnd.set(0.0f, 10000.0f, 0.0f);
     pointerEnd = pointerEnd * TrackingManager::instance()->getHandMat(0);
-    //Add intersection detector
 
     osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
-    osgUtil::IntersectionVisitor iv( handseg.get() );
+
+    osgUtil::IntersectionVisitor iv(handseg.get());
     _objects->accept( iv );
     if ( handseg->containsIntersections()){
+        _map.clear();
         for(auto itr=handseg->getIntersections().begin(); itr!=handseg->getIntersections().end(); itr++)
             tackleHitted(*itr);
     }
+
 }
 void GlesDrawables::postFrame() {
     _pointcloudDrawable->updateOnFrame();
@@ -172,7 +176,7 @@ void GlesDrawables::createObject(osg::Group *parent,
 
     std::string fhead(getenv("CALVR_RESOURCE_DIR"));
 
-    Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/objectOSG.vert","shaders/object.frag");
+    Program * program =assetLoader::instance()->createShaderProgramFromFile("shaders/objectOSG.vert","shaders/objectOSG.frag");
     osg::StateSet * stateSet = _node->getOrCreateStateSet();
     stateSet->setAttributeAndModes(program);
 
@@ -195,9 +199,21 @@ void GlesDrawables::createObject(osg::Group *parent,
     texture->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR );
     texture->setFilter( osg::Texture::MAG_FILTER, osg::Texture::LINEAR );
 
+    osg::ref_ptr<osg::Texture2D> changeTexture = new osg::Texture2D;
+    changeTexture->setImage( osgDB::readImageFile(fhead+"textures/andy-change.png") );
+    changeTexture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
+    changeTexture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
+    changeTexture->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR );
+    changeTexture->setFilter( osg::Texture::MAG_FILTER, osg::Texture::LINEAR );
+
 
     stateSet->setTextureAttributeAndModes(1, texture.get());
     stateSet->addUniform(new osg::Uniform("uSampler", 1));
+
+    stateSet->setTextureAttributeAndModes(2, changeTexture.get());
+    stateSet->addUniform(new osg::Uniform("uSamplerC", 2));
+
+    stateSet->addUniform(new osg::Uniform("uTextureChoice", true));
 
     objectTrans->addChild(_node.get());
     parent->addChild(objectTrans.get());

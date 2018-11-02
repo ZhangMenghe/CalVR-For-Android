@@ -46,7 +46,7 @@ protected:
     int _plane_num = 0, _objNum = 0;
     std::vector<planeDrawable*> _planeDrawables;
     osg::ref_ptr<strokeDrawable> _strokeDrawable;
-    std::unordered_map<std::string, osg::Uniform*> _obj_color_map;
+    std::unordered_map<osg::Node*, osg::Uniform*> _map;
 
     int _hitTimes = 0;
     const osg::Vec4f _switchColor[2] = {osg::Vec4f(.0f,1.0f,.0f,1.0f),
