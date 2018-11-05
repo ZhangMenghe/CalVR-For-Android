@@ -49,21 +49,22 @@ JNI_METHOD(void, JNIonViewChanged)
     controllerNative(nativeAppAddr)->onViewChanged(rotation, width, height);
 }
 
-JNI_METHOD(void, JNIonSingleTouchUp)(JNIEnv*, jclass, jint pointer_num, jfloat x, jfloat y){
-    controllerNative(nativeAppAddr)->onSingleTouchUp(pointer_num, x, y);
+JNI_METHOD(void, JNIonSingleTouchUp)(JNIEnv*, jclass, jint type, jfloat x, jfloat y){
+    controllerNative(nativeAppAddr)->onSingleTouchUp(static_cast<cvr::TouchType>(type), x, y);
 }
 
-JNI_METHOD(void, JNIonSingleTouchDown)(JNIEnv*, jclass, jint pointer_num, jfloat x, jfloat y){
-    controllerNative(nativeAppAddr)->onSingleTouchDown(pointer_num, x, y);
+JNI_METHOD(void, JNIonSingleTouchDown)(JNIEnv*, jclass, jint type, jfloat x, jfloat y){
+    controllerNative(nativeAppAddr)->onSingleTouchDown(static_cast<cvr::TouchType>(type), x, y);
 }
 
-JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv*, jclass, jint pointer_num, jfloat x, jfloat y){
-    controllerNative(nativeAppAddr)->onDoubleTouch(pointer_num, x, y);
+JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv*, jclass, jint type, jfloat x, jfloat y){
+    controllerNative(nativeAppAddr)->onDoubleTouch(static_cast<cvr::TouchType>(type), x, y);
 }
 
-JNI_METHOD(void, JNIonTouchMove)(JNIEnv*, jclass, jint pointer_num, jfloat destx, jfloat desty){
-    controllerNative(nativeAppAddr)->onTouchMove(pointer_num, destx, desty);
+JNI_METHOD(void, JNIonTouchMove)(JNIEnv*, jclass, jint type, jfloat x, jfloat y){
+    controllerNative(nativeAppAddr)->onTouchMove(static_cast<cvr::TouchType>(type), x, y);
 }
+
 JNI_METHOD(void, JNIonResume)(JNIEnv * env, jclass, jobject contex, jobject activitiy){
     controllerNative(nativeAppAddr)->onResume(env, contex, activitiy);
 }

@@ -8,6 +8,8 @@
 #include <cvrKernel/InteractionEvent.h>
 #include "bgDrawable.h"
 
+#include <cvrKernel/InteractionEvent.h>
+
 class allController {
 protected:
     cvr::CalVR *_CalVR;
@@ -16,12 +18,10 @@ protected:
     // AUX OSG Node & drawable
     osg::ref_ptr<osg::Group>  _root, _sceneGroup;
     bgDrawable *_bgDrawable;
-    float _touchX, _touchY;
+    int _touchX, _touchY;
     bool _detectStart = false;
 
     osg::ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3f pos);
-
-    void onSingleFingerDoubleTouch(float x, float y);
 
 public:
     allController(AAssetManager *assetManager);
@@ -30,25 +30,23 @@ public:
 
     void onCreate(const char * calvr_path);
 
+    void onViewChanged(int rot, int width, int height);
+
     void onPause();
 
     void onResume(void * env, void* context, void* activity);
 
     void onDrawFrame();
 
-    void onViewChanged(int rot, int width, int height);
+    void onSingleTouchDown(cvr::TouchType type, float x, float y);
 
-    void onSingleTouchDown(int pointer_num, float x, float y);
+    void onSingleTouchUp(cvr::TouchType type, float x, float y);
 
-    void onSingleTouchUp(int pointer_num, float x, float y);
+    void onDoubleTouch(cvr::TouchType type, float x, float y);
 
-    void onDoubleTouch(int pointer_num, float x, float y);
-
-    void onTouchMove(int pointer_num, float x, float y);
+    void onTouchMove(cvr::TouchType type, float x, float y);
 
     float getFPS();
 };
-
-
 
 #endif

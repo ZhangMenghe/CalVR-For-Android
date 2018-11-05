@@ -94,7 +94,7 @@ public abstract class MultiFingerTapDetector {
             // as soon as the second finger touches the screen no longer a oneTouch event
             case MotionEvent.ACTION_POINTER_DOWN:
                 oneFingerDown = false;
-                onMoreFingersDown(event);
+                onMoreFingersDown(event.getPointerCount(), event);
                 break;
 
             // POINTER_UP - when a second(+) finger leaves the screen
@@ -222,7 +222,7 @@ public abstract class MultiFingerTapDetector {
     public abstract void onFling(int pointerNum, float srcx, float srcy, float dstx, float dsty);
     public abstract void onSingleTapUp(int pointerNum, MotionEvent event);
 
-    public abstract void onMoreFingersDown(MotionEvent event);
+    public abstract void onMoreFingersDown(int pointerNum, MotionEvent event);
     public abstract void onTwoFingersMove(MotionEvent event);
     public abstract void onThreeFingersMove(MotionEvent event);
 
@@ -231,7 +231,7 @@ public abstract class MultiFingerTapDetector {
     public abstract void onOneFingerLongPress();
 
     // TWO FINGER TAPS
-    public abstract void onTwoFingerDoubleTap(float avgX, float avgY);
+    public abstract void onTwoFingerDoubleTap(float ex, float ey);
     public abstract void onTwoFingerTripleTap();
     public abstract void onTwoFingerLongPress(MotionEvent event);
 

@@ -1,8 +1,6 @@
 package com.samsung.arcalvr;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 public class GestureDetectorCalVR {
@@ -17,28 +15,30 @@ public class GestureDetectorCalVR {
 
             public  void onFling(int pointerNum, float srcx, float srcy, float dstx, float dsty){}
 
+            // LEFT(0) OR Right(1) Single Tap [UP]
             public  void onSingleTapUp(int pointerNum, MotionEvent event){
-                if(pointerNum != 1)
-                    JniInterface.JNIonSingleTouchUp(pointerNum, event.getX(), event.getY());
+                JniInterface.JNIonSingleTouchUp(pointerNum - 1, event.getX(), event.getY());
             }
 
-            public void onMoreFingersDown(MotionEvent event){
-                JniInterface.JNIonSingleTouchDown(2,event.getX(), event.getY());
+            //RIGHT SINGLE TOUCH
+            public void onMoreFingersDown(int pointerNum, MotionEvent event){
+                JniInterface.JNIonSingleTouchDown(pointerNum-1, event.getX(), event.getY());
             }
 
             public void onTwoFingersMove(MotionEvent event){}
             public void onThreeFingersMove(MotionEvent event){}
 
+            // left double tap
             public void onOneFingerDoubleTap(float ex, float ey){
-                JniInterface.JNIonDoubleTouch(1, ex, ey);
+                JniInterface.JNIonDoubleTouch(0, ex, ey);
             }
 
             public void onOneFingerTripleTap(){}
             public void onOneFingerLongPress(){}
 
-            // TWO FINGER TAPS
-            public void onTwoFingerDoubleTap(float avgX, float avgY){
-                JniInterface.JNIonDoubleTouch(2, avgX, avgY);
+            // TWO FINGER DOUBLE: right double
+            public void onTwoFingerDoubleTap(float ex, float ey){
+                JniInterface.JNIonDoubleTouch(1, ex, ey);
             }
 
             public void onTwoFingerTripleTap(){}

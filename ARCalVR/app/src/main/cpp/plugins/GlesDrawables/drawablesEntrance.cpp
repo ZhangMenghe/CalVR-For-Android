@@ -66,9 +66,9 @@ bool GlesDrawables::init() {
     _pointcloudDrawable = new pointDrawable;
     _root->addChild(_pointcloudDrawable->createDrawableNode());
 
-    createObject(_objects,
-                 "models/andy.obj", "textures/andy.png",
-                 Matrixf::rotate(PI_2f, Vec3f(.0,.0,1.0)) * Matrixf::translate(Vec3f(.0f, 0.5f, .0f)));
+//    createObject(_objects,
+//                 "models/andy.obj", "textures/andy.png",
+//                 Matrixf::rotate(PI_2f, Vec3f(.0,.0,1.0)) * Matrixf::translate(Vec3f(.0f, 0.5f, .0f)));
 
     return true;
 }
@@ -79,18 +79,22 @@ void GlesDrawables::preFrame() {
     Vec2f touchPos;
     if(!ARCoreManager::instance()->getHitPosition(touchPos))
         return;
-    osg::Vec3 pointerStart, pointerEnd;
-    Matrixf vpMat = ARCoreManager::instance()->getMVPMatrix();
-    vpMat.inverse(vpMat);
-    TrackingManager::instance()->getScreenToClientPos(touchPos);
-    Vec4f vIn(touchPos.x(),touchPos.y(), 1.0f, 1.0f);
-    Vec4f pos = vIn * vpMat;
-    float inv_w = 1.0f / pos.w() * ConfigManager::UNIT_ALIGN_FACTOR;
-    pointerStart = Vec3f(pos.x() * inv_w, -pos.z()*inv_w, pos.y()*inv_w);
+    Matrixf vpMat =ARCoreManager::instance()->getMVPMatrix();
+    vpMat = Matrixf::inverse(vpMat);
 
-    
-    pointerEnd.set(0.0f, 10000.0f, 0.0f);
-    pointerEnd = pointerEnd* TrackingManager::instance()->getHandMat(0) + pointerStart;
+    osg::Vec3 pointerStart, pointerEnd;
+    pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
+    TrackingManager::instance()->getScreenToClientPos(touchPos);
+    Vec4f vIn(touchPos.x(),touchPos.y(),-1, 1.0f);
+    Vec4f pos = vIn * vpMat;
+    float inv_w = 1.0f / pos.w();// * ConfigManager::UNIT_ALIGN_FACTOR;
+
+
+    Vec4f testScreen = Vec4f(pos.x()*inv_w, pos.y()*inv_w, pos.z()*inv_w, 1.0) *ARCoreManager::instance()->getMVPMatrix();
+    pointerEnd = Vec3f(pos.x() * inv_w, -pos.z()*inv_w, pos.y()*inv_w);
+    Vec3f dir = pointerEnd-pointerStart;
+    float t = (10-pointerStart.y())/dir.y();
+    pointerEnd = Vec3f(pointerStart.x() + t*dir.x(), 10.0f, pointerStart.z() + t*dir.z());
 
     osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
 
@@ -103,6 +107,7 @@ void GlesDrawables::preFrame() {
     }
 
 }
+
 void GlesDrawables::postFrame() {
     _pointcloudDrawable->updateOnFrame();
     cvr::planeMap map = ARCoreManager::instance()->getPlaneMap();
@@ -144,6 +149,14 @@ void GlesDrawables::postFrame() {
     }
 }
 
+bool GlesDrawables::processEvent(cvr::InteractionEvent * event){
+    AndroidInteractionEvent * aie = event->asAndroidEvent();
+    if(aie->getTouchType() == LEFT && aie->getInteraction()==BUTTON_DOUBLE_CLICK) {
+        ARCoreManager::instance()->updatePlaneHittest(aie->getX(), aie->getY());
+        return true;
+    }
+    return false;
+}
 
 void GlesDrawables::createObject(osg::Group *parent,
                                  const char* obj_file_name, const char* png_file_name,

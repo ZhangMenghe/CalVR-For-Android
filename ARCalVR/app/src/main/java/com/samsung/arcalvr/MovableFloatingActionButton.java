@@ -87,11 +87,11 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
         }
         return true;
     }
-    private void RayMove(float x, float y){JniInterface.JNIonTouchMove(1, x, y);}
+    private void RayMove(float x, float y){JniInterface.JNIonTouchMove(2, x, y);}
     private void RayCast(float x, float y){
-        JniInterface.JNIonSingleTouchDown(1, x, y);
+        JniInterface.JNIonSingleTouchDown(2, x, y);
     }
     private void RayCastEnd(float x, float y ){
-        JniInterface.JNIonSingleTouchUp(1, x, y);
+        JniInterface.JNIonSingleTouchUp(2, x, y);
     }
 }

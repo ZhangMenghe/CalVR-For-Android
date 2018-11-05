@@ -61,6 +61,7 @@ public:
     void menuCallback(cvr::MenuItem * item);
     void preFrame();
     void postFrame();
+    bool processEvent(cvr::InteractionEvent * event);
 };
 
 #endif
