@@ -20,10 +20,15 @@ REGISTER(GlesDrawables);
 void JNICallBackCallback::operator()(osg::Node *node, osg::NodeVisitor *nv) {
     std::string functionName;
     if(PluginManager::getCallBackRequest(functionName)){
-        jmethodID method = _env->GetMethodID(_helper_class, functionName.c_str(), "()V");
-        _env->CallVoidMethod(_obj, method);
+        if(_map.find(functionName) != _map.end())
+            _env->CallVoidMethod(_obj, _map[functionName]);
     }
     traverse( node, nv );
+}
+
+void JNICallBackCallback::registerCallBackFunction(std::string funcName, const char* signature){
+    jmethodID method = _env->GetMethodID(_helper_class, funcName.c_str(), signature);
+    _map[funcName] = method;
 }
 
 allController::allController(AAssetManager *assetManager)
@@ -59,7 +64,9 @@ void allController::onCreate(const char * calvr_path){
     jclass helper_class = env->FindClass( "com/samsung/arcalvr/MainActivity" );
     if(helper_class){
         helper_class = static_cast<jclass>(env->NewGlobalRef(helper_class));
-        _sceneGroup->addUpdateCallback(new JNICallBackCallback(env, helper_class, GetMainActivityObj()));
+        JNICallBackCallback* callback = new JNICallBackCallback(env, helper_class, GetMainActivityObj());
+        callback->registerCallBackFunction("popButtons", "()V");
+        _sceneGroup->addUpdateCallback(callback);
     }
 }
 
@@ -152,11 +159,6 @@ void allController::onDoubleTouch(TouchType type, float x, float y){
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DOUBLE_CLICK);
     _CalVR->setTouchEvent(aie, type, x, y);
-
-    ///for debug
-//    callJavaTest("popButtons");
-//    if(_callbackHelper)
-//        _callbackHelper->callFunction("popButtons");
 }
 
 void allController::onTouchMove(TouchType type, float x, float y){

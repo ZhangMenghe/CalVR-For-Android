@@ -17,9 +17,12 @@ private:
     JNIEnv * _env;
     jclass _helper_class;
     jobject _obj;
+    std::unordered_map<std::string, jmethodID > _map;
 public:
     JNICallBackCallback(JNIEnv* env, jclass hclass, jobject obj):
     _env(env), _helper_class(hclass), _obj(obj){}
+
+    void registerCallBackFunction(std::string funcName, const char* signature);
 
     virtual void operator()(osg::Node*node, osg::NodeVisitor * nv);
 };
