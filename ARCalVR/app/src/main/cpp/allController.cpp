@@ -7,16 +7,25 @@
 #include <PhysxBall.h>
 #include <drawablesEntrance.h>
 #include <osg/Depth>
+#include <osg/Callback>
+#include <cvrKernel/PluginManager.h>
+
 using namespace cvr;
 using namespace osg;
 
 REGISTER(MenuBasics);
 REGISTER(PhysxBall)
 REGISTER(GlesDrawables);
-allController * allController::_myPtr = nullptr;
-allController * allController::instance() {
-    return _myPtr;
+
+void JNICallBackCallback::operator()(osg::Node *node, osg::NodeVisitor *nv) {
+    std::string functionName;
+    if(PluginManager::getCallBackRequest(functionName)){
+        jmethodID method = _env->GetMethodID(_helper_class, functionName.c_str(), "()V");
+        _env->CallVoidMethod(_obj, method);
+    }
+    traverse( node, nv );
 }
+
 allController::allController(AAssetManager *assetManager)
         :_asset_manager(assetManager){
     _CalVR = new CalVR();
@@ -45,6 +54,13 @@ void allController::onCreate(const char * calvr_path){
 //    _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
 //    _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
     _CalVR->setSceneData(_root.get());
+
+    JNIEnv* env = GetJniEnv();
+    jclass helper_class = env->FindClass( "com/samsung/arcalvr/MainActivity" );
+    if(helper_class){
+        helper_class = static_cast<jclass>(env->NewGlobalRef(helper_class));
+        _sceneGroup->addUpdateCallback(new JNICallBackCallback(env, helper_class, GetMainActivityObj()));
+    }
 }
 
 void allController::onPause(){
@@ -138,7 +154,9 @@ void allController::onDoubleTouch(TouchType type, float x, float y){
     _CalVR->setTouchEvent(aie, type, x, y);
 
     ///for debug
-    callJavaTest("popButtons");
+//    callJavaTest("popButtons");
+//    if(_callbackHelper)
+//        _callbackHelper->callFunction("popButtons");
 }
 
 void allController::onTouchMove(TouchType type, float x, float y){

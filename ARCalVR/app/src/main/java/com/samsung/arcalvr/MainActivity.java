@@ -211,8 +211,13 @@ public class MainActivity extends AppCompatActivity
             }});
     }
     public void popButtons(){
-        track_bnt = findViewById(R.id.main_button);
-        track_bnt.startAnimation();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                track_bnt = findViewById(R.id.main_button);
+                track_bnt.startAnimation();
+            }
+        });
     }
     public native void JNIOnMainActivityCreated();
 }

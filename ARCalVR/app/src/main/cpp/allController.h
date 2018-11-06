@@ -11,11 +11,21 @@
 
 #include <cvrKernel/InteractionEvent.h>
 #include <jni.h>
+#include <cvrUtil/AndroidHelper.h>
+class JNICallBackCallback:public osg::NodeCallback{
+private:
+    JNIEnv * _env;
+    jclass _helper_class;
+    jobject _obj;
+public:
+    JNICallBackCallback(JNIEnv* env, jclass hclass, jobject obj):
+    _env(env), _helper_class(hclass), _obj(obj){}
+
+    virtual void operator()(osg::Node*node, osg::NodeVisitor * nv);
+};
 
 class allController {
 protected:
-    static allController* _myPtr;
-
     cvr::CalVR *_CalVR;
     AAssetManager * _asset_manager;
 
@@ -28,8 +38,6 @@ protected:
     osg::ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3f pos);
 
 public:
-    static allController* instance();
-
     allController(AAssetManager *assetManager);
 
     ~allController();
