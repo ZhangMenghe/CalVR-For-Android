@@ -1,9 +1,13 @@
 package com.samsung.arcalvr;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Intent;
+import android.graphics.Path;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.File;
+import java.security.acl.Group;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -103,8 +108,11 @@ public class MainActivity extends AppCompatActivity
 //                startActivity(restartIntent);
 //            }
 //        });
-        MovableFloatingActionButton track_bnt = findViewById(R.id.fab);
+        MovableFloatingActionButton track_bnt = findViewById(R.id.main_button);
         track_bnt.bringToFront();
+
+        track_bnt.addSubButton(findViewById(R.id.moveButton), -300f, -200f);
+        track_bnt.addSubButton(findViewById(R.id.rotateButton), 300f, -200f);
 
         FPSlabel = (TextView) findViewById(R.id.textViewFPS);
     }
@@ -201,4 +209,5 @@ public class MainActivity extends AppCompatActivity
 
             }});
     }
+
 }

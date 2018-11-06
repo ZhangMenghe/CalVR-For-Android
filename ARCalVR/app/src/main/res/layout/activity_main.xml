@@ -17,6 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/textViewFPS"
         android:layout_width="wrap_content"
@@ -27,32 +28,60 @@
         android:textColor="@android:color/white" />
 
     <com.samsung.arcalvr.MovableFloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/main_button"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_margin="0dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:backgroundTint="#f7e1bd"
         android:src="@drawable/pokeball_empty"
-        app:layout_constraintBottom_toBottomOf="@+id/surfaceview"
+        app:backgroundTint="#f7e1bd"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.534"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!--<Button-->
-        <!--android:id="@+id/restart_button"-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/moveButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:alpha="0.8"
+        android:background="#f7e1bd"
+        android:foreground="@drawable/move"
+        app:layout_constraintBottom_toBottomOf="@+id/main_button"
+        app:layout_constraintStart_toStartOf="@+id/main_button"
+         />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/rotateButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:alpha="0.8"
+        android:background="#f7e1bd"
+        android:foreground="@drawable/rotate"
+        app:layout_constraintBottom_toBottomOf="@+id/main_button"
+        app:layout_constraintEnd_toEndOf="@+id/main_button"/>
+
+    <!--<android.support.constraint.Group-->
+        <!--android:id="@+id/mr_button_group"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:text="Restart"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintHorizontal_bias="1.0"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
+        <!--android:visibility="gone"-->
+        <!--app:constraint_referenced_ids="rotateButton,moveButton" />-->
+
+
+
+    <!--<Button-->
+    <!--android:id="@+id/restart_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginEnd="8dp"-->
+    <!--android:layout_marginStart="8dp"-->
+    <!--android:text="Restart"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintHorizontal_bias="1.0"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
 </android.support.constraint.ConstraintLayout>

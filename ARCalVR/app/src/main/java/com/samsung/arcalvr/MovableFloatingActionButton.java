@@ -1,17 +1,24 @@
 package com.samsung.arcalvr;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MovableFloatingActionButton extends FloatingActionButton implements View.OnTouchListener {
 
     private final static float CLICK_DRAG_TOLERANCE = 10; // Often, there will be a slight, unintentional, drag when the user taps the FAB, so we need to account for this.
-
+    private float _originX, _originY;
     private float downRawX, downRawY;
     private float dX, dY;
+    private Map<FloatingActionButton, ObjectAnimator> sub_buttons;
+    private boolean islocked = false;
 
     public MovableFloatingActionButton(Context context) {
         super(context);
@@ -29,7 +36,10 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
     }
 
     private void init() {
+        _originX = 540;
+        _originY = 1980;
         setOnTouchListener(this);
+        sub_buttons = new HashMap<>();
     }
 
     @Override
@@ -46,6 +56,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                 RayCast(motionEvent.getX(), motionEvent.getY());
                 break;
             case MotionEvent.ACTION_MOVE:
+                if(islocked) break;
                 int viewWidth = view.getWidth();
                 int viewHeight = view.getHeight();
 
@@ -89,9 +100,59 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
     }
     private void RayMove(float x, float y){JniInterface.JNIonTouchMove(2, x, y);}
     private void RayCast(float x, float y){
+        startAnimation();
         JniInterface.JNIonSingleTouchDown(2, x, y);
     }
     private void RayCastEnd(float x, float y ){
         JniInterface.JNIonSingleTouchUp(2, x, y);
+    }
+    private void resetPosition(){this.setX(_originX); this.setY(_originY);}
+    private void startAnimation(){
+        for (Map.Entry<FloatingActionButton, ObjectAnimator> entry : sub_buttons.entrySet()){
+            entry.getKey().setVisibility(VISIBLE);
+            entry.getValue().start();
+        }
+//        if(!islocked){
+////            resetPosition();
+//            for (Map.Entry<FloatingActionButton, float[]> entry : sub_buttons.entrySet()) {
+//                entry.getKey().setVisibility(VISIBLE);
+//
+//                PropertyValuesHolder holderX = PropertyValuesHolder.ofFloat("translationX", getX(), entry.getValue()[0]);
+//                PropertyValuesHolder holderY = PropertyValuesHolder.ofFloat("translationY", getY(), entry.getValue()[1]);
+//
+//                ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(entry.getKey(), holderX, holderY);
+//                animation.setDuration(2000);
+//                animation.start();
+//            }
+//        }else{
+//            for (Map.Entry<FloatingActionButton, float[]> entry : sub_buttons.entrySet()) {
+//                FloatingActionButton bnt = entry.getKey();
+//                PropertyValuesHolder holderX = PropertyValuesHolder.ofFloat("translationX", bnt.getX(), getX());
+//                PropertyValuesHolder holderY = PropertyValuesHolder.ofFloat("translationY", bnt.getY(), getY());
+//
+//                ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(bnt, holderX, holderY);
+//                animation.setDuration(2000);
+//                animation.start();
+////                bnt.animate().withEndAction(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        setVisibility(INVISIBLE);
+////                    }
+////                });
+//
+//            }
+//        }
+//        islocked = !islocked;
+    }
+    public void addSubButton(View bnt, float offset_x, float offset_y){
+        bnt.setVisibility(INVISIBLE);
+
+        PropertyValuesHolder holderX = PropertyValuesHolder.ofFloat("translationX", getX(), offset_x);
+        PropertyValuesHolder holderY = PropertyValuesHolder.ofFloat("translationY", getY(), offset_y);
+
+        ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(bnt, holderX, holderY);
+        animation.setDuration(2000);
+
+        sub_buttons.put((FloatingActionButton) bnt, animation);
     }
 }
