@@ -7,11 +7,15 @@
 #include <cvrKernel/CalVR.h>
 #include <cvrKernel/InteractionEvent.h>
 #include "bgDrawable.h"
+#include "jni_interface.h"
 
 #include <cvrKernel/InteractionEvent.h>
+#include <jni.h>
 
 class allController {
 protected:
+    static allController* _myPtr;
+
     cvr::CalVR *_CalVR;
     AAssetManager * _asset_manager;
 
@@ -24,6 +28,8 @@ protected:
     osg::ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3f pos);
 
 public:
+    static allController* instance();
+
     allController(AAssetManager *assetManager);
 
     ~allController();
@@ -47,6 +53,8 @@ public:
     void onTouchMove(cvr::TouchType type, float x, float y);
 
     float getFPS();
+
+    void callJavaTest(const char* funcName);
 };
 
 #endif

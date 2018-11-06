@@ -7,9 +7,14 @@
     JNIEXPORT returnType JNICALL        \
         Java_com_samsung_arcalvr_JniInterface_##funcName
 
+#define MAIN_METHOD(returnType, funcName)\
+    JNIEXPORT returnType JNICALL        \
+        Java_com_samsung_arcalvr_MainActivity_##funcName
+
+
 //define helper functions to provide access to Java from C via JNI
 extern "C"{
-JNI_METHOD(jlong, JNIcreateController)(JNIEnv* env, jclass, jobject asset_manager);
+JNI_METHOD(jlong, JNIcreateController)(JNIEnv* env, jclass , jobject asset_manager);
 
 JNI_METHOD(void, JNIdrawFrame)(JNIEnv *, jclass);
 
@@ -33,7 +38,11 @@ JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr);
 
 JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass);
 
+MAIN_METHOD(void, JNIOnMainActivityCreated)(JNIEnv*, jobject);
+
 JNIEnv * GetJniEnv();
+
+jobject GetMainActivityObj();
 }
 
 

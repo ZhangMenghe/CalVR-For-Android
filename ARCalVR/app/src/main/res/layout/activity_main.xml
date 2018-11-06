@@ -47,6 +47,7 @@
         android:alpha="0.8"
         android:background="#f7e1bd"
         android:foreground="@drawable/move"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="@+id/main_button"
         app:layout_constraintStart_toStartOf="@+id/main_button"
          />
@@ -59,6 +60,7 @@
         android:alpha="0.8"
         android:background="#f7e1bd"
         android:foreground="@drawable/rotate"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="@+id/main_button"
         app:layout_constraintEnd_toEndOf="@+id/main_button"/>
 

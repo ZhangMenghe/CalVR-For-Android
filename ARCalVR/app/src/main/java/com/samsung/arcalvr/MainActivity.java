@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
 
     //Label
     TextView FPSlabel;
-
+    MovableFloatingActionButton track_bnt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +54,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         JniInterface.assetManager = getAssets();
-
         controllerAddr = JniInterface.JNIcreateController(JniInterface.assetManager);
 
         setupLabelandButton();
         setupResource();
         setupSurfaceView();
         setupTouchDetector();
+
+        JNIOnMainActivityCreated();
     }
     @Override
     protected void onResume(){
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity
 //                startActivity(restartIntent);
 //            }
 //        });
-        MovableFloatingActionButton track_bnt = findViewById(R.id.main_button);
+        track_bnt = findViewById(R.id.main_button);
         track_bnt.bringToFront();
 
         track_bnt.addSubButton(findViewById(R.id.moveButton), -300f, -200f);
@@ -209,5 +210,9 @@ public class MainActivity extends AppCompatActivity
 
             }});
     }
-
+    public void popButtons(){
+        track_bnt = findViewById(R.id.main_button);
+        track_bnt.startAnimation();
+    }
+    public native void JNIOnMainActivityCreated();
 }

@@ -98,14 +98,15 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
     }
     private void RayMove(float x, float y){JniInterface.JNIonTouchMove(2, x, y);}
     private void RayCast(float x, float y){
-        startAnimation();
+        if(islocked)
+            startAnimation();
         JniInterface.JNIonSingleTouchDown(2, x, y);
     }
     private void RayCastEnd(float x, float y ){
         JniInterface.JNIonSingleTouchUp(2, x, y);
     }
     private void resetPosition(){this.setX(_originX); this.setY(_originY);}
-    private void startAnimation(){
+    public void startAnimation(){
         if(!islocked){
             for (Map.Entry<FloatingActionButton, ObjectAnimator> entry : sub_buttons.entrySet()){
                 entry.getKey().setVisibility(VISIBLE);

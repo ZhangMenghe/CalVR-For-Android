@@ -6,6 +6,8 @@
 namespace {
     //maintain a reference to VM
     static JavaVM *g_vm = nullptr;
+
+    jobject main_object;
     //global environment
     jlong nativeAppAddr = 0;
 
@@ -24,9 +26,15 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
     return JNI_VERSION_1_6;
 }
 
+MAIN_METHOD(void, JNIOnMainActivityCreated)
+(JNIEnv* env, jobject obj){
+    main_object = env->NewGlobalRef(obj);
+}
+
 /*Native Application methods*/
 JNI_METHOD(jlong, JNIcreateController)
 (JNIEnv* env, jclass, jobject asset_manager){
+
     AAssetManager * cpp_asset_manager = AAssetManager_fromJava(env, asset_manager);
     nativeAppAddr =  controllerPtr(new allController(cpp_asset_manager));
     return nativeAppAddr;
@@ -72,6 +80,7 @@ JNI_METHOD(void, JNIonPause)(JNIEnv *, jclass){
     controllerNative(nativeAppAddr)->onPause();
 }
 JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr){
+    GetJniEnv()->DeleteGlobalRef(main_object);
     delete controllerNative(controller_addr);
 }
 JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass){
@@ -82,4 +91,7 @@ JNIEnv *GetJniEnv() {
     JNIEnv *env;
     jint result = g_vm->AttachCurrentThread(&env, nullptr);
     return result == JNI_OK ? env : nullptr;
+}
+jobject GetMainActivityObj(){
+    return main_object;
 }

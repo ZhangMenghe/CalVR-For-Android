@@ -13,7 +13,10 @@ using namespace osg;
 REGISTER(MenuBasics);
 REGISTER(PhysxBall)
 REGISTER(GlesDrawables);
-
+allController * allController::_myPtr = nullptr;
+allController * allController::instance() {
+    return _myPtr;
+}
 allController::allController(AAssetManager *assetManager)
         :_asset_manager(assetManager){
     _CalVR = new CalVR();
@@ -83,10 +86,59 @@ void allController::onSingleTouchUp(TouchType type, float x, float y){
     _CalVR->setTouchEvent(aie, type, x, y);
 }
 
+void allController::callJavaTest(const char* funcName){
+    JNIEnv* env = GetJniEnv();
+    jclass helper_class = env->FindClass( "com/samsung/arcalvr/MainActivity" );
+    if(helper_class){
+        helper_class = static_cast<jclass>(env->NewGlobalRef(helper_class));
+        jmethodID button_move_method = env->GetMethodID(helper_class, funcName, "()V");
+        jobject object = GetMainActivityObj();
+        env->CallVoidMethod(object,button_move_method);
+    }
+
+        /*
+         * [ capture clause ] (parameters) -> return-type
+{
+   definition of method
+}
+         */
+//    static struct JNIData{
+//        jclass helper_class;
+//        jmethodID test_method;
+//        jmethodID button_move_method;
+//    }jniIds = [env]()->JNIData{
+//        constexpr char kHelperClassName[] = "com/samsung/arcalvr/JniInterface";
+//        constexpr char kTestFunctionName[] = "testCallBack";
+//        constexpr char kButtonMoveFunction[]="popButtons";
+//        constexpr char kSignature[] = "()V";
+//
+//        jclass helper_class = env->FindClass( kHelperClassName );
+//
+//        if(helper_class){
+//            helper_class = static_cast<jclass>(env->NewGlobalRef(helper_class));
+//            jmethodID test_method = env->GetStaticMethodID(
+//                    helper_class, kTestFunctionName, kSignature);
+//            jmethodID button_move_method = env->GetMethodID(
+//                    helper_class, kButtonMoveFunction, kSignature);
+//            return {helper_class, test_method, button_move_method};
+//        }
+//        LOGE("===CAN'T FIND HELPER CLASS");
+//        return {};
+//    }();
+//    if(!jniIds.helper_class)
+//        return;
+//    jmethodID constructor = env->GetMethodID(jniIds.helper_class, "<init>", "()V");
+//    env->CallStaticVoidMethod(jniIds.helper_class, jniIds.test_method);
+//    jobject object = env->NewObject(jniIds.helper_class, constructor);
+//    env->CallVoidMethod(object,jniIds.button_move_method);
+}
 void allController::onDoubleTouch(TouchType type, float x, float y){
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DOUBLE_CLICK);
     _CalVR->setTouchEvent(aie, type, x, y);
+
+    ///for debug
+    callJavaTest("popButtons");
 }
 
 void allController::onTouchMove(TouchType type, float x, float y){
