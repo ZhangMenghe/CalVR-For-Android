@@ -56,7 +56,6 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                 RayCast(motionEvent.getX(), motionEvent.getY());
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(islocked) break;
                 int viewWidth = view.getWidth();
                 int viewHeight = view.getHeight();
 
@@ -108,41 +107,17 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
     }
     private void resetPosition(){this.setX(_originX); this.setY(_originY);}
     private void startAnimation(){
-        for (Map.Entry<FloatingActionButton, ObjectAnimator> entry : sub_buttons.entrySet()){
-            entry.getKey().setVisibility(VISIBLE);
-            entry.getValue().start();
+        if(!islocked){
+            for (Map.Entry<FloatingActionButton, ObjectAnimator> entry : sub_buttons.entrySet()){
+                entry.getKey().setVisibility(VISIBLE);
+                entry.getValue().start();
+            }
+        }else{
+            for (Map.Entry<FloatingActionButton, ObjectAnimator> entry : sub_buttons.entrySet()){
+                entry.getKey().setVisibility(INVISIBLE);
+            }
         }
-//        if(!islocked){
-////            resetPosition();
-//            for (Map.Entry<FloatingActionButton, float[]> entry : sub_buttons.entrySet()) {
-//                entry.getKey().setVisibility(VISIBLE);
-//
-//                PropertyValuesHolder holderX = PropertyValuesHolder.ofFloat("translationX", getX(), entry.getValue()[0]);
-//                PropertyValuesHolder holderY = PropertyValuesHolder.ofFloat("translationY", getY(), entry.getValue()[1]);
-//
-//                ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(entry.getKey(), holderX, holderY);
-//                animation.setDuration(2000);
-//                animation.start();
-//            }
-//        }else{
-//            for (Map.Entry<FloatingActionButton, float[]> entry : sub_buttons.entrySet()) {
-//                FloatingActionButton bnt = entry.getKey();
-//                PropertyValuesHolder holderX = PropertyValuesHolder.ofFloat("translationX", bnt.getX(), getX());
-//                PropertyValuesHolder holderY = PropertyValuesHolder.ofFloat("translationY", bnt.getY(), getY());
-//
-//                ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(bnt, holderX, holderY);
-//                animation.setDuration(2000);
-//                animation.start();
-////                bnt.animate().withEndAction(new Runnable() {
-////                    @Override
-////                    public void run() {
-////                        setVisibility(INVISIBLE);
-////                    }
-////                });
-//
-//            }
-//        }
-//        islocked = !islocked;
+        islocked = !islocked;
     }
     public void addSubButton(View bnt, float offset_x, float offset_y){
         bnt.setVisibility(INVISIBLE);
@@ -151,7 +126,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
         PropertyValuesHolder holderY = PropertyValuesHolder.ofFloat("translationY", getY(), offset_y);
 
         ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(bnt, holderX, holderY);
-        animation.setDuration(2000);
+        animation.setDuration(1500);
 
         sub_buttons.put((FloatingActionButton) bnt, animation);
     }
