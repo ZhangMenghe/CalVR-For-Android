@@ -48,7 +48,6 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
         int action = motionEvent.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                this.setImageResource(R.drawable.pokeball);
                 downRawX = motionEvent.getRawX();
                 downRawY = motionEvent.getRawY();
                 dX = view.getX() - downRawX;
@@ -58,28 +57,28 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
             case MotionEvent.ACTION_MOVE:
                 int viewWidth = view.getWidth();
                 int viewHeight = view.getHeight();
-
-                View viewParent = (View) view.getParent();
-                int parentWidth = viewParent.getWidth();
-                int parentHeight = viewParent.getHeight();
-
-                float newX = motionEvent.getRawX() + dX;
-                newX = Math.max(0, newX); // Don't allow the FAB past the left hand side of the parent
-                newX = Math.min(parentWidth - viewWidth, newX); // Don't allow the FAB past the right hand side of the parent
-
-                float newY = motionEvent.getRawY() + dY;
-                newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
-                newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
-                RayMove(newX +viewWidth/2, newY+viewHeight/2);
-                view.animate()
-                        .x(newX)
-                        .y(newY)
-                        .setDuration(0)
-                        .start();
+//
+//                View viewParent = (View) view.getParent();
+//                int parentWidth = viewParent.getWidth();
+//                int parentHeight = viewParent.getHeight();
+//
+//                float newX = motionEvent.getRawX() + dX;
+//                newX = Math.max(0, newX); // Don't allow the FAB past the left hand side of the parent
+//                newX = Math.min(parentWidth - viewWidth, newX); // Don't allow the FAB past the right hand side of the parent
+//
+//                float newY = motionEvent.getRawY() + dY;
+//                newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
+//                newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
+                RayMove(getX() +viewWidth/2, getY()+viewHeight/2);
+//                view.animate()
+//                        .x(newX)
+//                        .y(newY)
+//                        .setDuration(0)
+//                        .start();
                 break;
             case MotionEvent.ACTION_UP:
                 RayCastEnd(motionEvent.getX(), motionEvent.getY());
-                this.setImageResource(R.drawable.pokeball_empty);
+//                this.setImageResource(R.drawable.pokeball_empty);
                 float upRawX = motionEvent.getRawX();
                 float upRawY = motionEvent.getRawY();
 
@@ -112,10 +111,12 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                 entry.getKey().setVisibility(VISIBLE);
                 entry.getValue().start();
             }
+            setImageResource(R.drawable.pokeball);
         }else{
             for (Map.Entry<FloatingActionButton, ObjectAnimator> entry : sub_buttons.entrySet()){
                 entry.getKey().setVisibility(INVISIBLE);
             }
+            setImageResource(R.drawable.pokeball_empty);
         }
         islocked = !islocked;
     }
