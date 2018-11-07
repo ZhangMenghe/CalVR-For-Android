@@ -53,10 +53,11 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                 dX = view.getX() - downRawX;
                 dY = view.getY() - downRawY;
                 RayCast(motionEvent.getX(), motionEvent.getY());
+                setImageResource(R.drawable.pokeball);
                 break;
             case MotionEvent.ACTION_MOVE:
-                int viewWidth = view.getWidth();
-                int viewHeight = view.getHeight();
+//                int viewWidth = view.getWidth();
+//                int viewHeight = view.getHeight();
 //
 //                View viewParent = (View) view.getParent();
 //                int parentWidth = viewParent.getWidth();
@@ -69,7 +70,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
 //                float newY = motionEvent.getRawY() + dY;
 //                newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
 //                newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
-                RayMove(getX() +viewWidth/2, getY()+viewHeight/2);
+//                RayMove(getX() +viewWidth/2, getY()+viewHeight/2);
 //                view.animate()
 //                        .x(newX)
 //                        .y(newY)
@@ -78,7 +79,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
                 break;
             case MotionEvent.ACTION_UP:
                 RayCastEnd(motionEvent.getX(), motionEvent.getY());
-//                this.setImageResource(R.drawable.pokeball_empty);
+                this.setImageResource(R.drawable.pokeball_empty);
                 float upRawX = motionEvent.getRawX();
                 float upRawY = motionEvent.getRawY();
 
@@ -121,22 +122,6 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
         setImageResource(R.drawable.pokeball);
         islocked = !islocked;
     }
-
-//    public void startAnimation(){
-//        if(!islocked){
-//            for (Map.Entry<FloatingActionButton, ObjectAnimator> entry : sub_buttons.entrySet()){
-//                entry.getKey().setVisibility(VISIBLE);
-//                entry.getValue().start();
-//            }
-//            setImageResource(R.drawable.pokeball);
-//        }else{
-//            for (Map.Entry<FloatingActionButton, ObjectAnimator> entry : sub_buttons.entrySet()){
-//                entry.getKey().setVisibility(INVISIBLE);
-//            }
-//            setImageResource(R.drawable.pokeball_empty);
-//        }
-//        islocked = !islocked;
-//    }
     public void addSubButton(View bnt, float offset_x, float offset_y){
         bnt.setVisibility(INVISIBLE);
 

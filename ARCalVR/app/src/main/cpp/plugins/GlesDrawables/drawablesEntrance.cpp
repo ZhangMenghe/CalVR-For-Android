@@ -16,10 +16,18 @@ bool GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection 
 //    LOGE("==== parent Num: %d", result.drawable->getNumParents());
     osg::Node* parent = dynamic_cast<Node*>(result.drawable->getParent(0));
     if(_map.empty() || _map.find(parent) ==_map.end()){
-        _map[parent] = parent->getOrCreateStateSet()->getUniform("uTextureChoice");
+//        MatrixTransform *transform =
+//        Matrixf mat = transform->getMatrix();
+//        Vec3f pos = mat.getTrans();
+//        LOGE("====getpos: %f, %f, %f", pos.x(), pos.y(), pos.z());
+        isectObj obj;
+        obj.uTexture = parent->getOrCreateStateSet()->getUniform("uTextureChoice");
+        obj.matrixTrans = dynamic_cast<MatrixTransform *>(parent->getParent(0));
+
+        _map[parent] = obj;
         bool textureChoice;
-        _map[parent]->get(textureChoice);
-        _map[parent]->set(!textureChoice);
+        _map[parent].uTexture->get(textureChoice);
+        _map[parent].uTexture->set(!textureChoice);
         PluginManager::setCallBackRequest("popButtons");
         return true;
     }
@@ -49,7 +57,6 @@ bool GlesDrawables::init() {
 
     _root = new Group;
     _objects = new Group;
-//    _root->addChild(_objects);
 
     SceneManager::instance()->getSceneRoot()->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
@@ -66,7 +73,7 @@ bool GlesDrawables::init() {
     rootSO->attachToScene();
 
     _strokeDrawable = new strokeDrawable;
-    _root->addChild(_strokeDrawable->createDrawableNode());
+    _root->addChild(_strokeDrawable->createDrawableNode(.0f,-0.8f));
 
     _pointcloudDrawable = new pointDrawable;
     _root->addChild(_pointcloudDrawable->createDrawableNode());
@@ -74,7 +81,7 @@ bool GlesDrawables::init() {
 //    createObject(_objects,
 //                 "models/andy.obj", "textures/andy.png",
 //                 Matrixf::rotate(PI_2f, Vec3f(.0,.0,1.0)) * Matrixf::translate(Vec3f(.0f, 0.5f, .0f)));
-
+//    _objects->addUpdateCallback(new )
     return true;
 }
 
@@ -97,11 +104,9 @@ void GlesDrawables::postFrame() {
         _planeDrawables[i]->updateOnFrame(planeIt->first, planeIt->second);
 
 
-    Vec3f isPoint;Vec2f offset;
+    Vec3f isPoint;
     if(TrackingManager::instance()->getIsPoint(isPoint)){
-        TrackingManager::instance()->getTouchOffset(offset);
-        _strokeDrawable->updateOnFrame(TrackingManager::instance()->getHandMat(0).getTrans(),
-                                       isPoint, offset);
+        _strokeDrawable->updateOnFrame(isPoint);
         _strokeDrawable->getGLNode()->setNodeMask(0xFFFFFF);
     } else
         _strokeDrawable->getGLNode()->setNodeMask(0x0);
@@ -124,6 +129,14 @@ void GlesDrawables::postFrame() {
 
 bool GlesDrawables::processEvent(cvr::InteractionEvent * event){
     AndroidInteractionEvent * aie = event->asAndroidEvent();
+    if(aie->getTouchType() == TRANS_BUTTON){
+
+        return true;
+    }
+    if(aie->getTouchType() == ROT_BUTTON){
+        return true;
+    }
+
     if(aie->getTouchType() != LEFT)
         return false;
 

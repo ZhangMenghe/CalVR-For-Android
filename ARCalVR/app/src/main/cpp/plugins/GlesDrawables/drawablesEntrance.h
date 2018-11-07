@@ -34,6 +34,11 @@
 #include "planeDrawable.h"
 #include "strokeDrawable.h"
 
+typedef struct IntersetctObj{
+    osg::Uniform * uTexture;
+    osg::MatrixTransform * matrixTrans;
+}isectObj;
+
 class GlesDrawables : public cvr::CVRPlugin, public cvr::MenuCallback
 {
 typedef osg::ref_ptr<osg::MatrixTransform> Transform;
@@ -42,11 +47,12 @@ protected:
     cvr::MenuButton *_pointButton, *_planeButton, *_strokeButton;
     osg::Group *_root, *_objects;
     cvr::SceneObject *rootSO, *objSO;
+
     osg::ref_ptr<pointDrawable> _pointcloudDrawable;
     int _plane_num = 0, _objNum = 0;
     std::vector<planeDrawable*> _planeDrawables;
     osg::ref_ptr<strokeDrawable> _strokeDrawable;
-    std::unordered_map<osg::Node*, osg::Uniform*> _map;
+    std::unordered_map<osg::Node*, isectObj> _map;
 
     void initMenuButtons();
     void createObject(osg::Group *, const char*, const char*, osg::Matrixf);
