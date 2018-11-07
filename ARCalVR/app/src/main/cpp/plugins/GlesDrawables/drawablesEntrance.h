@@ -48,18 +48,13 @@ protected:
     osg::ref_ptr<strokeDrawable> _strokeDrawable;
     std::unordered_map<osg::Node*, osg::Uniform*> _map;
 
-    int _hitTimes = 0;
-    const osg::Vec4f _switchColor[2] = {osg::Vec4f(.0f,1.0f,.0f,1.0f),
-                                        osg::Vec4f(1.0f,.0f,.0f,1.0f)};
-
     void initMenuButtons();
     void createObject(osg::Group *, const char*, const char*, osg::Matrixf);
     void createObject(osg::Group *, const char*, const char*, osg::Matrixf, bool opengl);
-    void tackleHitted(osgUtil::LineSegmentIntersector::Intersection result );
+    bool tackleHitted(osgUtil::LineSegmentIntersector::Intersection result );
 public:
     bool init();
     void menuCallback(cvr::MenuItem * item);
-    void preFrame();
     void postFrame();
     bool processEvent(cvr::InteractionEvent * event);
 };

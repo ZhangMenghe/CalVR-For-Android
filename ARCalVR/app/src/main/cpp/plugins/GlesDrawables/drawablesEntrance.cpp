@@ -7,20 +7,25 @@
 #include <osg/Texture2D>
 #include <cvrUtil/AndroidHelper.h>
 #include <osg/ShapeDrawable>
+#include <cvrKernel/PluginManager.h>
 
 using namespace osg;
 using namespace cvr;
 
-void GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection result ){
-    LOGE("==== parent Num: %d", result.drawable->getNumParents());
+bool GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection result ){
+//    LOGE("==== parent Num: %d", result.drawable->getNumParents());
     osg::Node* parent = dynamic_cast<Node*>(result.drawable->getParent(0));
     if(_map.empty() || _map.find(parent) ==_map.end()){
         _map[parent] = parent->getOrCreateStateSet()->getUniform("uTextureChoice");
         bool textureChoice;
         _map[parent]->get(textureChoice);
         _map[parent]->set(!textureChoice);
+        PluginManager::setCallBackRequest("popButtons");
+        return true;
     }
+    return false;
 }
+
 void GlesDrawables::initMenuButtons() {
     _pointButton = new MenuButton("Show PointCloud");
     _pointButton->setCallback(this);
@@ -75,38 +80,6 @@ bool GlesDrawables::init() {
 
 void GlesDrawables::menuCallback(cvr::MenuItem *item) {
 }
-void GlesDrawables::preFrame() {
-    Vec2f touchPos;
-    if(!ARCoreManager::instance()->getHitPosition(touchPos))
-        return;
-    Matrixf vpMat =ARCoreManager::instance()->getMVPMatrix();
-    vpMat = Matrixf::inverse(vpMat);
-
-    osg::Vec3 pointerStart, pointerEnd;
-    pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
-    TrackingManager::instance()->getScreenToClientPos(touchPos);
-    Vec4f vIn(touchPos.x(),touchPos.y(),-1, 1.0f);
-    Vec4f pos = vIn * vpMat;
-    float inv_w = 1.0f / pos.w();// * ConfigManager::UNIT_ALIGN_FACTOR;
-
-
-    Vec4f testScreen = Vec4f(pos.x()*inv_w, pos.y()*inv_w, pos.z()*inv_w, 1.0) *ARCoreManager::instance()->getMVPMatrix();
-    pointerEnd = Vec3f(pos.x() * inv_w, -pos.z()*inv_w, pos.y()*inv_w);
-    Vec3f dir = pointerEnd-pointerStart;
-    float t = (10-pointerStart.y())/dir.y();
-    pointerEnd = Vec3f(pointerStart.x() + t*dir.x(), 10.0f, pointerStart.z() + t*dir.z());
-
-    osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
-
-    osgUtil::IntersectionVisitor iv(handseg.get());
-    _objects->accept( iv );
-    if ( handseg->containsIntersections()){
-        _map.clear();
-        for(auto itr=handseg->getIntersections().begin(); itr!=handseg->getIntersections().end(); itr++)
-            tackleHitted(*itr);
-    }
-
-}
 
 void GlesDrawables::postFrame() {
     _pointcloudDrawable->updateOnFrame();
@@ -151,8 +124,45 @@ void GlesDrawables::postFrame() {
 
 bool GlesDrawables::processEvent(cvr::InteractionEvent * event){
     AndroidInteractionEvent * aie = event->asAndroidEvent();
-    if(aie->getTouchType() == LEFT && aie->getInteraction()==BUTTON_DOUBLE_CLICK) {
-        ARCoreManager::instance()->updatePlaneHittest(aie->getX(), aie->getY());
+    if(aie->getTouchType() != LEFT)
+        return false;
+
+    Vec2f touchPos = Vec2f(aie->getX(), aie->getY());
+    if(aie->getInteraction()==BUTTON_DOUBLE_CLICK){
+        ARCoreManager::instance()->updatePlaneHittest(touchPos.x(), touchPos.y());
+        return true;
+    }
+
+    if(aie->getInteraction()== BUTTON_DOWN){
+        Matrixf vpMat =ARCoreManager::instance()->getMVPMatrix();
+        vpMat = Matrixf::inverse(vpMat);
+
+        osg::Vec3 pointerStart, pointerEnd;
+        pointerStart = TrackingManager::instance()->getHandMat(0).getTrans();
+        TrackingManager::instance()->getScreenToClientPos(touchPos);
+        Vec4f vIn(touchPos.x(),touchPos.y(),-1, 1.0f);
+        Vec4f pos = vIn * vpMat;
+        float inv_w = 1.0f / pos.w();// * ConfigManager::UNIT_ALIGN_FACTOR;
+
+
+        Vec4f testScreen = Vec4f(pos.x()*inv_w, pos.y()*inv_w, pos.z()*inv_w, 1.0) *ARCoreManager::instance()->getMVPMatrix();
+        pointerEnd = Vec3f(pos.x() * inv_w, -pos.z()*inv_w, pos.y()*inv_w);
+        Vec3f dir = pointerEnd-pointerStart;
+        float t = (10-pointerStart.y())/dir.y();
+        pointerEnd = Vec3f(pointerStart.x() + t*dir.x(), 10.0f, pointerStart.z() + t*dir.z());
+
+        osg::ref_ptr<osgUtil::LineSegmentIntersector> handseg = new osgUtil::LineSegmentIntersector(pointerStart, pointerEnd);
+
+        osgUtil::IntersectionVisitor iv(handseg.get());
+        _objects->accept( iv );
+        if ( handseg->containsIntersections()){
+            _map.clear();
+            for(auto itr=handseg->getIntersections().begin(); itr!=handseg->getIntersections().end(); itr++){
+                if(tackleHitted(*itr))
+                    break;
+            }
+        }
+
         return true;
     }
     return false;

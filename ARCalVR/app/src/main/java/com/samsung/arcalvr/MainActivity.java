@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 track_bnt = findViewById(R.id.main_button);
-                track_bnt.startAnimation();
+                track_bnt.StartLockAnimation();
             }
         });
     }
