@@ -64,8 +64,6 @@ public:
     void onTouchMove(cvr::TouchType type, float x, float y);
 
     float getFPS();
-
-    void callJavaTest(const char* funcName);
 };
 
 #endif
