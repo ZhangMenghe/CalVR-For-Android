@@ -70,6 +70,7 @@ include(CMakeLists-staticOSG.txt)
 include(CMakeLists-staticMXML.txt)
 include(CMakeLists-staticPhysX.txt)
 include(CMakeLists-buildCALVR.txt)
+include(CMakeLists-buildCALVR-PLUGIN.txt)
 
 # physx needs cpufeatures
 include_directories(${ANDROID_NDK}/sources/android/cpufeatures)
@@ -85,6 +86,7 @@ include_directories(src/main/cpp/plugins/common)
 include_directories(src/main/cpp/plugins/MenuBasics)
 include_directories(src/main/cpp/plugins/PhysxBall)
 include_directories(src/main/cpp/plugins/GlesDrawables)
+
 add_library(ARCalVR
             SHARED
             src/main/cpp/jni_interface.cpp
@@ -93,9 +95,7 @@ add_library(ARCalVR
             )
 
 target_link_libraries(ARCalVR
-                      GlesDrawables
-                      PhysxBall
-                      MenuBasics
+                      ${CVR_PLUGINS}
                       android
                       mediandk
                       arcore
