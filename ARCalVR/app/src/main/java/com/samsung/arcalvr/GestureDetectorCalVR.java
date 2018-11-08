@@ -13,7 +13,9 @@ public class GestureDetectorCalVR {
             public void onOneFingerDown(MotionEvent event){
                 JniInterface.JNIonSingleTouchDown(0, event.getX(), event.getY());
             }
-            public void onOneFingerMove(MotionEvent event){}
+            public void onOneFingerMove(MotionEvent event){
+                JniInterface.JNIonTouchMove(0, event.getX(), event.getY());
+            }
 
             public  void onFling(int pointerNum, float srcx, float srcy, float dstx, float dsty){}
 
