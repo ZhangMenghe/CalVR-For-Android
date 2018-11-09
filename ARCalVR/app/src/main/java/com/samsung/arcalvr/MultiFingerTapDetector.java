@@ -5,11 +5,12 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
 public abstract class MultiFingerTapDetector {
-
+    private static final String TAG = "MultiFingerTapDetector";
     private static final int TIMEOUT = ViewConfiguration.getDoubleTapTimeout() + 100;
     private static final int TRIPLE_TIMEOUT = ViewConfiguration.getDoubleTapTimeout() + 250;
     private static final int LONG_PRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
     private static final int MIN_DISTANCE = 400;
+    private static final int SAME_POS_THREADHOOD = 20;
     // for one finger taps
     private long mFirstDownTimeOne = 0;
     private boolean mSeparateTouchesOne = false;
@@ -23,6 +24,8 @@ public abstract class MultiFingerTapDetector {
     private float avgX, avgY;
     private float downX, downY, upX, upY;
     private float sumx, sumy;
+    //for longpress
+    private float lastx, lasty;
 
     // for three finger taps
     private long mFirstDownTimeThree = 0;
@@ -75,6 +78,7 @@ public abstract class MultiFingerTapDetector {
                 downX = event.getX(); downY = event.getY();
                 if(event.getPointerCount() == 1){
                     onOneFingerDown(event);
+                    lastx = event.getX(); lasty = event.getY();
                     oneFingerDown = true;
                 }
                 // if this is the first tap OR we are tapping too slow -> resetTwo
@@ -181,10 +185,11 @@ public abstract class MultiFingerTapDetector {
 
                 // MOVE when the finger moves at all
             case MotionEvent.ACTION_MOVE:
-
                 // if we have just the one finger touching the screen
                 if (event.getPointerCount() == 1 && oneFingerDown){
-                    if(event.getEventTime() - event.getDownTime() > LONG_PRESS_TIMEOUT)
+                    if(event.getEventTime() - event.getDownTime() > LONG_PRESS_TIMEOUT &&
+                            Math.abs(event.getX() - lastx) < SAME_POS_THREADHOOD &&
+                            Math.abs(event.getY() - lasty) < SAME_POS_THREADHOOD)
                         onOneFingerLongPress();
                     else
                         onOneFingerMove(event);
@@ -195,7 +200,6 @@ public abstract class MultiFingerTapDetector {
                     onTwoFingerLongPress(event);
                     return true;
                 }
-
                 // if we have two fingers down and time is longer than the TIMEOUT
                 if (event.getPointerCount() == 3 && event.getEventTime() - event.getDownTime() > LONG_PRESS_TIMEOUT) {
                     onThreeFingerLongPress(event);
