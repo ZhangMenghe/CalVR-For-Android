@@ -22,19 +22,19 @@ public class GestureDetectorCalVR {
                 JniInterface.JNIonSingleTouchUp(pointerNum - 1, event.getX(), event.getY());
             }
 
-            //RIGHT SINGLE TOUCH
+            // TWO FINGERS (right mouse click)
+            // RIGHT SINGLE TOUCH
             public void onMoreFingersDown(int pointerNum, MotionEvent event){
-                JniInterface.JNIonSingleTouchDown(1, event.getX(), event.getY());
+                JniInterface.JNIonSingleTouchDown(pointerNum - 1, event.getX(), event.getY());
             }
-
             public void onTwoFingersMove(MotionEvent event){}
             public void onThreeFingersMove(MotionEvent event){}
 
+            // ONE FINGER (left mouse click)
             // left double tap
             public void onOneFingerDoubleTap(float ex, float ey){
                 JniInterface.JNIonDoubleTouch(0, ex, ey);
             }
-
             public void onOneFingerTripleTap(){}
             public void onOneFingerLongPress(){}
 

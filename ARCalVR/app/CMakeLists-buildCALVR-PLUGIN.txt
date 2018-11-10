@@ -11,5 +11,6 @@ ADD_SUBDIRECTORY(${CALVR_PLUGIN_SOURCE_DIR} ${CALVR_PLUGIN_BUILD_DIR})
 SET(CVR_PLUGINS
     GlesDrawables
     PhysxBall
+    SpatialViz
     MenuBasics)
 

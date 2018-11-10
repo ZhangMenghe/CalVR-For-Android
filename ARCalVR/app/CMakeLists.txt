@@ -31,7 +31,7 @@ SET(KERNEL_LIBRARIES
     z                             #
     osgText                       #
     osgGA                         #
-    osgdb_obj
+    #osgdb_obj
     osgdb_tiff
     osgdb_rgb
     osgdb_png
@@ -86,6 +86,7 @@ include_directories(src/main/cpp/plugins/common)
 include_directories(src/main/cpp/plugins/MenuBasics)
 include_directories(src/main/cpp/plugins/PhysxBall)
 include_directories(src/main/cpp/plugins/GlesDrawables)
+include_directories(src/main/cpp/plugins/SpatialViz)
 
 add_library(ARCalVR
             SHARED
