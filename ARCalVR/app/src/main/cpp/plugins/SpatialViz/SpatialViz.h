@@ -52,10 +52,7 @@ class SpatialViz : public cvr::CVRPlugin, public cvr::MenuCallback
     cvr::MenuButton *_mazePuzzleButton, *_5x5puzzleButton, *_tetrisPuzzle2, *_labyrinthPuzzle, *_tetrisPuzzle, *_removePuzzles, *_restartPhysics;
     cvr::MenuCheckbox * _rotate5x5Menu, *_rotateMazeMenu, *_rotateLabMenu, *_rotateMainTetrisMenu, *_rotateMainTetris2Menu;
     cvr::SceneObject *soLab, *so5x5, *soMaze, *soTetris, *soMainTetris, *soTetris2, *soMainTetris2;
-
-    // testing
-    cvr::MenuButton *_testButton;
-
+    
     osg::PositionAttitudeTransform *_sphereTrans, *_cubeTrans;
     osg::Geode *_cubeGeode, *_sphereGeode;
     osg::Switch *_root, *_labyrinthSwitch, *_5x5Switch, *_mazeSwitch, *_tetrisSwitch, *_mainTetrisSwitch, *_tetrisSwitch2, *_mainTetrisSwitch2, *_testSwitch;

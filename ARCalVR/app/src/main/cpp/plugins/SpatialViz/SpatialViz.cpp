@@ -1040,10 +1040,6 @@ void SpatialViz::menuCallback(MenuItem* menuItem)
         }
     }
     // -------- END SUB-MENU ITEMS -------- //
-    if (menuItem == _testButton){
-        PopupMenu *pop = new PopupMenu("test popup", "contextMenu");
-        pop->setVisible(true);
-    }
 }
 
 // reset the Scene Manager so that rotations and scales are not transferred between puzzles
@@ -1091,11 +1087,6 @@ bool SpatialViz::init()
 	_restartPhysics = new MenuButton("Restart Physics");
     _restartPhysics->setCallback(this);
     _mainMenu->addItem(_restartPhysics);
-
-    // testing
-    _testButton = new MenuButton("TESTING");
-    _testButton->setCallback(this);
-    _mainMenu->addItem(_testButton);
     
 	
 	// --------------- create Group Nodes for the root and each puzzle --------------- //
@@ -1163,7 +1154,7 @@ bool SpatialViz::init()
     
 	
  	// ----------------------- add each of the puzzles to the scene with scene objects -------------------------------- //
- 	//                      name, navigation, movable, clip, context menu, show bounds
+ 	//                              name, navigation, movable, clip, context menu, show bounds
 	soLab = new SceneObject("Labyrinth", false, false, true, true, true);
 	PluginHelper::registerSceneObject(soLab,"SpatialVizObject");
 	soLab->addChild(_labyrinthSwitch);
@@ -1178,7 +1169,7 @@ bool SpatialViz::init()
 	soLab->addMenuItem(_rotateLabMenu);
 	
 	
-	//                      name, navigation, movable, clip, context menu, show bounds
+	//                              name, navigation, movable, clip, context menu, show bounds
 	so5x5 = new SceneObject("5x5", false, false, true, true, true);
 	PluginHelper::registerSceneObject(so5x5,"SpatialVizObject");
 	so5x5->addChild(_5x5Switch);
@@ -1219,7 +1210,7 @@ bool SpatialViz::init()
 	soTetris->setBoundsCalcMode((cvr::SceneObject::BoundsCalcMode)1);
 	soTetris->setBoundingBox(BoundingBox(Vec3(0.0, 0.0, 0.0), Vec3(0.1, 0.1, 0.1)));
 	
-	//                             name, navigation, movable, clip, context menu, show bounds
+	//                                        name, navigation, movable, clip, context menu, show bounds
 	soMainTetris = new SceneObject("Main Tetris Piece", false, true, true, true, false);
 	PluginHelper::registerSceneObject(soMainTetris,"SpatialVizObject");
 	soMainTetris->addChild(_mainTetrisSwitch);
@@ -1233,7 +1224,7 @@ bool SpatialViz::init()
 	
 	soMainTetris->addMenuItem(_rotateMainTetrisMenu);
     
-    //                          name, navigation, movable, clip, context menu, show bounds
+    //                                 name, navigation, movable, clip, context menu, show bounds
 	soTetris2 = new SceneObject("Tetris2 Pieces", false, false, true, true, false);
 	PluginHelper::registerSceneObject(soTetris2,"SpatialVizObject");
 	soTetris2->addChild(_tetrisSwitch2);
@@ -1243,11 +1234,11 @@ bool SpatialViz::init()
 	soTetris2->setBoundsCalcMode((cvr::SceneObject::BoundsCalcMode)1);
 	soTetris2->setBoundingBox(BoundingBox(Vec3(0.0, 0.0, 0.0), Vec3(0.1, 0.1, 0.1)));
 	
-	//                               name, navigation, movable, clip, context menu, show bounds
+	//                                         name, navigation, movable, clip, context menu, show bounds
 	soMainTetris2 = new SceneObject("Main Tetris2 Piece", false, true, true, true, false);
 	PluginHelper::registerSceneObject(soMainTetris2,"SpatialVizObject");
 	soMainTetris2->addChild(_mainTetrisSwitch2);
-	soMainTetris2->attachToScene();
+	soMainTetris2->attachToScene();				
 	soMainTetris2->addMoveMenuItem();
 	soMainTetris2->addNavigationMenuItem();
 	

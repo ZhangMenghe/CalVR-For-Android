@@ -11,7 +11,9 @@
 
 using namespace std;
 using namespace osg;
-using namespace physx;
+#ifdef HAVE_PHYSX
+  using namespace physx;
+#endif
 
 class PuzzleGenerator{
 public:
@@ -132,7 +134,7 @@ void PuzzleGenerator::createTetrisPiece(int size, int numPieces, vector<Vec3> &c
 		for (int j = 0; j < size; j++) {
 			delete(cube[i][j]);
 		}delete(cube[i]);
-	}delete[](cube);
+	}delete(cube);
     
 }
 
@@ -322,7 +324,7 @@ void PuzzleGenerator::createPuzzleCube(int size, vector<Vec3>& positions) {
 		}
 		delete(cube[i]);
 	}
-	delete[](cube);
+	delete(cube);
 }
 
 //------------------------------------------ 5x5 PUZZLE -----------------------------------------//
@@ -330,10 +332,10 @@ void PuzzleGenerator::createPuzzleCube(int size, vector<Vec3>& positions) {
 void PuzzleGenerator::create5x5(int puzzleSize, vector<Vec3>& verticalWalls, vector<Vec3>& horizontalWalls, vector<Vec3>& floors) {
     // puzzleSize is the dimension of the final puzzle, the three vectors of Vec3's store the different types of walls to draw
 
-    //float puzzleDim = 0.25;
-    //float height = 0.05;    float radius = 0.0375;
-    //float width = 0.001;
-    //float spacing = 0.1;                        // to have the maze an even 5x5 grid
+    float puzzleDim = 0.25;
+    float height = 0.05;    float radius = 0.0375;
+    float width = 0.001;
+    float spacing = 0.1;                        // to have the maze an even 5x5 grid
     PxVec3 position = PxVec3(0.0f, 0.0f, 0.0f);
     
     
@@ -609,7 +611,7 @@ void PuzzleGenerator::create5x5(int puzzleSize, vector<Vec3>& verticalWalls, vec
 		for (int j = 0; j <= prioritySize; j++) {
 			delete(cube[i][j]);
 		}delete(cube[i]);
-	}delete[](cube);
+	}delete(cube);
 }
 
 //-------------------------------------- LABYRINTH PUZZLE ---------------------------------------//

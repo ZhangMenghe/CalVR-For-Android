@@ -108,6 +108,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
     private void StartUnLockAnimation(){
         if(!islocked) return;
         for (Map.Entry<FloatingActionButton, ObjectAnimator> entry : sub_buttons.entrySet()){
+            entry.getKey().setAlpha(0.5f);
             entry.getKey().setVisibility(INVISIBLE);
         }
         setImageResource(R.drawable.pokeball_empty);

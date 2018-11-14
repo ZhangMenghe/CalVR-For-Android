@@ -115,18 +115,23 @@ public class MainActivity extends AppCompatActivity
         track_bnt.addSubButton(findViewById(R.id.moveButton), -300f, -200f);
         track_bnt.addSubButton(findViewById(R.id.rotateButton), 300f, -200f);
 
-        FloatingActionButton trans_bnt = findViewById(R.id.moveButton);
+        final FloatingActionButton trans_bnt = findViewById(R.id.moveButton);
+        final FloatingActionButton move_bnt = findViewById(R.id.rotateButton);
         trans_bnt.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                trans_bnt.setAlpha(1.0f);
+                move_bnt.setAlpha(0.5f);
                 JniInterface.JNIonSingleTouchDown(3,view.getX(), view.getY());
             }
         });
 
-        FloatingActionButton move_bnt = findViewById(R.id.rotateButton);
+
         move_bnt.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                move_bnt.setAlpha(1.0f);
+                trans_bnt.setAlpha(0.5f);
                 JniInterface.JNIonSingleTouchDown(4, view.getX(), view.getY());
             }
         });

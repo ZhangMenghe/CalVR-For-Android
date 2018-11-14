@@ -47,7 +47,7 @@
    <Plugin>
     <PhysxBall value = "on" />
     <GlesDrawables value = "on" />
-    <SpatialViz value = "on" />
+    <SpatialViz value = "off" />
 
     <ParticleDreams value="off">
       <DataDir value="/home/aprudhom/data/ParticleDreams" />

@@ -1,4 +1,3 @@
-uniform mat4 uModelView, uProj;
 uniform vec3 lightPosition;
 varying vec3 normal, eyeVec, lightDir;
 varying vec2 vTexCoord;
