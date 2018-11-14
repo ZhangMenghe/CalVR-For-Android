@@ -40,6 +40,7 @@ allController::allController(AAssetManager *assetManager)
     _root = nullptr;
     _sceneGroup = nullptr;
     _bgDrawable = new bgDrawable();
+    _fpsMonitor = new perfMonitor();
 }
 
 allController::~allController(){
@@ -126,8 +127,6 @@ void allController::onTouchMove(TouchType type, float x, float y){
     aie->setInteraction(BUTTON_DRAG);
     _CalVR->setTouchEvent(aie, type, x, y);
 }
-
-float allController::getFPS(){return 60.0f;}
 
 ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
