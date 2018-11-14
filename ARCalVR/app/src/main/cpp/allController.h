@@ -8,6 +8,7 @@
 #include <cvrKernel/InteractionEvent.h>
 #include "bgDrawable.h"
 #include "jni_interface.h"
+#include "perfMonitor.h"
 
 #include <cvrKernel/InteractionEvent.h>
 #include <jni.h>
@@ -31,6 +32,7 @@ class allController {
 protected:
     cvr::CalVR *_CalVR;
     AAssetManager * _asset_manager;
+    perfMonitor * _fpsMonitor;
 
     // AUX OSG Node & drawable
     osg::ref_ptr<osg::Group>  _root, _sceneGroup;
@@ -63,7 +65,7 @@ public:
 
     void onTouchMove(cvr::TouchType type, float x, float y);
 
-    float getFPS();
+    float getFPS(){return _fpsMonitor->Update();}
 };
 
 #endif

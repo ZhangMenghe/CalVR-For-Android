@@ -93,6 +93,7 @@ add_library(ARCalVR
             src/main/cpp/jni_interface.cpp
             src/main/cpp/allController.cpp
             src/main/cpp/bgDrawable.cpp
+            src/main/cpp/perfMonitor.cpp
             )
 
 target_link_libraries(ARCalVR
