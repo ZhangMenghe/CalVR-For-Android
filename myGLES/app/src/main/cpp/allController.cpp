@@ -27,27 +27,11 @@ REGISTER(MenuBasics);
 
 allController::allController(AAssetManager *assetManager)
         :_asset_manager(assetManager){
-    _viewer = new cvr::CVRViewer();
-    _viewer->setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
+    _CalVR = new CalVR;
     _root = new Group;
-    _menu =  cvr::MenuManager::instance();
-    _scene = cvr::SceneManager::instance();
-    _config = cvr::ConfigManager::instance();
-    _interactionManager = cvr::InteractionManager::instance();
-    _tracking = TrackingManager::instance();
-    _navigation = cvr::Navigation::instance();
-    _communication = cvr::ComController::instance();
-    _plugins = cvr::PluginManager::instance();
-
-    _ar_controller = new arcoreController;
     _bgDrawable = new bgDrawable();
     _sceneGroup = new Group;
-    _strokeDrawable = new strokeDrawable;
     _fpsMonitor = new perfMonitor();
-
-    _pointcloudDrawable = new pointDrawable();
-
-//    initialize_camera();
 }
 
 allController::~allController(){
@@ -102,182 +86,43 @@ allController::~allController(){
     }*/
 }
 
-
-void allController::initialize_camera() {
-    osg::ref_ptr<osg::Camera> mainCam = _viewer->getCamera();
-    mainCam->setClearColor(osg::Vec4f(0.81, 0.77, 0.75,1.0));
-    osg::Vec3d eye = osg::Vec3d(0,-10,0);
-    osg::Vec3d center = osg::Vec3d(0,0,.0);
-    osg::Vec3d up = osg::Vec3d(0,0,1);
-    mainCam->setViewMatrixAsLookAt(eye,center,up); // usual up vector
-    mainCam->setRenderOrder(osg::Camera::NESTED_RENDER);
-//    mainCam->setCullingMode( osg::CullSettings::NO_CULLING );
-}
-
-void allController::setupDefaultEnvironment(const char *root_path) {
-    std::string homeDir = std::string(root_path) + "/";
-    setenv("CALVR_HOST_NAME", "calvrHost");
-    setenv("CALVR_HOME", homeDir);
-    setenv("CALVR_ICON_DIR", homeDir+"icons/");
-    setenv("CALVR_CONFIG_DIR", homeDir+"config/");
-    setenv("CALVR_RESOURCE_DIR", homeDir+"resources/");
-    setenv("CALVR_CONFIG_FILE", homeDir+"config/config.xml");
-}
-
 void allController::onCreate(const char * calvr_path){
-//    calvr = new cvr::CalVR();
-//    if(!calvr->init(calvr_path)){
-//        delete calvr;
-//        return;
-//    }
-    setupDefaultEnvironment(calvr_path);
-//    ref_ptr<Geode> sphereNode = createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f));
-//    _sceneGroup->addChild(sphereNode.get());
+    if(!_CalVR->init(calvr_path, _asset_manager)){
+        delete _CalVR;
+        return;
+    }
 
-    _sceneGroup->addChild( _strokeDrawable->createDrawableNode(_asset_manager,&_glStateStack));
-
-    //Initialization should follow a specific order
-
-    if(!_config->init())
-        LOGE("==========CONFIG INITIALIZATION FAIL========");
-    if(!_communication->init())
-        LOGE("==========INTERACTION MANAGER FAIL=========");
-    if(!_tracking->init())
-        LOGE("==========TRACKING MANAGER FAIL=========");
-    if(!_interactionManager->init())
-        LOGE("==========INTERACTION MANAGER FAIL=========");
-    if(!_navigation->init())
-        LOGE("=========NAVIGATION FAIL===========");
-    if(!_scene->init())
-        LOGE("==========SCENE INITIALIZATION FAIL=========");
-    _scene->setViewerScene(_viewer);
-    _viewer->setReleaseContextAtEndOfFrameHint(false);
-
-    if(!_menu->init())
-        LOGE("==========MENU INITIALIZATION FAIL=========");
-
-    if(!_plugins->init(_asset_manager))
-        LOGE("==========PLUG IN  FAIL=========");
-
-//    _bgDrawable->createDrawableNode(_asset_manager, &_glStateStack);
-    _root->addChild(_bgDrawable->createDrawableNode(_asset_manager, &_glStateStack));
+    _root->addChild(_bgDrawable->createDrawableNode(&_glStateStack));
+    ARCoreManager::instance()->setCameraTextureTarget(_bgDrawable->GetTextureId());
 
     //This will make sure camera always in the background
     _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2,"RenderBin");
     _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
     _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
-    _sceneGroup->addChild(_scene->getSceneRoot());
-//    _scene->addChild(createDebugOSGSphere(osg::Vec3(.0f,0.5f,.0f)));
-    _sceneGroup->addChild(_pointcloudDrawable->createDrawableNode(_asset_manager, &_glStateStack));
+    _sceneGroup->addChild(_CalVR->getSceneRoot());
 
     _root->addChild(_sceneGroup);
-    _viewer->setSceneData(_root.get());
-}
-void allController::DrawRealWorld(){
-    _ar_controller->onDrawFrame(_bgDrawable->GetTextureId());
-
-    osg::Matrixd* mat = new osg::Matrixd(glm::value_ptr(_ar_controller->view_mat));
-    Vec3d eye, center, up;
-    mat->getLookAt(eye, center, up);
-    _viewer->getCamera()->setViewMatrixAsLookAt(Vec3d(eye.x(), -eye.z(), eye.y()),
-                                                Vec3d(center.x(), -center.z(), center.y()),
-                                                Vec3d(up.x(), -up.z(), up.y()));
-
-    float * transUV = _ar_controller->updateBackgroundRender();
-    if(nullptr != transUV)
-        _bgDrawable->updateOnFrame(transUV);
-
-    if(ARcoreHelper::instance()->getPointCloudStatus()){
-        _ar_controller->renderPointClouds(_pointcloudDrawable);
-
-        _pointcloudDrawable->getGLNode()->setNodeMask(0xFFFFFF);
-    } else
-        _pointcloudDrawable->getGLNode()->setNodeMask(0x0);
-
-    if(ARcoreHelper::instance()->getPlaneStatus()){
-        if(!_ar_controller->isTracking())
-            return;
-        _ar_controller->doLightEstimation();
-
-        PlaneParams planes = _ar_controller->doPlaneDetection();
-        if(_plane_num < planes.plane_color_map.size()){
-            for(int i= _plane_num; i<planes.plane_color_map.size();i++){
-                planeDrawable * pd = new planeDrawable();
-                _sceneGroup->addChild(pd->createDrawableNode(_asset_manager, &_glStateStack));
-                _planeDrawables.push_back(pd);
-            }
-            _plane_num = planes.plane_color_map.size();
-        }
-        auto planeIt = planes.plane_color_map.begin();
-        for(int i=0; i<_plane_num; i++,planeIt++){
-            LOGE("=== %f, %f, %f",planeIt->second[0], planeIt->second[1], planeIt->second[2]);
-            _planeDrawables[i]->updateOnFrame(_ar_controller->getSession(), planeIt->first,
-                                              _ar_controller->proj_mat, _ar_controller->view_mat,
-                                              planeIt->second);
-            ARcoreHelper::instance()->updatePlaneData(_planeDrawables[i]->getPlaneCenter(), i);
-
-            _planeDrawables[i]->getGLNode()->setNodeMask(0xFFFFFF);
-        }
-
-    }else{
-        for(int i=0; i<_plane_num; i++)
-            _planeDrawables[i]->getGLNode()->setNodeMask(0x0);
-    }
-    size_t anchor_num = _ar_controller->getAnchorSize();
-    if( anchor_num != 0){
-        if(_andy_num < anchor_num){
-            for(int i=_andy_num; i<anchor_num; i++){
-                osg_objectRenderer * obj_render = new osg_objectRenderer;
-                _sceneGroup->addChild(obj_render->createNode(_asset_manager, "models/andy.obj", "textures/andy.png"));
-                _object_renderers.push_back(obj_render);
-            }
-
-        }
-        _ar_controller->getAnchorModelMatrixFrom(_andy_Model_Mats, _andy_num);
-
-        _andy_num = anchor_num;
-    }
-    for(int i=0; i<_object_renderers.size(); i++){
-        _object_renderers[i]->Draw(_ar_controller->proj_mat,_ar_controller->view_mat, _andy_Model_Mats[i],_color_correction, 1);
-    }
+    _CalVR->setSceneData(_root.get());
 
 }
+
 void allController::onDrawFrame(){
-    DrawRealWorld();
-
-    _viewer->frameStart();
-    _viewer->advance(USE_REFERENCE_TIME);
-//    _viewer->eventTraversal();
-
-    _tracking->update();
-    _scene->update();
-    _menu->update();
-    _interactionManager->update();
-
-    _navigation->update();
-    _scene->postEventUpdate();
-    _plugins->preFrame();
-//    _viewer->frame();
-    _viewer->updateTraversal();
-    _viewer->renderingTraversals();
-    if(_communication->getIsSyncError())
-        LOGE("Sync error");
-    _plugins->postFrame();
+    _CalVR->frame();
+    _bgDrawable->updateOnFrame(ARCoreManager::instance()->getTransformedUVs());
     DrawRay();
 }
 
 void allController::onViewChanged(int rot, int width, int height){
-    _viewer->setUpViewerAsEmbeddedInWindow(0,0,width,height);
-    _ar_controller->onViewChanged(rot, width, height);
+    _CalVR->onViewChanged(rot, width, height);
     _touchX = width/2; _touchY = height/2;
     _screenWidth = width;   _screenHeight = height;
 }
 void allController::onPause() {
-    _ar_controller->onPause();
+    _CalVR->onPause();
 }
 
 void allController::onResume(void *env, void *context, void *activity) {
-    _ar_controller->onResume(env, context, activity);
+    _CalVR->onResume(env, context, activity);
 }
 void allController::onResourceLoaded(const char *path) {
     FILE* fp = fopen(path, "r");
@@ -313,21 +158,21 @@ void allController::commonMouseEvent(cvr::MouseInteractionEvent * mie,
     mie->setX(x);
     mie->setY(y);
 
-    float * camera_pos = _ar_controller->getCameraPose();
-    osg::Quat camRot = osg::Quat(camera_pos[0],-camera_pos[2],camera_pos[1],camera_pos[3]);
-    Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]);
-    osg::Matrix m, n;
-    m.makeRotate(camRot);
+//    float * camera_pos = _ar_controller->getCameraPose();
+//    osg::Quat camRot = osg::Quat(camera_pos[0],-camera_pos[2],camera_pos[1],camera_pos[3]);
+//    Vec3f hand_pose = Vec3f(camera_pos[4], -camera_pos[6], camera_pos[5]);
+//    osg::Matrix m, n;
+//    m.makeRotate(camRot);
+//
+//    n.makeTranslate(hand_pose);
+//    mie->setTransform(m * n);
+//
+//    double roll, pitch, yaw;
+//    toEulerAngle(osg::Quat(camera_pos[0],camera_pos[1],camera_pos[2],camera_pos[3]), roll, pitch, yaw);
 
-    n.makeTranslate(hand_pose);
-    mie->setTransform(m * n);
-
-    double roll, pitch, yaw;
-    toEulerAngle(osg::Quat(camera_pos[0],camera_pos[1],camera_pos[2],camera_pos[3]), roll, pitch, yaw);
-
-    _tracking->setCameraRotation(m, roll, -yaw, pitch);
-    _tracking->setTouchEventMatrix(m*n);
-    _interactionManager->addEvent(mie);
+//    _tracking->setCameraRotation(m, roll, -yaw, pitch);
+//    _tracking->setTouchEventMatrix(m*n);
+//    _interactionManager->addEvent(mie);
 }
 
 void allController::onSingleTouchDown(int pointer_num, float x, float y) {
@@ -361,28 +206,28 @@ void allController::onTouchMove(int pointer_num, float x, float y) {
 
 void allController::onSingleFingerDoubleTouch(float x, float y){
     LOGE("===onSingleFingerDoubleTouch==");
-    _ar_controller->updateHitTest(x,y);
+//    _ar_controller->updateHitTest(x,y);
 }
 
 void allController::DrawRay(){
-    float offset[2];
-    offset[0] = 2*(_touchX - _screenWidth/2) / _screenWidth;
-    offset[1] = 2*(_screenHeight/2 - _touchY) / _screenHeight;
-
-    Vec3f isPoint;
-    if(TrackingManager::instance()->getIsPoint(isPoint)){
-        _strokeDrawable->getGLNode()->setNodeMask(0xFFFFFF);
-        _ar_controller->renderStroke(_strokeDrawable,
-                                     TrackingManager::instance()->getHandMat(0).getTrans(),
-                                     isPoint,
-                                     offset);
-    }
-    else
-        _strokeDrawable->getGLNode()->setNodeMask(0x0);
+//    float offset[2];
+//    offset[0] = 2*(_touchX - _screenWidth/2) / _screenWidth;
+//    offset[1] = 2*(_screenHeight/2 - _touchY) / _screenHeight;
+//
+//    Vec3f isPoint;
+//    if(TrackingManager::instance()->getIsPoint(isPoint)){
+//        _strokeDrawable->getGLNode()->setNodeMask(0xFFFFFF);
+//        _ar_controller->renderStroke(_strokeDrawable,
+//                                     TrackingManager::instance()->getHandMat(0).getTrans(),
+//                                     isPoint,
+//                                     offset);
+//    }
+//    else
+//        _strokeDrawable->getGLNode()->setNodeMask(0x0);
     //shoot the ray to check the interaction with menu
-    MouseInteractionEvent * mie = new MouseInteractionEvent();
-    mie->setInteraction(BUTTON_DRAG);
-    commonMouseEvent(mie, 1, _touchX, _touchY);
+//    MouseInteractionEvent * mie = new MouseInteractionEvent();
+//    mie->setInteraction(BUTTON_DRAG);
+//    commonMouseEvent(mie, 1, _touchX, _touchY);
 }
 ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
 //    osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;

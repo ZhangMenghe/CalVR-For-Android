@@ -2,13 +2,14 @@
 // Created by menghe on 8/1/2018.
 //
 
-#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
 #include <GLES2/gl2ext.h>
 #include "bgDrawable.h"
-void bgDrawable::Initialization(AAssetManager * manager,std::stack<utils::glState>* stateStack){
-    glDrawable::Initialization(manager, stateStack);
+#include <cvrUtil/AndroidHelper.h>
+void bgDrawable::Initialization(std::stack<cvr::glState>* stateStack){
+    cvr::glesDrawable::Initialization(stateStack);
 
-    _shader_program = utils::CreateProgram("shaders/screenquad.vert", "shaders/Texture.frag", manager);
+    _shader_program = cvr::assetLoader::instance()->createGLShaderProgramFromFile("shaders/screenquad.vert", "shaders/Texture.frag");
     if(!_shader_program)
         LOGE("Failed to create shader program");
 
