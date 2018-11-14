@@ -21,3 +21,7 @@
 
 ## Other changes
 - `std::mem_fun_ref()` and `std::mem_fun()` have been deprecated in C++11 and removed in C++17; they are replaced by `std::mem_fn()`.
+
+## Library Dependencies
+
+ <img src="https://drive.google.com/uc?id=1MLgzZ5nHGDCjWUK0t9VVi9CyLKMLHYjR" alt="drawing" align="middle" width="800px"/> 

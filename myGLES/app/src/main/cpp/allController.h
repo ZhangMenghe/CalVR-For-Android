@@ -10,6 +10,7 @@
 #include <osgViewer/Viewer>
 #include <cvrKernel/CVRViewer.h>
 #include <cvrKernel/InteractionManager.h>
+#include <android/asset_manager_jni.h>
 #include "bgDrawable.h"
 #include "perfMonitor.h"
 
@@ -66,6 +67,21 @@ namespace controller{
         void onTouchMove(int pointer_num, float x, float y);
 
         float getFPS(){return _fpsMonitor->Update();}
+//        AAssetManager * getAssetManager(){
+//            JNIEnv* env = GetJniEnv();
+//            jclass cls_JavaClass = env->FindClass("com/example/arcalvr/JniInterfaceCalVR");
+//
+//            if (cls_JavaClass){
+//                cls_JavaClass = static_cast<jclass>(env->NewGlobalRef(cls_JavaClass));
+//
+//                jmethodID load_image_method = env->GetStaticMethodID(
+//                        helper_class, kLoadImageMethodName, kLoadImageMethodSignature);
+//
+//                jobject newObj = env->NewGlobalRef(cls_JavaClass);
+//                AAssetManager*  assetManager = AAssetManager_fromJava(env, newObj);
+//            }
+//
+//        }
     };
 }
 
