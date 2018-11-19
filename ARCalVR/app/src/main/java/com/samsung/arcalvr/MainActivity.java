@@ -1,9 +1,5 @@
 package com.samsung.arcalvr;
 
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.content.Intent;
-import android.graphics.Path;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
@@ -14,12 +10,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.TextView;
-
 import java.io.File;
-import java.security.acl.Group;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -47,11 +40,15 @@ public class MainActivity extends AppCompatActivity
     //Label
     TextView FPSlabel;
     MovableFloatingActionButton track_bnt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+
 
         JniInterface.assetManager = getAssets();
         controllerAddr = JniInterface.JNIcreateController(JniInterface.assetManager);
