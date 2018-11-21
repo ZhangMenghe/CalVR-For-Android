@@ -33,7 +33,7 @@
 #include "pointDrawable.h"
 #include "planeDrawable.h"
 #include "strokeDrawable.h"
-
+//#include "quadDrawable.h"
 typedef struct IntersetctObj{
     osg::Uniform * uTexture;
     osg::MatrixTransform * matrixTrans;
@@ -42,6 +42,11 @@ enum sceneState{
     FREE = 0,
     ROTATE,
     TRANSLATE
+};
+enum LightingType{
+    ARCORE_CORRECTION = 0,
+    SPHERICAL_HARMONICS,
+    ONES_SOURCE
 };
 class GlesDrawables : public cvr::CVRPlugin, public cvr::MenuCallback
 {
@@ -53,6 +58,7 @@ protected:
     cvr::SceneObject *rootSO, *objSO;
 
     osg::ref_ptr<pointDrawable> _pointcloudDrawable;
+//    osg::ref_ptr<quadDrawable> _quadDrawable;
     int _plane_num = 0, _objNum = 0;
     std::vector<planeDrawable*> _planeDrawables;
     osg::ref_ptr<strokeDrawable> _strokeDrawable;
@@ -60,10 +66,9 @@ protected:
     osg::Node* _selectedNode = nullptr;
     sceneState _selectState = FREE;
     osg::Vec2f _mPreviousPos;
-    const bool use_sh = true;
 
     void initMenuButtons();
-    void createObject(osg::Group *, const char*, const char*, osg::Matrixf);
+    void createObject(osg::Group *, const char*, const char*, osg::Matrixf, LightingType);
     void createObject(osg::Group *, const char*, const char*, osg::Matrixf, bool opengl);
     bool tackleHitted(osgUtil::LineSegmentIntersector::Intersection result );
 public:

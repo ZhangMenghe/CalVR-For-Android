@@ -1,9 +1,9 @@
 package com.samsung.arcalvr;
 
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.content.Intent;
-import android.graphics.Path;
+import android.graphics.Rect;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
@@ -11,17 +11,20 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
+import android.util.SizeF;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.TextView;
-
 import java.io.File;
-import java.security.acl.Group;
+import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import static android.hardware.camera2.CameraCharacteristics.SENSOR_INFO_PIXEL_ARRAY_SIZE;
 
 public class MainActivity extends AppCompatActivity
     implements DisplayManager.DisplayListener{
@@ -47,10 +50,14 @@ public class MainActivity extends AppCompatActivity
     //Label
     TextView FPSlabel;
     MovableFloatingActionButton track_bnt;
+
+    //Sensor pixel 2 meter
+    ArrayList<Size> pixel_arr_size = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
         JniInterface.assetManager = getAssets();
@@ -72,7 +79,29 @@ public class MainActivity extends AppCompatActivity
             CameraPermissionHelper.requestCameraPermission(this);
             return;
         }
+        try{
+            CameraManager manager = (CameraManager) getSystemService(this.CAMERA_SERVICE);
+            for (String camera_id : manager.getCameraIdList()) {
+                CameraCharacteristics characteristics = manager.getCameraCharacteristics(camera_id);
+//                int facing = characteristics.get(CameraCharacteristics.LENS_FACING);
+//                float[] f = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS);
+//                Log.e(TAG, "===onResume: FOCAL LENS:" + f[0]);
+//                SizeF ps = characteristics.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE);
+//                Log.e(TAG, "===onResume: SENSOR_INFO_PHYSICAL_SIZE:" + ps.toString());
+                pixel_arr_size.add(characteristics.get(CameraCharacteristics.SENSOR_INFO_PIXEL_ARRAY_SIZE));
+//                Log.e(TAG, "===onResume: SENSOR_INFO_PIXEL_ARRAY_SIZE:" + pas.toString());
+//                Rect aas = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+//                Log.e(TAG, "===onResume:SENSOR_INFO_ACTIVE_ARRAY_SIZE:" + aas.toString());
+            }
+        }catch (CameraAccessException e){
+            e.printStackTrace();
+        }
+
+
+
+
         JniInterface.JNIonResume(getApplicationContext(), this);
+        JniInterface.JNIsetPixelSize(getPixelSize());
         // Listen to display changed events to detect 180° rotation, which does not cause a config
         // change or view resize.
         getSystemService(DisplayManager.class).registerDisplayListener(this, null);
@@ -146,6 +175,8 @@ public class MainActivity extends AppCompatActivity
         surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0); // Alpha used for plane blending.
         surfaceView.setRenderer(new MainActivity.Renderer());
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+
+
     }
     private void setupTouchDetector(){
         gestureDetector = new GestureDetectorCalVR(this);
@@ -239,6 +270,16 @@ public class MainActivity extends AppCompatActivity
                 track_bnt.StartLockAnimation();
             }
         });
+    }
+    public float[] getPixelSize(){
+        float[] arr = new float[pixel_arr_size.size() * 2];
+        int i=0;
+        for(Size sz:pixel_arr_size){
+            arr[2*i] = sz.getWidth();
+            arr[2*i+1] = sz.getHeight();
+            i++;
+        }
+        return arr;
     }
     public native void JNIOnMainActivityCreated();
 }
