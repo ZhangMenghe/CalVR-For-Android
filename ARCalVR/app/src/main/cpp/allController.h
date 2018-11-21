@@ -15,15 +15,20 @@
 #include <cvrUtil/AndroidHelper.h>
 class JNICallBackCallback:public osg::NodeCallback{
 private:
+    typedef struct funcParam{
+        jmethodID id;
+        int funMode;
+    }mFun;
     JNIEnv * _env;
     jclass _helper_class;
     jobject _obj;
-    std::unordered_map<std::string, jmethodID > _map;
+    std::unordered_map<std::string, mFun > _map;
 public:
+    std::vector<float> sizeArr;
     JNICallBackCallback(JNIEnv* env, jclass hclass, jobject obj):
     _env(env), _helper_class(hclass), _obj(obj){}
 
-    void registerCallBackFunction(std::string funcName, const char* signature);
+    void registerCallBackFunction(std::string funcName, const char* signature, int funMode = 0);
 
     virtual void operator()(osg::Node*node, osg::NodeVisitor * nv);
 };
@@ -33,6 +38,7 @@ protected:
     cvr::CalVR *_CalVR;
     AAssetManager * _asset_manager;
     perfMonitor * _fpsMonitor;
+    JNICallBackCallback* JNIcallback;
 
     // AUX OSG Node & drawable
     osg::ref_ptr<osg::Group>  _root, _sceneGroup;
@@ -66,6 +72,8 @@ public:
     void onTouchMove(cvr::TouchType type, float x, float y);
 
     float getFPS(){return _fpsMonitor->Update();}
+
+    void setPixelSize(float * arr);
 };
 
 #endif

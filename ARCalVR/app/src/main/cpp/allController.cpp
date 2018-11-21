@@ -22,16 +22,32 @@ REGISTER(GlesDrawables);
 void JNICallBackCallback::operator()(osg::Node *node, osg::NodeVisitor *nv) {
     std::string functionName;
     if(PluginManager::getCallBackRequest(functionName)){
-        if(_map.find(functionName) != _map.end())
-            _env->CallVoidMethod(_obj, _map[functionName]);
+        if(_map.find(functionName) != _map.end()){
+            if(_map[functionName].funMode == 0)
+                _env->CallVoidMethod(_obj, _map[functionName].id);
+            else if(_map[functionName].funMode == 1){
+                sizeArr.clear();
+                jboolean copy = 0;
+                jfloatArray sizeArray = (jfloatArray)_env->CallObjectMethod(_obj, _map[functionName].id);
+                jsize len = _env->GetArrayLength(sizeArray);
+                jfloat * content = _env->GetFloatArrayElements(sizeArray, &copy);
+                for(int i=0;i<len;i++)
+                    sizeArr.push_back(content[i]);
+            }
+
+        }
     }
     traverse( node, nv );
 }
 
-void JNICallBackCallback::registerCallBackFunction(std::string funcName, const char* signature){
+void JNICallBackCallback::registerCallBackFunction(std::string funcName, const char* signature, int funMode){
     jmethodID method = _env->GetMethodID(_helper_class, funcName.c_str(), signature);
-    if(_map.find(funcName) == _map.end())
-        _map[funcName] = method;
+    if(_map.find(funcName) == _map.end()){
+        mFun function;
+        function.id = method;
+        function.funMode = funMode;
+        _map[funcName] = function;
+    }
 }
 
 allController::allController(AAssetManager *assetManager)
@@ -53,7 +69,7 @@ void allController::onCreate(const char * calvr_path){
 
     _root = new Group;
     _sceneGroup = new Group;
-
+//    _bgDrawable->createDrawableNode();
     _root->addChild(_bgDrawable->createDrawableNode());
     ARCoreManager::instance()->setCameraTextureTarget(_bgDrawable->GetTextureId());
     _root->addChild(_sceneGroup);
@@ -69,9 +85,10 @@ void allController::onCreate(const char * calvr_path){
     jclass helper_class = env->FindClass( "com/samsung/arcalvr/MainActivity" );
     if(helper_class){
         helper_class = static_cast<jclass>(env->NewGlobalRef(helper_class));
-        JNICallBackCallback* callback = new JNICallBackCallback(env, helper_class, GetMainActivityObj());
-        callback->registerCallBackFunction("popButtons", "()V");
-        _sceneGroup->addUpdateCallback(callback);
+        JNIcallback = new JNICallBackCallback(env, helper_class, GetMainActivityObj());
+        JNIcallback->registerCallBackFunction("popButtons", "()V");
+//        JNIcallback->registerCallBackFunction("getPixelSize", "()[F", 1);
+        _sceneGroup->addUpdateCallback(JNIcallback);
     }
 }
 
@@ -81,6 +98,7 @@ void allController::onPause(){
 
 void allController::onResume(void * env, void* context, void* activity){
     _CalVR->onResume(env, context, activity);
+//    PluginManager::setCallBackRequest("getPixelSize");
 }
 
 void allController::onDrawFrame(){
@@ -127,7 +145,9 @@ void allController::onTouchMove(TouchType type, float x, float y){
     aie->setInteraction(BUTTON_DRAG);
     _CalVR->setTouchEvent(aie, type, x, y);
 }
-
+void allController::setPixelSize(float * arr){
+    ARCoreManager::instance()->setPixelSize(arr[0], arr[1]);
+}
 ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
     shape->setShape(new osg::Sphere(pos, 0.05f));

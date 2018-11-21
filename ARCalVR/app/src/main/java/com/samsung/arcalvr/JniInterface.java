@@ -40,4 +40,6 @@ public class JniInterface {
     public static native void JNIonDestroy();
 
     public static native float JNIgetFPS();
+
+    public static native void JNIsetPixelSize(float arr[]);
 }
