@@ -11,6 +11,7 @@
 
 using namespace osg;
 using namespace cvr;
+
 bool GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection result ){
     osg::Node* parent = dynamic_cast<Node*>(result.drawable->getParent(0));
     if(_map.empty() || _map.find(parent) ==_map.end()){
@@ -68,13 +69,17 @@ bool GlesDrawables::init() {
     rootSO->attachToScene();
 
     _strokeDrawable = new strokeDrawable;
+//    _quadDrawable = new quadDrawable;
+//    _root->addChild(_quadDrawable->createDrawableNode());
     _root->addChild(_strokeDrawable->createDrawableNode(.0f,-0.8f));
 
     _pointcloudDrawable = new pointDrawable;
     _root->addChild(_pointcloudDrawable->createDrawableNode());
-
-    createObject(_objects,"models/andy-origin.obj", "textures/andy.png",
-                 osg::Matrixf::translate(Vec3f(.0,1.0,.0)), SPHERICAL_HARMONICS);
+//
+    createObject(_objects,"models/andy.obj", "textures/andy.png",
+                 osg::Matrixf::translate(Vec3f(0.1,0.8,.0)), SPHERICAL_HARMONICS);
+    createObject(_objects,"models/andy.obj", "textures/andy.png",
+                 osg::Matrixf::translate(Vec3f(-0.1f,0.8,.0)), ARCORE_CORRECTION);
     return true;
 }
 
@@ -112,13 +117,14 @@ void GlesDrawables::postFrame() {
                 Matrixf modelMat;
                 if(!ARCoreManager::instance()->getAnchorModelMatrixAt(modelMat, i))
                     break;
-                createObject(_objects,"models/andy-origin.obj", "textures/andy.png",
-                             modelMat, SPHERICAL_HARMONICS);
+                createObject(_objects,"models/andy.obj", "textures/andy.png",
+                             modelMat, ONES_SOURCE);
             }
 
         }
         _objNum = anchor_num;
     }
+//    _quadDrawable->updateOnFrame(ARCoreManager::instance()->getCameraTransformedUVs());
 }
 
 bool GlesDrawables::processEvent(cvr::InteractionEvent * event){

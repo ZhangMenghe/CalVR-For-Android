@@ -87,6 +87,16 @@ JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass){
     return controllerNative(nativeAppAddr)->getFPS();
 }
 
+JNI_METHOD(void, JNIsetPixelSize)(JNIEnv * env, jclass, jfloatArray sizeArray){
+    jboolean copy = 0;
+    jsize len = env->GetArrayLength(sizeArray);
+    jfloat * content = env->GetFloatArrayElements(sizeArray, &copy);
+    float * cppArr = new float[len];
+    for(int i=0;i<len;i++)
+        cppArr[i] = content[i];
+    controllerNative(nativeAppAddr)->setPixelSize(cppArr);
+}
+
 JNIEnv *GetJniEnv() {
     JNIEnv *env;
     jint result = g_vm->AttachCurrentThread(&env, nullptr);
