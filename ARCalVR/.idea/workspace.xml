@@ -18,7 +18,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="===" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ec9a1a1-f2bd-4fc0-b609-b610621df771" name="Default" comment="" />
@@ -52,72 +52,7 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="allController.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="792">
-              <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="drawablesEntrance.cpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="69" column="0" lean-forward="true" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="quadDrawable.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/quadDrawable.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
-              <caret line="35" column="40" lean-forward="false" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ARCoreManager.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="130">
-              <caret line="364" column="35" lean-forward="false" selection-start-line="364" selection-start-column="35" selection-end-line="364" selection-end-column="35" />
-              <folding>
-                <element signature="e#710#1755#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LightingEstimator.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/LightingEstimator.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4290">
-              <caret line="195" column="26" lean-forward="false" selection-start-line="195" selection-start-column="26" selection-end-line="195" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="drawablesEntrance.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="849">
-              <caret line="73" column="7" lean-forward="false" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
-              <folding>
-                <element signature="e#674#694#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -128,36 +63,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>YUV2RGB</find>
-      <find>detectedge</find>
-      <find>100</find>
-      <find>imageOSG</find>
-      <find>_quadDrawable</find>
-      <find>quad</find>
-      <find>_image</find>
-      <find>bgdrawa</find>
-      <find>_ndk_image_height</find>
-      <find>quadd</find>
-      <find>getscreen</find>
-      <find>createquad</find>
-      <find>kuv</find>
-      <find>cylindricalWarpImage</find>
-      <find>error</find>
-      <find>%100</find>
-      <find>_warp_img</find>
-      <find>_rgb_image</find>
-      <find>quaddra</find>
-      <find>update</find>
-      <find>ndk_</find>
-      <find>ndk_image</find>
+      <find>transpose</find>
+      <find>transpose(</find>
+      <find>postMult</find>
+      <find>Estimate_Homography_From_PointCloud</find>
+      <find>setRotate</find>
+      <find>makeRotate</find>
+      <find>camera_pose_raw</find>
+      <find>push</find>
+      <find>pointcl</find>
+      <find>inverse</find>
+      <find>include</find>
+      <find>MXML_BUILD_DIR</find>
+      <find>PxPvdSDK</find>
+      <find>PxTask</find>
+      <find>OPENCV_LOCAL_CFLAGS</find>
+      <find>PHYSX_LIBS</find>
+      <find>ERROR</find>
+      <find>DANDROID_STL</find>
+      <find>stl</find>
+      <find>estimati</find>
+      <find>invMat</find>
+      <find>update_nd</find>
       <find>update_ndk_image</find>
-      <find>GetNdkImageProperties</find>
-      <find>andy-cha</find>
-      <find>_map</find>
-      <find>createobj</find>
-      <find>yuv</find>
-      <find>memcpy</find>
-      <find>createobject</find>
+      <find>_envImgs</find>
+      <find>_env</find>
+      <find>NDK_IMAGE</find>
+      <find>NDK_IMAGE_UP</find>
+      <find>ndk_im</find>
+      <find>YUV2RGB</find>
+      <find>error</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -2225,34 +2160,49 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/app/src/main/cpp/plugins/GlesDrawables/drawablesEntrance.h" />
-        <option value="$PROJECT_DIR$/app/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/perfMonitor.h" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/QuadRenderer.java" />
         <option value="$PROJECT_DIR$/../../calvr/include/cvrUtil/AndroidHelper.h" />
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/quad.vert" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/JniInterface.java" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/jni_interface.h" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/jni_interface.cpp" />
-        <option value="$PROJECT_DIR$/app/src/main/cpp/allController.h" />
-        <option value="$PROJECT_DIR$/../../calvr/include/cvrUtil/OsgGlesMath.h" />
-        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/planeDrawable.cpp" />
         <option value="$PROJECT_DIR$/../../calvr/src/cvrKernel/CVRViewer.cpp" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/bgDrawable.cpp" />
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/quad.frag" />
         <option value="$PROJECT_DIR$/../../calvr/src/cvrUtil/LightingEstimator.cpp" />
-        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/quadDrawable.h" />
-        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/quadDrawable.cpp" />
         <option value="$PROJECT_DIR$/../../calvr/include/cvrUtil/OsgMath.h" />
         <option value="$PROJECT_DIR$/../../calvr/src/cvrUtil/OsgMath.cpp" />
-        <option value="$PROJECT_DIR$/../../calvr/include/cvrUtil/ARCoreManager.h" />
-        <option value="$PROJECT_DIR$/app/src/main/cpp/allController.cpp" />
-        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.h" />
-        <option value="$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp" />
+        <option value="$PROJECT_DIR$/app/src/main/cpp/bgDrawable.h" />
+        <option value="$PROJECT_DIR$/../../calvr/include/cvrUtil/simpleMatrix.h" />
+        <option value="$PROJECT_DIR$/../../calvr/src/cvrUtil/simpleMatrix.cpp" />
+        <option value="$PROJECT_DIR$/../../calvr/src/cvrUtil/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/../../calvr/src/cvrMenu/BoardMenu.cpp" />
+        <option value="$PROJECT_DIR$/app/src/main/cpp/plugins/GlesDrawables/drawablesEntrance.cpp" />
+        <option value="$PROJECT_DIR$/../../calvr/include/cvrUtil/OsgGlesMath.h" />
+        <option value="$PROJECT_DIR$/../../calvr/src/cvrUtil/OsgGlesMath.cpp" />
+        <option value="$PROJECT_DIR$/../../calvr/src/cvrInput/TrackingManager.cpp" />
+        <option value="$PROJECT_DIR$/../../calvr/include/cvrInput/TrackingManager.h" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/CMakeLists-staticOPENCV.txt" />
+        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/planeDrawable.cpp" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/CMakeLists-buildOPENCV.txt" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp" />
+        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/quadDrawable.h" />
+        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.h" />
+        <option value="$PROJECT_DIR$/app/src/main/cpp/allController.h" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/JniInterface.java" />
+        <option value="$PROJECT_DIR$/../../calvr/include/cvrUtil/ARCoreManager.h" />
+        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/quadDrawable.cpp" />
+        <option value="$PROJECT_DIR$/app/CMakeLists-buildEIGEN.txt" />
+        <option value="$PROJECT_DIR$/app/CMakeLists-staticEIGEN.txt" />
+        <option value="$PROJECT_DIR$/app/src/main/cpp/allController.cpp" />
+        <option value="$PROJECT_DIR$/app/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp" />
+        <option value="$PROJECT_DIR$/../.gitignore" />
       </list>
     </option>
   </component>
@@ -2278,23 +2228,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="Scope">
         <subPane subId="Project Files">
           <expand>
@@ -2311,6 +2244,24 @@
           <select />
         </subPane>
       </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
+            </path>
+            <path>
+              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -2318,17 +2269,25 @@
               <item name="ARCalVR" type="1abcf292:AndroidViewProjectNode" />
               <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
             </path>
+            <path>
+              <item name="ARCalVR" type="1abcf292:AndroidViewProjectNode" />
+              <item name="External Build Files" type="62ab2ea3:ExternalBuildFilesGroupNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="show.migrate.to.gradle.popup" value="false" />
     <property name="device.picker.selection" value="3235484e47553398" />
-    <property name="last_opened_file_path" value="E:/arcore-android-sdk-1.5.0/samples/computervision_c" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/OpenCV-android-sdk/sdk/build.gradle" />
+    <property name="DEBUGGABLE_DEVICE" value="samsung-sm_g9600-3235484e47553398" />
+    <property name="DEBUGGABLE_PROCESS" value="com.samsung.arcalvr" />
+    <property name="SHOW_ALL_PROCESSES" value="false" />
+    <property name="DEBUGGER_ID" value="Auto" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Projects/Github/calvr_plugins/calit2/GlesDrawables/quadDrawable.cpp" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -2513,22 +2472,22 @@
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20709382" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20709382" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32914287" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Flutter Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.037593983" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.328" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" x="2028" y="124" width="1174" height="849" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.328" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" x="2082" y="185" width="1174" height="849" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14554243" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17028572" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12083781" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Build" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2757437" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32975295" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="2162" y="169" width="1390" height="844" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="2023" y="148" width="1390" height="844" />
       <window_info id="Flutter Inspector" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.06659506" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2537,7 +2496,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26201373" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29176202" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -2545,7 +2504,24 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="67" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp</url>
+          <line>516</line>
+          <option name="timeStamp" value="106" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp</url>
+          <line>491</line>
+          <option name="timeStamp" value="115" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp</url>
+          <line>471</line>
+          <option name="timeStamp" value="117" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="122" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="AndroidRunConfigurationType">
@@ -2555,11 +2531,34 @@
         <watch expression="GL_RGB" language="ObjectiveC" />
         <watch expression="GL_UNSIGNED_BYTE" language="ObjectiveC" />
         <watch expression="yuvImage" language="ObjectiveC" />
+        <watch expression="cameraMatrix.ptr()" language="ObjectiveC" />
+        <watch expression="tab_mat*n_mat" language="ObjectiveC" />
+        <watch expression="640*480" language="ObjectiveC" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>640*480</expression-string>
+        <language-id>ObjectiveC</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>3*640*480</expression-string>
+        <language-id>ObjectiveC</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>tab_mat*n_mat</expression-string>
+        <language-id>ObjectiveC</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cameraMatrix.ptr()</expression-string>
+        <language-id>ObjectiveC</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>yuvImage</expression-string>
         <language-id>ObjectiveC</language-id>
@@ -2590,23 +2589,13 @@
         <language-id>ObjectiveC</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>_image[0]</expression-string>
-        <language-id>ObjectiveC</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>_image</expression-string>
-        <language-id>ObjectiveC</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>sizeArray[0]</expression-string>
-        <language-id>ObjectiveC</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>cameraMatrix.ptr()</expression-string>
+        <language-id>ObjectiveC</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>_image[2]</expression-string>
         <language-id>ObjectiveC</language-id>
@@ -2652,395 +2641,394 @@
         <language-id>ObjectiveC</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>img-&gt;_data-&gt;*_data</expression-string>
-        <language-id>ObjectiveC</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-fragment/26.1.0/8279b00f5194701ff18363fa2958c5a26670b0ef/support-fragment-26.1.0-sources.jar!/android/support/v4/app/FragmentActivity.java">
+    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12210">
-          <caret line="614" column="62" lean-forward="false" selection-start-line="614" selection-start-column="60" selection-end-line="614" selection-end-column="62" />
+        <state relative-caret-position="410">
+          <caret line="92" column="1" lean-forward="false" selection-start-line="92" selection-start-column="1" selection-end-line="92" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="14" column="42" lean-forward="false" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="32" column="28" lean-forward="false" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/JniInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/jni_interface.h">
+    <entry file="file://$USER_HOME$/Downloads/OpenCV-android-sdk/apk/readme.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="352">
-          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="65" />
+          <caret line="16" column="61" lean-forward="false" selection-start-line="16" selection-start-column="61" selection-end-line="16" selection-end-column="61" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.h">
+    <entry file="file://$USER_HOME$/Downloads/OpenCV-android-sdk/README.android">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="75" column="34" lean-forward="false" selection-start-line="75" selection-start-column="4" selection-end-line="75" selection-end-column="34" />
+        <state relative-caret-position="22">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/OpenCV-android-sdk/samples/face-detection/jni/Android.mk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/arcore_c_api.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="1540" column="5" lean-forward="false" selection-start-line="1540" selection-start-column="5" selection-end-line="1540" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrMenu/BoardMenu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="186" column="68" lean-forward="false" selection-start-line="186" selection-start-column="68" selection-end-line="186" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/plugins/GlesDrawables/drawablesEntrance.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="314">
+          <caret line="166" column="52" lean-forward="false" selection-start-line="166" selection-start-column="52" selection-end-line="166" selection-end-column="52" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/OsgGlesMath.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="16" column="34" lean-forward="false" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrInput/TrackingManager.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="365">
+          <caret line="833" column="27" lean-forward="false" selection-start-line="833" selection-start-column="27" selection-end-line="833" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/glesDrawable.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" column="41" lean-forward="false" selection-start-line="11" selection-start-column="41" selection-end-line="11" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="22" column="18" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrKernel/CalVR.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="574" column="14" lean-forward="false" selection-start-line="574" selection-start-column="14" selection-end-line="574" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrKernel/SceneManager.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="935">
+          <caret line="222" column="0" lean-forward="false" selection-start-line="222" selection-start-column="0" selection-end-line="222" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/OsgGlesMath.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="11" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrInput/TrackingManager.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="226" column="25" lean-forward="false" selection-start-line="226" selection-start-column="25" selection-end-line="226" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="103" column="12" lean-forward="false" selection-start-line="103" selection-start-column="12" selection-end-line="103" selection-end-column="12" />
+        <state relative-caret-position="332">
+          <caret line="67" column="27" lean-forward="false" selection-start-line="67" selection-start-column="27" selection-end-line="67" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/jni_interface.cpp">
+    <entry file="jar://D:/Android_SDK/platforms/android-26/android.jar!/android/view/View.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="93" column="36" lean-forward="false" selection-start-line="93" selection-start-column="36" selection-end-line="93" selection-end-column="36" />
+        <state relative-caret-position="354">
+          <caret line="335" column="20" lean-forward="true" selection-start-line="335" selection-start-column="20" selection-end-line="335" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MovableFloatingActionButton.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="83" column="53" lean-forward="false" selection-start-line="83" selection-start-column="53" selection-end-line="83" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrKernel/InteractionEvent.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="61" column="4" lean-forward="false" selection-start-line="61" selection-start-column="4" selection-end-line="61" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osg/Matrixf.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="580">
+          <caret line="33" column="1" lean-forward="false" selection-start-line="33" selection-start-column="1" selection-end-line="33" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osg/Matrixd.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="602">
+          <caret line="35" column="50" lean-forward="false" selection-start-line="35" selection-start-column="50" selection-end-line="35" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/include/osg/Matrixf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="117" column="23" lean-forward="false" selection-start-line="117" selection-start-column="13" selection-end-line="117" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osg/Matrix_implementation.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="382" column="13" lean-forward="false" selection-start-line="382" selection-start-column="4" selection-end-line="382" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists-staticMXML.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" column="55" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="8" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists-staticOSG.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists-staticPhysX.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="339">
+          <caret line="59" column="30" lean-forward="false" selection-start-line="59" selection-start-column="22" selection-end-line="59" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists-staticOPENCV.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="17" column="60" lean-forward="false" selection-start-line="17" selection-start-column="60" selection-end-line="17" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../opencv-3.4.3/include/opencv2/core/hal/interface.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="75" column="8" lean-forward="false" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/planeDrawable.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="13" column="47" lean-forward="false" selection-start-line="13" selection-start-column="47" selection-end-line="13" selection-end-column="47" />
           <folding>
             <element signature="e#0#34#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/OsgGlesMath.h">
+    <entry file="file://$USER_HOME$/Downloads/OpenCV-android-sdk/sdk/gradlew">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+        <state relative-caret-position="172">
+          <caret line="46" column="27" lean-forward="false" selection-start-line="46" selection-start-column="27" selection-end-line="46" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/OsgGlesMath.cpp">
+    <entry file="file://$USER_HOME$/Downloads/OpenCV-android-sdk/sdk/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="8" column="33" lean-forward="false" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
+        <state relative-caret-position="925">
+          <caret line="124" column="0" lean-forward="false" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/Android_SDK/ndk-bundle/sysroot/usr/include/media/NdkImage.h">
+    <entry file="file://$USER_HOME$/Downloads/OpenCV-android-sdk/sdk/native/jni/OpenCV.mk">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="515" column="12" lean-forward="false" selection-start-line="515" selection-start-column="12" selection-end-line="515" selection-end-column="12" />
+        <state relative-caret-position="1313">
+          <caret line="118" column="5" lean-forward="false" selection-start-line="118" selection-start-column="5" selection-end-line="118" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrInput/TrackingManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="54" column="4" lean-forward="false" selection-start-line="54" selection-start-column="4" selection-end-line="54" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrInput/TrackingManager.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="228" column="23" lean-forward="false" selection-start-line="228" selection-start-column="13" selection-end-line="228" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osg/Image.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="266" column="0" lean-forward="false" selection-start-line="266" selection-start-column="0" selection-end-line="266" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/include/osg/Matrixd">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="90" column="0" lean-forward="false" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrKernel/PluginManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="331" column="5" lean-forward="false" selection-start-line="331" selection-start-column="5" selection-end-line="331" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osg/StateSet.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="1930" column="0" lean-forward="false" selection-start-line="1930" selection-start-column="0" selection-end-line="1930" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osg/NodeVisitor.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="167" column="1" lean-forward="true" selection-start-line="167" selection-start-column="1" selection-end-line="167" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osg/Texture.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="2201" column="0" lean-forward="false" selection-start-line="2201" selection-start-column="0" selection-end-line="2201" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osg/glu/libutil/mipmap.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="5064" column="0" lean-forward="false" selection-start-line="5064" selection-start-column="0" selection-end-line="5064" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrKernel/CVRViewer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="1153" column="11" lean-forward="false" selection-start-line="1153" selection-start-column="11" selection-end-line="1153" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Android_SDK/ndk-bundle/sysroot/usr/include/GLES2/gl2.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="211" column="8" lean-forward="false" selection-start-line="211" selection-start-column="8" selection-end-line="211" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/planeDrawable.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="968">
-          <caret line="67" column="67" lean-forward="false" selection-start-line="67" selection-start-column="60" selection-end-line="67" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrKernel/CalVR.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2374">
-          <caret line="593" column="0" lean-forward="false" selection-start-line="593" selection-start-column="0" selection-end-line="593" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/AndroidHelper.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="116" column="10" lean-forward="false" selection-start-line="116" selection-start-column="10" selection-end-line="116" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/include/osg/Group">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/quad.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/include/osg/Geode">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/bgDrawable.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="26" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/bgDrawable.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="76" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/screenquad.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="23" lean-forward="false" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/include/osg/Image">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="305" column="0" lean-forward="false" selection-start-line="305" selection-start-column="0" selection-end-line="305" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/quad.frag">
+    <entry file="file://$USER_HOME$/Downloads/OpenCV-android-sdk/sdk/native/jni/OpenCV-arm64-v8a.mk">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22">
-          <caret line="1" column="27" lean-forward="false" selection-start-line="1" selection-start-column="27" selection-end-line="1" selection-end-column="27" />
+          <caret line="1" column="25" lean-forward="false" selection-start-line="1" selection-start-column="25" selection-end-line="1" selection-end-column="35" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/glesDrawable.h">
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists-buildMXML.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="13" column="36" lean-forward="false" selection-start-line="13" selection-start-column="36" selection-end-line="13" selection-end-column="36" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists-buildOPENCV.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/quadDrawable.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+        <state relative-caret-position="367">
+          <caret line="20" column="33" lean-forward="false" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/OsgMath.h">
+    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3938">
-          <caret line="179" column="0" lean-forward="false" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
+        <state relative-caret-position="263">
+          <caret line="14" column="34" lean-forward="false" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
+          <folding>
+            <element signature="e#67#84#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/OsgMath.cpp">
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="131" column="4" lean-forward="false" selection-start-line="131" selection-start-column="4" selection-end-line="131" selection-end-column="32" />
+        <state relative-caret-position="1584">
+          <caret line="72" column="16" lean-forward="false" selection-start-line="72" selection-start-column="16" selection-end-line="72" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/quadDrawable.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1628">
+          <caret line="74" column="44" lean-forward="false" selection-start-line="74" selection-start-column="44" selection-end-line="74" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/JniInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="19" column="78" lean-forward="false" selection-start-line="19" selection-start-column="78" selection-end-line="19" selection-end-column="78" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/ARCoreManager.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="76" column="27" lean-forward="false" selection-start-line="76" selection-start-column="17" selection-end-line="76" selection-end-column="27" />
+        <state relative-caret-position="1562">
+          <caret line="71" column="27" lean-forward="false" selection-start-line="71" selection-start-column="27" selection-end-line="71" selection-end-column="27" />
           <folding>
-            <element signature="e#51#84#0" expanded="false" />
+            <element signature="e#51#84#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osgUtil/RenderBin.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="429" column="0" lean-forward="false" selection-start-line="429" selection-start-column="0" selection-end-line="429" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/src/osgUtil/RenderStage.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="1380" column="0" lean-forward="false" selection-start-line="1380" selection-start-column="0" selection-end-line="1380" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/LightingEstimator.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4290">
-          <caret line="195" column="26" lean-forward="false" selection-start-line="195" selection-start-column="26" selection-end-line="195" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Android_SDK/ndk-bundle/sources/cxx-stl/llvm-libc++/include/__hash_table">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="47102">
-          <caret line="2141" column="0" lean-forward="false" selection-start-line="2141" selection-start-column="0" selection-end-line="2141" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/calvrAssets/resources/models/andy.obj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-99390">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/calvrAssets/resources/models/andy-origin.obj">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="3730" column="31" lean-forward="false" selection-start-line="3730" selection-start-column="31" selection-end-line="3730" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="849">
-          <caret line="73" column="7" lean-forward="false" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
-          <folding>
-            <element signature="e#674#694#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="1474">
+          <caret line="67" column="78" lean-forward="false" selection-start-line="67" selection-start-column="13" selection-end-line="67" selection-end-column="78" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/quadDrawable.cpp">
+    <entry file="file://$USER_HOME$/Downloads/eigen-eigen-b3f3d4950030/CMakeLists.txt" />
+    <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="35" column="40" lean-forward="false" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists-buildEIGEN.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="6" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="22" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists-staticEIGEN.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" column="38" lean-forward="false" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="91" column="24" lean-forward="false" selection-start-line="91" selection-start-column="24" selection-end-line="91" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="364" column="35" lean-forward="false" selection-start-line="364" selection-start-column="35" selection-end-line="364" selection-end-column="35" />
+        <state relative-caret-position="330">
+          <caret line="15" column="25" lean-forward="false" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
           <folding>
-            <element signature="e#710#1755#0" expanded="false" />
+            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#892#1937#0" expanded="false" />
+            <element signature="e#21146#22378#0" expanded="false" />
+            <element signature="e#22380#23404#0" expanded="false" />
+            <element signature="e#23406#24296#0" expanded="false" />
+            <element signature="e#24298#25921#0" expanded="false" />
+            <element signature="e#25923#28717#0" expanded="false" />
+            <element signature="e#28719#29585#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.cpp">
+    <entry file="file://$PROJECT_DIR$/../.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="792">
-          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="69" column="0" lean-forward="true" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+        <state relative-caret-position="176">
+          <caret line="8" column="3" lean-forward="false" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
           <folding />
         </state>
       </provider>

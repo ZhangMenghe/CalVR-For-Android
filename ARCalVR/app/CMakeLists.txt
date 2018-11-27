@@ -46,6 +46,8 @@ SET(KERNEL_LIBRARIES
     png
     jpeg
     #zlib
+    eigen_lapack_static
+    eigen_blas_static
     EGL                           #
     GLESv2                        #
     GLESv3
@@ -65,6 +67,7 @@ SET(PHYSX_LIBS
 	cpufeatures
 )
 
+include(CMakeLists-staticEIGEN.txt)
 include(CMakeLists-staticDependencies.txt)
 include(CMakeLists-staticOSG.txt)
 include(CMakeLists-staticMXML.txt)
