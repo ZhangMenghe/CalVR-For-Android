@@ -52,18 +52,40 @@ class SpatialViz : public cvr::CVRPlugin, public cvr::MenuCallback
     cvr::MenuButton *_mazePuzzleButton, *_5x5puzzleButton, *_tetrisPuzzle2, *_labyrinthPuzzle, *_tetrisPuzzle, *_removePuzzles, *_restartPhysics;
     cvr::MenuCheckbox * _rotate5x5Menu, *_rotateMazeMenu, *_rotateLabMenu, *_rotateMainTetrisMenu, *_rotateMainTetris2Menu;
     cvr::SceneObject *soLab, *so5x5, *soMaze, *soTetris, *soMainTetris, *soTetris2, *soMainTetris2;
-    
+
+    // testing Popup Menu Button
+    cvr::MenuButton *_testButton;
+    cvr::PopupMenu *popup;
+
     osg::PositionAttitudeTransform *_sphereTrans, *_cubeTrans;
     osg::Geode *_cubeGeode, *_sphereGeode;
     osg::Switch *_root, *_labyrinthSwitch, *_5x5Switch, *_mazeSwitch, *_tetrisSwitch, *_mainTetrisSwitch, *_tetrisSwitch2, *_mainTetrisSwitch2, *_testSwitch;
     
     // Puzzle variables
-    osg::PositionAttitudeTransform * _puzzleMazeTrans, *_puzzle5x5Trans, *_labTrans, *_mainTetrisPieceTrans, *_mainTetris2PieceTrans;    // used to rotate the entire puzzle
+    // used to rotate the entire puzzle
+    osg::PositionAttitudeTransform * _puzzleMazeTrans, *_puzzle5x5Trans, *_labTrans, *_mainTetrisPieceTrans, *_mainTetris2PieceTrans;
+    // positions for the transforms
+    osg::Vec3 _labPos;
     osg::PositionAttitudeTransform  *_mazeBox, * _piecePuzzle1, * _piecePuzzle2, * _piecePuzzle3, * _piecePuzzle4, * _piecePuzzle5;
     osg::Group * _puzzleMazeGroup, *_puzzle5x5Group, *_piecePuzzleGroup, *_labyrinthGroup;
     osg::Group * _objGroup5x5, *_objGroupMaze, *_objGroupTetris, *_TetrisPiece, *_mainTetris, *_TetrisPiece2, *_mainTetris2;
     
     physx::PxSceneDesc* _sceneDesc;
+
+    // ----- ANDROID additions ----- //
+    osg::Group *_androidGroup;          // contains all the AR-Core objects
+    cvr::SceneObject *_androidSO;
+
+    int _objNum = 0, _plane_num = 0;    // keeps track of the detected anchor points and planes
+
+    // stores the points and planes
+    osg::ref_ptr<pointDrawable> _pointcloudDrawable;
+    std::vector<planeDrawable*> _planeDrawables;
+
+    bool inWorldSpace = true;
+    void addCubeWorld(osg::Group*, osg::Matrixf);
+    osg::Vec2f _mPreviousPos;
+    // ----- end ANDROID additions ----- //
     
     // osg helper functions
     void setNodeTransparency(osg::Node*, float);
@@ -95,13 +117,19 @@ class SpatialViz : public cvr::CVRPlugin, public cvr::MenuCallback
     void create5x5(int);
     void createLabyrinth(float, float);
 
-#if(__ANDROID__)// NOTE CHANGED DIRECTION OF ALL THESE INEQUALITIES
+    /* createBoxes and createSpheres take in dimensions in terms of m */
+#if(__ANDROID__)
     // createIdentity() and createZero() are deprecated since 3.3
     void createBoxes(physx::PxVec3, physx::PxVec3, osg::Group*, std::vector<osg::PositionAttitudeTransform*>*, std::vector<physx::PxRigidDynamic*>*, std::vector<osg::Vec3>*, std::vector<physx::PxVec3>*, physx::PxQuat quat = physx::PxQuat(physx::PxIDENTITY()));
 #else
     void createBoxes(physx::PxVec3, physx::PxVec3, osg::Group*, std::vector<osg::PositionAttitudeTransform*>*, std::vector<physx::PxRigidDynamic*>*, std::vector<osg::Vec3>*, std::vector<physx::PxVec3>*, physx::PxQuat quat = physx::PxQuat::createIdentity());
 #endif
     void createSpheres(physx::PxVec3, float, osg::Group*, std::vector<osg::PositionAttitudeTransform*>*, std::vector<physx::PxRigidDynamic*>*, std::vector<osg::Vec3>*, std::vector<physx::PxVec3>*);
+
+    // ----- more ANDROID additions ----- //
+    bool processEvent(cvr::InteractionEvent *event);
+    // ----- end more ANDROID additions ----- //
+
 };
 
 #endif

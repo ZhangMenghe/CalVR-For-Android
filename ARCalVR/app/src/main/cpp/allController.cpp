@@ -1,23 +1,29 @@
-#include <cvrUtil/AndroidStdio.h>
 #include "allController.h"
+
+// CVR
+#include <cvrUtil/AndroidStdio.h>
 #include <cvrUtil/AndroidHelper.h>
-#include <osg/ShapeDrawable>
 #include <cvrUtil/AndroidPreloadPlugins.h>
-#include <MenuBasics.h>
-#include <PhysxBall.h>
-#include <drawablesEntrance.h>
-//#include <SpatialViz.h>
+#include <cvrKernel/PluginManager.h>
+
+// OSG
+#include <osg/ShapeDrawable>
 #include <osg/Depth>
 #include <osg/Callback>
-#include <cvrKernel/PluginManager.h>
+
+// Plugins
+#include <MenuBasics.h>
+//#include <PhysxBall.h>
+#include <drawablesEntrance.h>
+#include <SpatialViz.h>
 
 using namespace cvr;
 using namespace osg;
 
-REGISTER(MenuBasics);
-REGISTER(PhysxBall)
-REGISTER(GlesDrawables);
-//REGISTER(SpatialViz);
+//REGISTER(MenuBasics);
+//REGISTER(PhysxBall)
+//REGISTER(GlesDrawables);
+REGISTER(SpatialViz);
 
 void JNICallBackCallback::operator()(osg::Node *node, osg::NodeVisitor *nv) {
     std::string functionName;
@@ -86,7 +92,7 @@ void allController::onDrawFrame(){
     _CalVR->frame();
     _bgDrawable->updateOnFrame(ARCoreManager::instance()->getCameraTransformedUVs());
 
-    if(_detectStart){
+    if(_menuOpen){
         //shoot the ray to check the interaction with menu
         AndroidInteractionEvent * aie = new AndroidInteractionEvent();
         aie->setInteraction(BUTTON_DRAG);
@@ -107,20 +113,31 @@ void allController::onSingleTouchDown(TouchType type, float x, float y){
 }
 
 void allController::onSingleTouchUp(TouchType type, float x, float y){
-    if(type == RIGHT) _detectStart = false;
+    if(type == RIGHT) _menuOpen = false;
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_UP);
     _CalVR->setTouchEvent(aie, type, x, y);
+    if (aie->asTrackedButtonEvent()){
+        LOGI("--- BUTTON DOWN ---");
+        LOGI("--- Button = %d ---", aie->getButton());
+    }
 }
 
 void allController::onDoubleTouch(TouchType type, float x, float y){
-    if(type==RIGHT) _detectStart = true;
+    if(type==RIGHT) _menuOpen = true;
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DOUBLE_CLICK);
     _CalVR->setTouchEvent(aie, type, x, y);
+    if (aie->asTrackedButtonEvent()){
+        LOGI("--- Double Touch - BUTTON UP ---");
+        LOGI("--- button = %d ---", aie->getButton());
+        LOGI("--- (%f, %f) ---", x, y);
+    }
 }
 
 void allController::onTouchMove(TouchType type, float x, float y){
+//    _menuOpen = true;
+    _touchX = x; _touchY = y;
 
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DRAG);

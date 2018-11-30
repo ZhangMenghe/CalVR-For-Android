@@ -48,14 +48,18 @@ class GlesDrawables : public cvr::CVRPlugin, public cvr::MenuCallback
 typedef osg::ref_ptr<osg::MatrixTransform> Transform;
 protected:
     cvr::SubMenu *_mainMenu;
-    cvr::MenuButton *_pointButton, *_planeButton, *_strokeButton;
+    cvr::MenuCheckbox *_pointButton, *_planeButton, *_strokeButton;
     osg::Group *_root, *_objects;
     cvr::SceneObject *rootSO, *objSO;
 
-    osg::ref_ptr<pointDrawable> _pointcloudDrawable;
+    bool drawPoints, drawPlanes, drawStroke;
+
     int _plane_num = 0, _objNum = 0;
+    osg::ref_ptr<pointDrawable> _pointcloudDrawable;
     std::vector<planeDrawable*> _planeDrawables;
     osg::ref_ptr<strokeDrawable> _strokeDrawable;
+
+    // for interactions with particular object
     std::unordered_map<osg::Node*, isectObj> _map;
     osg::Node* _selectedNode = nullptr;
     sceneState _selectState = FREE;

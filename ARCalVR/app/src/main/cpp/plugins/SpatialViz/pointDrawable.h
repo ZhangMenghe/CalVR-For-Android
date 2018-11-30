@@ -14,7 +14,7 @@ private:
     GLuint _attrib_vertices;
     GLuint _uniform_arMVP_mat;
 
-    osg::Vec4f _default_color= osg::Vec4f(0.0, 0.5, 1.0, 1.0);
+    osg::Vec4f _default_color= osg::Vec4f(0.5, 0.5, 1.0, 1.0);
     float _default_size = 10.0f;
     osg::Matrixf _mvpMat;
 

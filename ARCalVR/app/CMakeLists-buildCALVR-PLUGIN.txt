@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES(${CALVR_PLUGIN_BUILD_DIR}/include)
 
 SET(CVR_PLUGINS
     GlesDrawables
-    PhysxBall
-    #SpatialViz
+    #PhysxBall
+    SpatialViz
     MenuBasics)
 

@@ -1,23 +1,32 @@
 #include <cvrUtil/AndroidStdio.h>
+#include <cvrUtil/AndroidHelper.h>
+#include <cvrKernel/PluginManager.h>
+
 #include <osg/LineWidth>
 #include <osgUtil/Tessellator>
 #include <osg/Texture>
+#include <osg/Texture2D>
+#include <osg/ShapeDrawable>
+
 #include "drawablesEntrance.h"
 #include "planeDrawable.h"
-#include <osg/Texture2D>
-#include <cvrUtil/AndroidHelper.h>
-#include <osg/ShapeDrawable>
-#include <cvrKernel/PluginManager.h>
 
 using namespace osg;
 using namespace cvr;
+
+// for selecting an object
 bool GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection result ){
+
+    // get the parent of the object that we have hit
     osg::Node* parent = dynamic_cast<Node*>(result.drawable->getParent(0));
+
+    // if this parent is not in the map
     if(_map.empty() || _map.find(parent) ==_map.end()){
         isectObj obj;
         obj.uTexture = parent->getOrCreateStateSet()->getUniform("uTextureChoice");
         obj.matrixTrans = dynamic_cast<MatrixTransform *>(parent->getParent(0));
 
+        // swap the texture of the object
         _map[parent] = obj;
         bool textureChoice;
         _map[parent].uTexture->get(textureChoice);
@@ -30,15 +39,15 @@ bool GlesDrawables:: tackleHitted(osgUtil::LineSegmentIntersector::Intersection 
 }
 
 void GlesDrawables::initMenuButtons() {
-    _pointButton = new MenuButton("Show PointCloud");
+    _pointButton = new MenuCheckbox("Show PointCloud", true);
     _pointButton->setCallback(this);
     _mainMenu->addItem(_pointButton);
 
-    _planeButton = new MenuButton("Show Detected Planes");
+    _planeButton = new MenuCheckbox("Show Detected Planes", true);
     _planeButton->setCallback(this);
     _mainMenu->addItem(_planeButton);
 
-    _strokeButton = new MenuButton("Show Stroke Ray");
+    _strokeButton = new MenuCheckbox("Show Stroke Ray", true);
     _strokeButton->setCallback(this);
     _mainMenu->addItem(_strokeButton);
 }
@@ -76,10 +85,23 @@ bool GlesDrawables::init() {
 }
 
 void GlesDrawables::menuCallback(cvr::MenuItem *item) {
+    if (item == _pointButton){
+        drawPoints = !drawPoints;
+    }
+    if (item == _planeButton){
+        drawPlanes = !drawPlanes;
+    }
+    if (item == _strokeButton){
+        drawStroke = !drawStroke;
+    }
 }
 
 void GlesDrawables::postFrame() {
+
+    // update the point cloud
     _pointcloudDrawable->updateOnFrame();
+
+    // update the planes
     cvr::planeMap map = ARCoreManager::instance()->getPlaneMap();
     if(_plane_num < map.size()){
         for(int i= _plane_num; i<map.size();i++){
@@ -93,8 +115,9 @@ void GlesDrawables::postFrame() {
     for(int i=0; i<_plane_num; i++,planeIt++)
         _planeDrawables[i]->updateOnFrame(planeIt->first, planeIt->second);
 
-
     Vec3f isPoint;
+    // get the intersection point
+    // getIsPoint() returns true if we have previously set the intersection pt otherwise returns false
     if(TrackingManager::instance()->getIsPoint(isPoint)){
         _strokeDrawable->updateOnFrame(isPoint);
         _strokeDrawable->getGLNode()->setNodeMask(0xFFFFFF);
@@ -102,9 +125,13 @@ void GlesDrawables::postFrame() {
         _strokeDrawable->getGLNode()->setNodeMask(0x0);
 
 
+    // gt the anchor points from AR-Core
     size_t anchor_num = ARCoreManager::instance()->getAnchorSize();
+    // if we have anchor points
     if( anchor_num != 0){
+        // and we have a new anchor point
         if(_objNum < anchor_num){
+            // for each of the new anchor points add a robot at that tap position
             for(int i=_objNum; i<anchor_num; i++){
                 Matrixf modelMat;
                 if(!ARCoreManager::instance()->getAnchorModelMatrixAt(modelMat, i))
@@ -113,7 +140,7 @@ void GlesDrawables::postFrame() {
             }
 
         }
-        _objNum = anchor_num;
+        _objNum = (int)anchor_num;  // update the number of detected anchor points
     }
 }
 
@@ -182,6 +209,7 @@ bool GlesDrawables::processEvent(cvr::InteractionEvent * event){
         return true;
     }
 
+    // here is where we add new anchor points (one finger double tap)
     if(aie->getInteraction()==BUTTON_DOUBLE_CLICK){
         ARCoreManager::instance()->updatePlaneHittest(touchPos.x(), touchPos.y());
         return true;
@@ -229,7 +257,6 @@ void GlesDrawables::createObject(osg::Group *parent,
 
     ref_ptr<Vec3Array> vertices = new Vec3Array();
     ref_ptr<Vec3Array> normals = new Vec3Array();
-
     ref_ptr<Vec2Array> uvs = new Vec2Array();
 
     std::vector<GLfloat> _vertices;
