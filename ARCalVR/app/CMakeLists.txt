@@ -6,7 +6,7 @@ SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAG
 SET( CMAKE_SHARED_LINKER_FLAGS  "${CMAKE_SHARED_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
 SET( CMAKE_STATIC_LINKER_FLAGS  "${CMAKE_STATIC_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
 SET( OSG_CPP_EXCEPTIONS_AVAILABLE "Yes")
-
+SET( USE_OPENCV "Yes")
 SET(KERNEL_LIBRARIES
     cvrKernel                     # For cvr, Kernel > Menu > Util
     cvrMenu                       # The order of Input, Config, Collaborative is unsure (current order works)
@@ -46,8 +46,6 @@ SET(KERNEL_LIBRARIES
     png
     jpeg
     #zlib
-    eigen_lapack_static
-    eigen_blas_static
     EGL                           #
     GLESv2                        #
     GLESv3
