@@ -9,14 +9,13 @@ void main(){
     vec4 finalColor = uBaseColor;
     vec3 N = normalize(normal);
     vec3 L = normalize(lightDir);
-    float lambert = dot(N,L);
-    if (lambert > 0.0)
-    {
-        finalColor += lightDiffuse * lambert;
-        vec3 E = normalize(eyeVec);
-        vec3 R = reflect(-L, N);
-        float specular = pow(max(dot(R, E), 0.0), shininess);
-        finalColor += lightSpecular * specular;
-    }
+    float lambert = max(dot(N,L), .0);
+
+    finalColor += lightDiffuse * lambert;
+    vec3 E = normalize(eyeVec);
+    vec3 R = reflect(-L, N);
+    float specular = pow(max(dot(R, E), 0.0), shininess);
+    finalColor += lightSpecular * specular;
+
     gl_FragColor = finalColor;
 }
