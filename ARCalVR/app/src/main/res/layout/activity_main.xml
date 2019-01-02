@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.opengl.GLSurfaceView
-        android:id="@+id/surfaceview"
+    <com.samsung.arcalvr.CVandCGJavaCamera2View
+        android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"

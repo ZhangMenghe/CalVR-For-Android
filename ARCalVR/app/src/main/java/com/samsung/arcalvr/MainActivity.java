@@ -1,40 +1,45 @@
 package com.samsung.arcalvr;
 
-import android.graphics.Rect;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Size;
 import android.util.SizeF;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+
 import java.io.File;
 import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import static android.hardware.camera2.CameraCharacteristics.SENSOR_INFO_PIXEL_ARRAY_SIZE;
-
 public class MainActivity extends AppCompatActivity
-    implements DisplayManager.DisplayListener{
+    implements DisplayManager.DisplayListener,
+    CVandCGViewBase.CvCameraViewListener2{
+
     final static String TAG = "ARCalVR_Activity";
     final static boolean skipLoadingResource = false;
-
+    private CVandCGViewBase surfaceView;
     private long controllerAddr;
 
     //Surface view
-    private GLSurfaceView surfaceView;
+//    private GLSurfaceView surfaceView;
     private boolean viewportChanged = false;
     private int viewportWidth;
     private int viewportHeight;
@@ -53,7 +58,34 @@ public class MainActivity extends AppCompatActivity
 
     //Sensor pixel 2 meter
     ArrayList<Size> pixel_arr_size = new ArrayList<>();
+    private BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                    surfaceView.enableView();
+                    break;
+                default:
+                    super.onManagerConnected(status);
+                    break;
+            }
+            super.onManagerConnected(status);
+        }
+    };
 
+    @Override
+    public void onCameraViewStarted(int width, int height) {
+    }
+
+    @Override
+    public void onCameraViewStopped() {
+
+    }
+    @Override
+    public Mat onCameraFrame(CVandCGViewBase.CvCameraViewFrame inputFrame){
+        Log.e(TAG, "onCameraFrame: ====here!!!!" );
+        return inputFrame.rgba();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,46 +98,31 @@ public class MainActivity extends AppCompatActivity
         setupLabelandButton();
         setupResource();
         setupSurfaceView();
-        setupTouchDetector();
 
+        setupTouchDetector();
         JNIOnMainActivityCreated();
     }
     @Override
     protected void onResume(){
         super.onResume();
-        surfaceView.onResume();
+
         //Request for camera permission, which may be used in ARCore
         if (!CameraPermissionHelper.hasCameraPermission(this)) {
             CameraPermissionHelper.requestCameraPermission(this);
             return;
         }
-        try{
-            CameraManager manager = (CameraManager) getSystemService(this.CAMERA_SERVICE);
-            for (String camera_id : manager.getCameraIdList()) {
-                CameraCharacteristics characteristics = manager.getCameraCharacteristics(camera_id);
-//                int facing = characteristics.get(CameraCharacteristics.LENS_FACING);
-//                float[] f = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS);
-//                Log.e(TAG, "===onResume: FOCAL LENS:" + f[0]);
-//                SizeF ps = characteristics.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE);
-//                Log.e(TAG, "===onResume: SENSOR_INFO_PHYSICAL_SIZE:" + ps.toString());
-                pixel_arr_size.add(characteristics.get(CameraCharacteristics.SENSOR_INFO_PIXEL_ARRAY_SIZE));
-//                Log.e(TAG, "===onResume: SENSOR_INFO_PIXEL_ARRAY_SIZE:" + pas.toString());
-//                Rect aas = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
-//                Log.e(TAG, "===onResume:SENSOR_INFO_ACTIVE_ARRAY_SIZE:" + aas.toString());
-            }
-        }catch (CameraAccessException e){
-            e.printStackTrace();
+
+        surfaceView.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, baseLoaderCallback);
+        } else {
+            Log.d(TAG, "OpenCV library found inside package. Using it!");
+            baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
 
-
-
-
         JniInterface.JNIonResume(getApplicationContext(), this);
-        JniInterface.JNIsetPixelSize(getPixelSize());
-        // Listen to display changed events to detect 180° rotation, which does not cause a config
-        // change or view resize.
         getSystemService(DisplayManager.class).registerDisplayListener(this, null);
-
     }
     @Override
     protected void onPause(){
@@ -113,6 +130,8 @@ public class MainActivity extends AppCompatActivity
         surfaceView.onPause();
         JniInterface.JNIonPause();
         getSystemService(DisplayManager.class).unregisterDisplayListener(this);
+        if (surfaceView != null)
+            surfaceView.disableView();
     }
     @Override
     protected void onDestroy(){
@@ -124,6 +143,8 @@ public class MainActivity extends AppCompatActivity
                 controllerAddr = 0;
             }
         }
+        if (surfaceView != null)
+            surfaceView.disableView();
     }
     private void setupLabelandButton(){
 // add button actions
@@ -168,15 +189,17 @@ public class MainActivity extends AppCompatActivity
         FPSlabel = (TextView) findViewById(R.id.textViewFPS);
     }
     private void setupSurfaceView(){
-        surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
-        // Set up renderer.
+        surfaceView = (CVandCGViewBase) findViewById(R.id.camera_view);
+
+        surfaceView.setCameraIndex(CVandCGJavaCamera2View.CAMERA_ID_ANY);
+        surfaceView.setCvCameraViewListener(this);
+        surfaceView.disableView();
+
         surfaceView.setPreserveEGLContextOnPause(true);
         surfaceView.setEGLContextClientVersion(2);
         surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0); // Alpha used for plane blending.
         surfaceView.setRenderer(new MainActivity.Renderer());
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-
-
     }
     private void setupTouchDetector(){
         gestureDetector = new GestureDetectorCalVR(this);
@@ -251,6 +274,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDisplayChanged(int displayId) {viewportChanged = true;}
 
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//                holder.setFormat(PixelFormat.TRANSPARENT);
+            }
+
+            public void surfaceCreated (SurfaceHolder holder) {
+//                holder.setFormat(PixelFormat.TRANSPARENT);
+            }
+
+            public void surfaceDestroyed (SurfaceHolder holder) {
+
+            }
     public void updateFPS(final float fFPS)
     {
         if( FPSlabel == null )
@@ -281,5 +315,6 @@ public class MainActivity extends AppCompatActivity
         }
         return arr;
     }
+
     public native void JNIOnMainActivityCreated();
 }
