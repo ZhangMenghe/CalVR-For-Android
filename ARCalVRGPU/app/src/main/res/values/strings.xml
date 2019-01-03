@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ArCalVR-GPU</string>
+    <string name="fps">0.0 FPS</string>
+</resources>
