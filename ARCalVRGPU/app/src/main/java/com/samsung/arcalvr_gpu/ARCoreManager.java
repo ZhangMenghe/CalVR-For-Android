@@ -2,6 +2,14 @@ package com.samsung.arcalvr_gpu;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.media.Image;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.Element;
+import android.support.v8.renderscript.RenderScript;
+import android.support.v8.renderscript.Type;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -18,6 +26,7 @@ import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
+import com.google.ar.core.exceptions.NotYetAvailableException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
@@ -31,7 +40,10 @@ import com.samsung.arcalvr_gpu.rendering.PlaneRenderer;
 import com.samsung.arcalvr_gpu.rendering.PointCloudRenderer;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+
+//import com.samsung.arcalvr_gpu.ScriptC_yuv2rgb;
 
 public class ARCoreManager {
     private static final String TAG = "ARCore Manager Java side";
@@ -50,6 +62,11 @@ public class ARCoreManager {
     // Temporary matrix allocated here to reduce number of allocations for each frame.
     private final float[] anchorMatrix = new float[16];
     private static final float[] DEFAULT_COLOR = new float[] {0f, 0f, 0f, 0f};
+
+    // This lock prevents changing resolution as the frame is being rendered. ARCore requires all
+    // cpu images to be released before changing resolution.
+    private final Object frameImageInUseLock = new Object();
+
     // Used to load the 'native-lib' library on application startup.
     // Anchors created from taps used for object placing with a given color.
     private static class ColoredAnchor {
@@ -61,8 +78,22 @@ public class ARCoreManager {
             this.color = color4f;
         }
     }
+    // TWO approaches to obtaining image data accessible on CPU:
+    // 1. Access the CPU image directly from ARCore. This approach delivers a frame without latency
+    //    (if available), but currently is lower resolution than the GPU image.
+    // 2. Download the texture from GPU. This approach incurs a 1-frame latency, but allows a high
+    //    resolution image.
+    private enum ImageAcquisitionPath {
+        CPU_DIRECT_ACCESS,
+        GPU_DOWNLOAD
+    };
+
+    private final ImageAcquisitionPath imageAcquisitionPath = ImageAcquisitionPath.CPU_DIRECT_ACCESS;
 
     private final ArrayList<ColoredAnchor> anchors = new ArrayList<>();
+
+    RenderScript rs;
+    ScriptC_yuv2rgb script;
 
     public void onCreate(Context ctx){
         context = ctx;
@@ -70,6 +101,9 @@ public class ARCoreManager {
         installRequested = false;
         // Set up tap listener.
         tapHelper = new TapHelper(/*context=*/ context);
+
+        rs = RenderScript.create(context);
+        script = new ScriptC_yuv2rgb(rs);
     }
     public void onResume(Activity activity){
         if (session == null) {
@@ -140,6 +174,9 @@ public class ARCoreManager {
             session.pause();
         }
     }
+    public void onDestroy(){
+        script.destroy();
+    }
     public void onSurfaceCreated(){
         // Prepare the rendering objects. This involves reading shaders, so may throw an IOException.
         try {
@@ -169,6 +206,14 @@ public class ARCoreManager {
             // UpdateMode.BLOCKING (it is by default), this will throttle the rendering to the
             // camera framerate.
             Frame frame = session.update();
+            switch (imageAcquisitionPath) {
+                case CPU_DIRECT_ACCESS:
+                    renderProcessedImageCpuDirectAccess(frame);
+                    break;
+                case GPU_DOWNLOAD:
+//                    renderProcessedImageGpuDownload(frame);
+                    break;
+            }
             Camera camera = frame.getCamera();
 
             // Handle one tap per frame.
@@ -268,4 +313,95 @@ public class ARCoreManager {
             }
         }
     }
+
+    private void renderProcessedImageCpuDirectAccess(Frame frame) {
+        // Lock the image use to avoid pausing & resuming session when the image is in use. This is
+        // because switching resolutions requires all images to be released before session.resume() is
+        // called.
+        synchronized (frameImageInUseLock) {
+            try (Image image = frame.acquireCameraImage()) {
+                if (image.getFormat() != ImageFormat.YUV_420_888) {
+                    throw new IllegalArgumentException(
+                            "Expected image in YUV_420_888 format, got format " + image.getFormat());
+                }
+                ConvertToRGBImage(image);
+            } catch (NotYetAvailableException e) {
+                Log.e(TAG, "Fail to get image from current frame");
+            }
+        }
+    }
+    private void ConvertToRGBImage(Image image){
+        byte[] yuv = YUV_420_888toNV21(image);
+        int imageWidth  = image.getWidth();
+        int imageHeight = image.getHeight();
+
+        Type.Builder yuvBlder = new Type.Builder(rs, Element.U8(rs))
+                .setX(imageWidth).setY(imageHeight*3/2);
+        Allocation allocIn = Allocation.createTyped(rs,yuvBlder.create(),Allocation.USAGE_SCRIPT);
+        Type rgbType = Type.createXY(rs, Element.RGBA_8888(rs), imageWidth, imageHeight);
+        Allocation allocOut = Allocation.createTyped(rs,rgbType,Allocation.USAGE_SCRIPT);
+
+        allocIn.copyFrom(yuv);
+        script.set_gW(imageWidth);
+        script.set_gH(imageHeight);
+        script.set_gYUV(allocIn);
+        script.forEach_YUV2RGB(allocOut);
+
+        Bitmap bmp = Bitmap.createBitmap(imageWidth, imageHeight, Bitmap.Config.ARGB_8888);
+        allocOut.copyTo(bmp);
+
+        allocIn.destroy();
+    }
+    private static byte[] YUV_420_888toNV21(Image image) {
+        byte[] nv21;
+        ByteBuffer yBuffer = image.getPlanes()[0].getBuffer();
+        ByteBuffer uBuffer = image.getPlanes()[1].getBuffer();
+        ByteBuffer vBuffer = image.getPlanes()[2].getBuffer();
+
+        int ySize = yBuffer.remaining();
+        int uSize = uBuffer.remaining();
+        int vSize = vBuffer.remaining();
+
+        nv21 = new byte[ySize + uSize + vSize];
+
+        //U and V are swapped
+        yBuffer.get(nv21, 0, ySize);
+        vBuffer.get(nv21, ySize, vSize);
+        uBuffer.get(nv21, ySize + vSize, uSize);
+
+        return nv21;
+    }
+//    private void renderProcessedImageGpuDownload(Frame frame) {
+//        // If there is a frame being requested previously, acquire the pixels and process it.
+//        if (gpuDownloadFrameBufferIndex >= 0) {
+//            TextureReaderImage image = textureReader.acquireFrame(gpuDownloadFrameBufferIndex);
+//
+//            if (image.format != TextureReaderImage.IMAGE_FORMAT_I8) {
+//                throw new IllegalArgumentException(
+//                        "Expected image in I8 format, got format " + image.format);
+//            }
+//
+//            ByteBuffer processedImageBytesGrayscale =
+//                    edgeDetector.detect(image.width, image.height, /* stride= */ image.width, image.buffer);
+//
+//            // You should always release frame buffer after using. Otherwise the next call to
+//            // submitFrame() may fail.
+//            textureReader.releaseFrame(gpuDownloadFrameBufferIndex);
+//
+//            cpuImageRenderer.drawWithCpuImage(
+//                    frame,
+//                    IMAGE_WIDTH,
+//                    IMAGE_HEIGHT,
+//                    processedImageBytesGrayscale,
+//                    cpuImageDisplayRotationHelper.getViewportAspectRatio(),
+//                    cpuImageDisplayRotationHelper.getCameraToDisplayRotation());
+//
+//        } else {
+//            cpuImageRenderer.drawWithoutCpuImage();
+//        }
+//
+//        // Submit request for the texture from the current frame.
+//        gpuDownloadFrameBufferIndex =
+//                textureReader.submitFrame(cpuImageRenderer.getTextureId(), TEXTURE_WIDTH, TEXTURE_HEIGHT);
+//    }
 }

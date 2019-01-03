@@ -13,6 +13,10 @@ android {
         renderscriptSupportModeEnabled true
         renderscriptNdkModeEnabled true
 
+        renderscriptTargetApi 26
+        renderscriptSupportModeEnabled true
+        renderscriptNdkModeEnabled false
+
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
