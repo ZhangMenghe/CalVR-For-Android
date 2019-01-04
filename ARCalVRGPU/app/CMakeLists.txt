@@ -17,9 +17,12 @@ IF(${USE_OPENCV})
     set(OpenCV_DIR "${CMAKE_SOURCE_DIR}/../../../opencv-3.4.3/build/${ANDROID_ABI}/sdk/native/jni")
     set(OpenCV_INCLUDE_DIR ${OpenCV_DIR}/include)
     INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIR})
+    find_package(OpenCV REQUIRED)
+     message(STATUS "OpenCV libraries: ${OpenCV_LIBS}")
 ENDIF(${USE_OPENCV})
 
 target_link_libraries( ARCalVR_GPU
+                       ${OpenCV_LIBS}
                        android
                        mediandk
                        arcore

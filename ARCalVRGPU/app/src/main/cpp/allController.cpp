@@ -57,6 +57,7 @@ allController::allController(AAssetManager *assetManager)
 //    _sceneGroup = nullptr;
 //    _bgDrawable = new bgDrawable();
     _fpsMonitor = new perfMonitor();
+    _stitcher = cv::Stitcher::createDefault();
 }
 
 allController::~allController(){
@@ -173,3 +174,12 @@ void allController::onViewChanged(int rot, int width, int height){
 //
 //    return node;
 //}
+void allController::processFrameImage(cv::Mat image){
+    cv::Stitcher::Status status = _stitcher.stitch(_stichImages, _panoImg);
+    if(status == cv::Stitcher::OK || _stichImages.size() > 10)
+        _stichImages.clear();
+    else {
+        cv::resize(image, image, cv::Size(image.rows/2, image.cols/2));
+        _stichImages.push_back(image);
+    }
+}

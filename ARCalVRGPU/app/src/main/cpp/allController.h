@@ -2,8 +2,11 @@
 #define ARCALVR_ALL_CONTROLLER_H
 
 #include <string>
+#include <vector>
 #include <android/asset_manager.h>
 
+#include <opencv2/core/mat.hpp>
+#include <opencv2/stitching.hpp>
 //#include <cvrKernel/CalVR.h>
 //#include <cvrKernel/InteractionEvent.h>
 
@@ -48,6 +51,10 @@ protected:
 
 //    osg::ref_ptr<osg::Geode> createDebugOSGSphere(osg::Vec3f pos);
 
+    cv::Mat _panoImg;
+//        cv::Ptr<cv::Stitcher> _stitcher;
+    cv::Stitcher _stitcher;
+    std::vector<cv::Mat> _stichImages;
 public:
     allController(AAssetManager *assetManager);
 
@@ -62,6 +69,8 @@ public:
     void onResume();
 
     void onDrawFrame();
+
+    void processFrameImage(cv::Mat image);
 
 //    void onSingleTouchDown(cvr::TouchType type, float x, float y);
 //

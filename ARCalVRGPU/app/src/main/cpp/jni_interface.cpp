@@ -1,5 +1,6 @@
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
+#include <opencv2/core/mat.hpp>
 #include "jni_interface.h"
 #include "allController.h"
 
@@ -88,6 +89,11 @@ JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv*, jclass, jint type, jfloat x, jfloat 
 
 JNI_METHOD(void, JNIonTouchMove)(JNIEnv*, jclass, jint type, jfloat x, jfloat y){
 //    controllerNative(nativeAppAddr)->onTouchMove(static_cast<cvr::TouchType>(type), x, y);
+}
+
+ARCORE_METHOD(void, JNIPassSingleFrame)(JNIEnv*, jclass, jlong matAddr){
+    cv::Mat& img = *(cv::Mat*) matAddr;
+    controllerNative(nativeAppAddr)->processFrameImage(img);
 }
 
 JNIEnv *GetJniEnv() {

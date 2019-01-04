@@ -9,7 +9,11 @@
 
 #define MAIN_METHOD(returnType, funcName)\
     JNIEXPORT returnType JNICALL        \
-        Java_com_samsung_arcalvr_MainActivity_##funcName
+        Java_com_samsung_arcalvr_1gpu_MainActivity_##funcName
+
+#define ARCORE_METHOD(returnType, funcName)\
+    JNIEXPORT returnType JNICALL        \
+        Java_com_samsung_arcalvr_1gpu_ARCoreManager_##funcName
 
 //define helper functions to provide access to Java from C via JNI
 extern "C"{
@@ -39,6 +43,7 @@ JNI_METHOD(void, JNIonTouchMove)(JNIEnv*, jclass, jint type, jfloat x, jfloat y)
 
 MAIN_METHOD(void, JNIOnMainActivityCreated)(JNIEnv*, jobject);
 
+ARCORE_METHOD(void, JNIPassSingleFrame)(JNIEnv*, jclass, jlong);
 
 JNIEnv * GetJniEnv();
 

@@ -60,15 +60,12 @@ public class ARCoreManager {
     private Session session;
     private TapHelper tapHelper;
     private DisplayRotationHelper displayRotationHelper;
-
+    private int _frameCount = 0;
 
     private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
 
     private final PlaneRenderer planeRenderer = new PlaneRenderer();
     private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
-
-    private Mat currentImg;
-    private Bitmap currentBmp;
 
     // Temporary matrix allocated here to reduce number of allocations for each frame.
     private final float[] anchorMatrix = new float[16];
@@ -206,6 +203,7 @@ public class ARCoreManager {
         if (session == null) {
             return;
         }
+        _frameCount++;
         // Notify ARCore session that the view size changed so that the perspective matrix and
         // the video background can be properly adjusted.
         displayRotationHelper.updateSessionIfNeeded(session);
@@ -217,14 +215,17 @@ public class ARCoreManager {
             // UpdateMode.BLOCKING (it is by default), this will throttle the rendering to the
             // camera framerate.
             Frame frame = session.update();
-            switch (imageAcquisitionPath) {
-                case CPU_DIRECT_ACCESS:
-                    renderProcessedImageCpuDirectAccess(frame);
-                    break;
-                case GPU_DOWNLOAD:
+            if(_frameCount %50 == 0){
+                switch (imageAcquisitionPath) {
+                    case CPU_DIRECT_ACCESS:
+                        renderProcessedImageCpuDirectAccess(frame);
+                        break;
+                    case GPU_DOWNLOAD:
 //                    renderProcessedImageGpuDownload(frame);
-                    break;
+                        break;
+                }
             }
+
             Camera camera = frame.getCamera();
 
             // Handle one tap per frame.
@@ -343,8 +344,8 @@ public class ARCoreManager {
     }
     private void ConvertToRGBImage(Image image){
         byte[] yuv = YUV_420_888toNV21(image);
-        currentImg = getYUV2Mat(yuv, image.getWidth(), image.getHeight());
-
+        Mat mRGB = getYUV2Mat(yuv, image.getWidth(), image.getHeight());
+        JNIPassSingleFrame(mRGB.getNativeObjAddr());
 //        DEBUG-VIEW: SEE RUNTIME BACKGROUND IMAGE
 //        Bitmap debugBitmap = Bitmap.createBitmap(currentImg.width(), currentImg.height(), Bitmap.Config.ARGB_8888);
 //        org.opencv.android.Utils.matToBitmap(currentImg, debugBitmap);
@@ -392,13 +393,7 @@ public class ARCoreManager {
         uBuffer.get(nv21, ySize + vSize, uSize);
         return nv21;
     }
-    public Mat getCurrentImg(){
-        return currentImg;
-    }
 
-    public Bitmap getCurrentBmp() {
-        return currentBmp;
-    }
     public Mat getYUV2Mat(byte[] data, int width, int height) {
         Mat mYuv = new Mat(height + height / 2, width, CvType.CV_8UC1);
         mYuv.put(0, 0, data);
@@ -407,6 +402,7 @@ public class ARCoreManager {
         return mRGB;
     }
 
+    public static native void JNIPassSingleFrame(long matAddr);
 
     //    private void renderProcessedImageGpuDownload(Frame frame) {
 //        // If there is a frame being requested previously, acquire the pixels and process it.
@@ -441,4 +437,6 @@ public class ARCoreManager {
 //        gpuDownloadFrameBufferIndex =
 //                textureReader.submitFrame(cpuImageRenderer.getTextureId(), TEXTURE_WIDTH, TEXTURE_HEIGHT);
 //    }
+
+
 }
