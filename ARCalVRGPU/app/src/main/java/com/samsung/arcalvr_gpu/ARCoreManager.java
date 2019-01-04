@@ -12,6 +12,7 @@ import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.Type;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
@@ -39,9 +40,16 @@ import com.samsung.arcalvr_gpu.rendering.BackgroundRenderer;
 import com.samsung.arcalvr_gpu.rendering.PlaneRenderer;
 import com.samsung.arcalvr_gpu.rendering.PointCloudRenderer;
 
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+
+import static org.opencv.imgproc.Imgproc.cvtColor;
 
 //import com.samsung.arcalvr_gpu.ScriptC_yuv2rgb;
 
@@ -58,6 +66,9 @@ public class ARCoreManager {
 
     private final PlaneRenderer planeRenderer = new PlaneRenderer();
     private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
+
+    private Mat currentImg;
+    private Bitmap currentBmp;
 
     // Temporary matrix allocated here to reduce number of allocations for each frame.
     private final float[] anchorMatrix = new float[16];
@@ -332,25 +343,36 @@ public class ARCoreManager {
     }
     private void ConvertToRGBImage(Image image){
         byte[] yuv = YUV_420_888toNV21(image);
-        int imageWidth  = image.getWidth();
-        int imageHeight = image.getHeight();
+        currentImg = getYUV2Mat(yuv, image.getWidth(), image.getHeight());
 
-        Type.Builder yuvBlder = new Type.Builder(rs, Element.U8(rs))
-                .setX(imageWidth).setY(imageHeight*3/2);
-        Allocation allocIn = Allocation.createTyped(rs,yuvBlder.create(),Allocation.USAGE_SCRIPT);
-        Type rgbType = Type.createXY(rs, Element.RGBA_8888(rs), imageWidth, imageHeight);
-        Allocation allocOut = Allocation.createTyped(rs,rgbType,Allocation.USAGE_SCRIPT);
+//        DEBUG-VIEW: SEE RUNTIME BACKGROUND IMAGE
+//        Bitmap debugBitmap = Bitmap.createBitmap(currentImg.width(), currentImg.height(), Bitmap.Config.ARGB_8888);
+//        org.opencv.android.Utils.matToBitmap(currentImg, debugBitmap);
+//        MainActivity.imgView.setImageBitmap(debugBitmap);
 
-        allocIn.copyFrom(yuv);
-        script.set_gW(imageWidth);
-        script.set_gH(imageHeight);
-        script.set_gYUV(allocIn);
-        script.forEach_YUV2RGB(allocOut);
+//        Mat mYuvMat = imageToMat(image);
 
-        Bitmap bmp = Bitmap.createBitmap(imageWidth, imageHeight, Bitmap.Config.ARGB_8888);
-        allocOut.copyTo(bmp);
+//        int imageWidth  = image.getWidth();
+//        int imageHeight = image.getHeight();
+//
+//        Type.Builder yuvBlder = new Type.Builder(rs, Element.U8(rs))
+//                .setX(imageWidth).setY(imageHeight*3/2);
+//        Allocation allocIn = Allocation.createTyped(rs,yuvBlder.create(),Allocation.USAGE_SCRIPT);
+//        Type rgbType = Type.createXY(rs, Element.RGBA_8888(rs), imageWidth, imageHeight);
+//        Allocation allocOut = Allocation.createTyped(rs,rgbType,Allocation.USAGE_SCRIPT);
+//
+//        allocIn.copyFrom(yuv);
+//        script.set_gW(imageWidth);
+//        script.set_gH(imageHeight);
+//        script.set_gYUV(allocIn);
+//        script.forEach_YUV2RGB(allocOut);
+//        allocIn.destroy();
+//
+//        currentBmp = Bitmap.createBitmap(imageWidth, imageHeight, Bitmap.Config.ARGB_8888);
+//        allocIn.copyTo(currentBmp);
+//        currentImg= new Mat(imageHeight, imageWidth, CvType.CV_8UC1);
+//        Utils.bitmapToMat(currentBmp, currentImg);
 
-        allocIn.destroy();
     }
     private static byte[] YUV_420_888toNV21(Image image) {
         byte[] nv21;
@@ -368,10 +390,25 @@ public class ARCoreManager {
         yBuffer.get(nv21, 0, ySize);
         vBuffer.get(nv21, ySize, vSize);
         uBuffer.get(nv21, ySize + vSize, uSize);
-
         return nv21;
     }
-//    private void renderProcessedImageGpuDownload(Frame frame) {
+    public Mat getCurrentImg(){
+        return currentImg;
+    }
+
+    public Bitmap getCurrentBmp() {
+        return currentBmp;
+    }
+    public Mat getYUV2Mat(byte[] data, int width, int height) {
+        Mat mYuv = new Mat(height + height / 2, width, CvType.CV_8UC1);
+        mYuv.put(0, 0, data);
+        Mat mRGB = new Mat();
+        cvtColor(mYuv, mRGB, Imgproc.COLOR_YUV2RGB_NV21, 3);
+        return mRGB;
+    }
+
+
+    //    private void renderProcessedImageGpuDownload(Frame frame) {
 //        // If there is a frame being requested previously, acquire the pixels and process it.
 //        if (gpuDownloadFrameBufferIndex >= 0) {
 //            TextureReaderImage image = textureReader.acquireFrame(gpuDownloadFrameBufferIndex);

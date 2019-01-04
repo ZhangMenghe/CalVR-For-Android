@@ -129,21 +129,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="257">
               <caret line="90" column="18" lean-forward="false" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CMakeLists-buildCALVR.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/CMakeLists-buildCALVR.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="926">
-              <caret line="44" column="21" lean-forward="false" selection-start-line="44" selection-start-column="4" selection-end-line="44" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -172,7 +162,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>OPENCV_THIS_DIR</find>
       <find>cxx</find>
       <find>OpenCV_LIB_COMPONENTS</find>
       <find>target_link_libraries</find>
@@ -198,10 +187,11 @@
       <find>LIB_EXTERNAL_LIBRARIES</find>
       <find>OSG_INCLUDE_DIR</find>
       <find>calvr_dest</find>
-      <find>ndk</find>
       <find>ondest</find>
       <find>OpenCV_INCLUDE_DIR</find>
       <find>opencv</find>
+      <find>CALVR_INCLUDE_DIR</find>
+      <find>ndk</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -3313,7 +3303,7 @@
     </option>
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="false" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="1911" />
     <option name="y" value="22" />
     <option name="width" value="1698" />
@@ -3631,7 +3621,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1911" y="22" width="1698" height="1018" extended-state="6" />
+    <frame x="1911" y="22" width="1698" height="1018" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -4230,18 +4220,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="90" column="18" lean-forward="false" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/CMakeLists-buildCALVR.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="926">
           <caret line="44" column="21" lean-forward="false" selection-start-line="44" selection-start-column="4" selection-end-line="44" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="90" column="18" lean-forward="false" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="18" />
           <folding />
         </state>
       </provider>
