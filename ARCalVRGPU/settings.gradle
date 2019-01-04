@@ -1,1 +1,3 @@
-include ':app'
+include ':app', ':opencv'
+def opencvsdk='../../opencv-3.4.3/build/arm64-v8a/sdk'
+project(':opencv').projectDir = new File(opencvsdk)

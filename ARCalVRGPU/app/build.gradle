@@ -49,6 +49,9 @@ dependencies {
     implementation 'com.google.ar:core:1.5.0'
     natives 'com.google.ar:core:1.5.0'
 
+    //opencv lib
+    implementation project(':opencv')
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
