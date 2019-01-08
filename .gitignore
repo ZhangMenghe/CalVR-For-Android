@@ -1,5 +1,6 @@
 /[Bb]uild/
 /buildLib/
+/*GPU/
 # Prerequisites
 *.d
 
