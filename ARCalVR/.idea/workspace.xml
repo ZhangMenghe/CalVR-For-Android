@@ -50,8 +50,8 @@
       <file leaf-file-name="SpatialViz.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="1403" column="107" lean-forward="false" selection-start-line="1403" selection-start-column="107" selection-end-line="1403" selection-end-column="107" />
+            <state relative-caret-position="518">
+              <caret line="1416" column="72" lean-forward="false" selection-start-line="1416" selection-start-column="72" selection-end-line="1416" selection-end-column="72" />
               <folding>
                 <element signature="e#547#601#0" expanded="true" />
                 <element signature="e#708#742#0" expanded="true" />
@@ -67,39 +67,29 @@
                 <element signature="e#42971#43218#0" expanded="false" />
                 <element signature="e#43220#45253#0" expanded="false" />
                 <element signature="e#45255#52649#0" expanded="false" />
-                <element signature="e#57244#57843#0" expanded="false" />
-                <element signature="e#57868#63173#0" expanded="false" />
-                <element signature="e#58193#61645#0" expanded="false" />
-                <element signature="e#63175#64159#0" expanded="false" />
-                <element signature="e#64244#65092#0" expanded="false" />
-                <element signature="e#65094#67753#0" expanded="false" />
-                <element signature="e#67755#70939#0" expanded="false" />
-                <element signature="e#71026#74969#0" expanded="false" />
-                <element signature="e#79049#84085#0" expanded="false" />
-                <element signature="e#84996#85127#0" expanded="false" />
-                <element signature="e#85129#85858#0" expanded="false" />
-                <element signature="e#85860#87619#0" expanded="false" />
-                <element signature="e#86270#87599#0" expanded="false" />
+                <element signature="e#57435#58034#0" expanded="false" />
+                <element signature="e#58059#63364#0" expanded="false" />
+                <element signature="e#58384#61836#0" expanded="false" />
+                <element signature="e#63366#64350#0" expanded="false" />
+                <element signature="e#64435#65283#0" expanded="false" />
+                <element signature="e#65285#67944#0" expanded="false" />
+                <element signature="e#67946#71130#0" expanded="false" />
+                <element signature="e#71217#75160#0" expanded="false" />
+                <element signature="e#79240#84276#0" expanded="false" />
+                <element signature="e#85187#85318#0" expanded="false" />
+                <element signature="e#85320#86049#0" expanded="false" />
+                <element signature="e#86051#87810#0" expanded="false" />
+                <element signature="e#86461#87790#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="objectOSG.vert" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectOSG.vert">
+      <file leaf-file-name="simpleOSG.vert" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/simpleOSG.vert">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="6" column="31" lean-forward="false" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="objectOSG.frag" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectOSG.frag">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+            <state relative-caret-position="175">
+              <caret line="7" column="31" lean-forward="false" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -108,18 +98,8 @@
       <file leaf-file-name="simpleOSG.frag" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/simpleOSG.frag">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="8" column="38" lean-forward="false" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="simpleOSG.vert" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/simpleOSG.vert">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="10" column="26" lean-forward="false" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
+            <state relative-caret-position="300">
+              <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -157,7 +137,6 @@
       <find>gl_ModelViewProjectionMatrix</find>
       <find>setviewma</find>
       <find>objectOSG.</find>
-      <find>lambert</find>
       <find>/objectOSG</find>
       <find>uSampler</find>
       <find>:addC</find>
@@ -166,6 +145,7 @@
       <find>error</find>
       <find>:addCube</find>
       <find>:processE</find>
+      <find>lambert</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -2631,20 +2611,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Desktop/SaveState/drawablesEntrance.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3575">
-          <caret line="100" column="0" lean-forward="true" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Desktop/SaveState/pointDrawable.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="21" column="26" lean-forward="true" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/plugins/GlesDrawables/pointDrawable.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
@@ -2923,6 +2889,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
           <caret line="23" column="21" lean-forward="false" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
+          <folding>
+            <element signature="e#35#68#0" expanded="false" />
+            <element signature="e#192#220#0" expanded="false" />
+            <element signature="e#327#357#0" expanded="false" />
+            <element signature="e#4844#5989#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2938,14 +2910,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2275">
           <caret line="91" column="61" lean-forward="false" selection-start-line="91" selection-start-column="61" selection-end-line="91" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/simpleOSG.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="10" column="26" lean-forward="false" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -2974,10 +2938,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectSH.frag">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="12" column="43" lean-forward="true" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectSH.vert">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectOSG.frag">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="500">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="1403" column="107" lean-forward="false" selection-start-line="1403" selection-start-column="107" selection-end-line="1403" selection-end-column="107" />
+        <state relative-caret-position="518">
+          <caret line="1416" column="72" lean-forward="false" selection-start-line="1416" selection-start-column="72" selection-end-line="1416" selection-end-column="72" />
           <folding>
             <element signature="e#547#601#0" expanded="true" />
             <element signature="e#708#742#0" expanded="true" />
@@ -2993,35 +2981,35 @@
             <element signature="e#42971#43218#0" expanded="false" />
             <element signature="e#43220#45253#0" expanded="false" />
             <element signature="e#45255#52649#0" expanded="false" />
-            <element signature="e#57244#57843#0" expanded="false" />
-            <element signature="e#57868#63173#0" expanded="false" />
-            <element signature="e#58193#61645#0" expanded="false" />
-            <element signature="e#63175#64159#0" expanded="false" />
-            <element signature="e#64244#65092#0" expanded="false" />
-            <element signature="e#65094#67753#0" expanded="false" />
-            <element signature="e#67755#70939#0" expanded="false" />
-            <element signature="e#71026#74969#0" expanded="false" />
-            <element signature="e#79049#84085#0" expanded="false" />
-            <element signature="e#84996#85127#0" expanded="false" />
-            <element signature="e#85129#85858#0" expanded="false" />
-            <element signature="e#85860#87619#0" expanded="false" />
-            <element signature="e#86270#87599#0" expanded="false" />
+            <element signature="e#57435#58034#0" expanded="false" />
+            <element signature="e#58059#63364#0" expanded="false" />
+            <element signature="e#58384#61836#0" expanded="false" />
+            <element signature="e#63366#64350#0" expanded="false" />
+            <element signature="e#64435#65283#0" expanded="false" />
+            <element signature="e#65285#67944#0" expanded="false" />
+            <element signature="e#67946#71130#0" expanded="false" />
+            <element signature="e#71217#75160#0" expanded="false" />
+            <element signature="e#79240#84276#0" expanded="false" />
+            <element signature="e#85187#85318#0" expanded="false" />
+            <element signature="e#85320#86049#0" expanded="false" />
+            <element signature="e#86051#87810#0" expanded="false" />
+            <element signature="e#86461#87790#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectOSG.frag">
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/simpleOSG.vert">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+        <state relative-caret-position="175">
+          <caret line="7" column="31" lean-forward="false" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/simpleOSG.frag">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="38" lean-forward="false" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
+        <state relative-caret-position="300">
+          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
           <folding />
         </state>
       </provider>
