@@ -46,7 +46,7 @@
 
 class SpatialViz : public cvr::CVRPlugin, public cvr::MenuCallback
 {
-  protected:
+protected:
     // menu and CVR variables
     cvr::SubMenu *_mainMenu;
     cvr::MenuButton *_mazePuzzleButton, *_5x5puzzleButton, *_tetrisPuzzle2, *_labyrinthPuzzle, *_tetrisPuzzle, *_removePuzzles, *_restartPhysics;
@@ -96,8 +96,8 @@ class SpatialViz : public cvr::CVRPlugin, public cvr::MenuCallback
     void updateGravity(osg::Quat, physx::PxScene *);
     osg::Vec2 checkTetris_matching(osg::Quat);
     osg::Vec2 checkTetris2_matching(osg::Quat);
- 
-  public:
+
+public:
     SpatialViz();
     virtual ~SpatialViz();
     
@@ -115,7 +115,7 @@ class SpatialViz : public cvr::CVRPlugin, public cvr::MenuCallback
     void createTetris2(int);
     void createPuzzleCube(int);
     void create5x5(int);
-    void createLabyrinth(float, float);
+    void createLabyrinth(float, float, osg::Vec3);
 
     /* createBoxes and createSpheres take in dimensions in terms of m */
 #if(__ANDROID__)

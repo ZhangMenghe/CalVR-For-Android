@@ -2,7 +2,7 @@ uniform vec4 lightDiffuse;
 uniform vec4 lightSpecular;
 uniform float shininess;
 uniform vec4 uColorCorrection;
-uniform sampler2D uSampler, uSamplerC;
+//uniform sampler2D uSampler, uSamplerC;
 uniform bool uTextureChoice;
 
 uniform vec4 uColor;
