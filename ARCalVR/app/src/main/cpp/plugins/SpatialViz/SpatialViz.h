@@ -63,7 +63,7 @@ protected:
     
     // Puzzle variables
     // used to rotate the entire puzzle
-    osg::PositionAttitudeTransform * _puzzleMazeTrans, *_puzzle5x5Trans, *_labTrans, *_mainTetrisPieceTrans, *_mainTetris2PieceTrans;
+    osg::PositionAttitudeTransform * _puzzleMazeTrans, *_puzzle5x5Trans, *_labTrans, *_mainTetrisTrans, *_mainTetris2Trans;
     // positions for the transforms
     osg::Vec3 _labPos;
     osg::PositionAttitudeTransform  *_mazeBox, * _piecePuzzle1, * _piecePuzzle2, * _piecePuzzle3, * _piecePuzzle4, * _piecePuzzle5;
@@ -83,7 +83,6 @@ protected:
     std::vector<planeDrawable*> _planeDrawables;
 
     bool inWorldSpace = true;
-    void addCubeWorld(osg::Group*, osg::Matrixf);
     osg::Vec2f _mPreviousPos;
     // ----- end ANDROID additions ----- //
     
@@ -96,6 +95,10 @@ protected:
     void updateGravity(osg::Quat, physx::PxScene *);
     osg::Vec2 checkTetris_matching(osg::Quat);
     osg::Vec2 checkTetris2_matching(osg::Quat);
+
+    // other helper functions
+    osg::PositionAttitudeTransform* getcurrTrans();
+    void updateBoundingBox(cvr::SceneObject* theSceneObj, osg::BoundingBox theBoundingBox);
 
 public:
     SpatialViz();
@@ -115,7 +118,7 @@ public:
     void createTetris2(int);
     void createPuzzleCube(int);
     void create5x5(int);
-    void createLabyrinth(float, float, osg::Vec3);
+    void createLabyrinth(float, float);
 
     /* createBoxes and createSpheres take in dimensions in terms of m */
 #if(__ANDROID__)

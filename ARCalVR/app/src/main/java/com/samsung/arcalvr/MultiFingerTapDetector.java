@@ -10,7 +10,7 @@ public abstract class MultiFingerTapDetector {
     private static final int TRIPLE_TIMEOUT = ViewConfiguration.getDoubleTapTimeout() + 250;
     private static final int LONG_PRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
     private static final int MIN_DISTANCE = 400;
-    private static final int SAME_POS_THREADHOOD = 20;
+    private static final int SAME_POS_THREADHOOD = 50;  // ORIGINALLY 20 testing changing this
     // for one finger taps
     private long mFirstDownTimeOne = 0;
     private boolean mSeparateTouchesOne = false;
@@ -183,16 +183,23 @@ public abstract class MultiFingerTapDetector {
                     return true;
                 }
 
-                // MOVE when the finger moves at all
+            // MOVE when the finger moves at all
             case MotionEvent.ACTION_MOVE:
                 // if we have just the one finger touching the screen
                 if (event.getPointerCount() == 1 && oneFingerDown){
+
+                    // if we have been touching the screen longer than the timeout
+                    // and the current position has not moved too much
                     if(event.getEventTime() - event.getDownTime() > LONG_PRESS_TIMEOUT &&
                             Math.abs(event.getX() - lastx) < SAME_POS_THREADHOOD &&
                             Math.abs(event.getY() - lasty) < SAME_POS_THREADHOOD)
                         onOneFingerLongPress();
-                    else
+
+                    // if either the x or y has moved at least 100
+                    else if (Math.abs(event.getX() - lastx) > 100 ||
+                            Math.abs(event.getY() - lasty) > 100){
                         onOneFingerMove(event);
+                    }
                     return true;
                 }
                 // if we have two fingers down and time is longer than the TIMEOUT

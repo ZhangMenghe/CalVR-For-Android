@@ -118,7 +118,7 @@ void allController::onSingleTouchUp(TouchType type, float x, float y){
     aie->setInteraction(BUTTON_UP);
     _CalVR->setTouchEvent(aie, type, x, y);
     if (aie->asTrackedButtonEvent()){
-        LOGI("--- BUTTON DOWN ---");
+        LOGI("--- BUTTON UP ---");
         LOGI("--- Button = %d ---", aie->getButton());
     }
 }
@@ -128,20 +128,28 @@ void allController::onDoubleTouch(TouchType type, float x, float y){
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DOUBLE_CLICK);
     _CalVR->setTouchEvent(aie, type, x, y);
+
+    // print statements
     if (aie->asTrackedButtonEvent()){
-        LOGI("--- Double Touch - BUTTON UP ---");
+        LOGI("--- Double Touch ---");
         LOGI("--- button = %d ---", aie->getButton());
         LOGI("--- (%f, %f) ---", x, y);
     }
 }
 
 void allController::onTouchMove(TouchType type, float x, float y){
-//    _menuOpen = true;
-    _touchX = x; _touchY = y;
 
-    AndroidInteractionEvent * aie = new AndroidInteractionEvent();
+//    _touchX = x; _touchY = y;
+    AndroidInteractionEvent *aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DRAG);
     _CalVR->setTouchEvent(aie, type, x, y);
+
+    // print statements
+    if (aie->asTrackedButtonEvent()) {
+        LOGI("--- TOUCH MOVE ---");
+        LOGI("--- button = %d ---", aie->getButton());
+        LOGI("--- (%f, %f) ---", x, y);
+    }
 }
 
 float allController::getFPS(){return 60.0f;}

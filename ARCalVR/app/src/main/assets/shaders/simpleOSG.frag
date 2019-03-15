@@ -31,7 +31,7 @@ void main() {
 //    finalColor.rgb = pow(finalColor.rgb, vec3(kGamma)); // makes everything more muted
 
     // Apply average pixel intensity and color shift
-    finalColor.rgb *= uColorCorrection.rgb * (uColorCorrection.a/kMiddleGrayGamma);
+//    finalColor.rgb *= uColorCorrection.rgb * (uColorCorrection.a/kMiddleGrayGamma);
     gl_FragColor = vec4(finalColor.rgb, alphaValue);
 
 }
