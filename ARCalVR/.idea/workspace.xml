@@ -6,7 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value=" --" />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="Updated Gravity" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="info" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
@@ -33,11 +33,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="SpatialViz.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/cpp/plugins/SpatialViz/SpatialViz.h">
+      <file leaf-file-name="allController.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1625">
-              <caret line="65" column="117" lean-forward="false" selection-start-line="65" selection-start-column="117" selection-end-line="65" selection-end-column="117" />
+            <state relative-caret-position="200">
+              <caret line="115" column="52" lean-forward="false" selection-start-line="115" selection-start-column="48" selection-end-line="115" selection-end-column="52" />
+              <folding>
+                <element signature="e#329#359#0" expanded="true" />
+                <element signature="e#3120#3453#0" expanded="false" />
+                <element signature="e#5263#6408#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CalVR.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/CalVR.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="138">
+              <caret line="568" column="28" lean-forward="false" selection-start-line="568" selection-start-column="9" selection-end-line="568" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -46,8 +60,8 @@
       <file leaf-file-name="SpatialViz.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2425">
-              <caret line="97" column="46" lean-forward="false" selection-start-line="97" selection-start-column="46" selection-end-line="97" selection-end-column="46" />
+            <state relative-caret-position="835">
+              <caret line="119" column="21" lean-forward="false" selection-start-line="119" selection-start-column="21" selection-end-line="119" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -56,78 +70,73 @@
       <file leaf-file-name="SpatialViz.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="1932" column="69" lean-forward="false" selection-start-line="1932" selection-start-column="69" selection-end-line="1932" selection-end-column="69" />
+            <state relative-caret-position="311">
+              <caret line="977" column="34" lean-forward="false" selection-start-line="977" selection-start-column="34" selection-end-line="977" selection-end-column="34" />
               <folding>
-                <element signature="e#547#601#0" expanded="true" />
-                <element signature="e#708#742#0" expanded="true" />
-                <element signature="e#3779#8453#0" expanded="false" />
-                <element signature="e#8573#12792#0" expanded="false" />
-                <element signature="e#12793#15760#0" expanded="false" />
-                <element signature="e#15761#18687#0" expanded="false" />
-                <element signature="e#18688#24539#0" expanded="false" />
-                <element signature="e#24540#26323#0" expanded="false" />
-                <element signature="e#26325#28566#0" expanded="false" />
-                <element signature="e#28568#30720#0" expanded="false" />
-                <element signature="e#30829#30965#0" expanded="false" />
-                <element signature="e#30967#31993#0" expanded="false" />
-                <element signature="e#40781#41028#0" expanded="false" />
-                <element signature="e#43290#49723#0" expanded="false" />
-                <element signature="e#49725#55605#0" expanded="false" />
-                <element signature="e#54983#55582#0" expanded="false" />
-                <element signature="e#55607#60665#0" expanded="false" />
-                <element signature="e#55935#59104#0" expanded="false" />
-                <element signature="e#59743#60640#0" expanded="false" />
-                <element signature="e#60667#61651#0" expanded="false" />
-                <element signature="e#61736#62611#0" expanded="false" />
-                <element signature="e#62613#65272#0" expanded="false" />
-                <element signature="e#65274#68458#0" expanded="false" />
-                <element signature="e#68545#71692#0" expanded="false" />
-                <element signature="e#69186#69892#0" expanded="false" />
-                <element signature="e#69998#70711#0" expanded="false" />
-                <element signature="e#71694#75349#0" expanded="false" />
-                <element signature="e#72854#74042#0" expanded="false" />
-                <element signature="e#75352#75483#0" expanded="false" />
-                <element signature="e#81447#82776#0" expanded="false" />
-                <element signature="e#83581#84170#0" expanded="false" />
-                <element signature="e#84171#84712#0" expanded="false" />
-                <element signature="e#84713#85443#0" expanded="false" />
-                <element signature="e#85444#85776#0" expanded="false" />
+                <element signature="e#3433#7752#0" expanded="false" />
+                <element signature="e#7753#10720#0" expanded="false" />
+                <element signature="e#10721#13647#0" expanded="false" />
+                <element signature="e#13648#20096#0" expanded="false" />
+                <element signature="e#20097#21890#0" expanded="false" />
+                <element signature="e#21893#22021#0" expanded="false" />
+                <element signature="e#22023#28664#0" expanded="false" />
+                <element signature="e#28666#30909#0" expanded="false" />
+                <element signature="e#30910#37536#0" expanded="false" />
+                <element signature="e#37538#38812#0" expanded="false" />
+                <element signature="e#38813#39061#0" expanded="false" />
+                <element signature="e#39063#42253#0" expanded="false" />
+                <element signature="e#39762#40467#0" expanded="false" />
+                <element signature="e#40569#41277#0" expanded="false" />
+                <element signature="e#42255#45947#0" expanded="false" />
+                <element signature="e#45950#46081#0" expanded="false" />
+                <element signature="e#46199#47333#0" expanded="false" />
+                <element signature="e#46199#49170#0" expanded="false" />
+                <element signature="e#49189#50316#0" expanded="false" />
+                <element signature="e#49189#52097#0" expanded="false" />
+                <element signature="e#52098#57993#0" expanded="false" />
+                <element signature="e#54867#55606#0" expanded="false" />
+                <element signature="e#57371#57970#0" expanded="false" />
+                <element signature="e#57995#63638#0" expanded="false" />
+                <element signature="e#58323#61492#0" expanded="false" />
+                <element signature="e#63640#64624#0" expanded="false" />
+                <element signature="e#64827#69425#0" expanded="false" />
+                <element signature="e#70223#72882#0" expanded="false" />
+                <element signature="e#72884#76068#0" expanded="false" />
+                <element signature="e#76171#83557#0" expanded="false" />
+                <element signature="e#82208#83537#0" expanded="false" />
+                <element signature="e#83558#84437#0" expanded="false" />
+                <element signature="e#84438#85027#0" expanded="false" />
+                <element signature="e#85028#85569#0" expanded="false" />
+                <element signature="e#85570#86300#0" expanded="false" />
+                <element signature="e#86301#86633#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="allController.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.h">
+      <file leaf-file-name="InteractionEvent.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../CalVR/include/cvrKernel/InteractionEvent.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="37" column="35" lean-forward="false" selection-start-line="37" selection-start-column="35" selection-end-line="37" selection-end-column="35" />
+            <state relative-caret-position="138">
+              <caret line="62" column="13" lean-forward="false" selection-start-line="62" selection-start-column="4" selection-end-line="62" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="allController.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.cpp">
+      <file leaf-file-name="BoardMenu.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/BoardMenu.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="985">
-              <caret line="151" column="5" lean-forward="false" selection-start-line="151" selection-start-column="5" selection-end-line="151" selection-end-column="5" />
+            <state relative-caret-position="563">
+              <caret line="313" column="0" lean-forward="false" selection-start-line="313" selection-start-column="0" selection-end-line="313" selection-end-column="0" />
               <folding>
-                <element signature="e#2804#3283#0" expanded="false" />
-                <element signature="e#3285#3443#0" expanded="false" />
-                <element signature="e#5033#6178#0" expanded="false" />
+                <element signature="e#0#30#0" expanded="true" />
+                <element signature="e#2593#2724#0" expanded="true" />
+                <element signature="e#4606#5311#0" expanded="false" />
+                <element signature="e#5312#5642#0" expanded="false" />
+                <element signature="e#5644#6575#0" expanded="false" />
+                <element signature="e#6577#7794#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MultiFingerTapDetector.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MultiFingerTapDetector.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="197" column="66" lean-forward="false" selection-start-line="197" selection-start-column="66" selection-end-line="197" selection-end-column="66" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -143,36 +152,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>createL</find>
-      <find>plane</find>
-      <find>*plane</find>
-      <find>0.025</find>
-      <find>erro</find>
-      <find>_labTrans</find>
-      <find>Objs</find>
-      <find>labyrinthObjs</find>
-      <find>trans</find>
-      <find>:createL</find>
-      <find>axis</find>
-      <find>_rotateButton</find>
-      <find>gesture</find>
-      <find>tetris2BB</find>
-      <find>_puzzleMazeTrans</find>
-      <find>currTrans</find>
-      <find>_tetrisSwitch-&gt;ad</find>
-      <find>root-&gt;addChild(_mainTetris</find>
-      <find>_puzzle5x5Trans</find>
-      <find>-----&gt;</find>
-      <find>:addC</find>
-      <find>_mainTetrisPieceTrans</find>
-      <find>_mainTetris2PieceTrans</find>
-      <find>androidRotate</find>
-      <find>ROTATE_OBJ</find>
-      <find>updateGravity</find>
-      <find>currScene</find>
-      <find>labObjs</find>
-      <find>performClick</find>
+      <find>_mazeBox</find>
+      <find>_piecePuzzle1</find>
+      <find>mainPiecePos</find>
+      <find>navigation</find>
+      <find>NavMouse</find>
+      <find>processEvent</find>
+      <find>nav</find>
+      <find>context</find>
+      <find>_touchX</find>
+      <find>_activeItem</find>
+      <find>handleEvents</find>
+      <find>androidInteraction</find>
+      <find>android</find>
+      <find>setTouch</find>
+      <find>_touchEventMat</find>
+      <find>_distance</find>
+      <find>showBoardMenu</find>
+      <find>FT_</find>
+      <find>_primaryButton</find>
+      <find>LEFT</find>
+      <find>touchPos</find>
+      <find>getScreenToClientPos</find>
+      <find>_sceneGroup</find>
+      <find>setInteractionEvent</find>
       <find>error</find>
+      <find>updatePhysXGravity</find>
+      <find>getRealWorldPositionFromScreen</find>
+      <find>FT_BUTTON</find>
+      <find>gScene5x5</find>
+      <find>gSceneLab</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -2251,7 +2260,6 @@
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/OSG_obj.vert" />
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/OSG_obj.frag" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp" />
-        <option value="$PROJECT_DIR$/../../CalVR/src/cvrMenu/BoardMenu.cpp" />
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/objectOSG.vert" />
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/objectOSG.frag" />
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/simpleOSG.frag" />
@@ -2259,22 +2267,30 @@
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/simpleOSG.vert" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/plugins/SpatialViz/SpatialViz.h" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.h" />
-        <option value="$PROJECT_DIR$/app/src/main/cpp/allController.h" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MultiFingerTapDetector.java" />
+        <option value="$PROJECT_DIR$/../../CalVR/src/cvrKernel/InteractionEvent.cpp" />
+        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.h" />
+        <option value="$PROJECT_DIR$/../../CalVR/src/cvrKernel/Navigation.cpp" />
+        <option value="$PROJECT_DIR$/app/src/main/assets/calvrAssets/config/config.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/cpp/allController.h" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/GestureDetectorCalVR.java" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/allController.cpp" />
+        <option value="$PROJECT_DIR$/../../CalVR/src/cvrKernel/InteractionManager.cpp" />
+        <option value="$PROJECT_DIR$/../../CalVR/include/cvrKernel/InteractionEvent.h" />
+        <option value="$PROJECT_DIR$/../../CalVR/include/cvrInput/TrackingManager.h" />
+        <option value="$PROJECT_DIR$/../../CalVR/src/cvrMenu/BoardMenu.cpp" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.cpp" />
       </list>
     </option>
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="false" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="950" />
     <option name="width" value="980" />
     <option name="height" value="1030" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
+    <navigator currentView="Scope" currentSubView="Project Files" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -2288,84 +2304,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="cpp" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="arcalvr" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="res" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="res" type="462c0819:PsiDirectoryNode" />
-              <item name="layout" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ARCalVR" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -2388,13 +2326,89 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
+            </path>
+            <path>
+              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ARCalVR" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="main" type="cbb8eebc:String" user="main" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="main" type="cbb8eebc:String" user="main" />
+              <item name="cpp" type="cbb8eebc:String" user="cpp" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="main" type="cbb8eebc:String" user="main" />
+              <item name="java" type="cbb8eebc:String" user="java" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="main" type="cbb8eebc:String" user="main" />
+              <item name="java" type="cbb8eebc:String" user="java" />
+              <item name="com/samsung/arcalvr" type="cbb8eebc:String" user="com/samsung/arcalvr" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+              <item name="C:\Users\kroth\AndroidStudioProjects\calvr_plugins\calit2\GlesDrawables" type="cbb8eebc:String" user="C:\Users\kroth\AndroidStudioProjects\calvr_plugins\calit2\GlesDrawables" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="show.migrate.to.gradle.popup" value="false" />
     <property name="device.picker.selection" value="5a364c4833573398" />
     <property name="android.profiler.active" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/PuzzleGenerator.hpp" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.h" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -2570,7 +2584,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="-11" width="1942" height="1042" extended-state="7" />
+    <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32821724" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2587,13 +2601,14 @@
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24972972" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19891892" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23621622" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42857143" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41086188" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32975295" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24972972" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" x="290" y="381" width="1543" height="873" />
+      <window_info id="Debug" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" x="431" y="83" width="1345" height="873" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2603,7 +2618,6 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41189933" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Flutter Inspector" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.06659506" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -2646,276 +2660,42 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.cpp</url>
-          <line>1858</line>
+          <line>1852</line>
           <option name="timeStamp" value="46" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MovableFloatingActionButton.java</url>
-          <line>91</line>
-          <properties />
-          <option name="timeStamp" value="49" />
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/Navigation.cpp</url>
+          <line>281</line>
+          <option name="timeStamp" value="93" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/Navigation.cpp</url>
+          <line>332</line>
+          <option name="timeStamp" value="97" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/BoardMenu.cpp</url>
+          <line>313</line>
+          <option name="timeStamp" value="130" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="51" />
+      <option name="time" value="131" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="AndroidRunConfigurationType">
-        <watch expression="physxGravity" />
-        <watch expression="updatedGravity" />
-        <watch expression="physxQuat1" />
-        <watch expression="initInverse" />
-        <watch expression="updatedRot" />
-        <watch expression="::tetrisQuat" />
+        <watch expression="this-&gt;_menuPoint" />
+        <watch expression="menuPoint" />
+        <watch expression="test" />
+        <watch expression="grav" />
       </configuration>
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../CalVR/include/cvrUtil/AndroidHelper.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-273">
-          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrUtil/AndroidHelper.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="85" column="27" lean-forward="false" selection-start-line="85" selection-start-column="27" selection-end-line="85" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrUtil/glesDrawable.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../CalVR/include/cvrUtil/glesDrawable.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="14" column="38" lean-forward="true" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/planeDrawable.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/plane.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="10" column="9" lean-forward="false" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/plane.frag">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/wall.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/wall.frag">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/point.frag">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/point.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/object.frag">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-205">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/Proj2/shader.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/object.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/planeDrawable.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="70" column="34" lean-forward="false" selection-start-line="70" selection-start-column="34" selection-end-line="70" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/Proj2/shader.frag">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-975">
-          <caret line="9" column="1" lean-forward="false" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Desktop/SaveState/11_30/ARCoreManager.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="103" column="78" lean-forward="false" selection-start-line="103" selection-start-column="8" selection-end-line="103" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Desktop/SaveState/11_30/ARCoreManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="156" column="0" lean-forward="false" selection-start-line="156" selection-start-column="0" selection-end-line="173" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/plugins/GlesDrawables/drawablesEntrance.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="296" column="24" lean-forward="false" selection-start-line="296" selection-start-column="24" selection-end-line="296" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrUtil/ARCoreManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="760">
-          <caret line="548" column="1" lean-forward="false" selection-start-line="548" selection-start-column="1" selection-end-line="548" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#34#0" expanded="false" />
-            <element signature="e#2050#3738#0" expanded="false" />
-            <element signature="e#3740#4675#0" expanded="false" />
-            <element signature="e#4677#6545#0" expanded="false" />
-            <element signature="e#6547#12301#0" expanded="false" />
-            <element signature="e#12303#14320#0" expanded="false" />
-            <element signature="e#14321#15153#0" expanded="false" />
-            <element signature="e#15154#15276#0" expanded="false" />
-            <element signature="e#15278#16085#0" expanded="false" />
-            <element signature="e#16087#20047#0" expanded="false" />
-            <element signature="e#20048#21280#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrInput/TrackingManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-79">
-          <caret line="819" column="28" lean-forward="false" selection-start-line="819" selection-start-column="28" selection-end-line="819" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/BoardMenu.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="42" column="56" lean-forward="false" selection-start-line="42" selection-start-column="56" selection-end-line="42" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../CalVR/include/cvrKernel/SceneManager.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="284" column="33" lean-forward="false" selection-start-line="284" selection-start-column="33" selection-end-line="284" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/plugins/SpatialViz/SpatialViz.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="1297" column="32" lean-forward="false" selection-start-line="1276" selection-start-column="4" selection-end-line="1297" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="87">
-          <caret line="271" column="21" lean-forward="false" selection-start-line="271" selection-start-column="21" selection-end-line="271" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/CalVR.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="583" column="26" lean-forward="false" selection-start-line="583" selection-start-column="26" selection-end-line="583" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#28#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectOSG.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="6" column="31" lean-forward="false" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/lighting.frag">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/lighting.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectSH.frag">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="12" column="43" lean-forward="true" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectSH.vert">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectOSG.frag">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/simpleOSG.frag">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="850">
@@ -2938,47 +2718,21 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="550">
           <caret line="22" column="48" lean-forward="false" selection-start-line="22" selection-start-column="48" selection-end-line="22" selection-end-column="48" />
           <folding />
         </state>
       </provider>
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/plugins/SpatialViz/SpatialViz.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1625">
+        <state relative-caret-position="0">
           <caret line="65" column="117" lean-forward="false" selection-start-line="65" selection-start-column="117" selection-end-line="65" selection-end-column="117" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/JniInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-50">
-          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/jni_interface.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-150">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/jni_interface.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1275">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#34#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2990,26 +2744,294 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/PluginManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="327" column="0" lean-forward="false" selection-start-line="327" selection-start-column="0" selection-end-line="327" selection-end-column="0" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.h">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MultiFingerTapDetector.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2425">
-          <caret line="97" column="46" lean-forward="false" selection-start-line="97" selection-start-column="46" selection-end-line="97" selection-end-column="46" />
+        <state relative-caret-position="4875">
+          <caret line="197" column="66" lean-forward="false" selection-start-line="197" selection-start-column="66" selection-end-line="197" selection-end-column="66" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/BubbleMenu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#31#0" expanded="false" />
+          </folding>
+        </state>
       </provider>
-      <provider editor-type-id="text-editor">
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/BoardPopupMenu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#35#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/MenuBar.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrUtil/AndroidPreloadPlugins.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrInput/Gesture.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-300">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#36#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/PluginManager.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#36#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/PluginHelper.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4140">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#35#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/general/MenuBasics/MenuBasics.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5475">
+          <caret line="219" column="0" lean-forward="false" selection-start-line="219" selection-start-column="0" selection-end-line="219" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#23#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/androidTest/java/com/samsung/arcalvr/ExampleInstrumentedTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/fileUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1525">
+          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MovableFloatingActionButton.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="15" column="64" lean-forward="false" selection-start-line="15" selection-start-column="64" selection-end-line="15" selection-end-column="64" />
+          <folding>
+            <element signature="e#1962#2012#0" expanded="false" />
+            <element signature="method#RayCast#0;class#MovableFloatingActionButton#0" expanded="false" />
+            <element signature="method#StartUnLockAnimation#0;class#MovableFloatingActionButton#0" expanded="false" />
+            <element signature="method#StartLockAnimation#0;class#MovableFloatingActionButton#0" expanded="false" />
+            <element signature="method#addSubButton#0;class#MovableFloatingActionButton#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/bgDrawable.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="13" column="74" lean-forward="false" selection-start-line="13" selection-start-column="74" selection-end-line="13" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrUtil/AndroidHelper.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="6" column="32" lean-forward="false" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#34#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrInput/TrackerAndroid.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="13" column="18" lean-forward="false" selection-start-line="13" selection-start-column="18" selection-end-line="13" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#36#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrConfig/ConfigManager.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="18" column="50" lean-forward="false" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
+          <folding>
+            <element signature="e#0#36#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/CVRViewer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="79">
+          <caret line="370" column="8" lean-forward="true" selection-start-line="370" selection-start-column="8" selection-end-line="370" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#32#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/ScreenConfig.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="420" column="44" lean-forward="false" selection-start-line="420" selection-start-column="44" selection-end-line="420" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#35#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/MenuCheckbox.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/MenuButton.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/MenuSystem.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/MenuManager.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-525">
+          <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#32#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/calvrAssets/config/config.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="316" column="22" lean-forward="false" selection-start-line="316" selection-start-column="22" selection-end-line="316" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-240">
+          <caret line="16" column="25" lean-forward="false" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/InteractionManager.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3475">
+          <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
+          <folding>
+            <element signature="e#3581#5258#0" expanded="false" />
+            <element signature="e#5260#5355#0" expanded="false" />
+            <element signature="e#5357#5443#0" expanded="false" />
+            <element signature="e#5445#5512#0" expanded="false" />
+            <element signature="e#5514#5587#0" expanded="false" />
+            <element signature="e#5589#5648#0" expanded="false" />
+            <element signature="e#5650#5709#0" expanded="false" />
+            <element signature="e#5711#5806#0" expanded="false" />
+            <element signature="e#5808#7184#0" expanded="false" />
+            <element signature="e#7186#8749#0" expanded="false" />
+            <element signature="e#8935#10102#0" expanded="false" />
+            <element signature="e#10104#10518#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/include/cvrKernel/InteractionManager.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-65">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/InteractionEvent.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3290">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/plugins/GlesDrawables/drawablesEntrance.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="156" column="30" lean-forward="false" selection-start-line="156" selection-start-column="30" selection-end-line="156" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/JniInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-200">
+          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/jni_interface.h">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
@@ -3018,8 +3040,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="44" column="19" lean-forward="false" selection-start-line="44" selection-start-column="12" selection-end-line="44" selection-end-column="19" />
+        <state relative-caret-position="100">
+          <caret line="25" column="13" lean-forward="false" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
           <folding>
             <element signature="method#setupLabelandButton#0;class#MainActivity#0" expanded="false" />
             <element signature="method#setupTouchDetector#0;class#MainActivity#0" expanded="false" />
@@ -3034,95 +3056,202 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/GestureDetectorCalVR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="16" column="38" lean-forward="false" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MovableFloatingActionButton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1575">
-          <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-          <folding>
-            <element signature="e#1962#2012#0" expanded="false" />
-            <element signature="method#RayCast#0;class#MovableFloatingActionButton#0" expanded="false" />
-            <element signature="method#StartUnLockAnimation#0;class#MovableFloatingActionButton#0" expanded="false" />
-            <element signature="method#StartLockAnimation#0;class#MovableFloatingActionButton#0" expanded="false" />
-            <element signature="method#addSubButton#0;class#MovableFloatingActionButton#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MultiFingerTapDetector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="197" column="66" lean-forward="false" selection-start-line="197" selection-start-column="66" selection-end-line="197" selection-end-column="66" />
+        <state relative-caret-position="250">
+          <caret line="23" column="58" lean-forward="false" selection-start-line="23" selection-start-column="48" selection-end-line="23" selection-end-column="58" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/Navigation.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6675">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#33#0" expanded="false" />
+            <element signature="e#3648#4994#0" expanded="false" />
+            <element signature="e#14396#16283#0" expanded="false" />
+            <element signature="e#16285#21837#0" expanded="false" />
+            <element signature="e#21839#24059#0" expanded="false" />
+            <element signature="e#24061#30291#0" expanded="false" />
+            <element signature="e#30293#30914#0" expanded="false" />
+            <element signature="e#30916#31798#0" expanded="false" />
+            <element signature="e#31800#35321#0" expanded="false" />
+            <element signature="e#35323#35560#0" expanded="false" />
+            <element signature="e#35562#35603#0" expanded="false" />
+            <element signature="e#35605#38851#0" expanded="false" />
+            <element signature="e#38853#42115#0" expanded="false" />
+            <element signature="e#42117#44184#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="5" column="15" lean-forward="false" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="176" column="4" lean-forward="false" selection-start-line="176" selection-start-column="4" selection-end-line="176" selection-end-column="53" />
+          <folding>
+            <element signature="e#1253#1784#0" expanded="false" />
+            <element signature="e#1786#2979#0" expanded="false" />
+            <element signature="e#2981#3360#0" expanded="false" />
+            <element signature="e#9980#13771#0" expanded="false" />
+            <element signature="e#13773#17177#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/include/cvrInput/TrackingManager.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="225" column="52" lean-forward="true" selection-start-line="225" selection-start-column="52" selection-end-line="225" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrInput/TrackingManager.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="943" column="6" lean-forward="false" selection-start-line="943" selection-start-column="6" selection-end-line="943" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#37#0" expanded="false" />
+            <element signature="e#875#1126#1" expanded="false" />
+            <element signature="e#1180#1299#0" expanded="false" />
+            <element signature="e#1301#1751#0" expanded="false" />
+            <element signature="e#1753#1889#0" expanded="false" />
+            <element signature="e#1891#17384#0" expanded="false" />
+            <element signature="e#17386#25590#0" expanded="false" />
+            <element signature="e#32363#33140#0" expanded="false" />
+            <element signature="e#33142#33919#0" expanded="false" />
+            <element signature="e#33921#34585#0" expanded="false" />
+            <element signature="e#34587#35709#0" expanded="false" />
+            <element signature="e#35711#36899#0" expanded="false" />
+            <element signature="e#36901#39477#0" expanded="false" />
+            <element signature="e#39479#43006#0" expanded="false" />
+            <element signature="e#43008#46166#0" expanded="false" />
+            <element signature="e#46168#48912#0" expanded="false" />
+            <element signature="e#48967#49696#0" expanded="false" />
+            <element signature="e#49698#51608#0" expanded="false" />
+            <element signature="e#51610#53991#0" expanded="false" />
+            <element signature="e#53993#54905#0" expanded="false" />
+            <element signature="e#54907#57190#0" expanded="false" />
+            <element signature="e#57192#57436#0" expanded="false" />
+            <element signature="e#57438#60385#0" expanded="false" />
+            <element signature="e#60387#60537#0" expanded="false" />
+            <element signature="e#60539#60890#0" expanded="false" />
+            <element signature="e#60951#62514#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/jni_interface.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1740">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#34#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="985">
-          <caret line="151" column="5" lean-forward="false" selection-start-line="151" selection-start-column="5" selection-end-line="151" selection-end-column="5" />
+        <state relative-caret-position="200">
+          <caret line="115" column="52" lean-forward="false" selection-start-line="115" selection-start-column="48" selection-end-line="115" selection-end-column="52" />
           <folding>
-            <element signature="e#2804#3283#0" expanded="false" />
-            <element signature="e#3285#3443#0" expanded="false" />
-            <element signature="e#5033#6178#0" expanded="false" />
+            <element signature="e#329#359#0" expanded="true" />
+            <element signature="e#3120#3453#0" expanded="false" />
+            <element signature="e#5263#6408#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/cpp/allController.h">
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrKernel/CalVR.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="37" column="35" lean-forward="false" selection-start-line="37" selection-start-column="35" selection-end-line="37" selection-end-column="35" />
+        <state relative-caret-position="138">
+          <caret line="568" column="28" lean-forward="false" selection-start-line="568" selection-start-column="9" selection-end-line="568" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="835">
+          <caret line="119" column="21" lean-forward="false" selection-start-line="119" selection-start-column="21" selection-end-line="119" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/src/cvrMenu/BoardMenu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="563">
+          <caret line="313" column="0" lean-forward="false" selection-start-line="313" selection-start-column="0" selection-end-line="313" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+            <element signature="e#2593#2724#0" expanded="true" />
+            <element signature="e#4606#5311#0" expanded="false" />
+            <element signature="e#5312#5642#0" expanded="false" />
+            <element signature="e#5644#6575#0" expanded="false" />
+            <element signature="e#6577#7794#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CalVR/include/cvrKernel/InteractionEvent.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="62" column="13" lean-forward="false" selection-start-line="62" selection-start-column="4" selection-end-line="62" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="1932" column="69" lean-forward="false" selection-start-line="1932" selection-start-column="69" selection-end-line="1932" selection-end-column="69" />
+        <state relative-caret-position="311">
+          <caret line="977" column="34" lean-forward="false" selection-start-line="977" selection-start-column="34" selection-end-line="977" selection-end-column="34" />
           <folding>
-            <element signature="e#547#601#0" expanded="true" />
-            <element signature="e#708#742#0" expanded="true" />
-            <element signature="e#3779#8453#0" expanded="false" />
-            <element signature="e#8573#12792#0" expanded="false" />
-            <element signature="e#12793#15760#0" expanded="false" />
-            <element signature="e#15761#18687#0" expanded="false" />
-            <element signature="e#18688#24539#0" expanded="false" />
-            <element signature="e#24540#26323#0" expanded="false" />
-            <element signature="e#26325#28566#0" expanded="false" />
-            <element signature="e#28568#30720#0" expanded="false" />
-            <element signature="e#30829#30965#0" expanded="false" />
-            <element signature="e#30967#31993#0" expanded="false" />
-            <element signature="e#40781#41028#0" expanded="false" />
-            <element signature="e#43290#49723#0" expanded="false" />
-            <element signature="e#49725#55605#0" expanded="false" />
-            <element signature="e#54983#55582#0" expanded="false" />
-            <element signature="e#55607#60665#0" expanded="false" />
-            <element signature="e#55935#59104#0" expanded="false" />
-            <element signature="e#59743#60640#0" expanded="false" />
-            <element signature="e#60667#61651#0" expanded="false" />
-            <element signature="e#61736#62611#0" expanded="false" />
-            <element signature="e#62613#65272#0" expanded="false" />
-            <element signature="e#65274#68458#0" expanded="false" />
-            <element signature="e#68545#71692#0" expanded="false" />
-            <element signature="e#69186#69892#0" expanded="false" />
-            <element signature="e#69998#70711#0" expanded="false" />
-            <element signature="e#71694#75349#0" expanded="false" />
-            <element signature="e#72854#74042#0" expanded="false" />
-            <element signature="e#75352#75483#0" expanded="false" />
-            <element signature="e#81447#82776#0" expanded="false" />
-            <element signature="e#83581#84170#0" expanded="false" />
-            <element signature="e#84171#84712#0" expanded="false" />
-            <element signature="e#84713#85443#0" expanded="false" />
-            <element signature="e#85444#85776#0" expanded="false" />
+            <element signature="e#3433#7752#0" expanded="false" />
+            <element signature="e#7753#10720#0" expanded="false" />
+            <element signature="e#10721#13647#0" expanded="false" />
+            <element signature="e#13648#20096#0" expanded="false" />
+            <element signature="e#20097#21890#0" expanded="false" />
+            <element signature="e#21893#22021#0" expanded="false" />
+            <element signature="e#22023#28664#0" expanded="false" />
+            <element signature="e#28666#30909#0" expanded="false" />
+            <element signature="e#30910#37536#0" expanded="false" />
+            <element signature="e#37538#38812#0" expanded="false" />
+            <element signature="e#38813#39061#0" expanded="false" />
+            <element signature="e#39063#42253#0" expanded="false" />
+            <element signature="e#39762#40467#0" expanded="false" />
+            <element signature="e#40569#41277#0" expanded="false" />
+            <element signature="e#42255#45947#0" expanded="false" />
+            <element signature="e#45950#46081#0" expanded="false" />
+            <element signature="e#46199#47333#0" expanded="false" />
+            <element signature="e#46199#49170#0" expanded="false" />
+            <element signature="e#49189#50316#0" expanded="false" />
+            <element signature="e#49189#52097#0" expanded="false" />
+            <element signature="e#52098#57993#0" expanded="false" />
+            <element signature="e#54867#55606#0" expanded="false" />
+            <element signature="e#57371#57970#0" expanded="false" />
+            <element signature="e#57995#63638#0" expanded="false" />
+            <element signature="e#58323#61492#0" expanded="false" />
+            <element signature="e#63640#64624#0" expanded="false" />
+            <element signature="e#64827#69425#0" expanded="false" />
+            <element signature="e#70223#72882#0" expanded="false" />
+            <element signature="e#72884#76068#0" expanded="false" />
+            <element signature="e#76171#83557#0" expanded="false" />
+            <element signature="e#82208#83537#0" expanded="false" />
+            <element signature="e#83558#84437#0" expanded="false" />
+            <element signature="e#84438#85027#0" expanded="false" />
+            <element signature="e#85028#85569#0" expanded="false" />
+            <element signature="e#85570#86300#0" expanded="false" />
+            <element signature="e#86301#86633#0" expanded="false" />
           </folding>
         </state>
       </provider>

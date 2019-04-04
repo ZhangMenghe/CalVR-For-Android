@@ -22,7 +22,6 @@ public:
     _env(env), _helper_class(hclass), _obj(obj){}
 
     void registerCallBackFunction(std::string funcName, const char* signature);
-
     virtual void operator()(osg::Node*node, osg::NodeVisitor * nv);
 };
 

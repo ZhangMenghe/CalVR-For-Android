@@ -12,7 +12,7 @@
 #include <osg/Callback>
 
 // Plugins
-#include <MenuBasics.h>
+//#include <MenuBasics.h>
 //#include <PhysxBall.h>
 #include <drawablesEntrance.h>
 #include <SpatialViz.h>
@@ -53,20 +53,26 @@ allController::~allController(){
 }
 
 void allController::onCreate(const char * calvr_path){
+
     if(!_CalVR->init(calvr_path, _asset_manager))
         LOGE("Failed to init calvr kernel");
 
     _root = new Group;
     _sceneGroup = new Group;
 
+    // add the background to the node and coordinate with ARCore
     _root->addChild(_bgDrawable->createDrawableNode());
     ARCoreManager::instance()->setCameraTextureTarget(_bgDrawable->GetTextureId());
+
+    // add scene Group to the root
     _root->addChild(_sceneGroup);
     _sceneGroup->addChild(_CalVR->getSceneRoot());
+
 //    _sceneGroup->addChild(createDebugOSGSphere(Vec3f(.0f, 0.5f, .0f)));
 //    _sceneGroup->getOrCreateStateSet()->setRenderBinDetails(2, "RenderBin");
 //    _sceneGroup->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
 //    _root->getOrCreateStateSet()->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+
     _CalVR->setSceneData(_root.get());
 
     //Initialize callback env
@@ -92,13 +98,14 @@ void allController::onDrawFrame(){
     _CalVR->frame();
     _bgDrawable->updateOnFrame(ARCoreManager::instance()->getCameraTransformedUVs());
 
-    if(_menuOpen){
+    // REMOVED BECAUSE INTERFERES WITH OTHER TOUCHES AND DRAGS
+    /* if(_menuOpen){
         //shoot the ray to check the interaction with menu
         AndroidInteractionEvent * aie = new AndroidInteractionEvent();
         aie->setInteraction(BUTTON_DRAG);
         _CalVR->setTouchEvent(aie, LEFT, _touchX, _touchY);
-//        TrackingManager::instance()->setTouchMovePosition(_touchX,_touchY);
-    }
+        TrackingManager::instance()->setTouchMovePosition(_touchX,_touchY);
+    }*/
 }
 
 void allController::onViewChanged(int rot, int width, int height){
@@ -107,6 +114,9 @@ void allController::onViewChanged(int rot, int width, int height){
 }
 
 void allController::onSingleTouchDown(TouchType type, float x, float y){
+
+    _touchX = x; _touchY = y;
+
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DOWN);
     _CalVR->setTouchEvent(aie, type, x, y);
@@ -114,9 +124,12 @@ void allController::onSingleTouchDown(TouchType type, float x, float y){
 
 void allController::onSingleTouchUp(TouchType type, float x, float y){
     if(type == RIGHT) _menuOpen = false;
+
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_UP);
     _CalVR->setTouchEvent(aie, type, x, y);
+
+    // print statements
     if (aie->asTrackedButtonEvent()){
         LOGI("--- BUTTON UP ---");
         LOGI("--- Button = %d ---", aie->getButton());
@@ -125,6 +138,7 @@ void allController::onSingleTouchUp(TouchType type, float x, float y){
 
 void allController::onDoubleTouch(TouchType type, float x, float y){
     if(type==RIGHT) _menuOpen = true;
+
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DOUBLE_CLICK);
     _CalVR->setTouchEvent(aie, type, x, y);
@@ -139,7 +153,8 @@ void allController::onDoubleTouch(TouchType type, float x, float y){
 
 void allController::onTouchMove(TouchType type, float x, float y){
 
-//    _touchX = x; _touchY = y;
+    _touchX = x; _touchY = y;
+
     AndroidInteractionEvent *aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DRAG);
     _CalVR->setTouchEvent(aie, type, x, y);

@@ -45,8 +45,8 @@
    </Input>
     
    <Plugin>
-    <PhysxBall value = "on" />
-    <GlesDrawables value = "on" />
+    <PhysxBall value = "off" />
+    <GlesDrawables value = "off" />
     <SpatialViz value = "off" />
 
     <ParticleDreams value="off">
@@ -306,15 +306,15 @@
 
    <ContextMenus>
      <Scale value="0.4" />
-     <MinDistance value="750" />
+     <MinDistance value="1000" />
      <MaxDistance value="1500" />
      <DefaultOpenButton value="1" />
    </ContextMenus>
 
    <MenuSystem type="BOARDMENU">
     <BoardMenu>
-     <Position distance="1000" />
-     <Scale value="1.0" />
+     <Position distance="100" />
+     <Scale value="0.1" />
      <Buttons select="0" open="1" />
      <Trigger value="DOUBLECLICK" />
     </BoardMenu>
