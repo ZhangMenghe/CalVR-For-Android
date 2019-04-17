@@ -15,7 +15,8 @@ android {
             cmake {
                 cppFlags "-std=c++17 -frtti -fexceptions -fopenmp -Wno-error=format-security "
                 arguments "-DANDROID_STL=c++_static",
-                        "-DARCORE_LIBPATH=${arcore_libpath}/jni"
+                        "-DARCORE_LIBPATH=${arcore_libpath}/jni",
+                        "-DCALVR_PLUGIN_OPTION_REFRESH=OFF"
             }
         }
         ndk {

@@ -45,10 +45,10 @@
    </Input>
     
    <Plugin>
-    <PhysxBall value = "on" />
-    <GlesDrawables value = "on" />
+    <PhysxBall value = "off" />
+    <GlesDrawables value = "off" />
     <SpatialViz value = "off" />
-
+    <VolumeViewer value = "on" />
     <ParticleDreams value="off">
       <DataDir value="/home/aprudhom/data/ParticleDreams" />
     </ParticleDreams>

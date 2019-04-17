@@ -90,12 +90,6 @@ IF(${USE_OPENCV})
     INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIR})
 ENDIF(${USE_OPENCV})
 
-include_directories(src/main/cpp/plugins/common)
-include_directories(src/main/cpp/plugins/MenuBasics)
-include_directories(src/main/cpp/plugins/PhysxBall)
-include_directories(src/main/cpp/plugins/GlesDrawables)
-include_directories(src/main/cpp/plugins/SpatialViz)
-
 add_library(ARCalVR
             SHARED
             src/main/cpp/jni_interface.cpp

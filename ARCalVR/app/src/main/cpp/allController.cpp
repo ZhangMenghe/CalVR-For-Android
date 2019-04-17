@@ -3,10 +3,6 @@
 #include <cvrUtil/AndroidHelper.h>
 #include <osg/ShapeDrawable>
 #include <cvrUtil/AndroidPreloadPlugins.h>
-#include <MenuBasics.h>
-#include <PhysxBall.h>
-#include <drawablesEntrance.h>
-//#include <SpatialViz.h>
 #include <osg/Depth>
 #include <osg/Callback>
 #include <cvrKernel/PluginManager.h>
@@ -14,9 +10,14 @@
 using namespace cvr;
 using namespace osg;
 
+#include <MenuBasics/MenuBasics.h>
 REGISTER(MenuBasics);
-REGISTER(PhysxBall)
-REGISTER(GlesDrawables);
+
+#include <Helmsley/VolumeViewer.h>
+REGISTER(VolumeViewer);
+
+//REGISTER(PhysxBall)
+//REGISTER(GlesDrawables);
 //REGISTER(SpatialViz);
 
 void JNICallBackCallback::operator()(osg::Node *node, osg::NodeVisitor *nv) {
