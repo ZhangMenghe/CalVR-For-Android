@@ -193,9 +193,9 @@ void dcmVolumeRender::onDraw() {
 
     glUniform1i(glGetUniformLocation(mProgram, "uSampler_tex"), 0);
     glUniform3fv(glGetUniformLocation(mProgram, "uEyePos"), 1, &(_camera->getCameraPosition()[0]));
-    glUniform1f(glGetUniformLocation(mProgram, "sample_step_inverse"), 150.0f);
-    glUniform1f(glGetUniformLocation(mProgram, "val_threshold"), 0.5f);
-    glUniform1f(glGetUniformLocation(mProgram, "brightness"), 200.0f);
+    glUniform1f(glGetUniformLocation(mProgram, "sample_step_inverse"), adjustParam[0]);
+    glUniform1f(glGetUniformLocation(mProgram, "val_threshold"),adjustParam[1]);
+    glUniform1f(glGetUniformLocation(mProgram, "brightness"), adjustParam[2]);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

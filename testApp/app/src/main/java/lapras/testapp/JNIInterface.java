@@ -13,5 +13,5 @@ public class JNIInterface {
 
     public static native void JNIonSingleTouchDown(float x, float y);
     public static native void JNIonTouchMove(float x, float y);
-    public static native void JNIonDoubleTouch(float x, float y);
+    public static native void JNIonDoubleTouch(int indicate, float x, float y);
 }

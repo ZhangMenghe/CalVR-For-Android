@@ -29,6 +29,7 @@
 //        size
 //    }
 //}dcmImage;
+
 class Camera{
     glm::mat4 _viewMat, _projMat;
     glm::vec3 _eyePos, _worldUp, _Front;
@@ -114,19 +115,26 @@ public:
         //Camera::instance()->Rotate_Camera(x - Mouse_old.x, Mouse_old.y - y);
         float xoffset = x - Mouse_old.x, yoffset = Mouse_old.y - y;
         Mouse_old = glm::fvec2(x, y);
-
-        if(xoffset / _screen_w > yoffset/_screen_h){
-            //rotate around y-axis
-            xoffset*= MOUSE_ROTATE_SENSITIVITY;
-            _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
-        }
+        xoffset*= MOUSE_ROTATE_SENSITIVITY;
+        yoffset*= MOUSE_ROTATE_SENSITIVITY;
+        if(switcher_move){
+            if(fabsf(xoffset / _screen_w) > fabsf(yoffset/_screen_h))
+                _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
+                //rotate around y-axis
 //        else{
-//            yoffset*= MOUSE_ROTATE_SENSITIVITY;
+//
 //            _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
 //        }
+        }else{
+            adjustParam[adjustIdx] += xoffset * adjustParam_origin[adjustIdx] * 0.01f;
+            LOGE("==== ID: %d, NOW:%f", adjustIdx, adjustParam[adjustIdx]);
+        }
     }
-    void onDoubleTouch(float x, float y){
-
+    void onDoubleTouch(int id, float x, float y){
+        if(id == 1)
+            switcher_move = !switcher_move;
+        else
+            adjustIdx = (adjustIdx+1)%3;
     }
 protected:
     const float CONVERT_UNIT = 0.001f;
@@ -139,6 +147,10 @@ private:
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
     const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
+    const float adjustParam_origin[3] = {200.0f, 0.95f, 400.0f};
+    float adjustParam[3] = {200.0f, 0.95f, 400.0f};
+    int adjustIdx = 0;
+    bool switcher_move = false;
 
     glm::vec3 volume_size;
     void initGeometry();

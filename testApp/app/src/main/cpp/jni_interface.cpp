@@ -50,6 +50,7 @@ void convert_bitmap(JNIEnv* env, jobject bitmap, GLubyte*& data, int&w, int &h )
         argb * line = (argb *) buffer;
         for (x = 0; x < w; x++) {
             data[idx++] = line[x].red;
+//            LOGE("=== RGBA: %d, %d, %d, %d", line[x].red, line[x].green,line[x].blue, line[x].alpha);
         }
 
         buffer = (char *) buffer + srcInfo.stride;
@@ -128,6 +129,6 @@ JNI_METHOD(void, JNIonTouchMove)(JNIEnv * env, jclass, jfloat x, jfloat y){
     renderNative(renderAddr)->onTouchMove(x, y);
 }
 
-JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv * env, jclass, jfloat x, jfloat y){
-    renderNative(renderAddr)->onDoubleTouch(x, y);
+JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv * env, jclass, jint indicate,jfloat x, jfloat y){
+    renderNative(renderAddr)->onDoubleTouch(indicate, x, y);
 }

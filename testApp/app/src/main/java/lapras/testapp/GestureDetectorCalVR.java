@@ -38,14 +38,14 @@ public class GestureDetectorCalVR {
             // ONE FINGER (left mouse click)
             // left double tap
             public void onOneFingerDoubleTap(float ex, float ey){
-//                JniInterface.JNIonDoubleTouch(0, ex, ey);
+                JNIInterface.JNIonDoubleTouch(0, ex, ey);
             }
             public void onOneFingerTripleTap(){}
             public void onOneFingerLongPress(){}
 
             // TWO FINGER DOUBLE: right double
             public void onTwoFingerDoubleTap(float ex, float ey){
-                JNIInterface.JNIonDoubleTouch(ex, ey);
+                JNIInterface.JNIonDoubleTouch(1, ex, ey);
             }
 
             public void onTwoFingerTripleTap(){}
