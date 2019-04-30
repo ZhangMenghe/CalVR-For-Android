@@ -42,7 +42,65 @@ void dcmVolumeRender::assembleTexture() {
     delete[]data;
 }
 void dcmVolumeRender::initGeometry() {
-    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/naive.vert", "shaders/naive.frag");
+    float vertices[] = {
+            -0.5f,-0.5f,-0.5f,0.0f,0.0f,-1.0f,0.0f,0.0f,
+            0.5f,-0.5f,-0.5f,0.0f,0.0f,-1.0f,1.0f,0.0f,
+            0.5f,0.5f,-0.5f,0.0f,0.0f,-1.0f,1.0f,1.0f,
+            0.5f,0.5f,-0.5f,0.0f,0.0f,-1.0f,1.0f,1.0f,
+            -0.5f,0.5f,-0.5f,0.0f,0.0f,-1.0f,0.0f,1.0f,
+            -0.5f,-0.5f,-0.5f,0.0f,0.0f,-1.0f,0.0f,0.0f,
+            -0.5f,-0.5f,0.5f,0.0f,0.0f,1.0f,0.0f,0.0f,
+            0.5f,-0.5f,0.5f,0.0f,0.0f,1.0f,1.0f,0.0f,
+            0.5f,0.5f,0.5f,0.0f,0.0f,1.0f,1.0f,1.0f,
+            0.5f,0.5f,0.5f,0.0f,0.0f,1.0f,1.0f,1.0f,
+            -0.5f,0.5f,0.5f,0.0f,0.0f,1.0f,0.0f,1.0f,
+            -0.5f,-0.5f,0.5f,0.0f,0.0f,1.0f,0.0f,0.0f,
+            -0.5f,0.5f,0.5f,-1.0f,0.0f,0.0f,1.0f,0.0f,
+            -0.5f,0.5f,-0.5f,-1.0f,0.0f,0.0f,1.0f,1.0f,
+            -0.5f,-0.5f,-0.5f,-1.0f,0.0f,0.0f,0.0f,1.0f,
+            -0.5f,-0.5f,-0.5f,-1.0f,0.0f,0.0f,0.0f,1.0f,
+            -0.5f,-0.5f,0.5f,-1.0f,0.0f,0.0f,0.0f,0.0f,
+            -0.5f,0.5f,0.5f,-1.0f,0.0f,0.0f,1.0f,0.0f,
+            0.5f,0.5f,0.5f,1.0f,0.0f,0.0f,1.0f,0.0f,
+            0.5f,0.5f,-0.5f,1.0f,0.0f,0.0f,1.0f,1.0f,
+            0.5f,-0.5f,-0.5f,1.0f,0.0f,0.0f,0.0f,1.0f,
+            0.5f,-0.5f,-0.5f,1.0f,0.0f,0.0f,0.0f,1.0f,
+            0.5f,-0.5f,0.5f,1.0f,0.0f,0.0f,0.0f,0.0f,
+            0.5f,0.5f,0.5f,1.0f,0.0f,0.0f,1.0f,0.0f,
+            -0.5f,-0.5f,-0.5f,0.0f,-1.0f,0.0f,0.0f,1.0f,
+            0.5f,-0.5f,-0.5f,0.0f,-1.0f,0.0f,1.0f,1.0f,
+            0.5f,-0.5f,0.5f,0.0f,-1.0f,0.0f,1.0f,0.0f,
+            0.5f,-0.5f,0.5f,0.0f,-1.0f,0.0f,1.0f,0.0f,
+            -0.5f,-0.5f,0.5f,0.0f,-1.0f,0.0f,0.0f,0.0f,
+            -0.5f,-0.5f,-0.5f,0.0f,-1.0f,0.0f,0.0f,1.0f,
+            -0.5f,0.5f,-0.5f,0.0f,1.0f,0.0f,0.0f,1.0f,
+            0.5f,0.5f,-0.5f,0.0f,1.0f,0.0f,1.0f,1.0f,
+            0.5f,0.5f,0.5f,0.0f,1.0f,0.0f,1.0f,0.0f,
+            0.5f,0.5f,0.5f,0.0f,1.0f,0.0f,1.0f,0.0f,
+            -0.5f,0.5f,0.5f,0.0f,1.0f,0.0f,0.0f,0.0f,
+            -0.5f,0.5f,-0.5f,0.0f,1.0f,0.0f,0.0f
+    };
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO[0]);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // normal attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    // texture coord attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+
+    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/cube.vert", "shaders/cube.frag");
     if(!mProgram)
         LOGE("===Failed to create shader program===");
     glClearColor(0,0,0,0);
@@ -147,9 +205,18 @@ void dcmVolumeRender::onDraw() {
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 void dcmVolumeRender::onNaiveDraw() {
+//    glClear(GL_COLOR_BUFFER_BIT);
+//    glUseProgram(mProgram);
+//    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,VERTEX);
+//    glEnableVertexAttribArray(0);
+//    glDrawArrays(GL_TRIANGLES,0,3);
+
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(mProgram);
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,VERTEX);
-    glEnableVertexAttribArray(0);
-    glDrawArrays(GL_TRIANGLES,0,3);
+    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 }
