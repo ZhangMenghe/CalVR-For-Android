@@ -176,6 +176,7 @@ void dcmVolumeRender::initGeometry() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 void dcmVolumeRender::onDraw() {
+    glClear(GL_COLOR_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
 

@@ -10,4 +10,8 @@ public class JNIInterface {
     public static native void JNIonGlSurfaceCreated();
     public static native void JNIonSurfaceChanged(int width, int height);
     public static native void JNIdrawFrame();
+
+    public static native void JNIonSingleTouchDown(float x, float y);
+    public static native void JNIonTouchMove(float x, float y);
+    public static native void JNIonDoubleTouch(float x, float y);
 }

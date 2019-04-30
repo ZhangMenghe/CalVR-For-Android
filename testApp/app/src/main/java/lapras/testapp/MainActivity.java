@@ -7,6 +7,7 @@ import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -49,11 +50,15 @@ public class MainActivity extends AppCompatActivity {
 
     private long nativeAddr;
 
+    //For touch event
+    private GestureDetectorCalVR gestureDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupSurfaceView();
+        setupTouchDetector();
         nativeAddr = JNIInterface.JNIonCreate(getAssets());
     }
     @Override
@@ -66,7 +71,20 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         surfaceView.onPause();
     }
-    private void setupSurfaceView(){
+    private void setupTouchDetector() {
+        gestureDetector = new GestureDetectorCalVR(this);
+
+        surfaceView.setOnTouchListener(
+                new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent e) {
+                        return gestureDetector.onTouchEvent(e);
+                    }
+                }
+        );
+    }
+
+        private void setupSurfaceView(){
         surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
         // Set up renderer.
         surfaceView.setPreserveEGLContextOnPause(true);

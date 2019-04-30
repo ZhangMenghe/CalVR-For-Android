@@ -100,13 +100,34 @@ public:
     void onViewChange(int w, int h){
         glViewport(0, 0, w, h);
         _camera->setProjMat(w,h);
+        _screen_w = w; _screen_h = h;
         glClear(GL_COLOR_BUFFER_BIT);
     }
     void onDraw();
     void onNaiveDraw();
-//    {
-//        glClear(GL_COLOR_BUFFER_BIT);}
 
+
+    void onSingleTouchDown(float x, float y){
+        Mouse_old = glm::fvec2(x, y);
+    }
+    void onTouchMove(float x, float y){
+        //Camera::instance()->Rotate_Camera(x - Mouse_old.x, Mouse_old.y - y);
+        float xoffset = x - Mouse_old.x, yoffset = Mouse_old.y - y;
+        Mouse_old = glm::fvec2(x, y);
+
+        if(xoffset / _screen_w > yoffset/_screen_h){
+            //rotate around y-axis
+            xoffset*= MOUSE_ROTATE_SENSITIVITY;
+            _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
+        }
+//        else{
+//            yoffset*= MOUSE_ROTATE_SENSITIVITY;
+//            _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
+//        }
+    }
+    void onDoubleTouch(float x, float y){
+
+    }
 protected:
     const float CONVERT_UNIT = 0.001f;
     const int UI_SIZE = sizeof(GLubyte);
@@ -115,6 +136,10 @@ protected:
     unsigned int volume_texid;
     std::vector<dcmImage *> images_;
 private:
+    glm::fvec2 Mouse_old = glm::fvec2(.0);
+    float _screen_w, _screen_h;
+    const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
+
     glm::vec3 volume_size;
     void initGeometry();
     void initGeometry_Naive();

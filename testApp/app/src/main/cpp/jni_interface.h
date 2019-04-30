@@ -19,6 +19,11 @@ JNI_METHOD(void, JNIonGlSurfaceCreated)(JNIEnv * env, jclass);
 
 JNI_METHOD(void, JNIonSurfaceChanged)(JNIEnv * env, jclass, jint, jint);
 
+JNI_METHOD(void, JNIonSingleTouchDown)(JNIEnv * env, jclass, jfloat, jfloat);
+
+JNI_METHOD(void, JNIonTouchMove)(JNIEnv * env, jclass, jfloat, jfloat);
+
+JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv * env, jclass, jfloat, jfloat);
 }
 
 

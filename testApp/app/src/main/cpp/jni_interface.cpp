@@ -119,3 +119,15 @@ JNI_METHOD(void, JNIonSurfaceChanged)(JNIEnv * env, jclass, jint w, jint h){
 JNI_METHOD(void, JNIdrawFrame)(JNIEnv*, jobject){
     renderNative(renderAddr)->onDraw();
 }
+
+JNI_METHOD(void, JNIonSingleTouchDown)(JNIEnv * env, jclass,jfloat x, jfloat y){
+    renderNative(renderAddr)->onSingleTouchDown(x, y);
+}
+
+JNI_METHOD(void, JNIonTouchMove)(JNIEnv * env, jclass, jfloat x, jfloat y){
+    renderNative(renderAddr)->onTouchMove(x, y);
+}
+
+JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv * env, jclass, jfloat x, jfloat y){
+    renderNative(renderAddr)->onDoubleTouch(x, y);
+}
