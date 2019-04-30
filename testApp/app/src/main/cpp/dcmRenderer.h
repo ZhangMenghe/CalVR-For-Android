@@ -105,7 +105,7 @@ public:
         glClear(GL_COLOR_BUFFER_BIT);
     }
     void onDraw();
-    void onNaiveDraw();
+
 
 
     void onSingleTouchDown(float x, float y){
@@ -152,9 +152,18 @@ private:
     int adjustIdx = 0;
     bool switcher_move = false;
 
+
+    GLuint* m_puTextureIDs;
+    GLuint* m_VAOs;
+
     glm::vec3 volume_size;
     void initGeometry();
+    void initGeometry_texturebased();
     void initGeometry_Naive();
+
+    void onNaiveDraw();
+    void onTexturebasedDraw();
+    void onRaycastDraw();
 };
 
 

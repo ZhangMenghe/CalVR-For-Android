@@ -36,7 +36,8 @@ void dcmVolumeRender::assembleTexture() {
 
     delete[]data;
 
-    initGeometry();
+//    initGeometry();
+    initGeometry_texturebased();
 }
 void dcmVolumeRender::initGeometry_Naive() {
     float vertices[] = {
@@ -103,7 +104,8 @@ void dcmVolumeRender::initGeometry_Naive() {
     glClearColor(0,0,0,0);
 }
 void dcmVolumeRender::onViewCreated(){
-    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/raycastVolume.vert", "shaders/raycastVolume.frag");
+//    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/raycastVolume.vert", "shaders/raycastVolume.frag");
+    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/textureVolume.vert", "shaders/textureVolume.frag");
     if(!mProgram)
         LOGE("===Failed to create shader program");
 }
@@ -175,7 +177,90 @@ void dcmVolumeRender::initGeometry() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
+void dcmVolumeRender::initGeometry_texturebased() {
+    m_VAOs = new GLuint[dimensions];
+    for (int i = 0; i < dimensions; i++)
+    {
+        float mappedZVal = -1.0f + 2.0f * (float)i / 109.0f;
+
+        float zTex = (float)mappedZVal + 1.0f / 2.0f;
+
+        float vertices[] = {
+                // positions		// texture coords
+                -0.5f,  -0.5f, mappedZVal,	0.0f, 0.0f, zTex,   // top right
+                0.5f, -0.5f, mappedZVal,	1.0f, 0.0f, zTex,  // bottom right
+                0.5f, 0.5f, mappedZVal,		1.0f, 1.0f, zTex,  // bottom left
+                -0.5f,  0.5f, mappedZVal,	0.0f, 1.0f,  zTex  // top left
+        };
+
+        unsigned int VBO, EBO;
+        unsigned int indices[] = {
+                0, 1, 3, // first triangle
+                1, 2, 3  // second triangle
+        };
+
+        glGenVertexArrays(1, &m_VAOs[i]);
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
+
+        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+        glBindVertexArray((GLuint)m_VAOs[i]);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*6, indices, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glBindVertexArray(0);
+    }
+}
 void dcmVolumeRender::onDraw() {
+    onTexturebasedDraw();
+}
+void dcmVolumeRender::onNaiveDraw() {
+//    glClear(GL_COLOR_BUFFER_BIT);
+//    glUseProgram(mProgram);
+//    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,VERTEX);
+//    glEnableVertexAttribArray(0);
+//    glDrawArrays(GL_TRIANGLES,0,3);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(mProgram);
+    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+void dcmVolumeRender::onTexturebasedDraw(){
+    glClear(GL_COLOR_BUFFER_BIT);
+    for (int i = 0; i < dimensions; i++) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_3D, volume_texid);
+
+        glUseProgram(mProgram);
+        glUniformMatrix4fv(glGetUniformLocation(mProgram, "uProjMat"), 1, GL_FALSE,
+                           &(_camera->getProjMat()[0][0]));
+        glUniformMatrix4fv(glGetUniformLocation(mProgram, "uViewMat"), 1, GL_FALSE,
+                           &(_camera->getViewMat()[0][0]));
+        glUniformMatrix4fv(glGetUniformLocation(mProgram, "uModelMat"), 1, GL_FALSE,
+                           &_modelMat[0][0]);
+
+        glUniform1i(glGetUniformLocation(mProgram, "uSampler_tex"), 0);
+        glBindVertexArray(m_VAOs[i]);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    }
+}
+void dcmVolumeRender::onRaycastDraw(){
     glClear(GL_COLOR_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
@@ -199,20 +284,4 @@ void dcmVolumeRender::onDraw() {
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-}
-void dcmVolumeRender::onNaiveDraw() {
-//    glClear(GL_COLOR_BUFFER_BIT);
-//    glUseProgram(mProgram);
-//    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,VERTEX);
-//    glEnableVertexAttribArray(0);
-//    glDrawArrays(GL_TRIANGLES,0,3);
-
-    glClear(GL_COLOR_BUFFER_BIT);
-    glUseProgram(mProgram);
-    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
-    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
-    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
-
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
 }
