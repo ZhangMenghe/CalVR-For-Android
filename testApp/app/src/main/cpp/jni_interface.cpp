@@ -1,0 +1,105 @@
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
+#include "jni_interface.h"
+#include <android/bitmap.h>
+#include <utility> //pair and make_pair
+#include <vector>
+#include "dcmRenderer.h"
+namespace {
+    jobject main_object;
+    //global environment
+    jlong renderAddr = 0;
+
+    inline jlong getNativeClassAddr(dcmVolumeRender * native_controller){
+        return reinterpret_cast<intptr_t>(native_controller);
+    }
+    inline dcmVolumeRender * renderNative(jlong ptr){
+        return reinterpret_cast<dcmVolumeRender *>(ptr);
+    }
+}
+void convert_bitmap(JNIEnv* env, jobject bitmap, unsigned int*& data, int&w, int &h ){
+ AndroidBitmapInfo srcInfo;
+    if (ANDROID_BITMAP_RESULT_SUCCESS != AndroidBitmap_getInfo(env, bitmap, &srcInfo)) {
+        LOGE("get bitmap info failed");
+        return;
+    }
+    void * buffer;
+    if (ANDROID_BITMAP_RESULT_SUCCESS != AndroidBitmap_lockPixels(env, bitmap, &buffer)) {
+        LOGE("lock src bitmap failed");
+        return;
+    }
+    LOGI("width=%d; height=%d; stride=%d; format=%d;flag=%d",
+         srcInfo.width, //  width=2700 (900*3)
+         srcInfo.height, // height=2025 (675*3)
+         srcInfo.stride, // stride=10800 (2700*4)
+         srcInfo.format, // format=1 (ANDROID_BITMAP_FORMAT_RGBA_8888=1)
+         srcInfo.flags); // flags=0 (ANDROID_BITMAP_RESULT_SUCCESS=0)
+    w = srcInfo.width; h = srcInfo.height;
+    auto * srcPixs = (int32_t *) buffer;
+    size_t size = srcInfo.width * srcInfo.height;
+    data = new unsigned int[size];
+    for(size_t n=0; n<size; n++)
+        data[n] = (unsigned int)(((srcPixs[n] & 0x00FF0000) >> 16));
+    //controllerNative(nativeAppAddr)->addImage(data);
+    AndroidBitmap_unlockPixels(env, bitmap);
+}
+
+/*Native Application methods*/
+JNI_METHOD(jlong, JNIonCreate)
+(JNIEnv* env, jclass, jobject asset_manager){
+    AAssetManager * cpp_asset_manager = AAssetManager_fromJava(env, asset_manager);
+    renderAddr =  getNativeClassAddr(new dcmVolumeRender(cpp_asset_manager));
+    return renderAddr;
+}
+
+JNI_METHOD(void, JNIsendDCMImgs)(JNIEnv* env, jobject obj,  jobjectArray img_arr, jint size){
+    //get dcmImg class defined in java
+    jclass imgClass = env->FindClass("lapras/testapp/dcmImage");
+    jobject img, bitmap;
+    jfieldID bitmap_id, location_id, thickness_id, xspace_id, yspace_id;
+    float location, xspacing, yspacing, thickness;
+    int valid_num = 0, last_valid = -1;
+    int width, height;
+    for(int i=0; i<size; i++) {
+        img = env->GetObjectArrayElement(img_arr, i);
+
+        thickness_id = env->GetFieldID(imgClass, "thickness", "F");
+        thickness = env->GetFloatField(img, thickness_id);
+        if(thickness == -1)//invalid
+            continue;
+        else{last_valid = i; valid_num++;}
+
+        location_id = env->GetFieldID(imgClass, "location", "F");
+        location = env->GetFloatField(img, location_id);
+
+        bitmap_id = env->GetFieldID(imgClass, "bitmap", "Landroid/graphics/Bitmap;");
+        bitmap = env->GetObjectField(img,bitmap_id);
+        unsigned int * data = nullptr;
+        convert_bitmap(env, bitmap, data, width, height);
+        renderNative(renderAddr)->addImage(data, location);
+    }
+    if(last_valid!=-1){
+        img = env->GetObjectArrayElement(img_arr, last_valid);
+        xspace_id = env->GetFieldID(imgClass, "xSpacing", "F");
+        xspacing = env->GetFloatField(img, xspace_id);
+
+        yspace_id = env->GetFieldID(imgClass, "ySpacing", "F");
+        yspacing = env->GetFloatField(img, yspace_id);
+
+        unsigned int * data = nullptr;
+        convert_bitmap(env, bitmap, data, width, height);
+
+        renderNative(renderAddr)->initDCMIProperty(width * xspacing, height*yspacing, thickness*valid_num);
+    }
+    renderNative(renderAddr)->assembleTexture();
+}
+JNI_METHOD(void, JNIonGlSurfaceCreated)
+(JNIEnv *, jclass){
+    renderNative(renderAddr)->initGeometry();
+}
+JNI_METHOD(void, JNIonSurfaceChanged)(JNIEnv * env, jclass, jint w, jint h){
+    renderNative(renderAddr)->onViewChange(w, h);
+}
+JNI_METHOD(void, JNIdrawFrame)(JNIEnv*, jobject){
+    renderNative(renderAddr)->onNaiveDraw();
+}
