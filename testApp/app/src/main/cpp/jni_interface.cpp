@@ -16,8 +16,14 @@ namespace {
     inline dcmVolumeRender * renderNative(jlong ptr){
         return reinterpret_cast<dcmVolumeRender *>(ptr);
     }
+    typedef struct {
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+        uint8_t alpha;
+    } argb;
 }
-void convert_bitmap(JNIEnv* env, jobject bitmap, unsigned int*& data, int&w, int &h ){
+void convert_bitmap(JNIEnv* env, jobject bitmap, GLubyte*& data, int&w, int &h ){
  AndroidBitmapInfo srcInfo;
     if (ANDROID_BITMAP_RESULT_SUCCESS != AndroidBitmap_getInfo(env, bitmap, &srcInfo)) {
         LOGE("get bitmap info failed");
@@ -35,12 +41,22 @@ void convert_bitmap(JNIEnv* env, jobject bitmap, unsigned int*& data, int&w, int
          srcInfo.format, // format=1 (ANDROID_BITMAP_FORMAT_RGBA_8888=1)
          srcInfo.flags); // flags=0 (ANDROID_BITMAP_RESULT_SUCCESS=0)
     w = srcInfo.width; h = srcInfo.height;
-    auto * srcPixs = (int32_t *) buffer;
+
     size_t size = srcInfo.width * srcInfo.height;
-    data = new unsigned int[size];
-    for(size_t n=0; n<size; n++)
-        data[n] = (unsigned int)(((srcPixs[n] & 0x00FF0000) >> 16));
-    //controllerNative(nativeAppAddr)->addImage(data);
+    data = new GLubyte[size];
+
+    int x, y, idx = 0;
+    for (y = 0; y < h; y++) {
+        argb * line = (argb *) buffer;
+        for (x = 0; x < w; x++) {
+            data[idx++] = line[x].red;
+        }
+
+        buffer = (char *) buffer + srcInfo.stride;
+    }
+
+
+
     AndroidBitmap_unlockPixels(env, bitmap);
 }
 
@@ -74,7 +90,7 @@ JNI_METHOD(void, JNIsendDCMImgs)(JNIEnv* env, jobject obj,  jobjectArray img_arr
 
         bitmap_id = env->GetFieldID(imgClass, "bitmap", "Landroid/graphics/Bitmap;");
         bitmap = env->GetObjectField(img,bitmap_id);
-        unsigned int * data = nullptr;
+        GLubyte * data = nullptr;
         convert_bitmap(env, bitmap, data, width, height);
         renderNative(renderAddr)->addImage(data, location);
     }
@@ -86,7 +102,7 @@ JNI_METHOD(void, JNIsendDCMImgs)(JNIEnv* env, jobject obj,  jobjectArray img_arr
         yspace_id = env->GetFieldID(imgClass, "ySpacing", "F");
         yspacing = env->GetFloatField(img, yspace_id);
 
-        unsigned int * data = nullptr;
+        GLubyte * data = nullptr;
         convert_bitmap(env, bitmap, data, width, height);
 
         renderNative(renderAddr)->initDCMIProperty(width * xspacing, height*yspacing, thickness*valid_num);
@@ -95,11 +111,11 @@ JNI_METHOD(void, JNIsendDCMImgs)(JNIEnv* env, jobject obj,  jobjectArray img_arr
 }
 JNI_METHOD(void, JNIonGlSurfaceCreated)
 (JNIEnv *, jclass){
-    renderNative(renderAddr)->initGeometry();
+    renderNative(renderAddr)->onViewCreated();
 }
 JNI_METHOD(void, JNIonSurfaceChanged)(JNIEnv * env, jclass, jint w, jint h){
     renderNative(renderAddr)->onViewChange(w, h);
 }
 JNI_METHOD(void, JNIdrawFrame)(JNIEnv*, jobject){
-    renderNative(renderAddr)->onNaiveDraw();
+    renderNative(renderAddr)->onDraw();
 }

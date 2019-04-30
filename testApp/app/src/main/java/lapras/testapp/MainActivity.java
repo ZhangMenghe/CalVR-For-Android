@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             dcm_images.add(new dcmImage(file_path));
 
         //pass down to native
-//        JNIInterface.JNIsendDCMImgs(dcm_images.toArray(new dcmImage[0]), file_nums);
+        JNIInterface.JNIsendDCMImgs(dcm_images.toArray(new dcmImage[0]), file_nums);
 
 //        imageView_dcm = (ImageView) findViewById(R.id.dcmimageView);
 //        imageView_dcm.setVisibility(View.INVISIBLE);

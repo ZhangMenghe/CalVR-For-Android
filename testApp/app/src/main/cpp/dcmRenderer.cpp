@@ -1,16 +1,11 @@
 #include "dcmRenderer.h"
 #include <glm/gtc/matrix_transform.hpp>
-static const GLfloat VERTEX_TRIANGLE[]={
-        0.0f,0.5f,0.0f,
-        -0.5f,-0.5f,0.0f,
-        0.5f,-0.5f,0.0f
-};
 dcmVolumeRender::dcmVolumeRender(AAssetManager *assetManager):
         cubeRenderer(assetManager){
     new assetLoader(assetManager);
 }
 
-void dcmVolumeRender::addImage(unsigned int* img, float location) {
+void dcmVolumeRender::addImage(GLubyte * img, float location) {
     images_.push_back(new dcmImage(
             img,
             location));
@@ -22,7 +17,7 @@ void dcmVolumeRender::assembleTexture() {
     dimensions = images_.size();
 
     size_t data_size = img_width * img_height * dimensions;
-    auto *data = new GLuint[data_size];
+    auto *data = new GLubyte[data_size];
     auto each_size = img_height * img_width* UI_SIZE;
     for(int i=0; i<dimensions; i++)
         memcpy(data+i*each_size, images_[i]->data, each_size);
@@ -37,11 +32,13 @@ void dcmVolumeRender::assembleTexture() {
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
     // pixel transfer happens here from client to OpenGL server
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_RED, (int)img_width, (int)img_height, (int)dimensions, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, data);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R8, (int)img_width, (int)img_height, (int)dimensions, 0, GL_RED, GL_UNSIGNED_BYTE, data);
 
     delete[]data;
+
+    initGeometry();
 }
-void dcmVolumeRender::initGeometry() {
+void dcmVolumeRender::initGeometry_Naive() {
     float vertices[] = {
             -0.5f,-0.5f,-0.5f,0.0f,0.0f,-1.0f,0.0f,0.0f,
             0.5f,-0.5f,-0.5f,0.0f,0.0f,-1.0f,1.0f,0.0f,
@@ -105,15 +102,12 @@ void dcmVolumeRender::initGeometry() {
         LOGE("===Failed to create shader program===");
     glClearColor(0,0,0,0);
 }
-void dcmVolumeRender::initGeometry(bool origin) {
-
-    //mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/raycastVolume.vert", "shaders/raycastVolume.frag");
-    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/cube.vert", "shaders/cube.frag");
+void dcmVolumeRender::onViewCreated(){
+    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/raycastVolume.vert", "shaders/raycastVolume.frag");
     if(!mProgram)
         LOGE("===Failed to create shader program");
-
-    glEnable(GL_DEPTH_TEST);
-
+}
+void dcmVolumeRender::initGeometry() {
     float dx = 0.5f / img_width;
     float dy = 0.5f / img_height;
     float dz = 0.5f / dimensions;
@@ -194,12 +188,13 @@ void dcmVolumeRender::onDraw() {
     //sliceModel = glm::translate(sliceModel, glm::vec3(0.0f, 0.0f, 0.0f));
     //sliceModel = glm::rotate(sliceModel, (float)glfwGetTime() * 30, glm::vec3(0.0f, 1.0f, 0.0f));
     sliceModel = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, -1.0f, 0.5f));
-    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uModelMat"), 1, GL_FALSE, &sliceModel[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
 
     glUniform1i(glGetUniformLocation(mProgram, "uSampler_tex"), 0);
     glUniform3fv(glGetUniformLocation(mProgram, "uEyePos"), 1, &(_camera->getCameraPosition()[0]));
-    glUniform1f(glGetUniformLocation(mProgram, "sample_step_inverse"),200.0f);
-    glUniform1f(glGetUniformLocation(mProgram, "val_threshold"),0.5f);
+    glUniform1f(glGetUniformLocation(mProgram, "sample_step_inverse"), 150.0f);
+    glUniform1f(glGetUniformLocation(mProgram, "val_threshold"), 0.5f);
+    glUniform1f(glGetUniformLocation(mProgram, "brightness"), 200.0f);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

@@ -16,6 +16,9 @@
 
 #include "AndroidHelper.h"
 #include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 //typedef struct mdcmImage{
 //    unsigned int* data;
 //    float sizex, sizey, sizez;
@@ -28,12 +31,25 @@
 //}dcmImage;
 class Camera{
     glm::mat4 _viewMat, _projMat;
-    glm::vec3 _eyePos;
+    glm::vec3 _eyePos, _worldUp, _Front;
+
+    const float NEAR_PLANE = 0.01f;
+    const float FAR_PLANE = 1000.0f;
+    const float FOV = 45.0f;
+
+    void updateCameraVector(){
+        _viewMat = glm::lookAt(_eyePos, glm::vec3(0,0,0), _worldUp);
+    }
 public:
     Camera(){
-        _eyePos = glm::vec3(0,0,0);
-        _viewMat = glm::mat4(1.0);
-        _projMat = glm::mat4(1.0);
+        _worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+        _eyePos = glm::vec3(0.0f, 0.f, 3.0f);
+        _Front = glm::vec3(0.0f, 0.0f, -1.0f);
+        updateCameraVector();
+    }
+    void setProjMat(int screen_width, int screen_height){
+        float screen_ratio = ((float)screen_width) / screen_height;
+        _projMat = glm::perspective(FOV, screen_ratio, NEAR_PLANE, FAR_PLANE);
     }
     glm::mat4 getProjMat(){return _projMat;}
     glm::mat4 getViewMat(){return _viewMat;}
@@ -41,10 +57,10 @@ public:
 };
 class dcmImage{
 public:
-    unsigned int* data;
+    GLubyte * data;
     float location;
 
-    dcmImage(unsigned int * _data, float _location):
+    dcmImage(GLubyte * _data, float _location):
     data(_data), location(_location){}
 
 };
@@ -72,17 +88,18 @@ protected:
 class dcmVolumeRender:public cubeRenderer{
 public:
     dcmVolumeRender(AAssetManager *assetManager);
-    void initGeometry(bool origin);
-    void initGeometry();
 
-    void addImage(unsigned int* img, float location);
+
+    void addImage(GLubyte * img, float location);
     void initDCMIProperty(size_t w, size_t h, int thickness){
         volume_size = glm::vec3(w*CONVERT_UNIT, h*CONVERT_UNIT ,thickness*CONVERT_UNIT);
         img_width = w; img_height = h;
     }
     void assembleTexture();
+    void onViewCreated();
     void onViewChange(int w, int h){
         glViewport(0, 0, w, h);
+        _camera->setProjMat(w,h);
         glClear(GL_COLOR_BUFFER_BIT);
     }
     void onDraw();
@@ -92,13 +109,15 @@ public:
 
 protected:
     const float CONVERT_UNIT = 0.001f;
-    const int UI_SIZE = sizeof(unsigned int);
+    const int UI_SIZE = sizeof(GLubyte);
     size_t img_width, img_height, dimensions;
 
     unsigned int volume_texid;
     std::vector<dcmImage *> images_;
 private:
     glm::vec3 volume_size;
+    void initGeometry();
+    void initGeometry_Naive();
 };
 
 
