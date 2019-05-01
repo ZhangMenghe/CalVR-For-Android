@@ -130,6 +130,13 @@ public class MainActivity extends AppCompatActivity {
 //                //getDCMIImage(file_path);
 //            }
 //        });
+
+        Button changeButton = (Button) findViewById(R.id.changeRenderButton);
+        changeButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view) {
+                JNIInterface.JNIchangeRender();
+            }
+        });
     }
     private void setupResource(){
         resourceDest = getFilesDir().getAbsolutePath() + "/";

@@ -136,6 +136,9 @@ public:
         else
             adjustIdx = (adjustIdx+1)%3;
     }
+    void changeRender(){
+        swithcer_render_texture = !swithcer_render_texture;
+    }
 protected:
     const float CONVERT_UNIT = 0.001f;
     const int UI_SIZE = sizeof(GLubyte);
@@ -150,12 +153,13 @@ private:
     const float adjustParam_origin[3] = {200.0f, 0.95f, 400.0f};
     float adjustParam[3] = {200.0f, 0.95f, 400.0f};
     int adjustIdx = 0;
-    bool switcher_move = false;
+    bool switcher_move = false, swithcer_render_texture = true;
 
 
     GLuint* m_puTextureIDs;
     GLuint* m_VAOs;
 
+    GLuint program_texture, program_ray;
     glm::vec3 volume_size;
     void initGeometry();
     void initGeometry_texturebased();

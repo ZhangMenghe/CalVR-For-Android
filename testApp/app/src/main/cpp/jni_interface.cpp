@@ -134,3 +134,6 @@ JNI_METHOD(void, JNIonTouchMove)(JNIEnv * env, jclass, jfloat x, jfloat y){
 JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv * env, jclass, jint indicate,jfloat x, jfloat y){
     renderNative(renderAddr)->onDoubleTouch(indicate, x, y);
 }
+JNI_METHOD(void, JNIchangeRender)(JNIEnv*, jobject){
+    renderNative(renderAddr)->changeRender();
+}

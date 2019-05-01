@@ -36,8 +36,11 @@ void dcmVolumeRender::assembleTexture() {
 
     delete[]data;
 
-//    initGeometry();
+
     initGeometry_texturebased();
+
+    initGeometry();
+//
 }
 void dcmVolumeRender::initGeometry_Naive() {
     float vertices[] = {
@@ -104,9 +107,9 @@ void dcmVolumeRender::initGeometry_Naive() {
     glClearColor(0,0,0,0);
 }
 void dcmVolumeRender::onViewCreated(){
-//    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/raycastVolume.vert", "shaders/raycastVolume.frag");
-    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/textureVolume.vert", "shaders/textureVolume.frag");
-    if(!mProgram)
+    program_ray = assetLoader::instance()->createGLShaderProgramFromFile("shaders/raycastVolume.vert", "shaders/raycastVolume.frag");
+    program_texture = assetLoader::instance()->createGLShaderProgramFromFile("shaders/textureVolume.vert", "shaders/textureVolume.frag");
+    if(!program_ray || !program_texture)
         LOGE("===Failed to create shader program");
 }
 void dcmVolumeRender::initGeometry() {
@@ -224,7 +227,11 @@ void dcmVolumeRender::initGeometry_texturebased() {
     }
 }
 void dcmVolumeRender::onDraw() {
-    onTexturebasedDraw();
+//
+    if(swithcer_render_texture)
+        onTexturebasedDraw();
+    else
+        onRaycastDraw();
 }
 void dcmVolumeRender::onNaiveDraw() {
 //    glClear(GL_COLOR_BUFFER_BIT);
@@ -248,15 +255,15 @@ void dcmVolumeRender::onTexturebasedDraw(){
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_3D, volume_texid);
 
-        glUseProgram(mProgram);
-        glUniformMatrix4fv(glGetUniformLocation(mProgram, "uProjMat"), 1, GL_FALSE,
+        glUseProgram(program_texture);
+        glUniformMatrix4fv(glGetUniformLocation(program_texture, "uProjMat"), 1, GL_FALSE,
                            &(_camera->getProjMat()[0][0]));
-        glUniformMatrix4fv(glGetUniformLocation(mProgram, "uViewMat"), 1, GL_FALSE,
+        glUniformMatrix4fv(glGetUniformLocation(program_texture, "uViewMat"), 1, GL_FALSE,
                            &(_camera->getViewMat()[0][0]));
-        glUniformMatrix4fv(glGetUniformLocation(mProgram, "uModelMat"), 1, GL_FALSE,
+        glUniformMatrix4fv(glGetUniformLocation(program_texture, "uModelMat"), 1, GL_FALSE,
                            &_modelMat[0][0]);
 
-        glUniform1i(glGetUniformLocation(mProgram, "uSampler_tex"), 0);
+        glUniform1i(glGetUniformLocation(program_texture, "uSampler_tex"), 0);
         glBindVertexArray(m_VAOs[i]);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
@@ -266,22 +273,22 @@ void dcmVolumeRender::onRaycastDraw(){
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
 
-    glUseProgram(mProgram);
+    glUseProgram(program_ray);
 
-    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
-    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(program_ray, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(program_ray, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
 
     glm::mat4 sliceModel;
     //sliceModel = glm::translate(sliceModel, glm::vec3(0.0f, 0.0f, 0.0f));
     //sliceModel = glm::rotate(sliceModel, (float)glfwGetTime() * 30, glm::vec3(0.0f, 1.0f, 0.0f));
     sliceModel = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, -1.0f, 0.5f));
-    glUniformMatrix4fv(glGetUniformLocation(mProgram, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(program_ray, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
 
-    glUniform1i(glGetUniformLocation(mProgram, "uSampler_tex"), 0);
-    glUniform3fv(glGetUniformLocation(mProgram, "uEyePos"), 1, &(_camera->getCameraPosition()[0]));
-    glUniform1f(glGetUniformLocation(mProgram, "sample_step_inverse"), adjustParam[0]);
-    glUniform1f(glGetUniformLocation(mProgram, "val_threshold"),adjustParam[1]);
-    glUniform1f(glGetUniformLocation(mProgram, "brightness"), adjustParam[2]);
+    glUniform1i(glGetUniformLocation(program_ray, "uSampler_tex"), 0);
+    glUniform3fv(glGetUniformLocation(program_ray, "uEyePos"), 1, &(_camera->getCameraPosition()[0]));
+    glUniform1f(glGetUniformLocation(program_ray, "sample_step_inverse"), adjustParam[0]);
+    glUniform1f(glGetUniformLocation(program_ray, "val_threshold"),adjustParam[1]);
+    glUniform1f(glGetUniformLocation(program_ray, "brightness"), adjustParam[2]);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

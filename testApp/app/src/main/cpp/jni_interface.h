@@ -24,6 +24,8 @@ JNI_METHOD(void, JNIonSingleTouchDown)(JNIEnv * env, jclass, jfloat, jfloat);
 JNI_METHOD(void, JNIonTouchMove)(JNIEnv * env, jclass, jfloat, jfloat);
 
 JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv * env, jclass, jint, jfloat, jfloat);
+
+JNI_METHOD(void, JNIchangeRender)(JNIEnv*, jobject);
 }
 
 
