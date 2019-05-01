@@ -106,7 +106,9 @@ JNI_METHOD(void, JNIsendDCMImgs)(JNIEnv* env, jobject obj,  jobjectArray img_arr
         GLubyte * data = nullptr;
         convert_bitmap(env, bitmap, data, width, height);
 
-        renderNative(renderAddr)->initDCMIProperty(width * xspacing, height*yspacing, thickness*valid_num);
+        renderNative(renderAddr)->initDCMIProperty(width, height, thickness*valid_num);
+
+//        renderNative(renderAddr)->initDCMIProperty(width * xspacing, height*yspacing, thickness*valid_num);
     }
     renderNative(renderAddr)->assembleTexture();
 }

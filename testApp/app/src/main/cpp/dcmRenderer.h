@@ -121,10 +121,10 @@ public:
             if(fabsf(xoffset / _screen_w) > fabsf(yoffset/_screen_h))
                 _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
                 //rotate around y-axis
-//        else{
-//
-//            _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
-//        }
+        else{
+
+            _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
+        }
         }else{
             adjustParam[adjustIdx] += xoffset * adjustParam_origin[adjustIdx] * 0.01f;
             LOGE("==== ID: %d, NOW:%f", adjustIdx, adjustParam[adjustIdx]);

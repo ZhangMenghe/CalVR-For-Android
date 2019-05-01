@@ -179,11 +179,12 @@ void dcmVolumeRender::initGeometry() {
 }
 void dcmVolumeRender::initGeometry_texturebased() {
     m_VAOs = new GLuint[dimensions];
+    float dimension_inv = 1.0f / dimensions;
     for (int i = 0; i < dimensions; i++)
     {
-        float mappedZVal = -1.0f + 2.0f * (float)i / 109.0f;
+        float mappedZVal = (-1.0f + 2.0f * (float)i * dimension_inv)/2.0f;
 
-        float zTex = (float)mappedZVal + 1.0f / 2.0f;
+        float zTex = (float)mappedZVal + 0.5f;
 
         float vertices[] = {
                 // positions		// texture coords
