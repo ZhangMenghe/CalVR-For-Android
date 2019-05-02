@@ -3,6 +3,7 @@
 dcmVolumeRender::dcmVolumeRender(AAssetManager *assetManager):
         cubeRenderer(assetManager){
     new assetLoader(assetManager);
+//    _modelMat = glm::scale(_modelMat, glm::vec3(1,1,0.3f));
 }
 
 void dcmVolumeRender::addImage(GLubyte * img, float location) {
@@ -183,9 +184,10 @@ void dcmVolumeRender::initGeometry() {
 void dcmVolumeRender::initGeometry_texturebased() {
     m_VAOs = new GLuint[dimensions];
     float dimension_inv = 1.0f / dimensions;
+
     for (int i = 0; i < dimensions; i++)
     {
-        float mappedZVal = (-1.0f + 2.0f * (float)i * dimension_inv)/2.0f;
+        float mappedZVal = (-1.0f + 2.0f * (float)i * dimension_inv)*scale_inv;
 
         float zTex = (float)mappedZVal + 0.5f;
 
@@ -278,10 +280,10 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
 
-    glm::mat4 sliceModel;
+   // glm::mat4 sliceModel;
     //sliceModel = glm::translate(sliceModel, glm::vec3(0.0f, 0.0f, 0.0f));
     //sliceModel = glm::rotate(sliceModel, (float)glfwGetTime() * 30, glm::vec3(0.0f, 1.0f, 0.0f));
-    sliceModel = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, -1.0f, 0.5f));
+    //sliceModel = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, -1.0f, 0.5f));
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
 
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_tex"), 0);

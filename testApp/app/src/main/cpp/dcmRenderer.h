@@ -16,7 +16,6 @@
 
 #include "AndroidHelper.h"
 #include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 //typedef struct mdcmImage{
@@ -39,7 +38,9 @@ class Camera{
     const float FOV = 45.0f;
 
     void updateCameraVector(){
-        _viewMat = glm::lookAt(_eyePos, glm::vec3(0,0,0), _worldUp);
+        _viewMat = glm::lookAt(_eyePos,
+                glm::vec3(_eyePos.x + _Front.x, _eyePos.y + _Front.y, _eyePos.z + _Front.z) ,
+                _worldUp);
     }
 public:
     Camera(){
@@ -147,6 +148,7 @@ protected:
     unsigned int volume_texid;
     std::vector<dcmImage *> images_;
 private:
+    const float scale_inv = 0.15f;
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
     const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
