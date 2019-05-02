@@ -152,8 +152,8 @@ private:
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
     const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
-    const float adjustParam_origin[3] = {200.0f, 0.95f, 400.0f};
-    float adjustParam[3] = {200.0f, 0.95f, 400.0f};
+    const float adjustParam_origin[3] = {200.0f, 0.9f, 400.0f};
+    float adjustParam[3] = {200.0f, 0.9f, 400.0f};
     int adjustIdx = 0;
     bool switcher_move = false, swithcer_render_texture = true;
 

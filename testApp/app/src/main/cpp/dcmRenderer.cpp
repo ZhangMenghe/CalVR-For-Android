@@ -135,9 +135,8 @@ void dcmVolumeRender::initGeometry() {
             0.5f,0.5f,-0.5f,		x1,y1,z0, //1.0f,1.0f,1.0f,	//v6
             -0.5f,0.5f,-0.5f,		x0,y1,z0//0.0f,1.0f,1.0f,	//v7
     };
-
     GLuint Indices[] = { 0,1,2,0,2,3,	//front
-                         4,7,6,4,6,5,	//back
+                         4,6,7,4,5,6,	//back
                          4,0,3,4,3,7,	//left
                          1,5,6,1,6,2,	//right
                          3,2,6,3,6,7,	//top
@@ -280,14 +279,14 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
 
-   // glm::mat4 sliceModel;
+    glm::mat4 sliceModel;
     //sliceModel = glm::translate(sliceModel, glm::vec3(0.0f, 0.0f, 0.0f));
     //sliceModel = glm::rotate(sliceModel, (float)glfwGetTime() * 30, glm::vec3(0.0f, 1.0f, 0.0f));
-    //sliceModel = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, -1.0f, 0.5f));
-    glUniformMatrix4fv(glGetUniformLocation(program_ray, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
+    sliceModel = glm::scale(_modelMat, glm::vec3(1.0f, -1.0f, 0.5f));
+    glUniformMatrix4fv(glGetUniformLocation(program_ray, "uModelMat"), 1, GL_FALSE, &sliceModel[0][0]);
 
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_tex"), 0);
-    glUniform3fv(glGetUniformLocation(program_ray, "uEyePos"), 1, &(_camera->getCameraPosition()[0]));
+    glUniform3fv(glGetUniformLocation(program_ray, "uEyePos"), 3, &(_camera->getCameraPosition()[0]));
     glUniform1f(glGetUniformLocation(program_ray, "sample_step_inverse"), adjustParam[0]);
     glUniform1f(glGetUniformLocation(program_ray, "val_threshold"),adjustParam[1]);
     glUniform1f(glGetUniformLocation(program_ray, "brightness"), adjustParam[2]);
