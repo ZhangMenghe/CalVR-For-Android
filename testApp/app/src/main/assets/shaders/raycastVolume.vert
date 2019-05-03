@@ -9,7 +9,7 @@ uniform mat4 uModelMat, uViewMat, uProjMat;
 
 void main(void)
 {
-    tex_coord =  aTexCoord;
+    tex_coord = aTexCoord;
     frag_position = vec3(uModelMat * vec4(aPosition, 1.0));
     gl_Position = uProjMat * uViewMat  * vec4(frag_position, 1.0);
 }

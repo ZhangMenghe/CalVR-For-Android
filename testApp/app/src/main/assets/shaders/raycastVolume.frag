@@ -16,13 +16,14 @@ void main(void)
     // gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
   float sample_step = 1.0/sample_step_inverse;
   // NOTE: ray direction goes from frag_position to uEyePos, i.e. back to front
-  vec3 ray_dir = normalize(uEyePos - frag_position);
+  vec3 ray_dir = -normalize(uEyePos - frag_position);
   vec3 ray_pos = tex_coord; // the current ray position
   vec3 pos111 = vec3(1.0, 1.0, 1.0);
   vec3 pos000 = vec3(0.0, 0.0, 0.0);
 
   vec4 frag_color = vec4(0,0,0,0);
   vec4 color;
+  float max_density = -1.0;
   do
   {
     // note:
@@ -40,12 +41,16 @@ void main(void)
 
     float density = texture(uSampler_tex, ray_pos).r;
 
-     density += val_threshold - 0.5;
-     density = density * density * density;
-    //
-    color.rgb = vec3(density);//texture(uSampler_trans, density).rgb;
-    color.a   = density * sample_step * brightness;
-    frag_color.rgb = frag_color.rgb * (1.0 - color.a) + color.rgb * color.a;
+    max_density = max(max_density, density);
+    if(max_density == density){
+        density += val_threshold - 0.5;
+        density = density * density * density;
+       //
+       color.rgb = vec3(density);//texture(uSampler_trans, density).rgb;
+       color.a   = density * sample_step * brightness;
+       frag_color.rgb = frag_color.rgb * (1.0 - color.a) + color.rgb * color.a;
+    }
+
     // frag_color = vec4(density * sample_step * brightness);
   }
   while(true);

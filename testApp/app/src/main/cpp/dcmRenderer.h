@@ -18,6 +18,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <glm/vec4.hpp>
 //typedef struct mdcmImage{
 //    unsigned int* data;
 //    float sizex, sizey, sizez;
@@ -31,22 +32,21 @@
 
 class Camera{
     glm::mat4 _viewMat, _projMat;
-    glm::vec3 _eyePos, _worldUp, _Front;
+    glm::vec3 _eyePos, _worldUp, _Front, _center;
 
     const float NEAR_PLANE = 0.01f;
     const float FAR_PLANE = 1000.0f;
     const float FOV = 45.0f;
 
     void updateCameraVector(){
-        _viewMat = glm::lookAt(_eyePos,
-                glm::vec3(_eyePos.x + _Front.x, _eyePos.y + _Front.y, _eyePos.z + _Front.z) ,
-                _worldUp);
+        _viewMat = glm::lookAt(_eyePos,_center,_worldUp);
     }
 public:
     Camera(){
         _worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
         _eyePos = glm::vec3(0.0f, 0.f, 3.0f);
         _Front = glm::vec3(0.0f, 0.0f, -1.0f);
+        _center = glm::vec3(_eyePos.x + _Front.x, _eyePos.y + _Front.y, _eyePos.z + _Front.z);
         updateCameraVector();
     }
     void setProjMat(int screen_width, int screen_height){
@@ -56,6 +56,19 @@ public:
     glm::mat4 getProjMat(){return _projMat;}
     glm::mat4 getViewMat(){return _viewMat;}
     glm::vec3 getCameraPosition(){return _eyePos;}
+
+    void rotateCamera(int axis, glm::vec4 center, float offset){
+        glm::mat4 modelMat = glm::mat4(1.0);
+        glm::vec3 rotateAxis = glm::vec3(0,1,0);
+        if(axis != 3)
+            rotateAxis = glm::vec3(1,0,0);
+        modelMat = glm::translate(modelMat, glm::vec3(-center.x, -center.y, -center.z));
+        modelMat = glm::rotate(modelMat, offset, rotateAxis);
+        modelMat = glm::translate(modelMat, glm::vec3(center.x, center.y, center.z));
+        _eyePos = glm::vec3(modelMat * glm::vec4(_eyePos, 1.0));
+        _center = glm::vec3(center);
+        updateCameraVector();
+    }
 };
 class dcmImage{
 public:
@@ -119,13 +132,17 @@ public:
         xoffset*= MOUSE_ROTATE_SENSITIVITY;
         yoffset*= MOUSE_ROTATE_SENSITIVITY;
         if(switcher_move){
-            if(fabsf(xoffset / _screen_w) > fabsf(yoffset/_screen_h))
-                _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
-                //rotate around y-axis
-        else{
-
-            _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
-        }
+            if(fabsf(xoffset / _screen_w) > fabsf(yoffset/_screen_h)){
+//                if(swithcer_render_texture)
+//                    _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
+//                else
+                    _camera->rotateCamera(3, glm::vec4(_modelMat[3]), xoffset);
+            }else{
+//                if(swithcer_render_texture)
+//                    _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
+//                else
+                    _camera->rotateCamera(2, glm::vec4(_modelMat[3]), -yoffset);
+            }
         }else{
             adjustParam[adjustIdx] += xoffset * adjustParam_origin[adjustIdx] * 0.01f;
             LOGE("==== ID: %d, NOW:%f", adjustIdx, adjustParam[adjustIdx]);

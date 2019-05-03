@@ -28,9 +28,9 @@ void dcmVolumeRender::assembleTexture() {
     glBindTexture(GL_TEXTURE_3D, volume_texid);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     // pixel transfer happens here from client to OpenGL server
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage3D(GL_TEXTURE_3D, 0, GL_R8, (int)img_width, (int)img_height, (int)dimensions, 0, GL_RED, GL_UNSIGNED_BYTE, data);
@@ -142,7 +142,7 @@ void dcmVolumeRender::initGeometry() {
                          3,2,6,3,6,7,	//top
                          4,5,1,4,1,0,	//bottom
     };
-
+//    GLuint Indices[] = {0,1,2, 0,2,3, 1,5,6, 1,6,2, 5,4,7, 5,7,6, 4,0,3, 4,3,7, 3,2,6, 3,6,7, 4,5,1, 4,1,0};
     glGenBuffers(1, VBO);
     glGenBuffers(1, &EBO);
 
@@ -179,6 +179,9 @@ void dcmVolumeRender::initGeometry() {
     //Disable Buffers and vertex attributes
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glEnable(GL_TEXTURE_3D);
+    glEnable(GL_BLEND);
 }
 void dcmVolumeRender::initGeometry_texturebased() {
     m_VAOs = new GLuint[dimensions];
