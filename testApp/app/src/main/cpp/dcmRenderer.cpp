@@ -1,4 +1,5 @@
 #include "dcmRenderer.h"
+#include "Color.h"
 #include <glm/gtc/matrix_transform.hpp>
 dcmVolumeRender::dcmVolumeRender(AAssetManager *assetManager):
         cubeRenderer(assetManager){
@@ -11,7 +12,20 @@ void dcmVolumeRender::addImage(GLubyte * img, float location) {
             img,
             location));
 }
-
+void dcmVolumeRender::setting_1D_texture(){
+//    GLuint textureID;
+    //enable texture unit
+    glActiveTexture(GL_TEXTURE1);
+    //create texture object
+    glGenTextures(1, &trans_texid);
+    glBindTexture(GL_TEXTURE_2D, trans_texid);
+    //bind current texture object and set the data
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, transfer_color);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+}
 void dcmVolumeRender::assembleTexture() {
     std::sort(images_.begin(), images_.end(),
               [](const dcmImage* img1, const dcmImage* img2){return img1->location < img2->location;});
@@ -37,11 +51,11 @@ void dcmVolumeRender::assembleTexture() {
 
     delete[]data;
 
+    setting_1D_texture();
 
     initGeometry_texturebased();
 
     initGeometry();
-//
 }
 void dcmVolumeRender::initGeometry_Naive() {
     float vertices[] = {
@@ -142,7 +156,7 @@ void dcmVolumeRender::initGeometry() {
                          3,2,6,3,6,7,	//top
                          4,5,1,4,1,0,	//bottom
     };
-//    GLuint Indices[] = {0,1,2, 0,2,3, 1,5,6, 1,6,2, 5,4,7, 5,7,6, 4,0,3, 4,3,7, 3,2,6, 3,6,7, 4,5,1, 4,1,0};
+
     glGenBuffers(1, VBO);
     glGenBuffers(1, &EBO);
 
@@ -175,13 +189,14 @@ void dcmVolumeRender::initGeometry() {
     //Unbind the vertex array
     glBindVertexArray(0);
 
-
     //Disable Buffers and vertex attributes
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     glEnable(GL_TEXTURE_3D);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
+
 }
 void dcmVolumeRender::initGeometry_texturebased() {
     m_VAOs = new GLuint[dimensions];
@@ -231,11 +246,17 @@ void dcmVolumeRender::initGeometry_texturebased() {
     }
 }
 void dcmVolumeRender::onDraw() {
-//
-    if(swithcer_render_texture)
-        onTexturebasedDraw();
-    else
-        onRaycastDraw();
+    switch(render_mode){
+        case TEXTURE_BASED:
+            onTexturebasedDraw();
+            break;
+        case RAYCAST:
+            onRaycastDraw();
+            break;
+        default:
+            onTexturebasedDraw();
+            break;
+    }
 }
 void dcmVolumeRender::onNaiveDraw() {
 //    glClear(GL_COLOR_BUFFER_BIT);
@@ -244,7 +265,7 @@ void dcmVolumeRender::onNaiveDraw() {
 //    glEnableVertexAttribArray(0);
 //    glDrawArrays(GL_TRIANGLES,0,3);
 
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(mProgram);
     glUniformMatrix4fv(glGetUniformLocation(mProgram, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
     glUniformMatrix4fv(glGetUniformLocation(mProgram, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
@@ -254,7 +275,7 @@ void dcmVolumeRender::onNaiveDraw() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 void dcmVolumeRender::onTexturebasedDraw(){
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     for (int i = 0; i < dimensions; i++) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_3D, volume_texid);
@@ -273,9 +294,12 @@ void dcmVolumeRender::onTexturebasedDraw(){
     }
 }
 void dcmVolumeRender::onRaycastDraw(){
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, trans_texid);
 
     glUseProgram(program_ray);
 
@@ -289,10 +313,22 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uModelMat"), 1, GL_FALSE, &sliceModel[0][0]);
 
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_tex"), 0);
-    glUniform3fv(glGetUniformLocation(program_ray, "uEyePos"), 3, &(_camera->getCameraPosition()[0]));
+    glUniform1i(glGetUniformLocation(program_ray, "uSampler_trans"), 1);
     glUniform1f(glGetUniformLocation(program_ray, "sample_step_inverse"), adjustParam[0]);
     glUniform1f(glGetUniformLocation(program_ray, "val_threshold"),adjustParam[1]);
     glUniform1f(glGetUniformLocation(program_ray, "brightness"), adjustParam[2]);
+
+    float lightIa[3] = { 0.3,0.3,0.3 };
+    float lightId[3] = { 0.7,0.7,0.7 };
+    float lightIs[3] = { 0.2,0.2,0.2 };
+
+    glUniform3fv(glGetUniformLocation(program_ray, "Light.Ia"), 1, lightIa);
+    glUniform3fv(glGetUniformLocation(program_ray, "Light.Id"), 1, lightId);
+    glUniform3fv(glGetUniformLocation(program_ray, "Light.Is"), 1, lightIs);
+    glUniform1f(glGetUniformLocation(program_ray, "shiness"), 32.0f);
+
+    glUniform1i(glGetUniformLocation(program_ray, "u_use_color_transfer"), use_color_tranfer);
+    glUniform1i(glGetUniformLocation(program_ray, "u_use_ligting"), use_lighting);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

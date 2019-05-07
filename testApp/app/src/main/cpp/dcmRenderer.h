@@ -107,7 +107,7 @@ public:
 
     void addImage(GLubyte * img, float location);
     void initDCMIProperty(size_t w, size_t h, int thickness){
-        volume_size = glm::vec3(w*CONVERT_UNIT, h*CONVERT_UNIT ,thickness*CONVERT_UNIT);
+//        volume_size = glm::vec3(w*CONVERT_UNIT, h*CONVERT_UNIT ,thickness*CONVERT_UNIT);
         img_width = w; img_height = h;
     }
     void assembleTexture();
@@ -155,31 +155,37 @@ public:
             adjustIdx = (adjustIdx+1)%3;
     }
     void changeRender(){
-        swithcer_render_texture = !swithcer_render_texture;
+        render_mode = static_cast<RENDERER >((render_mode+1)%3);
     }
 protected:
     const float CONVERT_UNIT = 0.001f;
     const int UI_SIZE = sizeof(GLubyte);
     size_t img_width, img_height, dimensions;
 
-    unsigned int volume_texid;
+    unsigned int volume_texid, trans_texid;
     std::vector<dcmImage *> images_;
 private:
+    enum RENDERER{
+        RAYCAST = 0,
+        TEXTURE_BASED
+    };
     const float scale_inv = 0.15f;
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
     const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
-    const float adjustParam_origin[3] = {200.0f, 0.9f, 400.0f};
-    float adjustParam[3] = {200.0f, 0.9f, 400.0f};
+    const float adjustParam_origin[3] = {500.0f, 0.6f, 350.0f};
+    float adjustParam[3]= {500.0f, 0.6f, 350.0f};
     int adjustIdx = 0;
-    bool switcher_move = false, swithcer_render_texture = true;
+    bool switcher_move = false;
+    bool use_color_tranfer = true, use_lighting = true;
+    RENDERER render_mode = TEXTURE_BASED;
 
-
-    GLuint* m_puTextureIDs;
     GLuint* m_VAOs;
 
     GLuint program_texture, program_ray;
-    glm::vec3 volume_size;
+
+    void setting_1D_texture();
+
     void initGeometry();
     void initGeometry_texturebased();
     void initGeometry_Naive();
