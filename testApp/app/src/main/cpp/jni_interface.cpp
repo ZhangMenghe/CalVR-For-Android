@@ -137,3 +137,6 @@ JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv * env, jclass, jint indicate,jfloat x,
 JNI_METHOD(void, JNIchangeRender)(JNIEnv*, jobject){
     renderNative(renderAddr)->changeRender();
 }
+JNI_METHOD(float , JNIgetFPS)(JNIEnv*, jobject){
+    return renderNative(renderAddr)->getFPS();
+}

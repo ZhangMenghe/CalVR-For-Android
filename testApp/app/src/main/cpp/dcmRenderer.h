@@ -15,6 +15,7 @@
 #include <EGL/egl.h>
 
 #include "AndroidHelper.h"
+#include "perfMonitor.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -157,6 +158,7 @@ public:
     void changeRender(){
         render_mode = static_cast<RENDERER >((render_mode+1)%3);
     }
+    float getFPS(){ return fps_monitor_.Update();}
 protected:
     const float CONVERT_UNIT = 0.001f;
     const int UI_SIZE = sizeof(GLubyte);
@@ -165,6 +167,7 @@ protected:
     unsigned int volume_texid, trans_texid;
     std::vector<dcmImage *> images_;
 private:
+    perfMonitor fps_monitor_;
     enum RENDERER{
         RAYCAST = 0,
         TEXTURE_BASED

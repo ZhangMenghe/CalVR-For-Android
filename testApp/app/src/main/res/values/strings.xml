@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">testApp</string>
+    <string name="app_name">DICOMRender</string>
+    <string name="fps">0.0 FPS</string>
 </resources>

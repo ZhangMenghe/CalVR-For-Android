@@ -16,4 +16,5 @@ public class JNIInterface {
     public static native void JNIonDoubleTouch(int indicate, float x, float y);
 
     public static native void JNIchangeRender();
+    public static native float JNIgetFPS();
 }

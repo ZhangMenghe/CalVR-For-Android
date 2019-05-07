@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -53,11 +54,15 @@ public class MainActivity extends AppCompatActivity {
     //For touch event
     private GestureDetectorCalVR gestureDetector;
 
+    //LABEL
+    TextView FPSlabel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupSurfaceView();
+        FPSlabel = (TextView) findViewById(R.id.textViewFPS);
         setupTouchDetector();
         nativeAddr = JNIInterface.JNIonCreate(getAssets());
     }
@@ -166,9 +171,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onDrawFrame(GL10 gl) {
             JNIInterface.JNIdrawFrame();
+            updateFPS(JNIInterface.JNIgetFPS());
         }
 
     }
-
+    public void updateFPS(final float fFPS)
+    {
+        if( FPSlabel == null )
+            return;
+        this.runOnUiThread(new Runnable()  {
+            @Override
+            public void run()  {
+                FPSlabel.setText(String.format("%2.2f FPS", fFPS));
+            }});
+    }
 
 }
