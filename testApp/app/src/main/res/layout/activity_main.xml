@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
     <android.opengl.GLSurfaceView
         android:id="@+id/surfaceview"
         android:layout_width="match_parent"
@@ -19,36 +18,164 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@color/paneColor"
+        android:alpha="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/surfaceview">
 
-    <TextView
-        android:id="@+id/textViewFPS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:text="@string/fps"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/white" />
 
-    <ImageView
-        android:id="@+id/buttonPanel"
+        <Switch
+            android:id="@+id/switch_color"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="35dp"
+            android:layout_marginStart="10dp"
+            android:text="@string/use_transfer"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:theme="@style/SCBSwitch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Switch
+            android:id="@+id/switch_lighting"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:checked="false"
+            android:text="@string/use_lighting"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:theme="@style/SCBSwitch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/switch_color"/>
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_param1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_param1"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <SeekBar
+                android:id="@+id/seekbar_param1"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="5dp"
+                android:max="800"
+                android:progressBackgroundTint="@color/middleGrey"
+                android:progressTint="@color/lightGreen"
+                android:thumbOffset="10dp"
+                android:thumbTint="@color/brightYellow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_param1" />
+            <TextView
+                android:id="@+id/text_param2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/text_param2"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/seekbar_param1" />
+
+            <SeekBar
+                android:id="@+id/seekbar_param2"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="5dp"
+                android:max="2"
+                android:progressBackgroundTint="@color/middleGrey"
+                android:progressTint="@color/lightGreen"
+                android:thumbOffset="10dp"
+                android:thumbTint="@color/brightYellow"
+                app:layout_constraintStart_toStartOf="@+id/text_param2"
+                app:layout_constraintTop_toTopOf="@+id/text_param1" />
+            <TextView
+                android:id="@+id/text_param3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/text_param3"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/seekbar_param2" />
+
+            <SeekBar
+                android:id="@+id/seekbar_param3"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="5dp"
+                android:max="500"
+                android:progressBackgroundTint="@color/middleGrey"
+                android:progressTint="@color/lightGreen"
+                android:thumbOffset="10dp"
+                android:thumbTint="@color/brightYellow"
+                app:layout_constraintStart_toStartOf="@+id/text_param1"
+                app:layout_constraintTop_toTopOf="@+id/text_param3" />
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="150dp"
-        android:layout_height="250dp"
-        app:layout_constraintBottom_toBottomOf="@+id/surfaceview"
-        app:layout_constraintEnd_toEndOf="@+id/surfaceview"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/surfaceview"
-        app:layout_constraintTop_toTopOf="@+id/surfaceview"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_height="81dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="@id/surfaceview"
+        app:layout_constraintTop_toTopOf="@id/surfaceview"
+        tools:layout_editor_absoluteY="0dp">
 
-    <Button
-        android:id="@+id/changeRenderButton"
-        android:layout_width="135dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        android:text="switch"
-        app:layout_constraintEnd_toEndOf="@+id/buttonPanel"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textViewFPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fps"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/changeRenderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="15dp"
+            android:text="@string/change_renderer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewFPS" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <!--<ImageView-->
+        <!--android:id="@+id/buttonPanel"-->
+        <!--android:layout_width="150dp"-->
+        <!--android:layout_height="250dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/surfaceview"-->
+        <!--app:layout_constraintEnd_toEndOf="@+id/surfaceview"-->
+        <!--app:layout_constraintHorizontal_bias="1.0"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/surfaceview"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/surfaceview"-->
+        <!--app:layout_constraintVertical_bias="0.0" />-->
 
     <!--<ImageView-->
         <!--android:id="@+id/dcmimageView"-->

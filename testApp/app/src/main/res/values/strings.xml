@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">DICOMRender</string>
     <string name="fps">0.0 FPS</string>
+    <string name="change_renderer">Next Renderer</string>
+    <string name="use_transfer">Transfer Color</string>
+    <string name="use_lighting">Phong Lighting</string>
+    <string name="text_param1">Sample Step Inv</string>
+    <string name="text_param2">Value Threshold</string>
+    <string name="text_param3">Brightness</string>
 </resources>
