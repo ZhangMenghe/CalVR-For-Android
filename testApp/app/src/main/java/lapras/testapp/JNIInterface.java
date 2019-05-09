@@ -15,6 +15,12 @@ public class JNIInterface {
     public static native void JNIonTouchMove(float x, float y);
     public static native void JNIonDoubleTouch(int indicate, float x, float y);
 
-    public static native void JNIchangeRender();
+    public static native boolean JNIchangeRender();
+    public static native void JNIsetSwitches(int idx, boolean isSet);
+    public static native void JNIsetParam(int idx, float value);
+
+    public static native boolean JNIgetOriginalChecked(int idx);
+    public static native float JNIgetOriginalValue(int idx);
     public static native float JNIgetFPS();
+
 }

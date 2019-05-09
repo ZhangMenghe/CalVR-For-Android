@@ -19,6 +19,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/raycastPanel"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:background="@color/paneColor"
@@ -101,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:layout_marginTop="5dp"
-                android:max="2"
+                android:max="20"
                 android:progressBackgroundTint="@color/middleGrey"
                 android:progressTint="@color/lightGreen"
                 android:thumbOffset="10dp"

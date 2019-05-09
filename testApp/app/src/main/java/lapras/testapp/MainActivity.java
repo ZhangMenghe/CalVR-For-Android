@@ -1,23 +1,16 @@
 package lapras.testapp;
 
-import android.graphics.Bitmap;
-import android.hardware.display.DisplayManager;
-import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.io.File;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import com.imebra.*;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -54,17 +47,16 @@ public class MainActivity extends AppCompatActivity {
     //For touch event
     private GestureDetectorCalVR gestureDetector;
 
-    //LABEL
-    TextView FPSlabel;
-
+    private UIsController uiController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupSurfaceView();
-        FPSlabel = (TextView) findViewById(R.id.textViewFPS);
-        setupTouchDetector();
         nativeAddr = JNIInterface.JNIonCreate(getAssets());
+
+        uiController = new UIsController(this);
+        setupTouchDetector();
     }
     @Override
     protected void onResume() {
@@ -136,12 +128,12 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        Button changeButton = (Button) findViewById(R.id.changeRenderButton);
-        changeButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view) {
-                JNIInterface.JNIchangeRender();
-            }
-        });
+//        Button changeButton = (Button) findViewById(R.id.changeRenderButton);
+//        changeButton.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View view) {
+//                JNIInterface.JNIchangeRender();
+//            }
+//        });
     }
     private void setupResource(){
         resourceDest = getFilesDir().getAbsolutePath() + "/";
@@ -171,19 +163,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onDrawFrame(GL10 gl) {
             JNIInterface.JNIdrawFrame();
-            updateFPS(JNIInterface.JNIgetFPS());
+            uiController.updateFPS(JNIInterface.JNIgetFPS());
         }
 
     }
-    public void updateFPS(final float fFPS)
-    {
-        if( FPSlabel == null )
-            return;
-        this.runOnUiThread(new Runnable()  {
-            @Override
-            public void run()  {
-                FPSlabel.setText(String.format("%2.2f FPS", fFPS));
-            }});
-    }
+
 
 }

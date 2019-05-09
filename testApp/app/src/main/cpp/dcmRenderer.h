@@ -135,14 +135,14 @@ public:
         if(switcher_move){
             if(fabsf(xoffset / _screen_w) > fabsf(yoffset/_screen_h)){
 //                if(swithcer_render_texture)
-//                    _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
+                    _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
 //                else
-                    _camera->rotateCamera(3, glm::vec4(_modelMat[3]), xoffset);
+//                    _camera->rotateCamera(3, glm::vec4(_modelMat[3]), xoffset);
             }else{
 //                if(swithcer_render_texture)
-//                    _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
+                    _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
 //                else
-                    _camera->rotateCamera(2, glm::vec4(_modelMat[3]), -yoffset);
+//                    _camera->rotateCamera(2, glm::vec4(_modelMat[3]), -yoffset);
             }
         }else{
             adjustParam[adjustIdx] += xoffset * adjustParam_origin[adjustIdx] * 0.01f;
@@ -155,9 +155,21 @@ public:
         else
             adjustIdx = (adjustIdx+1)%3;
     }
-    void changeRender(){
-        render_mode = static_cast<RENDERER >((render_mode+1)%3);
+    bool changeRender(){
+        render_mode = static_cast<RENDERER >((render_mode+1)%2);
+        return (render_mode == RAYCAST);
     }
+    void onSwitchersSet(int idx, bool isSet){
+        if(idx == 0) use_color_tranfer = isSet;
+        else if(idx == 1) use_lighting = isSet;
+    }
+    void onParamsSet(int idx, float value){
+        adjustParam[idx] = value;
+    }
+    bool getOriginalChecked(int idx){
+        return (idx == 0)? use_color_tranfer:use_lighting;
+    }
+    float getOriginalValue(int idx){return adjustParam_origin[idx];}
     float getFPS(){ return fps_monitor_.Update();}
 protected:
     const float CONVERT_UNIT = 0.001f;
@@ -179,8 +191,8 @@ private:
     const float adjustParam_origin[3] = {500.0f, 0.6f, 350.0f};
     float adjustParam[3]= {500.0f, 0.6f, 350.0f};
     int adjustIdx = 0;
-    bool switcher_move = false;
-    bool use_color_tranfer = true, use_lighting = true;
+    bool switcher_move = true;
+    bool use_color_tranfer = false, use_lighting = false;
     RENDERER render_mode = TEXTURE_BASED;
 
     GLuint* m_VAOs;

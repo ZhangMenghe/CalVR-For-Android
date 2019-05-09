@@ -134,9 +134,24 @@ JNI_METHOD(void, JNIonTouchMove)(JNIEnv * env, jclass, jfloat x, jfloat y){
 JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv * env, jclass, jint indicate,jfloat x, jfloat y){
     renderNative(renderAddr)->onDoubleTouch(indicate, x, y);
 }
-JNI_METHOD(void, JNIchangeRender)(JNIEnv*, jobject){
-    renderNative(renderAddr)->changeRender();
+JNI_METHOD(jboolean, JNIchangeRender)(JNIEnv*, jobject){
+    return renderNative(renderAddr)->changeRender();
 }
-JNI_METHOD(float , JNIgetFPS)(JNIEnv*, jobject){
+JNI_METHOD(void, JNIsetSwitches)(JNIEnv * env, jclass, jint idx, jboolean isSet){
+    renderNative(renderAddr)->onSwitchersSet(idx, isSet);
+}
+
+JNI_METHOD(void, JNIsetParam)(JNIEnv * env, jclass, jint idx, jfloat value){
+    renderNative(renderAddr)->onParamsSet(idx, value);
+}
+JNI_METHOD(jboolean , JNIgetOriginalChecked)(JNIEnv*, jobject, jint idx){
+    return renderNative(renderAddr)->getOriginalChecked(idx);
+}
+
+JNI_METHOD(jfloat , JNIgetOriginalValue)(JNIEnv*, jobject, jint idx){
+    return renderNative(renderAddr)->getOriginalValue(idx);
+}
+
+JNI_METHOD(jfloat , JNIgetFPS)(JNIEnv*, jobject){
     return renderNative(renderAddr)->getFPS();
 }

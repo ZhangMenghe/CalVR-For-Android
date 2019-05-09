@@ -25,9 +25,17 @@ JNI_METHOD(void, JNIonTouchMove)(JNIEnv * env, jclass, jfloat, jfloat);
 
 JNI_METHOD(void, JNIonDoubleTouch)(JNIEnv * env, jclass, jint, jfloat, jfloat);
 
-JNI_METHOD(void, JNIchangeRender)(JNIEnv*, jobject);
+JNI_METHOD(jboolean, JNIchangeRender)(JNIEnv*, jobject);
 
-JNI_METHOD(float , JNIgetFPS)(JNIEnv*, jobject);
+JNI_METHOD(void, JNIsetSwitches)(JNIEnv * env, jclass, jint , jboolean);
+
+JNI_METHOD(void, JNIsetParam)(JNIEnv * env, jclass, jint, jfloat);
+
+JNI_METHOD(jboolean , JNIgetOriginalChecked)(JNIEnv*, jobject, jint);
+
+JNI_METHOD(jfloat , JNIgetOriginalValue)(JNIEnv*, jobject, jint);
+
+JNI_METHOD(jfloat , JNIgetFPS)(JNIEnv*, jobject);
 }
 
 
