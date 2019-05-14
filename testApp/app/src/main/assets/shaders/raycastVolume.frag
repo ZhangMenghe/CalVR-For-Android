@@ -42,6 +42,7 @@ vec3 phong_illumination_model(vec3 N,vec3 curColor,vec3 curPos){
 }
 
 
+
 void main(void)
 {
     // float intensity = texture(uSampler_tex, tex_coord).r;
@@ -53,11 +54,12 @@ void main(void)
 
   vec4 frag_color = vec4(0,0,0,0);
   vec4 color;
-  float max_density = -1.0;
+  float density, max_density = -1.0;
+  vec3 best_ray_pos = ray_pos;
   do
   {
     // note:
-    // - ray_dir * sample_step can be precomputed
+    // - ray_dir * sample_step can be precomputed for a fixed view position/angle
     // - we assume the volume has a cube-like shape
 
     ray_pos += ray_dir * sample_step;
@@ -69,9 +71,33 @@ void main(void)
     if (any(lessThan(ray_pos,pos000)))
       break;
 
-    float density = texture(uSampler_tex, ray_pos).r;
+    density = texture(uSampler_tex, ray_pos).r;
     max_density = max(max_density, density);
-    if(max_density == density){
+    if(max_density == density)
+        best_ray_pos = ray_pos;
+    /*if(max_density == density){
+        density += val_threshold - 0.5;
+        density = density * density * density;
+
+        vec3 normal = normalize(NormalMatrix*(normalize(ray_pos)));
+        vec3 sampled_color;
+        if(u_use_color_transfer == true)
+            sampled_color = texture(uSampler_trans, vec2(density, 1.0)).rgb;
+        else
+            sampled_color = vec3(density);
+
+        if(u_use_ligting == true)
+            color.rgb = phong_illumination_model(normal, sampled_color, frag_position);
+        else
+            color.rgb = sampled_color;
+        color.a   = density * sample_step * brightness;
+        frag_color.rgb = frag_color.rgb * (1.0 - color.a) + color.rgb * color.a;
+    }*/
+  }while(true);
+
+    if(max_density > -1.0){
+        density = max_density;
+
         density += val_threshold - 0.5;
         density = density * density * density;
 
@@ -89,8 +115,7 @@ void main(void)
         color.a   = density * sample_step * brightness;
         frag_color.rgb = frag_color.rgb * (1.0 - color.a) + color.rgb * color.a;
     }
-  }
-  while(true);
+
 
   if(frag_color.r == 0.0)
     discard;
