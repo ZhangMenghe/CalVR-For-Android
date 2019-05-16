@@ -273,7 +273,9 @@ void dcmVolumeRender::onViewCreated(){
     if(!program_ray || !program_texture || !program_plane)
         LOGE("===Failed to create shader program===");
 }
+void dcmVolumeRender::setZpos(float nz){
 
+}
 //update vertices, indices, and corresponding numbers
 void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints){
     delete(vertices_);

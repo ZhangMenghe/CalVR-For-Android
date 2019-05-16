@@ -95,6 +95,8 @@ public:
         _modelMat = glm::mat4(1.0f);
     }
 protected:
+    const int MAX_VERTEX_NUM = 8;
+    const int MAX_INDICE_NUM = 36;
     glm::mat4 _modelMat;
 
     GLuint VAO,VBO[2], EBO;
@@ -191,7 +193,10 @@ public:
         else if(idx == 1) use_lighting = isSet;
     }
     void onParamsSet(int idx, float value){
-        adjustParam[idx] = value;
+        if(idx < 0)
+            setZpos(value);
+        else
+            adjustParam[idx] = value;
     }
     bool getOriginalChecked(int idx){
         return (idx == 0)? use_color_tranfer:use_lighting;
@@ -247,7 +252,7 @@ private:
 
     void draw_intersect_plane();
     void updateVBOData();
-
+    void setZpos(float nz);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
 };
 

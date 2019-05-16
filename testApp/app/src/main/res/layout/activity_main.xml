@@ -21,7 +21,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/raycastPanel"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="220dp"
         android:background="@color/paneColor"
         android:alpha="0.7"
         app:layout_constraintStart_toStartOf="parent"
@@ -133,6 +133,30 @@
                 app:layout_constraintStart_toStartOf="@+id/text_param1"
                 app:layout_constraintTop_toTopOf="@+id/text_param3" />
         </LinearLayout>
+        <TextView
+            android:id="@+id/text_zpos"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:text="Zpos"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/switch_lighting"
+            app:layout_constraintBottom_toTopOf="@id/zpos_seek" />
+
+        <SeekBar
+            android:id="@+id/zpos_seek"
+            android:layout_width="200dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="10dp"
+            android:max="40"
+            android:progressBackgroundTint="@color/middleGrey"
+            android:progressTint="@color/lightGreen"
+            android:thumbOffset="10dp"
+            android:thumbTint="@color/brightYellow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/switch_lighting" />
 
     </android.support.constraint.ConstraintLayout>
 

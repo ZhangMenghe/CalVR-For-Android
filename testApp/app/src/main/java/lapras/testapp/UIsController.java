@@ -113,6 +113,27 @@ public class UIsController {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+
+
+//        text_param3 = activity.findViewById(R.id.text_param3);
+//        float initialValue_p3 = JNIInterface.JNIgetOriginalValue(2);
+        float initialValue_zpos = 0.45f;
+//        text_param3.setText(activity.getString(R.string.text_param3, initialValue_p3));
+        SeekBar sbz = (SeekBar)activity.findViewById(R.id.zpos_seek);
+        sbz.setProgress((int)(40 * (initialValue_zpos + 0.5f)));
+        sbz.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if(!b) return;
+//                text_param3.setText(activity.getString(R.string.text_param3, (float)i));
+                JNIInterface.JNIsetParam(-1, (float)(i / 40.0f - 0.5f));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
     public void updateFPS(final float fFPS)
