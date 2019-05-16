@@ -193,9 +193,9 @@ public:
         else if(idx == 1) use_lighting = isSet;
     }
     void onParamsSet(int idx, float value){
-        if(idx < 0)
-            setZpos(value);
-        else
+//        if(idx < 0)
+//            setZpos(value);
+//        else
             adjustParam[idx] = value;
     }
     bool getOriginalChecked(int idx){
