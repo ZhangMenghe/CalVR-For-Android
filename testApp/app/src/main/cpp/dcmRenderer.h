@@ -2,7 +2,7 @@
 #define DCM_RENDERER_H
 
 #include <vector>
-
+#include <unordered_map>
 // Include the latest possible header file( GL version header )
 #if __ANDROID_API__ >= 24
 #include <GLES3/gl32.h>
@@ -30,7 +30,11 @@
 //        size
 //    }
 //}dcmImage;
-
+enum Face{
+    FRONT=0,BACK,LEFT,RIGHT,UP,BOTTOM
+};
+typedef std::pair<glm::vec3, int> Polygon;
+typedef std::unordered_map<Face, std::vector<int>> PolygonMap;
 class Camera{
     glm::mat4 _viewMat, _projMat;
     glm::vec3 _eyePos, _worldUp, _Front, _center;
@@ -57,6 +61,7 @@ public:
     glm::mat4 getProjMat(){return _projMat;}
     glm::mat4 getViewMat(){return _viewMat;}
     glm::vec3 getCameraPosition(){return _eyePos;}
+    glm::vec3 getViewDirection(){return _Front;}
 
     void rotateCamera(int axis, glm::vec4 center, float offset){
         glm::mat4 modelMat = glm::mat4(1.0);
@@ -98,6 +103,28 @@ protected:
     EGLContext mEglContext;
     AAssetManager* _asset_manager;
     Camera* _camera;
+
+    int indices_num_, vertices_num_;
+
+    const GLfloat sVertex[24] = {//World					//Color
+            -0.5f,-0.5f,0.5f,		//x0, y0, z1, //0.0f,0.0f,0.0f,	//v0
+            0.5f,-0.5f,0.5f,		//x1,y0,z1, //1.0f,0.0f,0.0f,	//v1
+            0.5f,0.5f,0.5f,			//x1, y1, z1,//1.0f,1.0f,0.0f,	//v2
+            -0.5f,0.5f,0.5f,		//x0,y1,z1, //0.0f,1.0f,0.0f,	//v3
+            -0.5f,-0.5f,-0.5f,		//x0,y0,z0,//0.0f,0.0f,1.0f,	//v4
+            0.5f,-0.5f,-0.5f,		//x1,y0,z0,//1.0f,0.0f,1.0f,	//v5
+            0.5f,0.5f,-0.5f,		//x1,y1,z0, //1.0f,1.0f,1.0f,	//v6
+            -0.5f,0.5f,-0.5f,		//x0,y1,z0//0.0f,1.0f,1.0f,	//v7
+    };
+    const GLuint sIndices[36] = { 0,1,2,0,2,3,	//front
+                                 4,6,7,4,5,6,	//back
+                                 4,0,3,4,3,7,	//left
+                                 1,5,6,1,6,2,	//right
+                                 3,2,6,3,6,7,	//top
+                                 4,5,1,4,1,0,	//bottom
+    };
+    GLfloat* vertices_;
+    GLuint* indices_;
 };
 
 
@@ -178,6 +205,10 @@ protected:
 
     unsigned int volume_texid, trans_texid;
     std::vector<dcmImage *> images_;
+
+    float* cplane_points_;//[18] = {.0f};
+    int cplane_points_num_ = 0;
+
 private:
     perfMonitor fps_monitor_;
     enum RENDERER{
@@ -195,10 +226,15 @@ private:
     bool use_color_tranfer = false, use_lighting = false;
     RENDERER render_mode = TEXTURE_BASED;
 
+
     GLuint* m_VAOs;
+    GLuint VAO_PLANE, VBO_PLANE;
 
-    GLuint program_texture, program_ray;
+    glm::vec3 stepsize_;
+    GLuint program_texture, program_ray, program_plane;
 
+    std::vector<Polygon> polygon;
+    PolygonMap polygon_map;
     void setting_1D_texture();
 
     void initGeometry();
@@ -208,6 +244,11 @@ private:
     void onNaiveDraw();
     void onTexturebasedDraw();
     void onRaycastDraw();
+
+    void draw_intersect_plane();
+    void updateVBOData();
+
+    void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
 };
 
 
