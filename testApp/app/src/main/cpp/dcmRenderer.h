@@ -193,9 +193,9 @@ public:
         else if(idx == 1) use_lighting = isSet;
     }
     void onParamsSet(int idx, float value){
-//        if(idx < 0)
-//            setZpos(value);
-//        else
+        if(idx < 0)
+            setZpos(value);
+        else
             adjustParam[idx] = value;
     }
     bool getOriginalChecked(int idx){
@@ -211,7 +211,7 @@ protected:
     unsigned int volume_texid, trans_texid;
     std::vector<dcmImage *> images_;
 
-    float* cplane_points_;//[18] = {.0f};
+    float* cplane_points_ = nullptr;
     int cplane_points_num_ = 0;
 
 private:

@@ -55,7 +55,7 @@ vec3 getRayIntersection(vec3 ray_start, vec3 ray_dir, vec3 plane_point, vec3 pla
 vec3 getPlaneNormal(vec3 a, vec3 b, vec3 c){
     return normalize(cross(b-a, c-a));
 }
-void main_old(void)
+void main(void)
 {
     // float intensity = texture(uSampler_tex, tex_coord).r;
     // gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
@@ -122,7 +122,7 @@ void main_old(void)
   else
     gl_FragColor = vec4(frag_color.rgb,1.0);
 }
-void main(void){
-    float intensity = texture(uSampler_tex, tex_coord).r*2.0;
-    gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
-}
+// void main(void){
+//     float intensity = texture(uSampler_tex, tex_coord).r*2.0;
+//     gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
+// }

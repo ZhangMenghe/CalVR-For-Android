@@ -363,18 +363,19 @@ void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap po
 }
 void dcmVolumeRender::updateVBOData(){
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices_num_  *sizeof(GL_FLOAT), vertices_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * vertices_num_  *sizeof(GL_FLOAT), vertices_);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indices_num_  *sizeof(GLuint), indices_);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indices_num_  *sizeof(GL_UNSIGNED_INT), indices_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 void dcmVolumeRender::setZpos(float nz){
-    //debug: setup clip plane
-//    delete(cplane_points_);
+    nz=min(0.49f, nz);
+    nz = max(-0.49f, nz);
     cplane_points_num_ = 4;
-    cplane_points_ = new float[12];
+    if(!cplane_points_)
+        cplane_points_ = new float[12];
     for(int i=0;i<4;i++){
         cplane_points_[3*i] = sVertex[3*i]*1.5f ;
         cplane_points_[3*i+1] = sVertex[3*i+1]*1.5f;
@@ -383,6 +384,7 @@ void dcmVolumeRender::setZpos(float nz){
 
     std::vector<vec3> plane_points;
     polygon.clear();
+    polygon_map.clear();
     for(int i=0; i<cplane_points_num_; i++)
         plane_points.push_back(vec3(cplane_points_[3*i], cplane_points_[3*i+1],cplane_points_[3*i+2]));
     vec3 p_norm = getPlaneNormal(plane_points[0], plane_points[1], plane_points[2]);
@@ -402,6 +404,7 @@ void dcmVolumeRender::setZpos(float nz){
             rpoints.push_back(i);
     }
     updateGeometry(polygon, polygon_map, rpoints);
+    updateVBOData();
 }
 void dcmVolumeRender::initGeometry() {
     stepsize_ = vec3(1.0f / img_width, 1.0f / img_height, 1.0f/dimensions);
@@ -470,7 +473,7 @@ void dcmVolumeRender::initGeometry() {
 
 ////////////////////////////////////////////////////
 
-    setZpos(0.0f);
+    setZpos(0.45f);
 
     //Generate the VAO
     glGenVertexArrays(1, &VAO);
@@ -478,16 +481,16 @@ void dcmVolumeRender::initGeometry() {
 
     glGenBuffers(1, VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-//    glBufferData(GL_ARRAY_BUFFER, 3*MAX_VERTEX_NUM* sizeof(GL_FLOAT), nullptr, GL_DYNAMIC_DRAW);
-    glBufferData(GL_ARRAY_BUFFER, 3*vertices_num_* sizeof(GL_FLOAT), vertices_, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3*MAX_VERTEX_NUM* sizeof(GL_FLOAT), nullptr, GL_DYNAMIC_DRAW);
+//    glBufferData(GL_ARRAY_BUFFER, 3*vertices_num_* sizeof(GL_FLOAT), vertices_, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_INDICE_NUM * sizeof(GL_UNSIGNED_INT), nullptr, GL_DYNAMIC_DRAW);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_num_ * sizeof(GL_UNSIGNED_INT), indices_, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_INDICE_NUM * sizeof(GL_UNSIGNED_INT), nullptr, GL_DYNAMIC_DRAW);
+//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_num_ * sizeof(GL_UNSIGNED_INT), indices_, GL_STATIC_DRAW);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -500,7 +503,7 @@ void dcmVolumeRender::initGeometry() {
 
 //    delete(vertices_);
 //    delete(indices_);
-//    updateVBOData();
+    updateVBOData();
 }
 
 void dcmVolumeRender::initGeometry_texturebased() {
@@ -599,7 +602,7 @@ void dcmVolumeRender::onTexturebasedDraw(){
     }
 }
 void dcmVolumeRender::onRaycastDraw(){
-
+    updateVBOData();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
@@ -645,7 +648,7 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices_num_, GL_UNSIGNED_INT, 0);
-
+    glBindVertexArray(0);
 //    draw_intersect_plane();
 }
 void dcmVolumeRender::draw_intersect_plane(){
