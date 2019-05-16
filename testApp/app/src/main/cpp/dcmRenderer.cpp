@@ -284,16 +284,18 @@ void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap po
     std::vector<int>id_map(vertices_num_, 0);
 //    int id_map[vertices_num_] = {0};
 
-    vertices_ = new GLfloat[3*vertices_num_];
+    GLfloat * c_vertices_ = new GLfloat[3*vertices_num_];
     int nidx = 0;
     for(auto id:rpoints){
-        vertices_[3*nidx] = sVertex[id*3];vertices_[3*nidx+1] = sVertex[id*3+1];vertices_[3*nidx+2] = sVertex[id*3+2];
+        c_vertices_[3*nidx] = sVertex[id*3];c_vertices_[3*nidx+1] = sVertex[id*3+1];c_vertices_[3*nidx+2] = sVertex[id*3+2];
         id_map[nidx] = id; nidx++;
     }
     for(auto point:polygon){
-        vertices_[3*nidx] = point.first.x;vertices_[3*nidx+1] = point.first.y;vertices_[3*nidx+2] = point.first.z;
+        c_vertices_[3*nidx] = point.first.x;c_vertices_[3*nidx+1] = point.first.y;c_vertices_[3*nidx+2] = point.first.z;
         id_map[nidx] = point.second; nidx++;
     }
+    memcpy(vertices_, c_vertices_, vertices_num_*sizeof(GLfloat) * 3);
+
     //points are copied
     //faces
 
@@ -363,6 +365,10 @@ void dcmVolumeRender::updateVBOData(){
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices_num_  *sizeof(GL_FLOAT), vertices_);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indices_num_  *sizeof(GLuint), indices_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 void dcmVolumeRender::setZpos(float nz){
     //debug: setup clip plane
@@ -472,13 +478,15 @@ void dcmVolumeRender::initGeometry() {
 
     glGenBuffers(1, VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-    glBufferData(GL_ARRAY_BUFFER, 3*MAX_VERTEX_NUM* sizeof(GL_FLOAT), vertices_, GL_STATIC_DRAW);
+//    glBufferData(GL_ARRAY_BUFFER, 3*MAX_VERTEX_NUM* sizeof(GL_FLOAT), nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3*vertices_num_* sizeof(GL_FLOAT), vertices_, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_INDICE_NUM * sizeof(GL_UNSIGNED_INT), nullptr, GL_DYNAMIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_num_ * sizeof(GL_UNSIGNED_INT), indices_, GL_STATIC_DRAW);
 
     glBindVertexArray(0);
@@ -490,8 +498,9 @@ void dcmVolumeRender::initGeometry() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
 
-    delete(vertices_);
-    delete(indices_);
+//    delete(vertices_);
+//    delete(indices_);
+//    updateVBOData();
 }
 
 void dcmVolumeRender::initGeometry_texturebased() {
@@ -590,7 +599,7 @@ void dcmVolumeRender::onTexturebasedDraw(){
     }
 }
 void dcmVolumeRender::onRaycastDraw(){
-//    updateVBOData();
+
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
