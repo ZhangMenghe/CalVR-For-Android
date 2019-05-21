@@ -1,4 +1,5 @@
 #version 300 es
+precision mediump float;
 
 in vec3 frag_position; // in object space
 in vec3 tex_coord;
@@ -23,7 +24,9 @@ uniform float shiness;
 
 uniform bool u_use_color_transfer;
 uniform bool u_use_ligting;
+uniform bool u_use_interpolation;
 
+uniform float volumex, volumey, volumez;
 // uniform vec3 u_clip_plane[6];
 // uniform int u_cpoints_num;
 vec3 phong_illumination_model(vec3 N,vec3 curColor,vec3 curPos){
@@ -55,10 +58,30 @@ vec3 getRayIntersection(vec3 ray_start, vec3 ray_dir, vec3 plane_point, vec3 pla
 vec3 getPlaneNormal(vec3 a, vec3 b, vec3 c){
     return normalize(cross(b-a, c-a));
 }
-void main(void)
-{
-    // float intensity = texture(uSampler_tex, tex_coord).r;
-    // gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
+float getVoxel(float x, float y, float z){
+    return texture(uSampler_tex, vec3(x,y,z)).r;
+}
+float get_trilinear_interpolation(vec3 pc, vec3 cmin, vec3 cmax){
+    // return texture(uSampler_tex, p).r;
+    highp float x1 = floor(pc.x * volumex) / volumex;
+    highp float y1 = floor(pc.y * volumey) / volumey;
+    highp float z1 = floor(pc.z * volumez) / volumez;
+    vec3 p = clamp(vec3(x1, y1, z1), cmin, cmax);
+
+    // return texture(uSampler_tex, vec3(x1, y1,z1)).r;
+    vec3 p2 =clamp(vec3(x1, y1, z1) + cmin, cmin, cmax);
+    float alpha = pc.x-p.x; float beta = pc.y-p.y; float gamma = pc.z-p.z;
+    return  ((1.0 - alpha) * (1.0- beta) * (1.0- gamma) * getVoxel(p.x, p.y, p.z) +
+                    alpha * (1.0- beta) * (1.0- gamma) * getVoxel(p2.x, p.y, p.z) +
+                    (1.0- alpha) * beta * (1.0- gamma) * getVoxel(p.x, p2.y, p.z) +
+                    alpha * beta * (1.0- gamma) * getVoxel(p2.x, p2.y, p.z) +
+                    (1.0- alpha) * (1.0- beta) * gamma *getVoxel(p.x, p.y, p2.z) +
+                    alpha * (1.0- beta) * gamma * getVoxel(p2.x, p.y, p2.z) +
+                    (1.0- alpha) * beta * gamma * getVoxel(p.x, p2.y, p2.z) +
+                    alpha * beta * gamma *getVoxel(p2.x, p2.y, p2.z));
+}
+void main(void){
+  vec3 step_size = vec3(1.0 / volumex, 1.0/volumey, 1.0/volumez);
   float sample_step = 1.0/sample_step_inverse;
   vec3 ray_pos = tex_coord; // the current ray position
   vec3 pos111 = vec3(1.0, 1.0, 1.0);
@@ -74,8 +97,7 @@ void main(void)
   //                                           getPlaneNormal(u_clip_plane[0], u_clip_plane[1], u_clip_plane[2]));
   // if (all(lessThan(intersect_point, pos111)))
   //   pos111 = intersect_point;
-  do
-  {
+  do{
     // note:
     // - ray_dir * sample_step can be precomputed for a fixed view position/angle
     // - we assume the volume has a cube-like shape
@@ -91,17 +113,23 @@ void main(void)
 
     density = texture(uSampler_tex, ray_pos).r;
     max_density = max(max_density, density);
-    if(max_density == density)
+    if(max_density == density){
+
         best_ray_pos = ray_pos;
+    }
+
   }while(true);
 
     if(max_density > -1.0){
-        density = max_density;
+        // density = max_density;
+        //re-sample using interpolation
+        if(u_use_interpolation)
+            density = get_trilinear_interpolation(best_ray_pos, step_size, 1.0-step_size);
 
         density += val_threshold - 0.5;
         density = density * density * density;
 
-        vec3 normal = normalize(NormalMatrix*(normalize(ray_pos)));
+        vec3 normal = normalize(NormalMatrix*(normalize(best_ray_pos)));
         vec3 sampled_color;
         if(u_use_color_transfer == true)
             sampled_color = texture(uSampler_trans, vec2(density, 1.0)).rgb;
@@ -125,5 +153,8 @@ void main(void)
 // void main(void){
 //     // float intensity = texture(uSampler_tex, tex_coord).r*2.0;
 //     // gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
-//     gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+//     if(volumex >= 500.0)
+//         gl_FragColor = vec4(1.0,0.0,0.0, 1.0);
+//     else
+//         gl_FragColor = vec4(1.0,1.0,0.0, 1.0);
 // }

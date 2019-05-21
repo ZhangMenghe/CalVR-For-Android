@@ -275,7 +275,7 @@ void dcmVolumeRender::initGeometry_Naive() {
     mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/cube.vert", "shaders/cube.frag");
     if(!mProgram)
         LOGE("===Failed to create shader program===");
-    glClearColor(0,0,0,0);
+    glClearColor(0.5,0.5,0.5,1.0);
 }
 void dcmVolumeRender::onViewCreated(){
     program_ray = assetLoader::instance()->createGLShaderProgramFromFile("shaders/raycastVolume.vert", "shaders/raycastVolume.frag");
@@ -286,6 +286,13 @@ void dcmVolumeRender::onViewCreated(){
         LOGE("===Failed to create shader program===");
 }
 
+void dcmVolumeRender::updateTexCoords(GLfloat* vertices, glm::vec3 p){
+    vertices[0] = p.x; vertices[1] = p.y; vertices[2] = p.z;
+    vertices[3] = floorf((p.x + 0.5f) *volume_size.x) * stepsize_.x;
+    vertices[4] = floorf((p.y + 0.5f) *volume_size.y) * stepsize_.y;
+    vertices[5] = floorf((p.z + 0.5f) *volume_size.z) * stepsize_.z;
+//    vertices[3] = p.x + 0.5f;vertices[4] = p.y + 0.5f;vertices[5] = p.z + 0.5f;
+}
 //update vertices, indices, and corresponding numbers
 void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints){
 //    delete(vertices_);
@@ -296,17 +303,19 @@ void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap po
     std::vector<int>id_map(vertices_num_, 0);
 //    int id_map[vertices_num_] = {0};
 
-    GLfloat * c_vertices_ = new GLfloat[3*vertices_num_];
+    GLfloat * c_vertices_ = new GLfloat[VAO_DATA_LEN*vertices_num_];
     int nidx = 0;
     for(auto id:rpoints){
-        c_vertices_[3*nidx] = sVertex[id*3];c_vertices_[3*nidx+1] = sVertex[id*3+1];c_vertices_[3*nidx+2] = sVertex[id*3+2];
+//        c_vertices_[VAO_DATA_LEN*nidx] = sVertex[id*VAO_DATA_LEN];c_vertices_[VAO_DATA_LEN*nidx+1] = sVertex[id*3+1];c_vertices_[3*nidx+2] = sVertex[id*3+2];
+        memcpy(c_vertices_+VAO_DATA_LEN*nidx, sVertex+VAO_DATA_LEN*id, VAO_DATA_LEN*sizeof(GL_FLOAT));
         id_map[nidx] = id; nidx++;
     }
     for(auto point:polygon){
-        c_vertices_[3*nidx] = point.first.x;c_vertices_[3*nidx+1] = point.first.y;c_vertices_[3*nidx+2] = point.first.z;
+//        c_vertices_[VAO_DATA_LEN*nidx] = point.first.x;c_vertices_[VAO_DATA_LEN*nidx+1] = point.first.y;c_vertices_[VAO_DATA_LEN*nidx+2] = point.first.z;
+        updateTexCoords(c_vertices_+VAO_DATA_LEN*nidx, point.first);
         id_map[nidx] = point.second; nidx++;
     }
-    memcpy(vertices_, c_vertices_, vertices_num_*sizeof(GLfloat) * 3);
+    memcpy(vertices_, c_vertices_, VAO_DATA_LEN * vertices_num_*sizeof(GLfloat));
 
     //points are copied
     //faces
@@ -336,11 +345,11 @@ void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap po
             std::vector<Polygon>face_points;
             for(auto id:got->second){
                 int cid = std::distance(id_map.begin(), std::find(id_map.begin()+rp_num, id_map.end(), id));
-                face_points.push_back(std::make_pair(vec3(vertices_[3*cid], vertices_[3*cid+1], vertices_[3*cid+2]), cid));
+                face_points.push_back(std::make_pair(vec3(vertices_[VAO_DATA_LEN*cid], vertices_[VAO_DATA_LEN*cid+1], vertices_[VAO_DATA_LEN*cid+2]), cid));
             }
             for(auto id:uset){
                 int cid = std::distance(id_map.begin(), std::find(id_map.begin(), id_map.begin()+rp_num, id));
-                face_points.push_back(std::make_pair(vec3(vertices_[3*cid], vertices_[3*cid+1], vertices_[3*cid+2]), cid));
+                face_points.push_back(std::make_pair(vec3(vertices_[VAO_DATA_LEN*cid], vertices_[VAO_DATA_LEN*cid+1], vertices_[VAO_DATA_LEN*cid+2]), cid));
             }
 
             vec3 origin = face_points[0].first;
@@ -371,11 +380,11 @@ void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap po
 //    indices_ = memcpy(c_indices.begin(), );
     indices_num_ = c_indices.size();
     memcpy(indices_, c_indices.data(), indices_num_ * sizeof(GLuint));
-
+    delete(c_vertices_);
 }
 void dcmVolumeRender::updateVBOData(){
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * vertices_num_  *sizeof(GL_FLOAT), vertices_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, VAO_DATA_LEN * vertices_num_  *sizeof(GL_FLOAT), vertices_);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -416,7 +425,7 @@ void dcmVolumeRender::setZpos(float nz){
     std::vector<int> rpoints;
 
     for(int i=0;i<8;i++){
-        vec3 vertex = vec3(sVertex[3*i], sVertex[3*i+1],sVertex[3*i+2]);//point to test
+        vec3 vertex = vec3(sVertex[VAO_DATA_LEN*i], sVertex[VAO_DATA_LEN*i+1],sVertex[VAO_DATA_LEN*i+2]);//point to test
         vec3 tdir = vertex- plane_points[0];
         if(dot(tdir, p_norm) >= 0)
             rpoints.push_back(i);
@@ -426,12 +435,13 @@ void dcmVolumeRender::setZpos(float nz){
 }
 void dcmVolumeRender::initGeometry() {
     stepsize_ = vec3(1.0f / img_width, 1.0f / img_height, 1.0f/dimensions);
+    volume_size = vec3(img_width, img_height, dimensions);
     indices_num_ = 36;
     vertices_num_ = 8;
 
-    vertices_ = new GLfloat[MAX_VERTEX_NUM * 3];
+    vertices_ = new GLfloat[MAX_VERTEX_NUM * VAO_DATA_LEN];
     indices_ = new GLuint[MAX_INDICE_NUM];
-    memcpy(vertices_, sVertex, sizeof(GLfloat) * 3 * vertices_num_);
+    memcpy(vertices_, sVertex, sizeof(GLfloat) * VAO_DATA_LEN * vertices_num_);
     memcpy(indices_, sIndices, sizeof(GLuint) * indices_num_);
 ////////////////////////////////////////////////////
 //    for(int i=0; i<polygon.size();i++)
@@ -499,11 +509,12 @@ void dcmVolumeRender::initGeometry() {
 
     glGenBuffers(1, VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-    glBufferData(GL_ARRAY_BUFFER, 3*MAX_VERTEX_NUM* sizeof(GL_FLOAT), nullptr, GL_DYNAMIC_DRAW);
-//    glBufferData(GL_ARRAY_BUFFER, 3*vertices_num_* sizeof(GL_FLOAT), vertices_, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glBufferData(GL_ARRAY_BUFFER, VAO_DATA_LEN*MAX_VERTEX_NUM* sizeof(GL_FLOAT), nullptr, GL_DYNAMIC_DRAW);
 
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VAO_DATA_LEN * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VAO_DATA_LEN * sizeof(float), (void*)(3 * sizeof(float)));
 
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -514,13 +525,10 @@ void dcmVolumeRender::initGeometry() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-
     glEnable(GL_TEXTURE_3D);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
 
-//    delete(vertices_);
-//    delete(indices_);
     updateVBOData();
 }
 
@@ -620,7 +628,7 @@ void dcmVolumeRender::onTexturebasedDraw(){
     }
 }
 void dcmVolumeRender::onRaycastDraw(){
-    updateVBOData();
+//    updateVBOData();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
@@ -635,8 +643,6 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
 
     glm::mat4 sliceModel;
-    //sliceModel = glm::translate(sliceModel, glm::vec3(0.0f, 0.0f, 0.0f));
-    //sliceModel = glm::rotate(sliceModel, (float)glfwGetTime() * 30, glm::vec3(0.0f, 1.0f, 0.0f));
     sliceModel = glm::scale(_modelMat, glm::vec3(1.0f, -1.0f, 0.5f));
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uModelMat"), 1, GL_FALSE, &sliceModel[0][0]);
 
@@ -657,18 +663,30 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glUniform1i(glGetUniformLocation(program_ray, "u_use_color_transfer"), use_color_tranfer);
     glUniform1i(glGetUniformLocation(program_ray, "u_use_ligting"), use_lighting);
+    glUniform1i(glGetUniformLocation(program_ray, "u_use_interpolation"), use_interpolation);
 
     //clipping plane
 //    glUniform3fv(glGetUniformLocation(program_ray, "u_clip_plane"), 6, cplane_points_);
 //    glUniform1i(glGetUniformLocation(program_ray, "u_cpoints_num"), cplane_points_num_);
 
-    glUniform3fv(glGetUniformLocation(program_ray,"step_size"), 3, stepsize_.data.data);
-
+    glUniform1f(glGetUniformLocation(program_ray, "volumex"), volume_size.x);
+    glUniform1f(glGetUniformLocation(program_ray, "volumey"), volume_size.y);
+    glUniform1f(glGetUniformLocation(program_ray, "volumez"), volume_size.z);
     glBindVertexArray(VAO);
 
     glDrawElements(RenderMode[gl_draw_mode_id], indices_num_, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 //    draw_intersect_plane();
+
+
+//    GLubyte *data = (GLubyte*)malloc(4 * 1080 * 1920);
+//    if( data ) {
+//        glReadPixels(0, 0, 1080, 1920, GL_RGBA, GL_UNSIGNED_BYTE, data);
+//    }
+//    for(int i=0; i<4*1080 * 1920; i++){
+//        if(data[i] != GLubyte(0))
+//            LOGE("====value %d", data[i]);
+//    }
 }
 void dcmVolumeRender::draw_intersect_plane(){
 

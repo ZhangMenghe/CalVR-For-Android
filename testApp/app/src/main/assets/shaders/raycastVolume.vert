@@ -1,7 +1,8 @@
 #version 300 es
+precision mediump float;
 
 layout (location = 0) in vec3 aPosition;
-// layout (location = 1) in vec3 aTexCoord;
+layout (location = 1) in vec3 aTexCoord;
 
 out vec3 frag_position; // in object space
 out vec3 tex_coord;
@@ -10,28 +11,10 @@ out mat3 NormalMatrix;
 out vec3 ray_dir;
 
 uniform mat4 uModelMat, uViewMat, uProjMat;
-uniform vec3 step_size;
-void main(void)
-{
-    // if(aPosition.x < 0.0)
-    //     tex_coord.x = 0.0;
-    // else
-    //     tex_coord.x = 1.0;
-    //
-    // if(aPosition.y < 0.0)
-    //     tex_coord.y = 0.0;
-    // else
-    //     tex_coord.y = 1.0;
-    //
-    // if(aPosition.z < 0.0)
-    //     tex_coord.z = 0.0;
-    // else
-    //     tex_coord.z = 1.0;
-gl_PointSize = 10.0;
-    tex_coord = clamp(vec3(aPosition.x+0.5, aPosition.y+0.5, aPosition.z+0.5),
-                      step_size,
-                      1.0 - step_size);
 
+void main(void){
+    gl_PointSize = 10.0;
+    tex_coord = aTexCoord;
     frag_position = vec3(uModelMat * vec4(aPosition, 1.0));
     mat4 modelViewMatrix = uViewMat * uModelMat;
 

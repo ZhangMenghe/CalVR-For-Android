@@ -97,6 +97,7 @@ public:
 protected:
     const int MAX_VERTEX_NUM = 15;
     const int MAX_INDICE_NUM = 90;
+    const int VAO_DATA_LEN = 6;
     glm::mat4 _modelMat;
 
     GLuint VAO,VBO[2], EBO;
@@ -108,15 +109,15 @@ protected:
 
     int indices_num_, vertices_num_;
 
-    const GLfloat sVertex[24] = {//World					//Color
-            -0.5f,-0.5f,0.5f,		//x0, y0, z1, //0.0f,0.0f,0.0f,	//v0
-            0.5f,-0.5f,0.5f,		//x1,y0,z1, //1.0f,0.0f,0.0f,	//v1
-            0.5f,0.5f,0.5f,			//x1, y1, z1,//1.0f,1.0f,0.0f,	//v2
-            -0.5f,0.5f,0.5f,		//x0,y1,z1, //0.0f,1.0f,0.0f,	//v3
-            -0.5f,-0.5f,-0.5f,		//x0,y0,z0,//0.0f,0.0f,1.0f,	//v4
-            0.5f,-0.5f,-0.5f,		//x1,y0,z0,//1.0f,0.0f,1.0f,	//v5
-            0.5f,0.5f,-0.5f,		//x1,y1,z0, //1.0f,1.0f,1.0f,	//v6
-            -0.5f,0.5f,-0.5f,		//x0,y1,z0//0.0f,1.0f,1.0f,	//v7
+    const GLfloat sVertex[48] = {//World					//Color
+            -0.5f,-0.5f,0.5f, 0.0f,0.0f,1.0f,		//x0, y0, z1, //	//v0
+            0.5f,-0.5f,0.5f, 1.0f,0.0f,1.0f,		//x1,y0,z1, //	//v1
+            0.5f,0.5f,0.5f,	1.0f,1.0f,1.0f,		//x1, y1, z1,//	//v2
+            -0.5f,0.5f,0.5f,0.0f,1.0f,1.0f,		//x0,y1,z1, //	//v3
+            -0.5f,-0.5f,-0.5f,0.0f,0.0f,0.0f,	//x0,y0,z0,//	//v4
+            0.5f,-0.5f,-0.5f,1.0f,0.0f,0.0f,		//x1,y0,z0,//	//v5
+            0.5f,0.5f,-0.5f,1.0f,1.0f,0.0f,	//x1,y1,z0, //	//v6
+            -0.5f,0.5f,-0.5f,0.0f,1.0f,0.0f,		//x0,y1,z0//	//v7
     };
     const GLuint sIndices[36] = { 0,1,2,0,2,3,	//front
                                  4,6,7,4,5,6,	//back
@@ -189,6 +190,7 @@ public:
         return (render_mode == RAYCAST);
     }
     void onSwitchersSet(int idx, bool isSet){
+//        gl_draw_mode_id = (gl_draw_mode_id + 1)%3;
         if(idx == 0) use_color_tranfer = isSet;
         else if(idx == 1) use_lighting = isSet;
     }
@@ -231,14 +233,14 @@ private:
     float adjustParam[3]= {500.0f, 0.6f, 350.0f};
     int adjustIdx = 0;
     bool switcher_move = true;
-    bool use_color_tranfer = false, use_lighting = false;
+    bool use_color_tranfer = false, use_lighting = false, use_interpolation = true;
     RENDERER render_mode = TEXTURE_BASED;
 
 
     GLuint* m_VAOs;
     GLuint VAO_PLANE, VBO_PLANE;
 
-    glm::vec3 stepsize_;
+    glm::vec3 stepsize_, volume_size;
     GLuint program_texture, program_ray, program_plane;
 
     std::vector<Polygon> polygon;
@@ -257,6 +259,7 @@ private:
     void updateVBOData();
     void setZpos(float nz);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
+    void updateTexCoords(GLfloat* vertices, glm::vec3 p);
 };
 
 
