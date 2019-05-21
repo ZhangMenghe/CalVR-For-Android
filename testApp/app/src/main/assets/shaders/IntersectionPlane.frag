@@ -1,6 +1,6 @@
 #version 300 es
 
-uniform vec3 u_clip_plane[6];
+// uniform vec3 u_clip_plane[6];
 out vec4 FragColor;
 
 void main(){

@@ -24,7 +24,7 @@ uniform float shiness;
 uniform bool u_use_color_transfer;
 uniform bool u_use_ligting;
 
-uniform vec3 u_clip_plane[6];
+// uniform vec3 u_clip_plane[6];
 // uniform int u_cpoints_num;
 vec3 phong_illumination_model(vec3 N,vec3 curColor,vec3 curPos){
     //compute ambient
@@ -123,6 +123,7 @@ void main(void)
     gl_FragColor = vec4(frag_color.rgb,1.0);
 }
 // void main(void){
-//     float intensity = texture(uSampler_tex, tex_coord).r*2.0;
-//     gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
+//     // float intensity = texture(uSampler_tex, tex_coord).r*2.0;
+//     // gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
+//     gl_FragColor = vec4(1.0,0.0,0.0,1.0);
 // }

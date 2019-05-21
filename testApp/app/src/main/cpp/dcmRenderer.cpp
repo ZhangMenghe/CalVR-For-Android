@@ -4,13 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <set>
 using namespace glm;
-template <typename T>
-std::set<T> getUnion(const std::set<T>& a, const std::set<T>& b)
-{
-    std::set<T> result = a;
-    result.insert(b.begin(), b.end());
-    return result;
-}
+
 bool getRayIntersection(vec3 ray_start, vec3 ray_dir, vec3 plane_point, vec3 plane_norm, vec3& out_point){
     float ray_plane_angle  = dot(ray_dir, plane_norm);
     if(ray_plane_angle == .0f)
@@ -36,6 +30,12 @@ vec3 findMinVec3(std::vector<vec3> points){
     auto res = std::min_element(points.begin(), points.end(), vecComp);
     return *res;
 }
+bool PointInsideBoundingBox(vec3 p, vec3 aabb_min, vec3 aabb_max){
+    if(p.x < aabb_min.x || p.x > aabb_max.x
+       ||p.y < aabb_min.y || p.y > aabb_max.y
+       ||p.z < aabb_min.z || p.z > aabb_max.z) return false;
+    return true;
+}
 
 /************************************
  * getIntersectionPolygon: get all the points that form the polygon of plane-aabb intersection.
@@ -51,27 +51,31 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
     int pid = 0;
     // Test edges along X axis, pointing right.
     dir = vec3(aabb_max.x - aabb_min.x, .0f, .0f);
-    if(getRayIntersection(aabb_min, dir, p, p_norm, p_rp)){
+    if(getRayIntersection(aabb_min, dir, p, p_norm, p_rp)
+    && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[BACK].push_back(pid);
         face_map[BOTTOM].push_back(pid);
         pid++;
     }
 
-    if(getRayIntersection(vec3(aabb_min.x, aabb_max.y, aabb_min.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_min.x, aabb_max.y, aabb_min.z), dir, p, p_norm, p_rp)
+    && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[BACK].push_back(pid);
         face_map[UP].push_back(pid);
         pid++;
     }
-    if(getRayIntersection(vec3(aabb_min.x, aabb_min.y, aabb_max.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_min.x, aabb_min.y, aabb_max.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[FRONT].push_back(pid);
         face_map[BOTTOM].push_back(pid);
         pid++;
     }
 
-    if(getRayIntersection(vec3(aabb_min.x, aabb_max.y, aabb_max.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_min.x, aabb_max.y, aabb_max.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[FRONT].push_back(pid);
         face_map[UP].push_back(pid);
@@ -80,25 +84,29 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
 
     // Test edges along Y axis, pointing up.
     dir = vec3(0.f, aabb_max.y - aabb_min.y, 0.f);
-    if(getRayIntersection(vec3(aabb_min.x, aabb_min.y, aabb_min.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_min.x, aabb_min.y, aabb_min.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[BACK].push_back(pid);
         face_map[LEFT].push_back(pid);
         pid++;
     }
-    if(getRayIntersection(vec3(aabb_max.x, aabb_min.y, aabb_min.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_max.x, aabb_min.y, aabb_min.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[BACK].push_back(pid);
         face_map[RIGHT].push_back(pid);
         pid++;
     }
-    if(getRayIntersection(vec3(aabb_min.x, aabb_min.y, aabb_max.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_min.x, aabb_min.y, aabb_max.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[FRONT].push_back(pid);
         face_map[LEFT].push_back(pid);
         pid++;
     }
-    if(getRayIntersection(vec3(aabb_max.x, aabb_min.y, aabb_max.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_max.x, aabb_min.y, aabb_max.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[FRONT].push_back(pid);
         face_map[RIGHT].push_back(pid);
@@ -107,25 +115,29 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
 
     // Test edges along Z axis, pointing forward.
     dir = vec3(0.f, 0.f, aabb_max.z - aabb_min.z);
-    if(getRayIntersection(vec3(aabb_min.x, aabb_min.y, aabb_min.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_min.x, aabb_min.y, aabb_min.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[LEFT].push_back(pid);
         face_map[BOTTOM].push_back(pid);
         pid++;
     }
-    if(getRayIntersection(vec3(aabb_max.x, aabb_min.y, aabb_min.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_max.x, aabb_min.y, aabb_min.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[BOTTOM].push_back(pid);
         face_map[RIGHT].push_back(pid);
         pid++;
     }
-    if(getRayIntersection(vec3(aabb_min.x, aabb_max.y, aabb_min.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_min.x, aabb_max.y, aabb_min.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[UP].push_back(pid);
         face_map[LEFT].push_back(pid);
         pid++;
     }
-    if(getRayIntersection(vec3(aabb_max.x, aabb_max.y, aabb_min.z), dir, p, p_norm, p_rp)){
+    if(getRayIntersection(vec3(aabb_max.x, aabb_max.y, aabb_min.z), dir, p, p_norm, p_rp)
+       && PointInsideBoundingBox(p_rp, aabb_min, aabb_max)){
         polygon.push_back(std::make_pair(p_rp, pid));
         face_map[UP].push_back(pid);
         face_map[RIGHT].push_back(pid);
@@ -140,7 +152,7 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
 
     std::sort(polygon.begin(), polygon.end(), [&](const Polygon& p1, const Polygon& p2)->bool{
         vec3 cross_v = glm::cross(p1.first - origin, p2.first - origin);
-        return dot(cross_v, p_norm)>0;
+        return dot(cross_v, p_norm)<0;
     });
 }
 
@@ -335,7 +347,7 @@ void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap po
             vec3 p_norm = getPlaneNormal(face_points[0].first, face_points[1].first, face_points[2].first);
             std::sort(face_points.begin(), face_points.end(), [&](const Polygon& p1, const Polygon& p2)->bool{
                 vec3 cross_v = glm::cross(p1.first - origin, p2.first - origin);
-                return dot(cross_v, p_norm)>0;
+                return dot(cross_v, p_norm)<0;
             });
 
 
@@ -371,7 +383,7 @@ void dcmVolumeRender::updateVBOData(){
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 void dcmVolumeRender::setZpos(float nz){
-    nz=min(0.49f, nz);
+    /*nz=min(0.49f, nz);
     nz = max(-0.49f, nz);
     cplane_points_num_ = 4;
     if(!cplane_points_)
@@ -380,13 +392,19 @@ void dcmVolumeRender::setZpos(float nz){
         cplane_points_[3*i] = sVertex[3*i]*1.5f ;
         cplane_points_[3*i+1] = sVertex[3*i+1]*1.5f;
         cplane_points_[3*i+2] = nz;
-    }
+    }*/
+    //debug:try another naive plane
+    cplane_points_num_ = 3;
+    delete(cplane_points_);
+    float points_[9] ={0,0.5,0.5,
+                        0.5,0.5,0,
+                        0.5,0,0.5};
 
     std::vector<vec3> plane_points;
     polygon.clear();
     polygon_map.clear();
     for(int i=0; i<cplane_points_num_; i++)
-        plane_points.push_back(vec3(cplane_points_[3*i], cplane_points_[3*i+1],cplane_points_[3*i+2]));
+        plane_points.push_back(vec3(points_[3*i], points_[3*i+1],points_[3*i+2]));
     vec3 p_norm = getPlaneNormal(plane_points[0], plane_points[1], plane_points[2]);
 
     //view_dir and p_norm should be on the same side
@@ -411,8 +429,8 @@ void dcmVolumeRender::initGeometry() {
     indices_num_ = 36;
     vertices_num_ = 8;
 
-    vertices_ = new GLfloat[vertices_num_ * 3];
-    indices_ = new GLuint[indices_num_];
+    vertices_ = new GLfloat[MAX_VERTEX_NUM * 3];
+    indices_ = new GLuint[MAX_INDICE_NUM];
     memcpy(vertices_, sVertex, sizeof(GLfloat) * 3 * vertices_num_);
     memcpy(indices_, sIndices, sizeof(GLuint) * indices_num_);
 ////////////////////////////////////////////////////
@@ -641,13 +659,14 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniform1i(glGetUniformLocation(program_ray, "u_use_ligting"), use_lighting);
 
     //clipping plane
-    glUniform3fv(glGetUniformLocation(program_ray, "u_clip_plane"), 6, cplane_points_);
+//    glUniform3fv(glGetUniformLocation(program_ray, "u_clip_plane"), 6, cplane_points_);
 //    glUniform1i(glGetUniformLocation(program_ray, "u_cpoints_num"), cplane_points_num_);
 
     glUniform3fv(glGetUniformLocation(program_ray,"step_size"), 3, stepsize_.data.data);
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices_num_, GL_UNSIGNED_INT, 0);
+
+    glDrawElements(RenderMode[gl_draw_mode_id], indices_num_, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 //    draw_intersect_plane();
 }

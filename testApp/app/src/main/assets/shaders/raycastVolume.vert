@@ -27,8 +27,11 @@ void main(void)
     //     tex_coord.z = 0.0;
     // else
     //     tex_coord.z = 1.0;
+gl_PointSize = 10.0;
+    tex_coord = clamp(vec3(aPosition.x+0.5, aPosition.y+0.5, aPosition.z+0.5),
+                      step_size,
+                      1.0 - step_size);
 
-    tex_coord = vec3(aPosition.x+0.5, aPosition.y+0.5, aPosition.z+0.5);
     frag_position = vec3(uModelMat * vec4(aPosition, 1.0));
     mat4 modelViewMatrix = uViewMat * uModelMat;
 

@@ -95,8 +95,8 @@ public:
         _modelMat = glm::mat4(1.0f);
     }
 protected:
-    const int MAX_VERTEX_NUM = 8;
-    const int MAX_INDICE_NUM = 36;
+    const int MAX_VERTEX_NUM = 15;
+    const int MAX_INDICE_NUM = 90;
     glm::mat4 _modelMat;
 
     GLuint VAO,VBO[2], EBO;
@@ -220,6 +220,9 @@ private:
         RAYCAST = 0,
         TEXTURE_BASED
     };
+    GLenum RenderMode[3] = {GL_TRIANGLES, GL_POINTS,GL_LINES};
+    int gl_draw_mode_id = 0;
+
     const float scale_inv = 0.15f;
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
