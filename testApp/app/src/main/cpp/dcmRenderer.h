@@ -37,21 +37,22 @@ typedef std::pair<glm::vec3, int> Polygon;
 typedef std::unordered_map<Face, std::vector<int>> PolygonMap;
 class Camera{
     glm::mat4 _viewMat, _projMat;
-    glm::vec3 _eyePos, _worldUp, _Front, _center;
+    glm::vec3 _eyePos, _up,  _center;
 
     const float NEAR_PLANE = 0.01f;
     const float FAR_PLANE = 1000.0f;
     const float FOV = 45.0f;
+    const glm::vec3 ORI_CAM_POS = glm::vec3(0.0f, 0.f, 3.0f);
+    const glm::vec3 ORI_UP = glm::vec3(0.0f, 1.0f, 0.0f);
+    const glm::vec3 ORI_FRONT = glm::vec3(0.0f, 0.0f, -1.0f);
 
     void updateCameraVector(){
-        _viewMat = glm::lookAt(_eyePos,_center,_worldUp);
+        _viewMat = glm::lookAt(_eyePos, _center, _up);
     }
 public:
     Camera(){
-        _worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-        _eyePos = glm::vec3(0.0f, 0.f, 3.0f);
-        _Front = glm::vec3(0.0f, 0.0f, -1.0f);
-        _center = glm::vec3(_eyePos.x + _Front.x, _eyePos.y + _Front.y, _eyePos.z + _Front.z);
+        _up = ORI_UP; _eyePos = ORI_CAM_POS;
+        _center = ORI_CAM_POS + ORI_FRONT;
         updateCameraVector();
     }
     void setProjMat(int screen_width, int screen_height){
@@ -61,13 +62,13 @@ public:
     glm::mat4 getProjMat(){return _projMat;}
     glm::mat4 getViewMat(){return _viewMat;}
     glm::vec3 getCameraPosition(){return _eyePos;}
-    glm::vec3 getViewDirection(){return _center - _eyePos;}
+    glm::vec3 getViewCenter(){return _center;}
+    glm::vec3 getViewDirection(){return glm::normalize(_center - _eyePos);}
 
     void rotateCamera(int axis, glm::vec4 center, float offset){
+        glm::vec3 rotateAxis = (axis==3)?glm::vec3(0,1,0):glm::vec3(1,0,0);
         glm::mat4 modelMat = glm::mat4(1.0);
-        glm::vec3 rotateAxis = glm::vec3(0,1,0);
-        if(axis != 3)
-            rotateAxis = glm::vec3(1,0,0);
+
         modelMat = glm::translate(modelMat, glm::vec3(-center.x, -center.y, -center.z));
         modelMat = glm::rotate(modelMat, offset, rotateAxis);
         modelMat = glm::translate(modelMat, glm::vec3(center.x, center.y, center.z));
@@ -98,7 +99,7 @@ protected:
     const int MAX_VERTEX_NUM = 15;
     const int MAX_INDICE_NUM = 90;
     const int VAO_DATA_LEN = 6;
-    const float CUTTING_DISTANCE = 4.0f;
+
     glm::mat4 _modelMat;
 
     GLuint VAO,VBO[2], EBO;
@@ -238,7 +239,9 @@ private:
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = true;
     bool rotate_model = false;//toggle between rotate model and camera
     RENDERER render_mode = TEXTURE_BASED;
-    glm::vec3 last_cutting_norm;
+    glm::vec3 last_cutting_norm, start_cutting;
+    float cutting_length;
+    bool is_cutting = true;
 
     GLuint* m_VAOs;
     GLuint VAO_PLANE, VBO_PLANE;
