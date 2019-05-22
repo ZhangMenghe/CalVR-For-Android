@@ -61,7 +61,7 @@ public:
     glm::mat4 getProjMat(){return _projMat;}
     glm::mat4 getViewMat(){return _viewMat;}
     glm::vec3 getCameraPosition(){return _eyePos;}
-    glm::vec3 getViewDirection(){return _Front;}
+    glm::vec3 getViewDirection(){return _center - _eyePos;}
 
     void rotateCamera(int axis, glm::vec4 center, float offset){
         glm::mat4 modelMat = glm::mat4(1.0);
@@ -165,15 +165,15 @@ public:
         yoffset*= MOUSE_ROTATE_SENSITIVITY;
         if(switcher_move){
             if(fabsf(xoffset / _screen_w) > fabsf(yoffset/_screen_h)){
-//                if(swithcer_render_texture)
+                if(rotate_model)
                     _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
-//                else
-//                    _camera->rotateCamera(3, glm::vec4(_modelMat[3]), xoffset);
+                else
+                    _camera->rotateCamera(3, glm::vec4(_modelMat[3]), xoffset);
             }else{
-//                if(swithcer_render_texture)
+                if(rotate_model)
                     _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
-//                else
-//                    _camera->rotateCamera(2, glm::vec4(_modelMat[3]), -yoffset);
+                else
+                    _camera->rotateCamera(2, glm::vec4(_modelMat[3]), -yoffset);
             }
         }else{
             adjustParam[adjustIdx] += xoffset * adjustParam_origin[adjustIdx] * 0.01f;
@@ -191,7 +191,8 @@ public:
         return (render_mode == RAYCAST);
     }
     void onSwitchersSet(int idx, bool isSet){
-        gl_draw_mode_id = (gl_draw_mode_id + 1)%3;
+        if(idx == 0) gl_draw_mode_id = (gl_draw_mode_id + 1)%3;
+        else rotate_model = !rotate_model;
 //        if(idx == 0) use_color_tranfer = isSet;
 //        else if(idx == 1) use_lighting = isSet;
     }
@@ -235,8 +236,9 @@ private:
     int adjustIdx = 0;
     bool switcher_move = true;
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = true;
+    bool rotate_model = false;//toggle between rotate model and camera
     RENDERER render_mode = TEXTURE_BASED;
-
+    glm::vec3 last_cutting_norm;
 
     GLuint* m_VAOs;
     GLuint VAO_PLANE, VBO_PLANE;

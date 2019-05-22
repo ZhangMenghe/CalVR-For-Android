@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <set>
 using namespace glm;
-
+//ray intersect a plane
 bool getRayIntersection(vec3 ray_start, vec3 ray_dir, vec3 plane_point, vec3 plane_norm, vec3& out_point){
     float ray_plane_angle  = dot(ray_dir, plane_norm);
     if(ray_plane_angle == .0f)
@@ -160,7 +160,7 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
 dcmVolumeRender::dcmVolumeRender(AAssetManager *assetManager):
         cubeRenderer(assetManager){
     new assetLoader(assetManager);
-//    _modelMat = glm::scale(_modelMat, glm::vec3(1,1,0.3f));
+    last_cutting_norm = _camera->getViewDirection();
 }
 
 void dcmVolumeRender::addImage(GLubyte * img, float location) {
@@ -416,11 +416,26 @@ void dcmVolumeRender::setCuttingPlane(float percent){
     percent+= 0.5f;
     polygon.clear();
     polygon_map.clear();
-    auto pos = _camera->getCameraPosition() + percent *CUTTING_DISTANCE * _camera->getViewDirection();
-//    vec3 pos = vec3(0,0,0.5);
-    updateCuttingPlane(pos,
-            _camera->getViewDirection() );
 
+    //get the nearest - farest vertex
+    //s1. trans eye position back to model-coord
+    mat4 inv_model = glm::inverse(_modelMat);
+    vec3 eyew = _camera->getCameraPosition();
+    if(!glm::any(glm::equal(eyew, last_cutting_norm))){
+        restore_original_cube();
+//        updateVBOData();
+        last_cutting_norm = eyew;
+    }
+    vec3 vdir = _camera->getViewDirection();
+    vec4 eye_model = inv_model * vec4(eyew.x, eyew.y, eyew.z, 1.0f);
+    float inv_w = 1.0f / eye_model.w;
+    vec3 eye_model3 = vec3(eye_model.x * inv_w, eye_model.y * inv_w, eye_model.w * inv_w);
+    //s2. rotate direction to model
+    mat3 inv_rot = glm::mat3(inv_model);
+    vec3 vdir_model = inv_rot * vdir;
+
+    vec3 pop_model = eye_model3 + percent * CUTTING_DISTANCE * vdir_model;
+    updateCuttingPlane(pop_model, vdir_model);
 }
 
 
