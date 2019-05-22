@@ -194,9 +194,7 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
 dcmVolumeRender::dcmVolumeRender(AAssetManager *assetManager):
         cubeRenderer(assetManager){
     new assetLoader(assetManager);
-    last_cutting_norm = _camera->getViewDirection();
-    start_cutting = -0.55f * _camera->getViewDirection();
-    cutting_length = 1.1f;
+    _modelMat = glm::scale(_modelMat, glm::vec3(1.0f, -1.0f, 0.5f));
 }
 
 void dcmVolumeRender::addImage(GLubyte * img, float location) {
@@ -449,25 +447,17 @@ void dcmVolumeRender::setCuttingPlane(float percent){
 //    for(int i=0; i<3; i++)
 //        plane_points.push_back(vec3(points_[3*i], points_[3*i+1],points_[3*i+2]));
 //    vec3 p_norm = getPlaneNormal(plane_points[0], plane_points[1], plane_points[2]);
+    is_in_deeper = percent>.0;
     percent+= 0.5f;
     polygon.clear();
     polygon_map.clear();
 
     //get the nearest - farest vertex
     //s1. trans eye position back to model-coord
-    mat4 inv_model = glm::inverse(_modelMat);
-    vec3 eyew = _camera->getCameraPosition();
+    glm::vec3 eye_model3 = _camera->getCameraPosition(_modelMat);
+    vec3 vdir_model = -glm::normalize(eye_model3);
 
-//    vec3 vdir = _camera->getViewDirection();
-    vec4 eye_model = inv_model * vec4(eyew.x, eyew.y, eyew.z, 1.0f);
-    float inv_w = 1.0f / eye_model.w;
-    vec3 eye_model3 = vec3(eye_model.x * inv_w, eye_model.y * inv_w, eye_model.w * inv_w);
-    //s2. rotate direction to model
-//    mat3 inv_rot = glm::mat3(inv_model);
-    vec3 vdir_model = -eye_model3;
-
-
-    if(!glm::any(glm::equal(eyew, last_cutting_norm))){
+    if(!glm::any(glm::equal(_camera->getViewDirection(), last_cutting_norm))){
 
         //update cutting nearest - fartest position
         vec3 nearest_plane_intersection;
@@ -475,11 +465,10 @@ void dcmVolumeRender::setCuttingPlane(float percent){
                                          vec3(-0.5), vec3(0.5),
                                          nearest_plane_intersection)){
             float hdist = glm::distance(_camera->getViewCenter() , nearest_plane_intersection);
-//            LOGE("====distance: %f", hdist);
-            hdist*=1.5f;
+            hdist*=1.3f;
             start_cutting = -hdist * vdir_model;
             cutting_length = 2.0f * hdist;
-            last_cutting_norm = eyew;
+            last_cutting_norm = _camera->getCameraPosition();
             is_cutting = true;
         } else{
             is_cutting = false;
@@ -492,30 +481,22 @@ void dcmVolumeRender::setCuttingPlane(float percent){
     updateCuttingPlane(pop_model, vdir_model);
 }
 
-
-//void dcmVolumeRender::setZpos(float nz){
-//
-//    /*cplane_points_num_ = 3;
-//    delete(cplane_points_);
-//    float points_[9] ={0,0.5,0.5,
-//                        0.5,0.5,0,
-//                        0.5,0,0.5};
-//
-//    std::vector<vec3> plane_points;
-//    polygon.clear();
-//    polygon_map.clear();
-//    for(int i=0; i<cplane_points_num_; i++)
-//        plane_points.push_back(vec3(points_[3*i], points_[3*i+1],points_[3*i+2]));
-//    vec3 p_norm = getPlaneNormal(plane_points[0], plane_points[1], plane_points[2]);
-//     */
-
+//p and p norm should be in model space
 void dcmVolumeRender::updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm){
     //view_dir and p_norm should be on the same side
-    if(dot(p_norm, _camera->getViewDirection()) < 0)
+    vec3 view_model_dir = glm::inverse(mat3(_modelMat)) * _camera->getViewDirection();
+    if(dot(p_norm, view_model_dir) < 0)
         p_norm = -p_norm;
+
     getIntersectionPolygon(p, p_norm, vec3(-0.5f), vec3(0.5f), polygon, polygon_map);
     if(polygon.empty()){
-        restore_original_cube(); updateVBOData(); return;
+        vec3 eye_model = _camera->getCameraPosition(_modelMat);
+        if(is_in_deeper){
+            vertices_num_ = 0; indices_num_ =0;
+        }else{
+            restore_original_cube();
+        }
+        updateVBOData(); return;
     }
     //Test 8 points which should be remove
     std::vector<int> rpoints;
@@ -653,7 +634,8 @@ void dcmVolumeRender::initGeometry() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
 
-    updateVBOData();
+//    updateVBOData();
+    setCuttingPlane();
 }
 
 void dcmVolumeRender::initGeometry_texturebased() {
@@ -766,9 +748,7 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
 
-    glm::mat4 sliceModel;
-    sliceModel = _modelMat;//glm::scale(_modelMat, glm::vec3(1.0f, -1.0f, 0.5f));
-    glUniformMatrix4fv(glGetUniformLocation(program_ray, "uModelMat"), 1, GL_FALSE, &sliceModel[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(program_ray, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
 
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_tex"), 0);
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_trans"), 1);

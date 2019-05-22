@@ -62,6 +62,12 @@ public:
     glm::mat4 getProjMat(){return _projMat;}
     glm::mat4 getViewMat(){return _viewMat;}
     glm::vec3 getCameraPosition(){return _eyePos;}
+    glm::vec3 getCameraPosition(glm::mat4 modelMat){
+        glm::mat4 inv_model = glm::inverse(modelMat);
+        glm::vec4 eye_model = inv_model * glm::vec4(_eyePos.x, _eyePos.y, _eyePos.z, 1.0f);
+        float inv_w = 1.0f / eye_model.w;
+        return glm::vec3(eye_model.x * inv_w, eye_model.y * inv_w, eye_model.z * inv_w);
+    }
     glm::vec3 getViewCenter(){return _center;}
     glm::vec3 getViewDirection(){return glm::normalize(_center - _eyePos);}
 
@@ -239,9 +245,9 @@ private:
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = true;
     bool rotate_model = false;//toggle between rotate model and camera
     RENDERER render_mode = TEXTURE_BASED;
-    glm::vec3 last_cutting_norm, start_cutting;
+    glm::vec3 last_cutting_norm = glm::vec3(FLT_MAX), start_cutting;
     float cutting_length;
-    bool is_cutting = true;
+    bool is_cutting = true, is_in_deeper = false;
 
     GLuint* m_VAOs;
     GLuint VAO_PLANE, VBO_PLANE;
@@ -264,7 +270,7 @@ private:
     void restore_original_cube();
     void draw_intersect_plane();
     void updateVBOData();
-    void setCuttingPlane(float percent);
+    void setCuttingPlane(float percent = -0.5f);
     void updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
     void updateTexCoords(GLfloat* vertices, glm::vec3 p);

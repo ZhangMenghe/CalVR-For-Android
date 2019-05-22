@@ -117,7 +117,7 @@ public class UIsController {
 
 //        text_param3 = activity.findViewById(R.id.text_param3);
 //        float initialValue_p3 = JNIInterface.JNIgetOriginalValue(2);
-        float initialValue_zpos = 0.45f;
+        float initialValue_zpos = -0.5f;
 //        text_param3.setText(activity.getString(R.string.text_param3, initialValue_p3));
         SeekBar sbz = (SeekBar)activity.findViewById(R.id.zpos_seek);
         sbz.setProgress((int)(40 * (initialValue_zpos + 0.5f)));
