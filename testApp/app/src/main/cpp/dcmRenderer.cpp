@@ -363,6 +363,11 @@ void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap po
             //face points are sorted counter_clock_wise
             for(int i=0; i<face_points.size()-2; i++){
                 GLuint indice[] = {(GLuint)face_points[0].second, (GLuint)face_points[i+1].second, (GLuint)face_points[i+2].second};
+                //check if two points are the same
+//                vec3 p0 = face_points[0].first,
+//                     p1 = face_points[i+1].first,
+//                     p2 = face_points[i+2].first;
+//                if(glm::all(glm::equal(p0, p1)) || glm::all(glm::equal(p0, p2)) ||glm::all(glm::equal(p1, p2))) continue;
                 c_indices.insert(c_indices.end(), indice, indice+3);
             }
         }
@@ -380,7 +385,7 @@ void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap po
 //    indices_ = memcpy(c_indices.begin(), );
     indices_num_ = c_indices.size();
     memcpy(indices_, c_indices.data(), indices_num_ * sizeof(GLuint));
-    delete(c_vertices_);
+    delete (c_vertices_);
 }
 void dcmVolumeRender::updateVBOData(){
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
@@ -391,58 +396,111 @@ void dcmVolumeRender::updateVBOData(){
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indices_num_  *sizeof(GL_UNSIGNED_INT), indices_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
-void dcmVolumeRender::setZpos(float nz){
-    /*nz=min(0.49f, nz);
-    nz = max(-0.49f, nz);
-    cplane_points_num_ = 4;
-    if(!cplane_points_)
-        cplane_points_ = new float[12];
-    for(int i=0;i<4;i++){
-        cplane_points_[3*i] = sVertex[3*i]*1.5f ;
-        cplane_points_[3*i+1] = sVertex[3*i+1]*1.5f;
-        cplane_points_[3*i+2] = nz;
-    }*/
-    //debug:try another naive plane
-    cplane_points_num_ = 3;
-    delete(cplane_points_);
-    float points_[9] ={0,0.5,0.5,
-                        0.5,0.5,0,
-                        0.5,0,0.5};
-
-    std::vector<vec3> plane_points;
+void dcmVolumeRender::restore_original_cube(){
+    indices_num_ = 36;
+    vertices_num_ = 8;
+    memcpy(vertices_, sVertex, sizeof(GLfloat) * VAO_DATA_LEN * vertices_num_);
+    memcpy(indices_, sIndices, sizeof(GLuint) * indices_num_);
+}
+void dcmVolumeRender::setCuttingPlane(float percent){
+//        float points_[9] ={0,0.5,0.5,
+//                        0.5,0.5,0,
+//                        0.5,0,0.5};
+//
+//    std::vector<vec3> plane_points;
+//    polygon.clear();
+//    polygon_map.clear();
+//    for(int i=0; i<3; i++)
+//        plane_points.push_back(vec3(points_[3*i], points_[3*i+1],points_[3*i+2]));
+//    vec3 p_norm = getPlaneNormal(plane_points[0], plane_points[1], plane_points[2]);
+    percent+= 0.5f;
     polygon.clear();
     polygon_map.clear();
-    for(int i=0; i<cplane_points_num_; i++)
-        plane_points.push_back(vec3(points_[3*i], points_[3*i+1],points_[3*i+2]));
-    vec3 p_norm = getPlaneNormal(plane_points[0], plane_points[1], plane_points[2]);
+    auto pos = _camera->getCameraPosition() + percent *CUTTING_DISTANCE * _camera->getViewDirection();
+//    vec3 pos = vec3(0,0,0.5);
+    updateCuttingPlane(pos,
+            _camera->getViewDirection() );
 
+}
+
+
+//void dcmVolumeRender::setZpos(float nz){
+//
+//    /*cplane_points_num_ = 3;
+//    delete(cplane_points_);
+//    float points_[9] ={0,0.5,0.5,
+//                        0.5,0.5,0,
+//                        0.5,0,0.5};
+//
+//    std::vector<vec3> plane_points;
+//    polygon.clear();
+//    polygon_map.clear();
+//    for(int i=0; i<cplane_points_num_; i++)
+//        plane_points.push_back(vec3(points_[3*i], points_[3*i+1],points_[3*i+2]));
+//    vec3 p_norm = getPlaneNormal(plane_points[0], plane_points[1], plane_points[2]);
+//     */
+
+void dcmVolumeRender::updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm){
     //view_dir and p_norm should be on the same side
     if(dot(p_norm, _camera->getViewDirection()) < 0)
         p_norm = -p_norm;
-    getIntersectionPolygon(plane_points[0], p_norm, vec3(-0.5f), vec3(0.5f), polygon, polygon_map);
-
+    getIntersectionPolygon(p, p_norm, vec3(-0.5f), vec3(0.5f), polygon, polygon_map);
+    if(polygon.empty()){
+        restore_original_cube(); updateVBOData(); return;
+    }
     //Test 8 points which should be remove
     std::vector<int> rpoints;
+    std::vector<vec3> rpoints_values;
 
     for(int i=0;i<8;i++){
         vec3 vertex = vec3(sVertex[VAO_DATA_LEN*i], sVertex[VAO_DATA_LEN*i+1],sVertex[VAO_DATA_LEN*i+2]);//point to test
-        vec3 tdir = vertex- plane_points[0];
-        if(dot(tdir, p_norm) >= 0)
+        if(dot(vertex - p, p_norm) >= 0) {
             rpoints.push_back(i);
+            rpoints_values.push_back(vec3(sVertex[VAO_DATA_LEN * i], sVertex[VAO_DATA_LEN * i+1],sVertex[VAO_DATA_LEN * i+2]));
+        }
+
     }
+    std::deque<int> polygon_to_be_erased;
+    //check if new points overlap with original vertices
+    for(int idx = polygon.size();idx >-1; idx--){
+        auto got = std::find(rpoints_values.begin(), rpoints_values.end(), polygon[idx].first);
+        if(got != rpoints_values.end()){
+            polygon_to_be_erased.push_front(idx);
+            for(auto face= polygon_map.begin(); face!=polygon_map.end(); face++){
+                auto tmpVec = face->second;
+                auto gotid = std::find(tmpVec.begin(), tmpVec.end(), idx);
+                if(gotid!=tmpVec.end()){
+                    int cid = std::distance(tmpVec.begin(), gotid);
+                    tmpVec.erase(tmpVec.begin() + cid);
+                    face->second = tmpVec;
+                }
+            }
+        }
+    }
+
+//    for(auto idx:polygon_to_be_erased){
+////        polygon.erase(polygon.begin() + idx);
+//        for(auto face= polygon_map.begin(); face!=polygon_map.end(); face++){
+//            auto tmpVec = face->second;
+//            auto gotid = std::find(tmpVec.begin(), tmpVec.end(), idx);
+//            if(gotid!=tmpVec.end()){
+//                int cid = std::distance(tmpVec.begin(), gotid);
+//                tmpVec.erase(tmpVec.begin() + cid);
+//                face->second = tmpVec;
+//            }
+//        }
+//    }
+
     updateGeometry(polygon, polygon_map, rpoints);
     updateVBOData();
 }
 void dcmVolumeRender::initGeometry() {
     stepsize_ = vec3(1.0f / img_width, 1.0f / img_height, 1.0f/dimensions);
     volume_size = vec3(img_width, img_height, dimensions);
-    indices_num_ = 36;
-    vertices_num_ = 8;
-
     vertices_ = new GLfloat[MAX_VERTEX_NUM * VAO_DATA_LEN];
     indices_ = new GLuint[MAX_INDICE_NUM];
-    memcpy(vertices_, sVertex, sizeof(GLfloat) * VAO_DATA_LEN * vertices_num_);
-    memcpy(indices_, sIndices, sizeof(GLuint) * indices_num_);
+
+    restore_original_cube();
 ////////////////////////////////////////////////////
 //    for(int i=0; i<polygon.size();i++)
 //        LOGE("====INTERSECTION id : %d, pos:  %f, %f, %f\n", polygon[i].second, polygon[i].first.x, polygon[i].first.y,polygon[i].first.z);
@@ -500,9 +558,6 @@ void dcmVolumeRender::initGeometry() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
 
 ////////////////////////////////////////////////////
-
-    setZpos(0.45f);
-
     //Generate the VAO
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -628,7 +683,7 @@ void dcmVolumeRender::onTexturebasedDraw(){
     }
 }
 void dcmVolumeRender::onRaycastDraw(){
-//    updateVBOData();
+    updateVBOData();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
@@ -676,6 +731,7 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glDrawElements(RenderMode[gl_draw_mode_id], indices_num_, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+//    LOGE("=====eyeposz: %f", _camera->getCameraPosition().z);
 //    draw_intersect_plane();
 
 

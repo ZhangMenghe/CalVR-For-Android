@@ -98,6 +98,7 @@ protected:
     const int MAX_VERTEX_NUM = 15;
     const int MAX_INDICE_NUM = 90;
     const int VAO_DATA_LEN = 6;
+    const float CUTTING_DISTANCE = 4.0f;
     glm::mat4 _modelMat;
 
     GLuint VAO,VBO[2], EBO;
@@ -190,13 +191,13 @@ public:
         return (render_mode == RAYCAST);
     }
     void onSwitchersSet(int idx, bool isSet){
-//        gl_draw_mode_id = (gl_draw_mode_id + 1)%3;
-        if(idx == 0) use_color_tranfer = isSet;
-        else if(idx == 1) use_lighting = isSet;
+        gl_draw_mode_id = (gl_draw_mode_id + 1)%3;
+//        if(idx == 0) use_color_tranfer = isSet;
+//        else if(idx == 1) use_lighting = isSet;
     }
     void onParamsSet(int idx, float value){
         if(idx < 0)
-            setZpos(value);
+            setCuttingPlane(value);//should be 0-1
         else
             adjustParam[idx] = value;
     }
@@ -255,9 +256,11 @@ private:
     void onTexturebasedDraw();
     void onRaycastDraw();
 
+    void restore_original_cube();
     void draw_intersect_plane();
     void updateVBOData();
-    void setZpos(float nz);
+    void setCuttingPlane(float percent);
+    void updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
     void updateTexCoords(GLfloat* vertices, glm::vec3 p);
 };
