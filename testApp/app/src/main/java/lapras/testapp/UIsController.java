@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
@@ -11,14 +13,31 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 public class UIsController {
-    TextView FPSlabel;
-    TextView text_param1, text_param2, text_param3;
-    View raycastPanel;
+    public static TextView FPSlabel;
+    public static TextView text_param1, text_param2, text_param3;
+    public static View raycastPanel;
 
     Activity activity;
     final static float CUTTING_DENSITY = 50.0f;
     final static float INITIAL_CUTTING_POS = .0f;
     final static String TAG = "UIsController";
+
+    public static boolean is_using_raycast = false;
+
+    public static TranslateAnimation panelHiddenAction, panelShownAction;
+    static {
+        panelHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF,
+                0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                -1.0f);
+        panelHiddenAction.setDuration(500);
+
+        panelShownAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        panelShownAction.setDuration(500);
+    }
+
     public UIsController(final Activity activity_){
         activity = activity_;
         //panels
@@ -31,10 +50,14 @@ public class UIsController {
         render_bnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(JNIInterface.JNIchangeRender())
+                if(JNIInterface.JNIchangeRender()){
+                    is_using_raycast = true;
                     raycastPanel.setVisibility(View.VISIBLE);
-                else
+                }
+                else{
+                    is_using_raycast = false;
                     raycastPanel.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
@@ -149,5 +172,15 @@ public class UIsController {
             public void run()  {
                 FPSlabel.setText(String.format("%2.2f FPS", fFPS));
             }});
+    }
+    public static void ToggleShowView(){
+        if(!is_using_raycast) return;
+        if(raycastPanel.getVisibility() == View.VISIBLE){
+            raycastPanel.startAnimation(panelHiddenAction);
+            raycastPanel.setVisibility(View.GONE);
+        }else{
+            raycastPanel.startAnimation(panelShownAction);
+            raycastPanel.setVisibility(View.VISIBLE);
+        }
     }
 }
