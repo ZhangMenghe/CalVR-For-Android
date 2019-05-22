@@ -447,8 +447,7 @@ void dcmVolumeRender::setCuttingPlane(float percent){
 //    for(int i=0; i<3; i++)
 //        plane_points.push_back(vec3(points_[3*i], points_[3*i+1],points_[3*i+2]));
 //    vec3 p_norm = getPlaneNormal(plane_points[0], plane_points[1], plane_points[2]);
-    is_in_deeper = percent>.0;
-    percent+= 0.5f;
+    is_in_deeper = percent>0.5f;
     polygon.clear();
     polygon_map.clear();
 

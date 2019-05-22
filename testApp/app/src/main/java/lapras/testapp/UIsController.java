@@ -2,6 +2,7 @@ package lapras.testapp;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -15,7 +16,9 @@ public class UIsController {
     View raycastPanel;
 
     Activity activity;
-
+    final static float CUTTING_DENSITY = 50.0f;
+    final static float INITIAL_CUTTING_POS = .0f;
+    final static String TAG = "UIsController";
     public UIsController(final Activity activity_){
         activity = activity_;
         //panels
@@ -117,16 +120,17 @@ public class UIsController {
 
 //        text_param3 = activity.findViewById(R.id.text_param3);
 //        float initialValue_p3 = JNIInterface.JNIgetOriginalValue(2);
-        float initialValue_zpos = -0.5f;
+
 //        text_param3.setText(activity.getString(R.string.text_param3, initialValue_p3));
         SeekBar sbz = (SeekBar)activity.findViewById(R.id.zpos_seek);
-        sbz.setProgress((int)(40 * (initialValue_zpos + 0.5f)));
+        sbz.setProgress((int)(CUTTING_DENSITY * INITIAL_CUTTING_POS));
         sbz.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if(!b) return;
 //                text_param3.setText(activity.getString(R.string.text_param3, (float)i));
-                JNIInterface.JNIsetParam(-1, (float)(i / 40.0f - 0.5f));
+                JNIInterface.JNIsetParam(-1, i / CUTTING_DENSITY);
+//                Log.e(TAG, "onProgressChanged: =======value:" + i/CUTTING_DENSITY );
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}

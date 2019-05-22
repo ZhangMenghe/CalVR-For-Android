@@ -270,7 +270,7 @@ private:
     void restore_original_cube();
     void draw_intersect_plane();
     void updateVBOData();
-    void setCuttingPlane(float percent = -0.5f);
+    void setCuttingPlane(float percent = .0f);
     void updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
     void updateTexCoords(GLfloat* vertices, glm::vec3 p);
