@@ -35,7 +35,7 @@ public class UIsController {
         SAMPLE_STEP, THRESHOLD, BRIGHTNESS
     };
     private enum SWITCH_VALUE{
-        TRANSFER_COLOR, USE_LIGHTING, NAIVE_RENDERER, CUTTING
+        TRANSFER_COLOR, USE_LIGHTING, USE_INTERPOLATION, SIMPLE_CUBE, NAIVE_RENDERER, CUTTING
     }
 
     private int toggle_id = 0, switch_id = 0;
@@ -57,10 +57,10 @@ public class UIsController {
     }
 
     private void init_values(){
-        toggle_values = new float[3];
-        bool_values = new boolean[4];
+        toggle_values = new float[TOGGLE_VALUE.values().length];
+        bool_values = new boolean[SWITCH_VALUE.values().length];
         ///get initial_value here
-        for(int i=0; i<3; i++){
+        for(int i=0; i<TOGGLE_VALUE.values().length; i++){
             toggle_values[i] = JNIInterface.JNIgetOriginalValue(i);
             if(i == 1)
                 toggle_values[i] *= MAX_THRESHOLD / MAX_THRESHOLD_REPRESENT;
@@ -69,18 +69,18 @@ public class UIsController {
         seekbar_toggle.setMax(MAX_SAMPLE_STEP);
         seekbar_toggle.setProgress((int)toggle_values[toggle_id]);
 
-        for(int i=0; i<4; i++)
+        for(int i=0; i<SWITCH_VALUE.values().length; i++)
             bool_values[i] = JNIInterface.JNIgetOriginalChecked(i);
         switch_widget.setChecked(bool_values[switch_id]);
 
         //naive hide panel
-        if(bool_values[2])
+        if(bool_values[4])
             ToggleShowView();
 
         seekbar_cut.setMax(DENSITY_CUTTING);
         seekbar_cut.setProgress(ORIGINAL_CUT);
         //init cut panel
-        if(bool_values[3]){// show cut
+        if(bool_values[5]){// show cut
             cutPanel.setVisibility(View.VISIBLE);
         }else{
             cutPanel.setVisibility(View.GONE);

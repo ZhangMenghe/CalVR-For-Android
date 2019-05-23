@@ -25,6 +25,7 @@ uniform float shiness;
 uniform bool u_use_color_transfer;
 uniform bool u_use_ligting;
 uniform bool u_use_interpolation;
+uniform bool u_draw_naive;
 
 uniform float volumex, volumey, volumez;
 // uniform vec3 u_clip_plane[6];
@@ -32,16 +33,16 @@ uniform float volumex, volumey, volumez;
 vec3 phong_illumination_model(vec3 N,vec3 curColor,vec3 curPos){
     //compute ambient
     //                  Ka  *  Ia
-    vec3 ambient = curColor * Light.Ia;
+    vec3 ambient = 1.5 * curColor * Light.Ia;
     //compute diffuse
     vec3 L = normalize(vec3(0,0,-1));
     //               Kd     *    Id    *  N dot L
-    vec3 diffuse = curColor * Light.Id * max(0.0,dot(N,L));
+    vec3 diffuse = 1.5 *curColor * Light.Id * max(0.0,dot(N,L));
     //compute specular
     vec3 R = reflect(L,N);
     vec3 E = normalize(-curPos);
     //                    Ks          *    Is    * (R dot E)^shiness
-    vec3 specular = vec3(1.0,1.0,1.0) * Light.Is * pow(max(0.0,dot(R,E)),shiness);
+    vec3 specular = 1.5 *vec3(1.0,1.0,1.0) * Light.Is * pow(max(0.0,dot(R,E)),shiness);
 
     return (ambient + diffuse + specular);
 }
@@ -81,6 +82,10 @@ float get_trilinear_interpolation(vec3 pc, vec3 cmin, vec3 cmax){
                     alpha * beta * gamma *getVoxel(p2.x, p2.y, p2.z));
 }
 void main(void){
+  if(u_draw_naive){
+      gl_FragColor = vec4(tex_coord, 1.0);
+      return;
+  }
   vec3 step_size = vec3(1.0 / volumex, 1.0/volumey, 1.0/volumez);
   float sample_step = 1.0/sample_step_inverse;
   vec3 ray_pos = tex_coord; // the current ray position
@@ -121,10 +126,12 @@ void main(void){
   }while(true);
 
     if(max_density > -1.0){
-        // density = max_density;
-        //re-sample using interpolation
-        if(u_use_interpolation)
+        if(u_use_interpolation)//re-sample using interpolation
             density = get_trilinear_interpolation(best_ray_pos, step_size, 1.0-step_size);
+        else{
+            density = max_density;
+        }
+
 
         density += val_threshold - 0.5;
         density = density * density * density;
@@ -150,11 +157,3 @@ void main(void){
   else
     gl_FragColor = vec4(frag_color.rgb,1.0);
 }
-// void main(void){
-//     // float intensity = texture(uSampler_tex, tex_coord).r*2.0;
-//     // gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
-//     if(volumex >= 500.0)
-//         gl_FragColor = vec4(1.0,0.0,0.0, 1.0);
-//     else
-//         gl_FragColor = vec4(1.0,1.0,0.0, 1.0);
-// }

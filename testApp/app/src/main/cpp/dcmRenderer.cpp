@@ -755,9 +755,9 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniform1f(glGetUniformLocation(program_ray, "val_threshold"),adjustParam[1]);
     glUniform1f(glGetUniformLocation(program_ray, "brightness"), adjustParam[2]);
 
-    float lightIa[3] = { 0.3,0.3,0.3 };
+    float lightIa[3] = { 0.8,0.8,0.8 };
     float lightId[3] = { 0.7,0.7,0.7 };
-    float lightIs[3] = { 0.2,0.2,0.2 };
+    float lightIs[3] = { 0.5,0.5,0.5 };
 
     glUniform3fv(glGetUniformLocation(program_ray, "Light.Ia"), 1, lightIa);
     glUniform3fv(glGetUniformLocation(program_ray, "Light.Id"), 1, lightId);
@@ -767,6 +767,7 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniform1i(glGetUniformLocation(program_ray, "u_use_color_transfer"), use_color_tranfer);
     glUniform1i(glGetUniformLocation(program_ray, "u_use_ligting"), use_lighting);
     glUniform1i(glGetUniformLocation(program_ray, "u_use_interpolation"), use_interpolation);
+    glUniform1i(glGetUniformLocation(program_ray, "u_draw_naive"), use_simple_cube);
 
     //clipping plane
 //    glUniform3fv(glGetUniformLocation(program_ray, "u_clip_plane"), 6, cplane_points_);

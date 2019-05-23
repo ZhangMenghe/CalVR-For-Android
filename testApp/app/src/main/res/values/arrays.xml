@@ -9,7 +9,9 @@
     <string-array name="switchArr">
         <item>Color Transfer</item>
         <item>Lighting</item>
-        <item>Naive Render</item>
+        <item>Coarse</item>
+        <item>SimpleCube</item>
+        <item>Naive DCMI</item>
         <item>Cutting</item>
     </string-array>
 

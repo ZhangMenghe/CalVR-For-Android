@@ -170,28 +170,19 @@ public:
         Mouse_old = glm::fvec2(x, y);
         xoffset*= MOUSE_ROTATE_SENSITIVITY;
         yoffset*= MOUSE_ROTATE_SENSITIVITY;
-        if(switcher_move){
-            if(fabsf(xoffset / _screen_w) > fabsf(yoffset/_screen_h)){
-                if(rotate_model)
-                    _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
-                else
-                    _camera->rotateCamera(3, glm::vec4(_modelMat[3]), xoffset);
-            }else{
-                if(rotate_model)
-                    _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
-                else
-                    _camera->rotateCamera(2, glm::vec4(_modelMat[3]), -yoffset);
-            }
+        if(fabsf(xoffset / _screen_w) > fabsf(yoffset/_screen_h)){
+            if(rotate_model)
+                _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
+            else
+                _camera->rotateCamera(3, glm::vec4(_modelMat[3]), xoffset);
         }else{
-            adjustParam[adjustIdx] += xoffset * adjustParam_origin[adjustIdx] * 0.01f;
-            LOGE("==== ID: %d, NOW:%f", adjustIdx, adjustParam[adjustIdx]);
+            if(rotate_model)
+                _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
+            else
+                _camera->rotateCamera(2, glm::vec4(_modelMat[3]), -yoffset);
         }
     }
     void onDoubleTouch(int id, float x, float y){
-        if(id == 1)
-            switcher_move = !switcher_move;
-        else
-            adjustIdx = (adjustIdx+1)%3;
     }
     bool changeRender(){
         render_mode = static_cast<RENDERER >((render_mode+1)%2);
@@ -206,6 +197,12 @@ public:
                 use_lighting = isSet;
                 return;
             case 2:
+                use_interpolation = isSet;
+                return;
+            case 3:
+                use_simple_cube = isSet;
+                return;
+            case 4:
                 render_mode = isSet? TEXTURE_BASED:RAYCAST;
                 return;
             default:
@@ -225,9 +222,11 @@ public:
             case 1:
                 return use_lighting;
             case 2:
-                return (render_mode == TEXTURE_BASED);
+                return use_interpolation;
             case 3:
-                return false;
+                return use_simple_cube;
+            case 4:
+                return (render_mode == TEXTURE_BASED);
             default:
                 return false;
         }
@@ -260,13 +259,16 @@ private:
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
     const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
-    const float adjustParam_origin[3] = {500.0f, 0.6f, 350.0f};
-    float adjustParam[3]= {500.0f, 0.6f, 350.0f};
-    int adjustIdx = 0;
-    bool switcher_move = true;
-    bool use_color_tranfer = false, use_lighting = false, use_interpolation = true;
-    bool rotate_model = false;//toggle between rotate model and camera
+    const float adjustParam_origin[3] = {500.0f, 0.9f, 350.0f};
+    float adjustParam[3]= {500.0f, 0.9f, 350.0f};
+
+    bool use_color_tranfer = false, use_lighting = false, use_interpolation = false;
     RENDERER render_mode = RAYCAST;
+    bool use_simple_cube = false;
+
+    bool rotate_model = false;//toggle between rotate model and camera
+
+
     glm::vec3 last_cutting_norm = glm::vec3(FLT_MAX), start_cutting;
     float cutting_length;
     bool is_cutting = true, is_in_deeper = false;
