@@ -198,10 +198,19 @@ public:
         return (render_mode == RAYCAST);
     }
     void onSwitchersSet(int idx, bool isSet){
-        if(idx == 0) gl_draw_mode_id = (gl_draw_mode_id + 1)%3;
-        else rotate_model = !rotate_model;
-//        if(idx == 0) use_color_tranfer = isSet;
-//        else if(idx == 1) use_lighting = isSet;
+        switch(idx){
+            case 0:
+                use_color_tranfer = isSet;
+                return;
+            case 1:
+                use_lighting = isSet;
+                return;
+            case 2:
+                render_mode = isSet? TEXTURE_BASED:RAYCAST;
+                return;
+            default:
+                break;
+        }
     }
     void onParamsSet(int idx, float value){
         if(idx < 0)
@@ -210,9 +219,22 @@ public:
             adjustParam[idx] = value;
     }
     bool getOriginalChecked(int idx){
-        return (idx == 0)? use_color_tranfer:use_lighting;
+        switch(idx) {
+            case 0:
+                return use_color_tranfer;
+            case 1:
+                return use_lighting;
+            case 2:
+                return (render_mode == TEXTURE_BASED);
+            case 3:
+                return (render_mode == RAYCAST);
+            default:
+                return false;
+        }
     }
-    float getOriginalValue(int idx){return adjustParam_origin[idx];}
+    float getOriginalValue(int idx){
+        return adjustParam_origin[idx];
+    }
     float getFPS(){ return fps_monitor_.Update();}
 protected:
     const float CONVERT_UNIT = 0.001f;
@@ -244,7 +266,7 @@ private:
     bool switcher_move = true;
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = true;
     bool rotate_model = false;//toggle between rotate model and camera
-    RENDERER render_mode = TEXTURE_BASED;
+    RENDERER render_mode = RAYCAST;
     glm::vec3 last_cutting_norm = glm::vec3(FLT_MAX), start_cutting;
     float cutting_length;
     bool is_cutting = true, is_in_deeper = false;

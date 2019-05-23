@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#35478C</color>
+    <color name="colorPrimaryDark">#16193B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="paneColor">#013603</color>
+    <color name="paneColor">#16193B</color>
     <color name="lightGreen">#CDCCFFBB</color>
+    <color name="lightBlue">#7FB2F0</color>
+    <color name="brightBlue">#ADD5F7</color>
     <color name="brightYellow">#F0D277</color>
     <color name="middleGrey">#CD5C615B</color>
 </resources>

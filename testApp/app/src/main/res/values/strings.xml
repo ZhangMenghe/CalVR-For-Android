@@ -4,7 +4,8 @@
     <string name="change_renderer">Next Renderer</string>
     <string name="use_transfer">Transfer Color</string>
     <string name="use_lighting">Phong Lighting</string>
-    <string name="text_param1">Sample Step Inv: %1$.2f </string>
-    <string name="text_param2">Value Threshold: %1$.2f</string>
-    <string name="text_param3">Brightness: %1$.2f</string>
+    <string name="text_sample">Sample Step Inv: %1$.2f </string>
+    <string name="text_threshold">Value Threshold: %1$.2f</string>
+    <string name="text_brightness">Brightness: %1$.2f</string>
+    <string name="text_toggle">Value</string>
 </resources>

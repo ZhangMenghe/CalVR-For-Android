@@ -6,23 +6,40 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
 public class UIsController {
-    public static TextView FPSlabel;
-    public static TextView text_param1, text_param2, text_param3;
-    public static View raycastPanel;
-
     Activity activity;
-    final static float CUTTING_DENSITY = 50.0f;
-    final static float INITIAL_CUTTING_POS = .0f;
     final static String TAG = "UIsController";
 
-    public static boolean is_using_raycast = false;
+    public static TextView FPSlabel, toggleValueTex;
+    public static View raycastPanel, cutPanel;
+    private Spinner spinner_toggle, spinner_switch;
+    private SeekBar seekbar_toggle, seekbar_cut;
+    private Switch switch_widget;
+    public static boolean b_naiverenderer = false;
+    final public static float MAX_SAMPLE_STEP_REPRESENT = 800.0f, MAX_THRESHOLD_REPRESENT = 2.0f,
+                              MAX_BRIGHTNESS_REPRESENT=500.0f, DENSITY_CUTTING_REPRESENT = 50.0f;
+    final public static int MAX_SAMPLE_STEP = 800, MAX_THRESHOLD = 20,
+            MAX_BRIGHTNESS=500, DENSITY_CUTTING = 50, ORIGINAL_CUT = 0;
+
+    private enum TOGGLE_VALUE{
+        SAMPLE_STEP, THRESHOLD, BRIGHTNESS
+    };
+    private enum SWITCH_VALUE{
+        TRANSFER_COLOR, USE_LIGHTING, NAIVE_RENDERER, CUTTING
+    }
+
+    private int toggle_id = 0, switch_id = 0;
+    private float toggle_values[];
+    private boolean bool_values[];
 
     public static TranslateAnimation panelHiddenAction, panelShownAction;
     static {
@@ -38,131 +55,165 @@ public class UIsController {
         panelShownAction.setDuration(500);
     }
 
+    private void init_values(){
+        toggle_values = new float[3];
+        bool_values = new boolean[4];
+        ///get initial_value here
+        for(int i=0; i<3; i++){
+            toggle_values[i] = JNIInterface.JNIgetOriginalValue(i);
+            if(i == 1)
+                toggle_values[i] *= MAX_THRESHOLD / MAX_THRESHOLD_REPRESENT;
+        }
+
+        seekbar_toggle.setMax(MAX_SAMPLE_STEP);
+        seekbar_toggle.setProgress((int)toggle_values[toggle_id]);
+
+        for(int i=0; i<4; i++)
+            bool_values[i] = JNIInterface.JNIgetOriginalChecked(i);
+        switch_widget.setChecked(bool_values[switch_id]);
+
+        //naive hide panel
+        if(bool_values[2])
+            ToggleShowView();
+
+        seekbar_cut.setMax(DENSITY_CUTTING);
+        seekbar_cut.setProgress(ORIGINAL_CUT);
+        //init cut panel
+        if(bool_values[3]){// show cut
+            cutPanel.setVisibility(View.VISIBLE);
+        }else{
+            cutPanel.setVisibility(View.GONE);
+        }
+
+    }
     public UIsController(final Activity activity_){
         activity = activity_;
         //panels
         raycastPanel = activity.findViewById(R.id.raycastPanel);
-        raycastPanel.setVisibility(View.INVISIBLE);
         //fps monitor
         FPSlabel = (TextView) activity.findViewById(R.id.textViewFPS);
-        //next button
-        Button render_bnt = (Button)activity.findViewById(R.id.changeRenderButton);
-        render_bnt.setOnClickListener(new View.OnClickListener() {
+        //toggles
+        spinner_toggle = (Spinner)activity.findViewById(R.id.toggleSpinner);
+        spinner_toggle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                if(JNIInterface.JNIchangeRender()){
-                    is_using_raycast = true;
-                    raycastPanel.setVisibility(View.VISIBLE);
-                }
-                else{
-                    is_using_raycast = false;
-                    raycastPanel.setVisibility(View.INVISIBLE);
-                }
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                toggle_id = i;
+                update_toggle_item_display();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
+        seekbar_toggle = (SeekBar) activity.findViewById(R.id.toggleSeekBar);
+        toggleValueTex = (TextView) activity.findViewById(R.id.toggleText);
+        seekbar_toggle.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if(!b) return;
+                toggle_values[toggle_id] = (float)i;
+                update_toggle_item_display();
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         //switches
-        Switch sw_trans = (Switch)activity.findViewById(R.id.switch_color);
-        sw_trans.setChecked(JNIInterface.JNIgetOriginalChecked(0));
-        sw_trans.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        spinner_switch = (Spinner)activity.findViewById(R.id.switchSpinner);
+        spinner_switch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch_id = i;
+                update_switch_item_display();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        switch_widget = (Switch)activity.findViewById(R.id.switcherSwitch);
+        switch_widget.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                JNIInterface.JNIsetSwitches(0, b);
+                if(!compoundButton.isPressed()) return;
+                bool_values[switch_id] = !bool_values[switch_id];
+                update_switch_item_display();
             }
         });
-        Switch sw_lighting = (Switch)activity.findViewById(R.id.switch_lighting);
-        sw_lighting.setChecked(JNIInterface.JNIgetOriginalChecked(1));
-        sw_lighting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                JNIInterface.JNIsetSwitches(1, b);
-            }
-        });
-
-
-        text_param1 = activity.findViewById(R.id.text_param1);
-        float initialValue_p1 = JNIInterface.JNIgetOriginalValue(0);
-        text_param1.setText(activity.getString(R.string.text_param1, initialValue_p1));
-        SeekBar sb1 = (SeekBar)activity.findViewById(R.id.seekbar_param1);
-        sb1.setProgress((int)initialValue_p1);
-        sb1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        //cut
+        seekbar_cut = (SeekBar)activity.findViewById(R.id.cuttingSeekBar);
+        seekbar_cut.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if(!b) return;
-                text_param1.setText(activity.getString(R.string.text_param1, (float)i));
-                JNIInterface.JNIsetParam(0, (float)i);
+                JNIInterface.JNIsetParam(-1, 1.0f * i / DENSITY_CUTTING);
             }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
-        text_param2 = activity.findViewById(R.id.text_param2);
-        float initialValue_p2 = JNIInterface.JNIgetOriginalValue(1);
-        text_param2.setText(activity.getString(R.string.text_param2, initialValue_p2));
-        SeekBar sb2 = (SeekBar)activity.findViewById(R.id.seekbar_param2);
-        sb2.setProgress((int)(initialValue_p2/ 2.0f * 20));
-
-        sb2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if(!b) return;
-                float actual_value = i * 0.1f;
-                text_param2.setText(activity.getString(R.string.text_param2, actual_value));
-                JNIInterface.JNIsetParam(1, actual_value);
             }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
-
-        text_param3 = activity.findViewById(R.id.text_param3);
-        float initialValue_p3 = JNIInterface.JNIgetOriginalValue(2);
-        text_param3.setText(activity.getString(R.string.text_param3, initialValue_p3));
-        SeekBar sb3 = (SeekBar)activity.findViewById(R.id.seekbar_param3);
-        sb3.setProgress((int)initialValue_p3);
-        sb3.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if(!b) return;
-                text_param3.setText(activity.getString(R.string.text_param3, (float)i));
-                JNIInterface.JNIsetParam(2, (float)i);
             }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+        cutPanel = (View)activity.findViewById(R.id.cutPanel);
+        init_values();
 
-
-//        text_param3 = activity.findViewById(R.id.text_param3);
-//        float initialValue_p3 = JNIInterface.JNIgetOriginalValue(2);
-
-//        text_param3.setText(activity.getString(R.string.text_param3, initialValue_p3));
-        SeekBar sbz = (SeekBar)activity.findViewById(R.id.zpos_seek);
-        sbz.setProgress((int)(CUTTING_DENSITY * INITIAL_CUTTING_POS));
-        sbz.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if(!b) return;
-//                text_param3.setText(activity.getString(R.string.text_param3, (float)i));
-                JNIInterface.JNIsetParam(-1, i / CUTTING_DENSITY);
-//                Log.e(TAG, "onProgressChanged: =======value:" + i/CUTTING_DENSITY );
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
     }
+    private void update_toggle_item_display(){
 
+        switch (TOGGLE_VALUE.values()[toggle_id]){
+            case SAMPLE_STEP:
+                seekbar_toggle.setMax(MAX_SAMPLE_STEP);
+                seekbar_toggle.setProgress((int)toggle_values[toggle_id]);
+                toggleValueTex.setText(activity.getString(R.string.text_sample, toggle_values[toggle_id]));
+                JNIInterface.JNIsetParam(toggle_id, toggle_values[toggle_id]);
+                break;
+            case THRESHOLD:
+                seekbar_toggle.setMax(MAX_THRESHOLD);
+                seekbar_toggle.setProgress((int)toggle_values[toggle_id]);
+                float actual_value = MAX_THRESHOLD_REPRESENT/ MAX_THRESHOLD * toggle_values[toggle_id];
+                toggleValueTex.setText(activity.getString(R.string.text_threshold, actual_value));
+                JNIInterface.JNIsetParam(toggle_id, actual_value);
+                break;
+            case BRIGHTNESS:
+                seekbar_toggle.setMax(MAX_BRIGHTNESS);
+                seekbar_toggle.setProgress((int)toggle_values[toggle_id]);
+                toggleValueTex.setText(activity.getString(R.string.text_brightness, toggle_values[toggle_id]));
+                JNIInterface.JNIsetParam(toggle_id, toggle_values[toggle_id]);
+                break;
+                default:
+                    break;
+        }
+    }
+    private void update_switch_item_display(){
+        boolean cvalue = bool_values[switch_id];
+        switch (SWITCH_VALUE.values()[switch_id]){
+            case CUTTING:
+                if(cvalue) cutPanel.setVisibility(View.VISIBLE);
+                else cutPanel.setVisibility(View.GONE);
+                break;
+            case NAIVE_RENDERER:
+                if(cvalue) ToggleShowView();
+                break;
+                default:
+                    break;
+        }
+        switch_widget.setChecked(cvalue);
+        JNIInterface.JNIsetSwitches(switch_id, cvalue);
+    }
     public void updateFPS(final float fFPS)
     {
         if( FPSlabel == null )
@@ -174,7 +225,6 @@ public class UIsController {
             }});
     }
     public static void ToggleShowView(){
-        if(!is_using_raycast) return;
         if(raycastPanel.getVisibility() == View.VISIBLE){
             raycastPanel.startAnimation(panelHiddenAction);
             raycastPanel.setVisibility(View.GONE);
