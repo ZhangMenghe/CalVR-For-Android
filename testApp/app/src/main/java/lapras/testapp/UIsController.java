@@ -14,6 +14,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class UIsController {
     Activity activity;
@@ -202,7 +203,10 @@ public class UIsController {
         boolean cvalue = bool_values[switch_id];
         switch (SWITCH_VALUE.values()[switch_id]){
             case CUTTING:
-                if(cvalue) cutPanel.setVisibility(View.VISIBLE);
+                if(cvalue){
+                    cutPanel.setVisibility(View.VISIBLE);
+                    Toast.makeText(activity, "Use Bottom SeekBar to Cut", Toast.LENGTH_LONG).show();
+                }
                 else cutPanel.setVisibility(View.GONE);
                 break;
             case NAIVE_RENDERER:

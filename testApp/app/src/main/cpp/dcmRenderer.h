@@ -227,7 +227,7 @@ public:
             case 2:
                 return (render_mode == TEXTURE_BASED);
             case 3:
-                return (render_mode == RAYCAST);
+                return false;
             default:
                 return false;
         }
