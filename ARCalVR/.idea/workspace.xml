@@ -21,16 +21,58 @@
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="===" />
   </component>
+  <component name="AvailableLibraryUpdateStorage">
+    <library-updates>
+      <library-update>
+        <group-id>com.google.ar</group-id>
+        <name>core</name>
+        <version>1.9.0</version>
+        <repository>Google</repository>
+      </library-update>
+      <library-update>
+        <group-id>com.android.support</group-id>
+        <name>appcompat-v7</name>
+        <version>28.0.0</version>
+        <repository>Google,Android Repository</repository>
+      </library-update>
+      <library-update>
+        <group-id>com.android.support.constraint</group-id>
+        <name>constraint-layout</name>
+        <version>2.0.0-beta1</version>
+        <repository>Google</repository>
+      </library-update>
+      <library-update>
+        <group-id>junit</group-id>
+        <name>junit</name>
+        <version>4.13-beta-3</version>
+        <repository>JCenter</repository>
+      </library-update>
+      <library-update>
+        <group-id>com.android.support.test</group-id>
+        <name>runner</name>
+        <version>1.0.2</version>
+        <repository>Google,Android Repository</repository>
+      </library-update>
+      <library-update>
+        <group-id>com.android.support.test.espresso</group-id>
+        <name>espresso-core</name>
+        <version>3.0.2</version>
+        <repository>Google,Android Repository</repository>
+      </library-update>
+    </library-updates>
+    <last-search-timestamp>1559059922383</last-search-timestamp>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="0ec9a1a1-f2bd-4fc0-b609-b610621df771" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/Helmsley_Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/imebra/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/imebra/imebrajni.aar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,109 +96,7 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrKernel/PluginManager.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1320">
-              <caret line="66" column="22" selection-start-line="66" selection-start-column="22" selection-end-line="66" selection-end-column="22" />
-              <folding>
-                <element signature="e#322#364#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/assets/calvrAssets/config/config.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1000">
-              <caret line="50" column="11" selection-start-line="50" selection-start-column="5" selection-end-line="50" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/AndroidPreloadPlugins.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="10" column="26" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="26" />
-              <folding>
-                <element signature="e#119#151#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrKernel/CalVR.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="537" column="19" selection-start-line="537" selection-start-column="19" selection-end-line="537" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="91" selection-start-line="91" selection-end-line="91" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MainActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1240">
-              <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="34" />
-              <folding>
-                <element signature="method#setupSurfaceView#0;class#MainActivity#0" />
-                <element signature="method#setupResource#0;class#MainActivity#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../opencv-3.4.3/build/arm64-v8a/sdk/java/AndroidManifest.xml">
-          <provider editor-type-id="android-manifest" />
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="6" selection-start-line="6" selection-end-line="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/CMakeLists-buildCALVR-PLUGIN.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="14" selection-start-line="14" selection-end-line="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="6" selection-start-line="6" selection-end-line="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="450" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -167,8 +107,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>USE_OPENCV</find>
-      <find>_ndk_rgb_img</find>
       <find>cv::</find>
       <find>getRGBImage</find>
       <find>27.0.3</find>
@@ -197,6 +135,8 @@
       <find>CALVR_PLUGIN_SOURCE_DIR</find>
       <find>vv</find>
       <find>manifestOutputDirectory</find>
+      <find>main</find>
+      <find>opencv</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -205,8 +145,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/cpp/panoHelper.h" />
-        <option value="$PROJECT_DIR$/../../opencv-3.4.3/modules/highgui/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/../../opencv-3.4.3/build/arm64-v8a/sdk/native/jni/OpenCV.mk" />
         <option value="$PROJECT_DIR$/../../opencv-3.4.3/build/arm64-v8a/sdk/native/jni/abi-arm64-v8a/OpenCVConfig.cmake" />
         <option value="$PROJECT_DIR$/../../calvr/src/cvrUtil/CMakeLists.txt" />
@@ -241,10 +179,8 @@
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/quadDrawable.cpp" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/pano.cpp" />
-        <option value="$PROJECT_DIR$/../../calvr/include/cvrUtil/ARCoreManager.h" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/SpatialViz/SpatialViz.cpp" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.h" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.cpp" />
@@ -254,8 +190,12 @@
         <option value="$PROJECT_DIR$/app/src/main/cpp/allController.cpp" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/allController.h" />
         <option value="$PROJECT_DIR$/app/CMakeLists-buildCALVR-PLUGIN.txt" />
-        <option value="$PROJECT_DIR$/app/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/../../opencv-3.4.3/build/arm64-v8a/sdk/java/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/Helmsley_Main.java" />
+        <option value="$PROJECT_DIR$/../../calvr/include/cvrUtil/ARCoreManager.h" />
+        <option value="$PROJECT_DIR$/app/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
       </list>
     </option>
   </component>
@@ -265,7 +205,9 @@
     <option name="width" value="980" />
     <option name="height" value="1030" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -275,31 +217,6 @@
       <pane id="AndroidView">
         <subPane>
           <expand>
-            <path>
-              <item name="ARCalVR" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="arcalvr" type="cbb59c9e:AndroidPsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="arcalvr" type="cbb59c9e:AndroidPsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="1abcf292:AndroidViewProjectNode" />
-              <item name="opencv" type="feadf853:AndroidModuleNode" />
-            </path>
             <path>
               <item name="ARCalVR" type="1abcf292:AndroidViewProjectNode" />
               <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
@@ -419,7 +336,10 @@
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="device.picker.selection" value="3235484e47553398" />
-    <property name="last_opened_file_path" value="E:/arcore-android-sdk-1.5.0/samples/computervision_c" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../imebra/imebrajni.aar" />
+    <property name="project.structure.last.edited" value="Suggestions" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="experimental" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -566,9 +486,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Resources Explorer" />
+      <window_info id="Resources Explorer" weight="0.3295302" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28590605" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Designer" order="2" />
@@ -590,7 +509,7 @@
       <window_info anchor="bottom" x="2045" y="114" width="1174" height="849" id="Logcat" order="9" type="FLOATING" weight="0.328" />
       <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32914287" />
-      <window_info anchor="bottom" id="Build" order="12" visible="true" weight="0.09915014" />
+      <window_info anchor="bottom" id="Build" order="12" visible="true" weight="0.31161472" />
       <window_info anchor="bottom" id="Messages" order="13" weight="0.32951945" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -809,14 +728,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://E:/build-opencv-for-android-master/android-ndk-downloader/README.md" />
-    <entry file="file://E:/build-opencv-for-android-master/android-ndk-downloader/updatetable.py" />
-    <entry file="file://E:/build-opencv-for-android-master/android-ndk-downloader/download_ndk.py" />
-    <entry file="file://E:/build-opencv-for-android-master/setup.sh" />
-    <entry file="file://E:/build-opencv-for-android-master/opencv/CMakeLists.txt" />
-    <entry file="file://E:/build-opencv-for-android-master/opencv/platforms/build_android_arm64-v8a/CMakeFiles/CMakeError.log" />
-    <entry file="file://E:/build-opencv-for-android-master/opencv/cmake/android/OpenCVDetectAndroidSDK.cmake" />
-    <entry file="file://E:/build-opencv-for-android-master/android-cmake/android.toolchain.cmake" />
     <entry file="file://E:/build-opencv-for-android-master/opencv/cmake/OpenCVCompilerOptions.cmake" />
     <entry file="file://E:/build-opencv-for-android-master/opencv/cmake/OpenCVCompilerOptimizations.cmake" />
     <entry file="file://E:/build-opencv-for-android-master/opencv/platforms/build_android_arm64-v8a/CMakeFiles/CMakeOutput.log" />
@@ -858,42 +769,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1056">
           <caret line="48" column="27" selection-start-line="48" selection-start-column="17" selection-end-line="48" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/ARCoreManager.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="136" column="32" selection-start-line="136" selection-start-column="32" selection-end-line="136" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/local.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gradle.properties">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/../.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
           <caret line="10" column="5" lean-forward="true" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -917,23 +799,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-8914">
           <caret column="34" selection-start-column="7" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="24" lean-forward="true" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrKernel/InteractionEvent.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -1003,7 +873,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
           <caret line="51" column="53" selection-start-line="51" selection-start-column="53" selection-end-line="51" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1097,20 +966,112 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="91" selection-start-line="91" selection-end-line="91" />
+        <state relative-caret-position="80">
+          <caret line="28" selection-start-line="28" selection-end-line="28" selection-end-column="51" />
+          <folding>
+            <element signature="e#5665#5945#0" expanded="true" />
+            <element signature="e#5944#5945#0" expanded="true" />
+            <element signature="e#5986#6267#0" expanded="true" />
+            <element signature="e#6266#6267#0" expanded="true" />
+            <element signature="e#6973#7201#0" expanded="true" />
+            <element signature="e#7200#7201#0" expanded="true" />
+            <element signature="e#9355#9511#0" expanded="true" />
+            <element signature="e#9510#9511#0" expanded="true" />
+            <element signature="e#9572#9774#0" expanded="true" />
+            <element signature="e#9773#9774#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest" />
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1240">
-          <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="34" />
+        <state relative-caret-position="202">
+          <caret line="27" column="46" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/local.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gradle.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/proguard-rules.pro">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../opencv-3.4.3/build/arm64-v8a/sdk/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-840">
           <folding>
-            <element signature="method#setupSurfaceView#0;class#MainActivity#0" />
-            <element signature="method#setupResource#0;class#MainActivity#0" />
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/GestureDetectorCalVR.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/ARCoreManager.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="10" selection-start-line="10" selection-end-line="12" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/Helmsley_Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imebra/build.gradle">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="51" column="71" selection-start-line="51" selection-start-column="71" selection-end-line="51" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/samsung/arcalvr/MovableFloatingActionButton.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="17" column="36" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
