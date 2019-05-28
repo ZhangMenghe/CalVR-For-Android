@@ -1,4 +1,4 @@
-package com.samsung.arcalvr;
+package com.samsung.arcalvr.UI;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -7,6 +7,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.samsung.arcalvr.JniInterface;
+import com.samsung.arcalvr.R;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -97,7 +100,8 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
         }
         return true;
     }
-    private void RayMove(float x, float y){JniInterface.JNIonTouchMove(2, x, y);}
+    private void RayMove(float x, float y){
+        JniInterface.JNIonTouchMove(2, x, y);}
     private void RayCast(float x, float y){
         StartUnLockAnimation();
         JniInterface.JNIonSingleTouchDown(2, x, y);

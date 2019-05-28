@@ -83,10 +83,10 @@ void allController::onCreate(const char * calvr_path){
 
     //Initialize callback env
     JNIEnv* env = GetJniEnv();
-    jclass helper_class = env->FindClass( "com/samsung/arcalvr/MainActivity" );
+    jclass helper_class = env->FindClass( "com/samsung/arcalvr/UIsController" );
     if(helper_class){
         helper_class = static_cast<jclass>(env->NewGlobalRef(helper_class));
-        JNIcallback = new JNICallBackCallback(env, helper_class, GetMainActivityObj());
+        JNIcallback = new JNICallBackCallback(env, helper_class, GetJUIObject());
         JNIcallback->registerCallBackFunction("popButtons", "()V");
 //        JNIcallback->registerCallBackFunction("getPixelSize", "()[F", 1);
         _sceneGroup->addUpdateCallback(JNIcallback);
@@ -146,9 +146,7 @@ void allController::onTouchMove(TouchType type, float x, float y){
     aie->setInteraction(BUTTON_DRAG);
     _CalVR->setTouchEvent(aie, type, x, y);
 }
-void allController::setPixelSize(float * arr){
-    ARCoreManager::instance()->setPixelSize(arr[0], arr[1]);
-}
+
 ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
     shape->setShape(new osg::Sphere(pos, 0.05f));

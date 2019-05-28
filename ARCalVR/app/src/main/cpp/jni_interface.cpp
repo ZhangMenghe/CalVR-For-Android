@@ -7,7 +7,7 @@ namespace {
     //maintain a reference to VM
     static JavaVM *g_vm = nullptr;
 
-    jobject main_object;
+    jobject ui_object;
     //global environment
     jlong nativeAppAddr = 0;
 
@@ -26,9 +26,9 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
     return JNI_VERSION_1_6;
 }
 
-MAIN_METHOD(void, JNIOnMainActivityCreated)
-(JNIEnv* env, jobject obj){
-    main_object = env->NewGlobalRef(obj);
+UI_METHOD(void, JUIonUICreated)
+(JNIEnv * env, jobject obj){
+    ui_object = env->NewGlobalRef(obj);
 }
 
 /*Native Application methods*/
@@ -80,21 +80,11 @@ JNI_METHOD(void, JNIonPause)(JNIEnv *, jclass){
     controllerNative(nativeAppAddr)->onPause();
 }
 JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr){
-    GetJniEnv()->DeleteGlobalRef(main_object);
+    GetJniEnv()->DeleteGlobalRef(ui_object);
     delete controllerNative(controller_addr);
 }
 JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass){
     return controllerNative(nativeAppAddr)->getFPS();
-}
-
-JNI_METHOD(void, JNIsetPixelSize)(JNIEnv * env, jclass, jfloatArray sizeArray){
-    jboolean copy = 0;
-    jsize len = env->GetArrayLength(sizeArray);
-    jfloat * content = env->GetFloatArrayElements(sizeArray, &copy);
-    float * cppArr = new float[len];
-    for(int i=0;i<len;i++)
-        cppArr[i] = content[i];
-    controllerNative(nativeAppAddr)->setPixelSize(cppArr);
 }
 
 JNIEnv *GetJniEnv() {
@@ -102,6 +92,6 @@ JNIEnv *GetJniEnv() {
     jint result = g_vm->AttachCurrentThread(&env, nullptr);
     return result == JNI_OK ? env : nullptr;
 }
-jobject GetMainActivityObj(){
-    return main_object;
+jobject GetJUIObject(){
+    return ui_object;
 }

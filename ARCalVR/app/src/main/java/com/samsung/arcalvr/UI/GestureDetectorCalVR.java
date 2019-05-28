@@ -1,12 +1,14 @@
-package com.samsung.arcalvr;
+package com.samsung.arcalvr.UI;
 
 import android.content.Context;
 import android.view.MotionEvent;
 
+import com.samsung.arcalvr.JniInterface;
+
 public class GestureDetectorCalVR {
     private MultiFingerTapDetector multiDetector;
     final static String TAG = "CalVR_Gesture";
-    GestureDetectorCalVR(Context ctx){
+    public GestureDetectorCalVR(Context ctx){
         multiDetector = new MultiFingerTapDetector() {
             // Methods that need to be overridden
             //public abstract void testing();

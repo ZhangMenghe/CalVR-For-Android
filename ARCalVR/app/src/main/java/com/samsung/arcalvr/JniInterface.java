@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 import android.util.Log;
 
+import com.samsung.arcalvr.Utils.dcmImage;
+
 import java.io.IOException;
 
 public class JniInterface {
@@ -43,4 +45,6 @@ public class JniInterface {
     public static native float JNIgetFPS();
 
     public static native void JNIsetPixelSize(float arr[]);
+
+    public static native void JNIsendDCMImgs(dcmImage img_arr[], int size);
 }

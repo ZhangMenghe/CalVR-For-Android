@@ -1,4 +1,4 @@
-package com.samsung.arcalvr;
+package com.samsung.arcalvr.Utils;
 import android.content.res.AssetManager;
 import android.util.Log;
 
@@ -9,6 +9,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 public class fileUtils {
     final static String TAG = "File Utils";
     public static void copyFromAsset(AssetManager assetManager, String src_path, String target_path)
@@ -94,5 +97,17 @@ public class fileUtils {
             }
         }
         return (path.delete());
+    }
+    public static List<String> getListFilesFromDir(File path) {
+        ArrayList<String> file_path_lst = new ArrayList<String>();
+        if (path.exists()) {
+            File[] files = path.listFiles();
+            for(File file:files){
+                if(file.isDirectory())
+                    file_path_lst.addAll(getListFilesFromDir(file));
+                else file_path_lst.add(file.getAbsolutePath());
+            }
+        }
+        return file_path_lst;
     }
 }

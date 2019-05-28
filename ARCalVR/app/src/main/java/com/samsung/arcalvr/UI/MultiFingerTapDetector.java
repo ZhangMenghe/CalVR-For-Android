@@ -1,4 +1,4 @@
-package com.samsung.arcalvr;
+package com.samsung.arcalvr.UI;
 
 import android.util.Log;
 import android.view.MotionEvent;

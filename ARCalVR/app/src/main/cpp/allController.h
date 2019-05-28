@@ -72,8 +72,6 @@ public:
     void onTouchMove(cvr::TouchType type, float x, float y);
 
     float getFPS(){return _fpsMonitor->Update();}
-
-    void setPixelSize(float * arr);
 };
 
 #endif

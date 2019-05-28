@@ -1,4 +1,4 @@
-package com.samsung.arcalvr;
+package com.samsung.arcalvr.Utils;
 
 import android.Manifest;
 import android.app.Activity;
