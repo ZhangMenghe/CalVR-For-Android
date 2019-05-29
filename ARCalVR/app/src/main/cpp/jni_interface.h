@@ -38,6 +38,8 @@ JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr);
 
 JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass);
 
+JNI_METHOD(void, JNIsendDCMImgs)(JNIEnv*, jobject,  jobjectArray, jint);
+
 UI_METHOD(void, JUIonUICreated)(JNIEnv *, jobject);
 
 

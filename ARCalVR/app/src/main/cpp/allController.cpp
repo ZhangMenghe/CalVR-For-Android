@@ -110,7 +110,7 @@ void allController::onDrawFrame(){
         //shoot the ray to check the interaction with menu
         AndroidInteractionEvent * aie = new AndroidInteractionEvent();
         aie->setInteraction(BUTTON_DRAG);
-        _CalVR->setTouchEvent(aie, LEFT, _touchX, _touchY);
+        _CalVR->setTouchEvent(aie, cvr::LEFT, _touchX, _touchY);
 //        TrackingManager::instance()->setTouchMovePosition(_touchX,_touchY);
     }
 }
@@ -127,14 +127,14 @@ void allController::onSingleTouchDown(TouchType type, float x, float y){
 }
 
 void allController::onSingleTouchUp(TouchType type, float x, float y){
-    if(type == RIGHT) _detectStart = false;
+    if(type == cvr::RIGHT) _detectStart = false;
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_UP);
     _CalVR->setTouchEvent(aie, type, x, y);
 }
 
 void allController::onDoubleTouch(TouchType type, float x, float y){
-    if(type==RIGHT) _detectStart = true;
+    if(type==cvr::RIGHT) _detectStart = true;
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
     aie->setInteraction(BUTTON_DOUBLE_CLICK);
     _CalVR->setTouchEvent(aie, type, x, y);

@@ -26,18 +26,18 @@ public class MainActivity extends AppCompatActivity
     private long controllerAddr;
 
     //Surface view
-    private GLSurfaceView surfaceView;
-    private boolean viewportChanged = false;
-    private int viewportWidth;
-    private int viewportHeight;
+    protected GLSurfaceView surfaceView;
+    protected boolean viewportChanged = false;
+    protected int viewportWidth;
+    protected int viewportHeight;
 
     // Resource
-    final static private String calvr_folder = "calvrAssets";
+    final static protected String calvr_folder = "calvrAssets";
     String calvr_dest = null;
     String resourceDest = null;
 
     //For touch event
-    private GestureDetectorCalVR gestureDetector;
+    protected GestureDetectorCalVR gestureDetector;
 
     protected UIsController uiController;
 
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-    private void setupSurfaceView(){
+    protected void setupSurfaceView(){
         surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
         // Set up renderer.
         surfaceView.setPreserveEGLContextOnPause(true);
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-    private void setupTouchDetector(){
+    protected void setupTouchDetector(){
         gestureDetector = new GestureDetectorCalVR(this);
 
         surfaceView.setOnTouchListener(
@@ -109,11 +109,11 @@ public class MainActivity extends AppCompatActivity
                 }
         );
     }
-    private void setupResource(){
+    protected void setupResource(){
         resourceDest = getFilesDir().getAbsolutePath() + "/";
         copyFromAssets();
     }
-    private void copyFromAssets(){
+    protected void copyFromAssets(){
         calvr_dest = resourceDest + calvr_folder;
         //Skip copying if files exist
         if(skipLoadingResource){
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, "copyFromAssets: Failed to copy from asset folder");
         }
     }
-    private class Renderer implements GLSurfaceView.Renderer {
+    protected class Renderer implements GLSurfaceView.Renderer {
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             GLES30.glClearColor(1.0f, .0f, .0f, 1.0f);

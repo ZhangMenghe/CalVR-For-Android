@@ -50,6 +50,7 @@ SET(KERNEL_LIBRARIES
     EGL                           #
     GLESv2                        #
     GLESv3
+	jnigraphics
 )
 
 # order matters
@@ -74,6 +75,9 @@ include(CMakeLists-staticPhysX.txt)
 include(CMakeLists-buildCALVR.txt)
 include(CMakeLists-buildCALVR-PLUGIN.txt)
 
+SET(GLM_DIRECTORY "D:/OpenGL-Libs/glm")
+include_directories(${GLM_DIRECTORY})
+
 # physx needs cpufeatures
 include_directories(${ANDROID_NDK}/sources/android/cpufeatures)
 add_library(cpufeatures ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c)
@@ -95,7 +99,7 @@ add_library(ARCalVR
             src/main/cpp/jni_interface.cpp
             src/main/cpp/allController.cpp
             src/main/cpp/bgDrawable.cpp
-            src/main/cpp/perfMonitor.cpp
+		    src/main/cpp/perfMonitor.cpp
             )
 target_link_libraries(ARCalVR
                       ${CVR_PLUGINS}
