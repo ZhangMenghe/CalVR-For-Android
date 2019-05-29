@@ -2,6 +2,7 @@ package com.samsung.arcalvr;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Path;
 import android.hardware.display.DisplayManager;
@@ -11,11 +12,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.security.acl.Group;
@@ -45,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     private GestureDetectorCalVR gestureDetector;
 
     //Label
-    TextView FPSlabel;
+    TextView puzzleMessage;
     MovableFloatingActionButton track_bnt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +142,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        FPSlabel = (TextView) findViewById(R.id.textViewFPS);
+        puzzleMessage = (TextView) findViewById(R.id.textViewPuzzleMessage);
     }
     private void setupSurfaceView(){
         surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
@@ -178,6 +184,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
     private class Renderer implements GLSurfaceView.Renderer {
+
+        int matches = -1;
+        int NONE_OPEN = 0;
+        int MAZE = 1;
+        int FIVE = 2;
+        int LAB = 3;
+        int TETRIS = 4;
+        int TETRIS_2 = 5;
+        int openPuzzle = 0;
+        boolean puzzleFinished = false;
+
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             GLES30.glClearColor(1.0f, .0f, .0f, 1.0f);
@@ -205,7 +222,39 @@ public class MainActivity extends AppCompatActivity
                     viewportChanged = false;
                 }
                 JniInterface.JNIdrawFrame();
-                updateFPS(JniInterface.JNIgetFPS());
+//                updateFPS(JniInterface.JNIgetFPS());
+
+                // check to see which Puzzle is open
+                int open = JniInterface.JNIwhoseOpen();
+                // if a different puzzle is open:
+                if (openPuzzle != open){
+                    openPuzzle = open;
+                    updatePuzzleToast(open);
+                }
+
+                // if Tetris is open:
+                if (open == TETRIS || open == TETRIS_2) {
+                    int currMatches = JniInterface.JNIgetMatches();
+                    // call update Toast if the matches variable changes
+                    if (matches != currMatches) {
+                        // update the Toast message and global variable
+                        updateTetrisToast(currMatches);
+                        matches = currMatches;
+                    }
+                }
+
+                // if 5x5 is open:
+                if (open == FIVE || open == LAB || open == MAZE){
+                    boolean finished = JniInterface.JNIpuzzleComplete();
+                    // if there was a change
+                    if (puzzleFinished != finished) {
+                        puzzleFinished = finished;      // store that change
+                        // make a toast message - if just finished
+                        if (finished) {
+                            puzzleCompleteToast();
+                        }
+                    }
+                }
             }
         }
 
@@ -220,7 +269,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDisplayChanged(int displayId) {viewportChanged = true;}
 
-    public void updateFPS(final float fFPS)
+    /*public void updateFPS(final float fFPS)
     {
         if( FPSlabel == null )
             return;
@@ -230,7 +279,7 @@ public class MainActivity extends AppCompatActivity
                 FPSlabel.setText(String.format("%2.2f FPS", fFPS));
 
             }});
-    }
+    }*/
     public void popButtons(){
         runOnUiThread(new Runnable() {
             @Override
@@ -241,4 +290,88 @@ public class MainActivity extends AppCompatActivity
         });
     }
     public native void JNIOnMainActivityCreated();
+
+    // SpatialViz Puzzle Messages
+    public void updateTetrisToast(final int matches){
+        if (matches == -1 || matches == 0)
+            return;
+
+        this.runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.toast_layout, (ViewGroup) findViewById(R.id.toast_root));
+
+                TextView toastText = layout.findViewById(R.id.toast_text);
+                ImageView toastImage = layout.findViewById(R.id.toast_image);
+
+                if (matches == 1){
+                    toastText.setText(R.string.position_match);
+                }
+                if (matches == 2){
+                   toastText.setText(R.string.orientation_match);
+                }
+                if (matches == 3){
+                    toastText.setText(R.string.complete_match);
+                    toastImage.setImageResource(R.drawable.ic_toast_double_check);
+                }
+
+                Toast toast = new Toast(MainActivity.this);
+                toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0,200);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setView(layout);
+                toast.show();
+            }
+        });
+
+    }
+    public void updatePuzzleToast(final int openPuzzle){
+
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch(openPuzzle){
+                    case 0:
+                        puzzleMessage.setText(R.string.no_puzzles);
+                        break;
+                    case 1:
+                        puzzleMessage.setText(R.string.maze_puzzle);
+                        break;
+                    case 2:
+                        puzzleMessage.setText(R.string.five_puzzle);
+                        break;
+                    case 3:
+                        puzzleMessage.setText(R.string.labyrinth_puzzle);
+                        break;
+                    case 4:
+                        puzzleMessage.setText(R.string.tetris_puzzle);
+                        break;
+                    case 5:
+                        puzzleMessage.setText(R.string.tetris_v2_puzzle);
+                        break;
+                }
+            }
+        });
+    }
+    public void puzzleCompleteToast(){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.toast_layout, (ViewGroup) findViewById(R.id.toast_root));
+
+                TextView toastText = layout.findViewById(R.id.toast_text);
+                ImageView toastImage = layout.findViewById(R.id.toast_image);
+
+                toastText.setText(R.string.puzzle_complete);
+                toastImage.setImageResource(R.drawable.ic_toast_double_check);
+
+                Toast toast = new Toast(MainActivity.this);
+                toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 200);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setView(layout);
+                toast.show();
+            }
+        });
+    }
 }

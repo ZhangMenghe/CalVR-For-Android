@@ -38,6 +38,11 @@ JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr);
 
 JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass);
 
+// ADDED FOR SPATIAL VIZ INTERACTION
+JNI_METHOD(jint, JNIgetMatches) (JNIEnv *, jclass);
+JNI_METHOD(jint, JNIwhoseOpen) (JNIEnv *, jclass);
+JNI_METHOD(jboolean, JNIpuzzleComplete) (JNIEnv *, jclass);
+
 MAIN_METHOD(void, JNIOnMainActivityCreated)(JNIEnv*, jobject);
 
 JNIEnv * GetJniEnv();

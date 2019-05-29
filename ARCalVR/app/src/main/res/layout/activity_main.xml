@@ -19,13 +19,14 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textViewFPS"
-        android:layout_width="wrap_content"
+        android:id="@+id/textViewPuzzleMessage"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:text="@string/fps"
+        android:layout_gravity="start"
+        android:textAlignment="center"
+        android:text="@string/no_puzzles"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/holo_green_light" />
 
     <com.samsung.arcalvr.MovableFloatingActionButton
         android:id="@+id/main_button"

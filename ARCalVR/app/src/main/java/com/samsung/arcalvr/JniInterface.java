@@ -40,4 +40,9 @@ public class JniInterface {
     public static native void JNIonDestroy();
 
     public static native float JNIgetFPS();
+
+    // Spatial Viz messages
+    public static native int JNIgetMatches();
+    public static native int JNIwhoseOpen();
+    public static native boolean JNIpuzzleComplete();
 }

@@ -56,6 +56,9 @@ public:
     void onTouchMove(cvr::TouchType type, float x, float y);
 
     float getFPS();
+    int getMatches();
+    int whoseOpen();
+    bool puzzleComplete();
 };
 
 #endif

@@ -120,6 +120,11 @@ public:
     void create5x5(int);
     void createLabyrinth(float, float);
 
+    // helper to communicate the tetris matches up to java
+    static int haveMatches();
+    static int whoseOpen();
+    static bool puzzleComplete();
+
     /* createBoxes and createSpheres take in dimensions in terms of m */
 #if(__ANDROID__)
     // createIdentity() and createZero() are deprecated since 3.3

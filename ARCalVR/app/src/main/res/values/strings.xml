@@ -1,4 +1,20 @@
 <resources>
     <string name="app_name">ArCalVR</string>
     <string name="fps">0.0 FPS</string>
+
+    <string name="complete_match">Correct Match!</string>
+    <string name="tetris_welcome">Tetris Open</string>
+    <string name="position_match">Right Tetris Piece…</string>
+    <string name="orientation_match">Orientation correct</string>
+
+    <string name="puzzle_complete">Mission Accomplished!</string>
+
+
+    <string name="maze_puzzle">Goal: \tMove the sphere from the bottom \nleft to the top of the puzzle</string>
+    <string name="five_puzzle">Goal: \tGet the sphere through the \npuzzle and out the bottom</string>
+    <string name="labyrinth_puzzle">Goal: \tMove the sphere to the bottom \nleft of the puzzle</string>
+    <string name="tetris_puzzle">Goal: \tRotate and move the Green Piece to one of the pieces above that it matches</string>
+    <string name="tetris_v2_puzzle">Goal: \tRotate and move the Green Piece to one of the pieces above that it matches</string>
+    <string name="no_puzzles"> </string>
+
 </resources>

@@ -169,6 +169,23 @@ void allController::onTouchMove(TouchType type, float x, float y){
 
 float allController::getFPS(){return 60.0f;}
 
+int allController::getMatches(){
+    int val = 0;
+    val = SpatialViz::haveMatches();
+    LOGI("--- TESTING: %i ---", val);
+    return val; // Stops working when pass back the value from haveMatches...
+}
+int allController::whoseOpen() {
+    int val = SpatialViz::whoseOpen();
+    LOGI("--- TESTING: %i is OPEN ---", val);
+    return val;
+}
+bool allController::puzzleComplete() {
+    bool val = SpatialViz::puzzleComplete();
+    LOGI("--- TESTING: puzzle is complete? %i ---", val);
+    return val;
+}
+
 ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
     shape->setShape(new osg::Sphere(pos, 0.05f));

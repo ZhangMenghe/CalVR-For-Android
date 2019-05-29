@@ -1,12 +1,25 @@
 package com.samsung.arcalvr;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class GestureDetectorCalVR {
     private MultiFingerTapDetector multiDetector;
     final static String TAG = "CalVR_Gesture";
-    GestureDetectorCalVR(Context ctx){
+
+    GestureDetectorCalVR(final Context ctx){
         multiDetector = new MultiFingerTapDetector() {
             // Methods that need to be overridden
             // public abstract void testing();
@@ -49,7 +62,24 @@ public class GestureDetectorCalVR {
             public void onTwoFingerLongPress(MotionEvent event){}
 
             // THREE FINGER TAPS
-            public void onThreeFingerDoubleTap(){}
+            public void onThreeFingerDoubleTap(){
+                LayoutInflater inflater = LayoutInflater.from(ctx);
+                final Activity activity = (Activity) ctx;
+                View layout = inflater.inflate(R.layout.toast_layout, (ViewGroup) activity.findViewById(R.id.toast_root));
+
+//                Toast toast = Toast.makeText(ctx, "testing", Toast.LENGTH_SHORT);
+//                View view = toast.getView();
+
+                TextView toastText = layout.findViewById(R.id.toast_text);
+                ImageView toastImate = layout.findViewById(R.id.toast_image);
+//                toastText.setText("DIFFERENT");
+
+                Toast toast = new Toast(ctx);
+                toast.setGravity(Gravity.CENTER_HORIZONTAL, 0,0);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+            }
             public void onThreeFingerTripleTap(){}
             public void onThreeFingerLongPress(MotionEvent event){}
         };

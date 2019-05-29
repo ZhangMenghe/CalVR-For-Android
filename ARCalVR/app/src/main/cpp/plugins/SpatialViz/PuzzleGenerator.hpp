@@ -150,6 +150,7 @@ void PuzzleGenerator::createPuzzleCube(int size, vector<Vec3>& positions) {
 	srand((unsigned)time(0));
 
 	// Initiallize and setup cube for maze generation
+	// 1 is for inner cube, surface of cube is between 2 and CHAR_MAX, 0 means visited
 	char*** cube = new char**[size];
 	for (int i = 0; i < size; i++) {
 		cube[i] = new char*[size];

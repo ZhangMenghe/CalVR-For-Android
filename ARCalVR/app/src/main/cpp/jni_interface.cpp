@@ -87,6 +87,20 @@ JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass){
     return controllerNative(nativeAppAddr)->getFPS();
 }
 
+
+// ADDED FOR SPATIAL VIZ INTERACTION
+JNI_METHOD(jint, JNIgetMatches)(JNIEnv *, jclass){
+    return controllerNative(nativeAppAddr)->getMatches();
+}
+JNI_METHOD(jint, JNIwhoseOpen)(JNIEnv*, jclass){
+    return controllerNative(nativeAppAddr)->whoseOpen();
+}
+JNI_METHOD(jboolean, JNIpuzzleComplete)(JNIEnv*, jclass){
+    return (jboolean) controllerNative(nativeAppAddr)->puzzleComplete();
+}
+// end SpatialViz additions
+
+
 JNIEnv *GetJniEnv() {
     JNIEnv *env;
     jint result = g_vm->AttachCurrentThread(&env, nullptr);
