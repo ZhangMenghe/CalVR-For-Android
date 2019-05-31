@@ -143,7 +143,7 @@ void allController::onDoubleTouch(TouchType type, float x, float y){
 void allController::onTouchMove(TouchType type, float x, float y){
 
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
-    aie->setInteraction(BUTTON_DRAG);
+    aie->setInteraction(MOVE);
     _CalVR->setTouchEvent(aie, type, x, y);
 }
 
