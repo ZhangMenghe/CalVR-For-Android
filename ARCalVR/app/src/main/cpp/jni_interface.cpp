@@ -26,19 +26,19 @@ namespace {
 
     class dcmImage{
     public:
-        GLubyte * data;
+        unsigned char * data;
         float location;
 
-        dcmImage(GLubyte * _data, float _location):
+        dcmImage(unsigned char * _data, float _location):
                 data(_data), location(_location){}
 
     };
     size_t img_width, img_height, dimensions;
     std::vector<dcmImage *> images_;
-    GLubyte *data;
+    unsigned char *data;
 }
 
-void convert_bitmap(JNIEnv* env, jobject bitmap, GLubyte*& data, int&w, int &h ){
+void convert_bitmap(JNIEnv* env, jobject bitmap, unsigned char*& data, int&w, int &h ){
     AndroidBitmapInfo srcInfo;
     if (ANDROID_BITMAP_RESULT_SUCCESS != AndroidBitmap_getInfo(env, bitmap, &srcInfo)) {
         LOGE("get bitmap info failed");
@@ -58,7 +58,7 @@ void convert_bitmap(JNIEnv* env, jobject bitmap, GLubyte*& data, int&w, int &h )
     w = srcInfo.width; h = srcInfo.height;
 
     size_t size = srcInfo.width * srcInfo.height;
-    data = new GLubyte[size];
+    data = new unsigned char[size];
 
     int x, y, idx = 0;
     for (y = 0; y < h; y++) {
@@ -77,7 +77,7 @@ void convert_bitmap(JNIEnv* env, jobject bitmap, GLubyte*& data, int&w, int &h )
 }
 
 void initDCMIProperty(size_t w, size_t h, int thickness){img_width = w; img_height = h;}
-void addImage(GLubyte * img, float location){
+void addImage(unsigned char * img, float location){
     images_.push_back(new dcmImage(
             img,
             location));
@@ -88,8 +88,8 @@ void assembleTexture(){
     dimensions = images_.size();
     size_t data_size = img_width * img_height * dimensions;
 
-    data = new GLubyte[data_size];
-    auto each_size = img_height * img_width* sizeof(GLubyte);
+    data = new unsigned char[data_size];
+    auto each_size = img_height * img_width* sizeof( unsigned char);
     for(int i=0; i<dimensions; i++)
         memcpy(data+i*each_size, images_[i]->data, each_size);
     DCMI::img_width = img_width; DCMI::img_height = img_height; DCMI::img_nums = dimensions;
@@ -185,9 +185,9 @@ JNI_METHOD(void, JNIsendDCMImgs)(JNIEnv* env, jobject obj,  jobjectArray img_arr
 
         bitmap_id = env->GetFieldID(imgClass, "bitmap", "Landroid/graphics/Bitmap;");
         bitmap = env->GetObjectField(img,bitmap_id);
-        GLubyte * data = nullptr;
-        convert_bitmap(env, bitmap, data, width, height);
-        addImage(data, location);
+        unsigned char * data_tmp = nullptr;
+        convert_bitmap(env, bitmap, data_tmp, width, height);
+        addImage(data_tmp, location);
     }
     if(last_valid!=-1){
         img = env->GetObjectArrayElement(img_arr, last_valid);
@@ -197,8 +197,8 @@ JNI_METHOD(void, JNIsendDCMImgs)(JNIEnv* env, jobject obj,  jobjectArray img_arr
         yspace_id = env->GetFieldID(imgClass, "ySpacing", "F");
         yspacing = env->GetFloatField(img, yspace_id);
 
-        GLubyte * data = nullptr;
-        convert_bitmap(env, bitmap, data, width, height);
+        unsigned char * data_tmp2 = nullptr;
+        convert_bitmap(env, bitmap, data_tmp2, width, height);
 
         initDCMIProperty(width, height, thickness*valid_num);
 
