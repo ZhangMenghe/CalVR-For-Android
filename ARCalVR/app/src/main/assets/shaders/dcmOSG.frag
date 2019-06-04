@@ -4,7 +4,7 @@ precision mediump float;
 uniform sampler3D uSampler_tex;
 uniform sampler2D uSampler_trans;
 uniform vec3 uVolume_size;
-
+uniform vec3 uEyePos;
 //lighting
 struct LightInfo{
     vec3 Ia;
@@ -21,8 +21,12 @@ uniform float val_threshold;
 uniform float brightness;
 uniform float OpacityThreshold;
 
+in vec3 frag_position;
 in vec3 vTexCoord;
+in vec3 ray_dir;
+in mat3 NormalMatrix;
 out vec4 gl_FragColor;
+
 void main(){
 //    gl_FragColor = vec4(vTexCoord, 1.0);
     float density = texture(uSampler_tex, vTexCoord).r;
