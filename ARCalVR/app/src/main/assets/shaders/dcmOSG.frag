@@ -93,7 +93,10 @@ float RayPlane(vec3 ro, vec3 rd, vec3 planep, vec3 planen) {
 void main(){
     vec2 intersect = RayCube(vTexCoord-0.5, ray_dir, vec3(.5));
     intersect.x = max(.0, intersect.x);
+
+    intersect.x = max(intersect.x, RayPlane(vTexCoord-0.5, ray_dir, PlanePoint, PlaneNormal));
     intersect.y = min(intersect.y, 1.0);
+
 
     float sample_step = 1.0/sample_step_inverse;
     vec3 ray_pos = vTexCoord; // the current ray position
