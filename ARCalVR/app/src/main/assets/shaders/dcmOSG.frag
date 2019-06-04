@@ -14,6 +14,7 @@ struct LightInfo{
 uniform LightInfo Light;
 uniform float shiness;
 uniform bool u_use_ligting;
+uniform bool u_use_transfercolor;
 
 //params
 uniform float sample_step_inverse;      // step used to advance the sampling ray
@@ -33,7 +34,7 @@ vec3 pos000 = vec3(0.0, 0.0, 0.0);
 vec3 PlanePoint = vec3(.0);
 vec3 PlaneNormal = vec3(.0, .0, 1.0);
 
-void main_old(){
+void main(){
     float sample_step = 1.0/sample_step_inverse;
     vec3 ray_pos = vTexCoord; // the current ray position
     vec4 frag_color = vec4(0), color;
@@ -58,7 +59,11 @@ void main_old(){
         density = max_density;
         density += val_threshold - 0.5;
         density = density * density * density;
-        color.rgb = vec3(density);
+        if(u_use_transfercolor)
+            color.rgb = texture(uSampler_trans, vec2(density, 1.0)).rgb;
+        else
+            color.rgb = vec3(density);
+
         if(density < OpacityThreshold)
             color.a = .0;
         else
@@ -90,7 +95,7 @@ float RayPlane(vec3 ro, vec3 rd, vec3 planep, vec3 planen) {
     return -1e5;
 }
 
-void main(){
+void main_old(){
     vec2 intersect = RayCube(vTexCoord-0.5, ray_dir, vec3(.5));
     intersect.x = max(.0, intersect.x);
 
