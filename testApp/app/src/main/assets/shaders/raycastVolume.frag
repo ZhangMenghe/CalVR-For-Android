@@ -28,6 +28,25 @@ uniform bool u_use_interpolation;
 uniform bool u_draw_naive;
 
 uniform float volumex, volumey, volumez;
+vec2 RayCube(vec3 orig, vec3 dir) {
+    const vec3 box_min = vec3(0);
+	const vec3 box_max = vec3(1);
+	vec3 inv_dir = 1.0 / dir;
+	vec3 tmin_tmp = (box_min - orig) * inv_dir;
+	vec3 tmax_tmp = (box_max - orig) * inv_dir;
+	vec3 tmin = min(tmin_tmp, tmax_tmp);
+	vec3 tmax = max(tmin_tmp, tmax_tmp);
+	float t0 = max(tmin.x, max(tmin.y, tmin.z));
+	float t1 = min(tmax.x, min(tmax.y, tmax.z));
+	return vec2(t0, t1);
+}
+float RayPlane(vec3 ro, vec3 rd, vec3 planep, vec3 planen) {
+	float d = dot(planen, rd);
+	float t = dot(planen, ro) - dot(planep, planen);// dot(planep - ro, planen);
+    if(d > 1e-5) return t/d;
+    if(t > .0) return 1e5;
+    return -1e5;
+}
 // uniform vec3 u_clip_plane[6];
 // uniform int u_cpoints_num;
 vec3 phong_illumination_model(vec3 N,vec3 curColor,vec3 curPos){
@@ -96,26 +115,18 @@ void main(void){
   vec4 color;
   float density, max_density = -1.0;
   vec3 best_ray_pos = ray_pos;
+  vec3 PlanePoint = vec3(0.0,0.0,0.5);
+  vec3 PlaneNormal = vec3(0.0,0.0,1.0);
+  vec2 intersect = RayCube(ray_pos, ray_dir);
+  if (intersect.y < intersect.x) discard;
+  intersect.x = max(intersect.x, 0.0);
 
-  // vec3 intersect_point = getRayIntersection(ray_pos, ray_dir,
-  //                                           u_clip_plane[0],
-  //                                           getPlaneNormal(u_clip_plane[0], u_clip_plane[1], u_clip_plane[2]));
-  // if (all(lessThan(intersect_point, pos111)))
-  //   pos111 = intersect_point;
-  do{
-    // note:
-    // - ray_dir * sample_step can be precomputed for a fixed view position/angle
-    // - we assume the volume has a cube-like shape
+  intersect.x = max(intersect.x, RayPlane(ray_pos, ray_dir, PlanePoint, PlaneNormal));
 
-    ray_pos += ray_dir * sample_step;
-
-    // break out if ray reached the end of the cube.
-    if (any(greaterThan(ray_pos,pos111)))
-      break;
-
-    if (any(lessThan(ray_pos,pos000)))
-      break;
-
+  intersect.y = min(1.0, intersect.y);
+  // vec2 intersect = vec2(0.0, 1.0);
+  for(float t = intersect.x; t < intersect.y;t+=sample_step){
+   ray_pos+= sample_step * ray_dir;
     density = texture(uSampler_tex, ray_pos).r;
     max_density = max(max_density, density);
     if(max_density == density){
@@ -123,7 +134,7 @@ void main(void){
         best_ray_pos = ray_pos;
     }
 
-  }while(true);
+  }//while(true);
 
     if(max_density > -1.0){
         if(u_use_interpolation)//re-sample using interpolation
@@ -156,4 +167,7 @@ void main(void){
     discard;
   else
     gl_FragColor = vec4(frag_color.rgb,1.0);
+}
+void main_old(){
+    gl_FragColor = vec4(tex_coord,1.0);
 }
