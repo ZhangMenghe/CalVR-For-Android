@@ -195,18 +195,22 @@ vec2 intersect_box(vec3 orig, vec3 dir) {
 }
 
 void main(){
-    vec3 PlanePoint = vec3(.0);
+    vec3 PlanePoint = vec3(.0, .0, 0.5);
     vec3 PlaneNormal = vec3(.0, .0, 1.0);
+    vec3 ray_start = tex_coord;
 
-    vec2 intersect = intersect_box(tex_coord, normalize(ray_dir));
-    intersect.x = max(.0, intersect.x);
+    vec2 intersect = intersect_box(ray_start, ray_dir);
+    intersect.x = max(.0, intersect.x);intersect.y = min(intersect.y, 1.0);
 
-//    intersect.x = max(intersect.x, RayPlane(tex_coord-0.5, ray_dir, PlanePoint, PlaneNormal));
-    intersect.y = min(intersect.y, 1.0);
+    #ifdef BACK_FACE_CULLED
+        intersect.x = max(intersect.x, RayPlane(ray_start, ray_dir, PlanePoint, PlaneNormal));
+    #else
+        intersect.y = min(intersect.y, RayPlane(ray_start, ray_dir, PlanePoint, PlaneNormal));
+    #endif
 
     if (intersect.y < intersect.x) discard;
 
-    gl_FragColor = vec4(tex_coord, 1.0);
+    gl_FragColor = vec4(ray_start, 1.0);
 //    float intensity = texture(uSampler_tex, tex_coord).r;
 //    gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
 

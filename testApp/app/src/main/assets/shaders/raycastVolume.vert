@@ -23,6 +23,6 @@ void main(void){
     NormalMatrix = mat3(modelViewMatrix[0].xyz,modelViewMatrix[1].xyz,modelViewMatrix[2].xyz);
 
 
-    ray_dir = vec3(inverse(uModelMat) * vec4(eye_pos_world,1.0)) - tex_coord;
+    ray_dir = normalize(vec3(inverse(uModelMat) * vec4(eye_pos_world,1.0)) - tex_coord);
     gl_Position = uProjMat * uViewMat  * vec4(frag_position, 1.0);
 }
