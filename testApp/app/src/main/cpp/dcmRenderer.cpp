@@ -194,7 +194,7 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
 dcmVolumeRender::dcmVolumeRender(AAssetManager *assetManager):
         cubeRenderer(assetManager){
     new assetLoader(assetManager);
-    _modelMat = glm::scale(_modelMat, glm::vec3(1.0f, -1.0f, 0.5f));
+    _modelMat = glm::scale(_modelMat, scale_origin);
 }
 
 void dcmVolumeRender::addImage(GLubyte * img, float location) {
@@ -419,7 +419,7 @@ void dcmVolumeRender::updateGeometry(std::vector<Polygon> polygon, PolygonMap po
 //    indices_ = memcpy(c_indices.begin(), );
     indices_num_ = c_indices.size();
     memcpy(indices_, c_indices.data(), indices_num_ * sizeof(GLuint));
-    delete (c_vertices_);
+    delete []c_vertices_;
 }
 void dcmVolumeRender::updateVBOData(){
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
@@ -435,6 +435,10 @@ void dcmVolumeRender::restore_original_cube(){
     vertices_num_ = 8;
     memcpy(vertices_, sVertex, sizeof(GLfloat) * VAO_DATA_LEN * vertices_num_);
     memcpy(indices_, sIndices, sizeof(GLuint) * indices_num_);
+}
+void dcmVolumeRender::setCuttingPlane_texturebased(float percent){
+//    _modelMat = glm::scale(mat4(1.0), scale_origin);
+    setCuttingPlane(percent);
 }
 void dcmVolumeRender::setCuttingPlane(float percent){
 //        float points_[9] ={0,0.5,0.5,
@@ -687,7 +691,8 @@ void dcmVolumeRender::initGeometry_texturebased() {
 void dcmVolumeRender::onDraw() {
     switch(render_mode){
         case TEXTURE_BASED:
-            onTexturebasedDraw();
+//            onTexturebasedDraw();
+            onTexturebasedDraw_dense();
             break;
         case RAYCAST:
             onRaycastDraw();
@@ -712,6 +717,26 @@ void dcmVolumeRender::onNaiveDraw() {
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+void dcmVolumeRender::onTexturebasedDraw_dense(){
+    updateVBOData();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_3D, volume_texid);
+
+    glUseProgram(program_texture);
+    glUniformMatrix4fv(glGetUniformLocation(program_texture, "uProjMat"), 1, GL_FALSE,
+                       &(_camera->getProjMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(program_texture, "uViewMat"), 1, GL_FALSE,
+                       &(_camera->getViewMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(program_texture, "uModelMat"), 1, GL_FALSE,
+                       &_modelMat[0][0]);
+
+    glUniform1i(glGetUniformLocation(program_texture, "uSampler_tex"), 0);
+
+    glBindVertexArray(VAO);
+    glDrawElements(RenderMode[gl_draw_mode_id], indices_num_, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
 void dcmVolumeRender::onTexturebasedDraw(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

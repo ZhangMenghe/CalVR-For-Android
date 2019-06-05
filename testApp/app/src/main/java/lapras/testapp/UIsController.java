@@ -238,6 +238,9 @@ public class UIsController {
             }});
     }
     public static void ToggleShowView(){
+        //do nothing
+    }
+    public static void ToggleShowView_animate(){
         if(raycastPanel.getVisibility() == View.VISIBLE){
             raycastPanel.startAnimation(panelHiddenAction);
             raycastPanel.setVisibility(View.GONE);

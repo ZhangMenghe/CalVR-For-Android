@@ -42,7 +42,7 @@ class Camera{
     const float NEAR_PLANE = 0.01f;
     const float FAR_PLANE = 1000.0f;
     const float FOV = 45.0f;
-    const glm::vec3 ORI_CAM_POS = glm::vec3(0.0f, 0.f, 3.0f);
+    const glm::vec3 ORI_CAM_POS = glm::vec3(0.0f, .0f, 3.0f);
     const glm::vec3 ORI_UP = glm::vec3(0.0f, 1.0f, 0.0f);
     const glm::vec3 ORI_FRONT = glm::vec3(0.0f, 0.0f, -1.0f);
 
@@ -210,8 +210,13 @@ public:
         }
     }
     void onParamsSet(int idx, float value){
-        if(idx < 0)
-            setCuttingPlane(value);//should be 0-1
+        if(idx < 0){
+            if(render_mode == TEXTURE_BASED)
+                setCuttingPlane_texturebased(value);
+            else
+                setCuttingPlane(value);//should be 0-1
+        }
+
         else
             adjustParam[idx] = value;
     }
@@ -256,11 +261,13 @@ private:
     int gl_draw_mode_id = 0;
 
     const float scale_inv = 0.15f;
+    const glm::vec3 scale_origin = glm::vec3(1.2f, -1.2f, 0.6f);
+
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
     const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
-    const float adjustParam_origin[4] = {500.0f, 0.9f, 350.0f, 0.3f};
-    float adjustParam[4]= {500.0f, 0.9f, 350.0f, 0.3f};
+    const float adjustParam_origin[4] = {400.0f, 0.9f, 250.0f, 0.3f};
+    float adjustParam[4]= {400.0f, 0.9f, 250.0f, 0.3f};
 
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = false;
     RENDERER render_mode = RAYCAST;
@@ -289,12 +296,14 @@ private:
 
     void onNaiveDraw();
     void onTexturebasedDraw();
+    void onTexturebasedDraw_dense();
     void onRaycastDraw();
 
     void restore_original_cube();
     void draw_intersect_plane();
     void updateVBOData();
     void setCuttingPlane(float percent = .0f);
+    void setCuttingPlane_texturebased(float percent = .0f);
     void updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
     void updateTexCoords(GLfloat* vertices, glm::vec3 p);
