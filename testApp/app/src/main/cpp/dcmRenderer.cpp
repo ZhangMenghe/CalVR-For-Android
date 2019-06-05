@@ -779,6 +779,8 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glUniformMatrix4fv(glGetUniformLocation(program_ray, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
 
+    glm::vec3 cam_pos =  _camera->getCameraPosition();
+    glUniform3f(glGetUniformLocation(program_ray, "eye_pos_world"),cam_pos.x, cam_pos.y, cam_pos.z);
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_tex"), 0);
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_trans"), 1);
     glUniform1f(glGetUniformLocation(program_ray, "sample_step_inverse"), adjustParam[0]);

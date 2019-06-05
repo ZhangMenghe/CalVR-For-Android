@@ -11,6 +11,7 @@ out mat3 NormalMatrix;
 out vec3 ray_dir;
 
 uniform mat4 uModelMat, uViewMat, uProjMat;
+uniform vec3 eye_pos_world;
 
 void main(void){
     gl_PointSize = 10.0;
@@ -20,7 +21,8 @@ void main(void){
     mat4 modelViewMatrix = uViewMat * uModelMat;
 
     NormalMatrix = mat3(modelViewMatrix[0].xyz,modelViewMatrix[1].xyz,modelViewMatrix[2].xyz);
-    ray_dir = vec3(inverse(modelViewMatrix) * vec4(0.0,0.0,-1.0,0.0));
 
+
+    ray_dir = vec3(inverse(uModelMat) * vec4(eye_pos_world,1.0)) - tex_coord;
     gl_Position = uProjMat * uViewMat  * vec4(frag_position, 1.0);
 }

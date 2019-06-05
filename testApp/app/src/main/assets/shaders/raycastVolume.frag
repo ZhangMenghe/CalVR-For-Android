@@ -28,6 +28,26 @@ uniform bool u_use_interpolation;
 uniform bool u_draw_naive;
 uniform float OpacityThreshold;
 uniform float volumex, volumey, volumez;
+
+vec2 RayCube(vec3 ro, vec3 rd, vec3 extents) {
+    vec3 tMin = (-extents - ro) / rd;
+    vec3 tMax = (extents - ro) / rd;
+    vec3 t1 = min(tMin, tMax);
+    vec3 t2 = max(tMin, tMax);
+    float tNear = max(max(t1.x, t1.y), t1.z);
+    float tFar = min(min(t2.x, t2.y), t2.z);
+    return vec2(tNear, tFar);
+}
+float RayPlane(vec3 ro, vec3 rd, vec3 planep, vec3 planen) {
+    float d = dot(planen, rd);
+    float t = dot(planep - ro, planen);
+    if(d >  1e-5)
+    return t/d;
+    else if (t > .0)
+    return 1e5;
+    return -1e5;
+}
+
 // uniform vec3 u_clip_plane[6];
 // uniform int u_cpoints_num;
 vec3 phong_illumination_model(vec3 N,vec3 curColor,vec3 curPos){
@@ -161,6 +181,33 @@ void main_old(void){
   else
     gl_FragColor = vec4(frag_color.rgb,1.0);
 }
+vec2 intersect_box(vec3 orig, vec3 dir) {
+    const vec3 box_min = vec3(0);
+    const vec3 box_max = vec3(1);
+    vec3 inv_dir = 1.0 / dir;
+    vec3 tmin_tmp = (box_min - orig) * inv_dir;
+    vec3 tmax_tmp = (box_max - orig) * inv_dir;
+    vec3 tmin = min(tmin_tmp, tmax_tmp);
+    vec3 tmax = max(tmin_tmp, tmax_tmp);
+    float t0 = max(tmin.x, max(tmin.y, tmin.z));
+    float t1 = min(tmax.x, min(tmax.y, tmax.z));
+    return vec2(t0, t1);
+}
+
 void main(){
-    gl_FragColor = vec4(1.0,.0,.0, 1.0);
+    vec3 PlanePoint = vec3(.0);
+    vec3 PlaneNormal = vec3(.0, .0, 1.0);
+
+    vec2 intersect = intersect_box(tex_coord, normalize(ray_dir));
+    intersect.x = max(.0, intersect.x);
+
+//    intersect.x = max(intersect.x, RayPlane(tex_coord-0.5, ray_dir, PlanePoint, PlaneNormal));
+    intersect.y = min(intersect.y, 1.0);
+
+    if (intersect.y < intersect.x) discard;
+
+    gl_FragColor = vec4(tex_coord, 1.0);
+//    float intensity = texture(uSampler_tex, tex_coord).r;
+//    gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
+
 }
