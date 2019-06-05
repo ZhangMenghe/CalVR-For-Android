@@ -73,57 +73,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ec9a1a1-f2bd-4fc0-b609-b610621df771" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/shaders/dcmOSG.frag" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/shaders/dcmOSG.frag" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/assets/shaders/raycastVolume.frag" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/assets/shaders/raycastVolume.frag" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/cpp/dcmRenderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/cpp/dcmRenderer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/cpp/dcmRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/cpp/dcmRenderer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/java/lapras/testapp/UIsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/java/lapras/testapp/UIsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/res/values/arrays.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/res/values/arrays.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="226">
-                    <caret line="351" column="24" selection-start-line="351" selection-start-column="24" selection-end-line="351" selection-end-column="24" />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.h">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="215">
-                    <caret line="90" column="4" selection-start-line="90" selection-start-column="4" selection-end-line="90" selection-end-column="35" />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.h">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="435">
-                    <caret line="55" column="48" selection-start-line="55" selection-start-column="48" selection-end-line="55" selection-end-column="48" />
-                    <folding>
-                      <element signature="e#49#79#0" expanded="true" />
-                      <element signature="e#160#188#0" expanded="true" />
-                      <element signature="e#281#309#0" expanded="true" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -145,8 +108,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
-              <caret line="143" column="5" selection-start-line="143" selection-start-column="5" selection-end-line="143" selection-end-column="5" />
+            <state relative-caret-position="175">
+              <caret line="163" column="27" selection-start-line="163" selection-start-column="24" selection-end-line="163" selection-end-column="27" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
               </folding>
@@ -157,24 +120,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/dcmOSG.frag">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="62" column="46" selection-start-line="62" selection-start-column="32" selection-end-line="62" selection-end-column="46" />
+            <state relative-caret-position="280">
+              <caret line="37" column="40" selection-start-line="37" selection-start-column="40" selection-end-line="37" selection-end-column="40" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/Color.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-63" />
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="135" column="28" selection-start-line="135" selection-start-column="28" selection-end-line="135" selection-end-column="28" />
+            <state relative-caret-position="480">
+              <caret line="78" column="48" lean-forward="true" selection-start-line="78" selection-start-column="48" selection-end-line="78" selection-end-column="48" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -183,9 +144,21 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="377">
+              <caret line="59" column="25" selection-start-line="59" selection-start-column="25" selection-end-line="59" selection-end-column="25" />
+              <folding>
+                <element signature="e#69#102#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-173">
+            <state relative-caret-position="6600">
               <caret line="330" column="20" selection-start-line="330" selection-start-column="20" selection-end-line="330" selection-end-column="20" />
             </state>
           </provider>
@@ -194,7 +167,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrInput/TrackingManager.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
+            <state relative-caret-position="4500">
               <caret line="225" column="19" selection-start-line="225" selection-start-column="19" selection-end-line="225" selection-end-column="19" />
             </state>
           </provider>
@@ -203,7 +176,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrKernel/InteractionEvent.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="47">
+            <state relative-caret-position="1120">
               <caret line="56" column="2" selection-start-line="56" selection-start-column="2" selection-end-line="56" selection-end-column="2" />
             </state>
           </provider>
@@ -220,16 +193,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>NormalMatrix</find>
-      <find>PlaneNormal</find>
-      <find>dcm_renderer</find>
-      <find>tracking</find>
-      <find>asse</find>
-      <find>volume_size</find>
-      <find>scalees</find>
-      <find>cut</find>
-      <find>_use_osg</find>
-      <find>setposition</find>
       <find>bool</find>
       <find>RayCube</find>
       <find>u_use_ligting</find>
@@ -250,6 +213,16 @@
       <find>setnodemas</find>
       <find>getScreenToClientPos</find>
       <find>setvalue</find>
+      <find>setnodema</find>
+      <find>glenabe</find>
+      <find>modelmat</find>
+      <find>program</find>
+      <find>clipnode</find>
+      <find>clip</find>
+      <find>gl</find>
+      <find>clipplane</find>
+      <find>GL_CLIP_PLANE5</find>
+      <find>gle</find>
     </findStrings>
     <replaceStrings>
       <replace>protected</replace>
@@ -307,11 +280,11 @@
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/raycastVolume.frag" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/basicDrawables/basisRenderer.h" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/basicDrawables/basisRenderer.cpp" />
-        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.h" />
         <option value="$PROJECT_DIR$/../../calvr/include/cvrInput/TrackingManager.h" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.h" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.cpp" />
         <option value="$PROJECT_DIR$/app/src/main/assets/shaders/dcmOSG.frag" />
+        <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.h" />
         <option value="$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.cpp" />
       </list>
     </option>
@@ -331,6 +304,32 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
+            </path>
+            <path>
+              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ARCalVR" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ARCalVR" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="Scope">
         <subPane subId="Project Files">
           <expand>
@@ -406,32 +405,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="app" type="47feb1d3:ProjectViewModuleNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ARCalVR" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ARCalVR" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="ARCalVR" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -613,7 +586,7 @@
       <window_info anchor="bottom" x="2087" y="61" width="1174" height="672" id="Logcat" order="10" type="FLOATING" weight="0.328" />
       <window_info anchor="bottom" id="Version Control" order="11" />
       <window_info anchor="bottom" id="Terminal" order="12" weight="0.32914287" />
-      <window_info active="true" anchor="bottom" id="Build" order="13" visible="true" weight="0.14305949" />
+      <window_info anchor="bottom" id="Build" order="13" visible="true" weight="0.14305949" />
       <window_info anchor="bottom" id="Messages" order="14" weight="0.32951945" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -808,20 +781,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrUtil/Bounds.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/ComputeBoundingBoxVisitor.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/objectOSG.frag">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -1085,16 +1044,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="50" column="82" selection-start-line="50" selection-start-column="82" selection-end-line="50" selection-end-column="82" />
-          <folding>
-            <element signature="e#69#102#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/basicDrawables/basisRenderer.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-16">
@@ -1119,60 +1068,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/Color.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr/src/cvrUtil/ARCoreManager.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-173">
+        <state relative-caret-position="6600">
           <caret line="330" column="20" selection-start-line="330" selection-start-column="20" selection-end-line="330" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrInput/TrackingManager.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
+        <state relative-caret-position="4500">
           <caret line="225" column="19" selection-start-line="225" selection-start-column="19" selection-end-line="225" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr/include/cvrKernel/InteractionEvent.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="47">
+        <state relative-caret-position="1120">
           <caret line="56" column="2" selection-start-line="56" selection-start-column="2" selection-end-line="56" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="90" column="4" selection-start-line="90" selection-start-column="4" selection-end-line="90" selection-end-column="35" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
+        <state relative-caret-position="7020">
           <caret line="351" column="24" selection-start-line="351" selection-start-column="24" selection-end-line="351" selection-end-column="24" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/Color.h">
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/GlesDrawables/drawablesEntrance.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-63" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/dcmOSG.frag">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="62" column="46" selection-start-line="62" selection-start-column="32" selection-end-line="62" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="143" column="5" selection-start-line="143" selection-start-column="5" selection-end-line="143" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#33#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="1800">
+          <caret line="90" column="4" selection-start-line="90" selection-start-column="4" selection-end-line="90" selection-end-column="35" />
         </state>
       </provider>
     </entry>
@@ -1188,10 +1118,51 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/shaders/dcmOSG.frag">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="37" column="40" selection-start-line="37" selection-start-column="40" selection-end-line="37" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="163" column="27" selection-start-line="163" selection-start-column="24" selection-end-line="163" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="59" column="25" selection-start-line="59" selection-start-column="25" selection-end-line="59" selection-end-column="25" />
+          <folding>
+            <element signature="e#69#102#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../calvr_plugins/general/ClipPlane/ClipPlane.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="59">
+          <caret line="27" column="39" selection-start-line="27" selection-start-column="39" selection-end-line="27" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../OpenSceneGraph-3.6.2/include/osg/ClipPlane">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1461">
+          <caret line="32" column="2" lean-forward="true" selection-start-line="32" selection-start-column="2" selection-end-line="32" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="135" column="28" selection-start-line="135" selection-start-column="28" selection-end-line="135" selection-end-column="28" />
+        <state relative-caret-position="480">
+          <caret line="78" column="48" lean-forward="true" selection-start-line="78" selection-start-column="48" selection-end-line="78" selection-end-column="48" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
           </folding>

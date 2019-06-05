@@ -4,6 +4,7 @@
         <item>Sample Step</item>
         <item>Threshold</item>
         <item>Brightness</item>
+        <item>Opacity</item>
     </string-array>
 
     <string-array name="switchArr">

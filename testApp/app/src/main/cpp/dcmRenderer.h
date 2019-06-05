@@ -259,8 +259,8 @@ private:
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
     const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
-    const float adjustParam_origin[3] = {500.0f, 0.9f, 350.0f};
-    float adjustParam[3]= {500.0f, 0.9f, 350.0f};
+    const float adjustParam_origin[4] = {500.0f, 0.9f, 350.0f, 0.3f};
+    float adjustParam[4]= {500.0f, 0.9f, 350.0f, 0.3f};
 
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = false;
     RENDERER render_mode = RAYCAST;

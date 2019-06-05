@@ -27,12 +27,12 @@ public class UIsController {
     private Switch switch_widget;
     public static boolean b_naiverenderer = false;
     final public static float MAX_SAMPLE_STEP_REPRESENT = 800.0f, MAX_THRESHOLD_REPRESENT = 2.0f,
-                              MAX_BRIGHTNESS_REPRESENT=500.0f, DENSITY_CUTTING_REPRESENT = 50.0f;
+                              MAX_BRIGHTNESS_REPRESENT=500.0f, DENSITY_CUTTING_REPRESENT = 50.0f, MAX_OPACITY_REPRESENT = 1.0f;
     final public static int MAX_SAMPLE_STEP = 800, MAX_THRESHOLD = 20,
             MAX_BRIGHTNESS=500, DENSITY_CUTTING = 50, ORIGINAL_CUT = 0;
 
     private enum TOGGLE_VALUE{
-        SAMPLE_STEP, THRESHOLD, BRIGHTNESS
+        SAMPLE_STEP, THRESHOLD, BRIGHTNESS, OPACITY
     };
     private enum SWITCH_VALUE{
         TRANSFER_COLOR, USE_LIGHTING, USE_INTERPOLATION, SIMPLE_CUBE, NAIVE_RENDERER, CUTTING
@@ -64,6 +64,8 @@ public class UIsController {
             toggle_values[i] = JNIInterface.JNIgetOriginalValue(i);
             if(i == 1)
                 toggle_values[i] *= MAX_THRESHOLD / MAX_THRESHOLD_REPRESENT;
+            if(i == 3)
+                toggle_values[i] *= MAX_THRESHOLD / MAX_OPACITY_REPRESENT;
         }
 
         seekbar_toggle.setMax(MAX_SAMPLE_STEP);
@@ -194,6 +196,13 @@ public class UIsController {
                 seekbar_toggle.setProgress((int)toggle_values[toggle_id]);
                 toggleValueTex.setText(activity.getString(R.string.text_brightness, toggle_values[toggle_id]));
                 JNIInterface.JNIsetParam(toggle_id, toggle_values[toggle_id]);
+                break;
+            case OPACITY:
+                seekbar_toggle.setMax(MAX_THRESHOLD);
+                seekbar_toggle.setProgress((int)toggle_values[toggle_id]);
+                float opacity_real = MAX_OPACITY_REPRESENT/ MAX_THRESHOLD * toggle_values[toggle_id];
+                toggleValueTex.setText(activity.getString(R.string.text_opacity_threshold, opacity_real));
+                JNIInterface.JNIsetParam(toggle_id, opacity_real);
                 break;
                 default:
                     break;

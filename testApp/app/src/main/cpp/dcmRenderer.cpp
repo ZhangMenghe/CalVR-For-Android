@@ -754,7 +754,7 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniform1f(glGetUniformLocation(program_ray, "sample_step_inverse"), adjustParam[0]);
     glUniform1f(glGetUniformLocation(program_ray, "val_threshold"),adjustParam[1]);
     glUniform1f(glGetUniformLocation(program_ray, "brightness"), adjustParam[2]);
-
+    glUniform1f(glGetUniformLocation(program_ray, "OpacityThreshold"), adjustParam[3]);
     float lightIa[3] = { 0.8,0.8,0.8 };
     float lightId[3] = { 0.7,0.7,0.7 };
     float lightIs[3] = { 0.5,0.5,0.5 };
