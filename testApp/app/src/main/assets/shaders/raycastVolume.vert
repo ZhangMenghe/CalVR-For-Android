@@ -12,10 +12,14 @@ out vec3 ray_dir;
 
 uniform mat4 uModelMat, uViewMat, uProjMat;
 uniform vec3 eye_pos_world;
+uniform float volumex, volumey, volumez;
 
 void main(void){
     gl_PointSize = 10.0;
-    tex_coord = aPosition + 0.5;
+
+    vec3 step_size = vec3(1.0 / volumex, 1.0/volumey, 1.0/volumez);
+    tex_coord = clamp(aPosition+0.5, step_size, 1.0 - step_size);
+
 //    tex_coord = aTexCoord;
     frag_position = vec3(uModelMat * vec4(aPosition, 1.0));
     mat4 modelViewMatrix = uViewMat * uModelMat;

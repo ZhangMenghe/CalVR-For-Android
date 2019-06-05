@@ -210,8 +210,55 @@ void main(){
 
     if (intersect.y < intersect.x) discard;
 
-    gl_FragColor = vec4(ray_start, 1.0);
+    float intensity = texture(uSampler_tex, ray_start).r;
+    gl_FragColor = vec4(intensity);
+
+//    float step_delta = intersect.y- intersect.x;
+//    float sample_step = step_delta/2.0;
+//    vec3 ray_pos = ray_start;
+//    vec4 frag_color = vec4(0), color;
+//    float density, max_density = -1.0;
+//    vec3 best_ray_pos = ray_pos;
+//    float acc_alpha = 0.0;
+//    for (float t = 0.0; t < step_delta; t+=sample_step) {
+//        ray_pos = ray_start + ray_dir * t;
+//        density = texture(uSampler_tex, ray_pos).r;
+//        float density_tmp = density+val_threshold - 0.5;
+//        density_tmp = density_tmp * density_tmp * density_tmp;
+//        acc_alpha += density_tmp*(1.0 - acc_alpha);
+//        max_density = max(max_density, density);
+//        if(max_density == density) best_ray_pos = ray_pos;
+//    }
+//    if(max_density > -1.0){
+//        density = max_density;
+//        density += val_threshold - 0.5;
+//        density = density * density * density;
+//        color.rgb = vec3(density);
+//        color.a   = density * sample_step * brightness;
+//        frag_color.rgb = frag_color.rgb * (1.0 - color.a) + color.rgb * color.a;
+//    }
+//    acc_alpha = clamp(acc_alpha, 0.0, 1.0);
+//    if(frag_color.r == 0.0)
+//    gl_FragColor = vec4(1.0,.0,.0,1.0);
+//    else
+//    gl_FragColor = vec4(frag_color.rgb, color.a);
+}
+
+//float dt = 1.0/sample_step_inverse;
+//vec3 p = ray_start + intersect.x * ray_dir;
+//for (float t = intersect.x; t < intersect.y; t += dt) {
+//    float val = texture(uSampler_tex, p).r;
+//    vec4 val_color = vec4(val);
+//    gl_FragColor.rgb += (1.0 - gl_FragColor.a) * val_color.a * val_color.rgb;
+//    gl_FragColor.a += (1.0 - gl_FragColor.a) * val_color.a;
+//    // Optimization: break out of the loop when the color is near opaque
+//    if (gl_FragColor.a >= 0.95) {
+//        break;
+//    }
+//    p += ray_dir * dt;
+//}
+
+//    gl_FragColor = vec4(ray_start, 1.0);
 //    float intensity = texture(uSampler_tex, tex_coord).r;
 //    gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
 
-}
