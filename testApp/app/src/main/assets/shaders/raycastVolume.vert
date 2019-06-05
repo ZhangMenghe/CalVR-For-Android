@@ -2,7 +2,7 @@
 precision mediump float;
 
 layout (location = 0) in vec3 aPosition;
-layout (location = 1) in vec3 aTexCoord;
+//layout (location = 1) in vec3 aTexCoord;
 
 out vec3 frag_position; // in object space
 out vec3 tex_coord;
@@ -14,7 +14,8 @@ uniform mat4 uModelMat, uViewMat, uProjMat;
 
 void main(void){
     gl_PointSize = 10.0;
-    tex_coord = aTexCoord;
+    tex_coord = aPosition + 0.5;
+//    tex_coord = aTexCoord;
     frag_position = vec3(uModelMat * vec4(aPosition, 1.0));
     mat4 modelViewMatrix = uViewMat * uModelMat;
 

@@ -81,7 +81,7 @@ float get_trilinear_interpolation(vec3 pc, vec3 cmin, vec3 cmax){
                     (1.0- alpha) * beta * gamma * getVoxel(p.x, p2.y, p2.z) +
                     alpha * beta * gamma *getVoxel(p2.x, p2.y, p2.z));
 }
-void main(void){
+void main_old(void){
   if(u_draw_naive){
       gl_FragColor = vec4(tex_coord, 1.0);
       return;
@@ -160,4 +160,7 @@ void main(void){
     discard;
   else
     gl_FragColor = vec4(frag_color.rgb,1.0);
+}
+void main(){
+    gl_FragColor = vec4(1.0,.0,.0, 1.0);
 }

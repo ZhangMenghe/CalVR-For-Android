@@ -72,16 +72,7 @@
     <bookmark url="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/VolumeViewer.cpp" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ec9a1a1-f2bd-4fc0-b609-b610621df771" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/shaders/dcmOSG.frag" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/shaders/dcmOSG.frag" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/assets/shaders/raycastVolume.frag" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/assets/shaders/raycastVolume.frag" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/cpp/dcmRenderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/cpp/dcmRenderer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/cpp/dcmRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/cpp/dcmRenderer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/java/lapras/testapp/UIsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/java/lapras/testapp/UIsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/res/values/arrays.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/res/values/arrays.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testApp/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../testApp/app/src/main/res/values/strings.xml" afterDir="false" />
-    </list>
+    <list default="true" id="0ec9a1a1-f2bd-4fc0-b609-b610621df771" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,8 +125,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="78" column="48" lean-forward="true" selection-start-line="78" selection-start-column="48" selection-end-line="78" selection-end-column="48" />
+            <state relative-caret-position="100">
+              <caret line="59" column="63" lean-forward="true" selection-start-line="59" selection-start-column="63" selection-end-line="59" selection-end-column="63" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -147,7 +138,7 @@
         <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="377">
-              <caret line="59" column="25" selection-start-line="59" selection-start-column="25" selection-end-line="59" selection-end-column="25" />
+              <caret line="58" column="25" selection-start-line="58" selection-start-column="25" selection-end-line="58" selection-end-column="25" />
               <folding>
                 <element signature="e#69#102#0" expanded="true" />
               </folding>
@@ -1138,7 +1129,7 @@
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="377">
-          <caret line="59" column="25" selection-start-line="59" selection-start-column="25" selection-end-line="59" selection-end-column="25" />
+          <caret line="58" column="25" selection-start-line="58" selection-start-column="25" selection-end-line="58" selection-end-column="25" />
           <folding>
             <element signature="e#69#102#0" expanded="true" />
           </folding>
@@ -1161,8 +1152,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../../calvr_plugins/calit2/Helmsley/dcmRenderer_osg.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="78" column="48" lean-forward="true" selection-start-line="78" selection-start-column="48" selection-end-line="78" selection-end-column="48" />
+        <state relative-caret-position="100">
+          <caret line="59" column="63" lean-forward="true" selection-start-line="59" selection-start-column="63" selection-end-line="59" selection-end-column="63" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
           </folding>

@@ -102,9 +102,13 @@ public:
         _modelMat = glm::mat4(1.0f);
     }
 protected:
-    const int MAX_VERTEX_NUM = 15;
-    const int MAX_INDICE_NUM = 90;
-    const int VAO_DATA_LEN = 6;
+    const int MAX_DIV_X = 100;
+    const int MAX_DIV_Y = 100;
+    const int MAX_DIV_Z = 50;
+
+    const long MAX_VERTEX_NUM = MAX_DIV_X * MAX_DIV_Y * MAX_DIV_Z * 8;
+    const long MAX_INDICE_NUM =  MAX_DIV_X * MAX_DIV_Y * MAX_DIV_Z * 36;
+    const int VAO_DATA_LEN = 3;
 
     glm::mat4 _modelMat;
 
@@ -117,15 +121,15 @@ protected:
 
     int indices_num_, vertices_num_;
 
-    const GLfloat sVertex[48] = {//World					//Color
-            -0.5f,-0.5f,0.5f, 0.0f,0.0f,1.0f,		//x0, y0, z1, //	//v0
-            0.5f,-0.5f,0.5f, 1.0f,0.0f,1.0f,		//x1,y0,z1, //	//v1
-            0.5f,0.5f,0.5f,	1.0f,1.0f,1.0f,		//x1, y1, z1,//	//v2
-            -0.5f,0.5f,0.5f,0.0f,1.0f,1.0f,		//x0,y1,z1, //	//v3
-            -0.5f,-0.5f,-0.5f,0.0f,0.0f,0.0f,	//x0,y0,z0,//	//v4
-            0.5f,-0.5f,-0.5f,1.0f,0.0f,0.0f,		//x1,y0,z0,//	//v5
-            0.5f,0.5f,-0.5f,1.0f,1.0f,0.0f,	//x1,y1,z0, //	//v6
-            -0.5f,0.5f,-0.5f,0.0f,1.0f,0.0f,		//x0,y1,z0//	//v7
+    const GLfloat sVertex[24] = {//World					//Color
+            -0.5f,-0.5f,0.5f, //0.0f,0.0f,1.0f,		//x0, y0, z1, //	//v0
+            0.5f,-0.5f,0.5f, //1.0f,0.0f,1.0f,		//x1,y0,z1, //	//v1
+            0.5f,0.5f,0.5f,	//1.0f,1.0f,1.0f,		//x1, y1, z1,//	//v2
+            -0.5f,0.5f,0.5f,//0.0f,1.0f,1.0f,		//x0,y1,z1, //	//v3
+            -0.5f,-0.5f,-0.5f,//0.0f,0.0f,0.0f,	//x0,y0,z0,//	//v4
+            0.5f,-0.5f,-0.5f,//1.0f,0.0f,0.0f,		//x1,y0,z0,//	//v5
+            0.5f,0.5f,-0.5f,//1.0f,1.0f,0.0f,	//x1,y1,z0, //	//v6
+            -0.5f,0.5f,-0.5f,//0.0f,1.0f,0.0f,		//x0,y1,z0//	//v7
     };
     const GLuint sIndices[36] = { 0,1,2,0,2,3,	//front
                                  4,6,7,4,5,6,	//back
@@ -183,6 +187,7 @@ public:
         }
     }
     void onDoubleTouch(int id, float x, float y){
+        gl_draw_mode_id = (gl_draw_mode_id+1)%3;
     }
     bool changeRender(){
         render_mode = static_cast<RENDERER >((render_mode+1)%2);
@@ -298,6 +303,15 @@ private:
     void updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
     void updateTexCoords(GLfloat* vertices, glm::vec3 p);
+    typedef std::pair<glm::vec3, int> vPair;
+    struct CmpClass // class comparing vertices in the set
+    {
+        bool operator() (const vPair& p1, const vPair& p2) const{
+            return p1.first.x == p2.first.x && p1.first.y == p2.first.y &&p1.first.z == p2.first.z;
+        }
+    };
+
+    void dense_the_cube(int dx, int dy, int dz);
 };
 
 

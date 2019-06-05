@@ -194,7 +194,8 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
 dcmVolumeRender::dcmVolumeRender(AAssetManager *assetManager):
         cubeRenderer(assetManager){
     new assetLoader(assetManager);
-    _modelMat = glm::scale(_modelMat, glm::vec3(1.0f, -1.0f, 0.5f));
+//    _modelMat = glm::scale(_modelMat, glm::vec3(1.0f, -1.0f, 0.5f));
+    _modelMat = mat4(1.0);
 }
 
 void dcmVolumeRender::addImage(GLubyte * img, float location) {
@@ -617,8 +618,8 @@ void dcmVolumeRender::initGeometry() {
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VAO_DATA_LEN * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VAO_DATA_LEN * sizeof(float), (void*)(3 * sizeof(float)));
+//    glEnableVertexAttribArray(1);
+//    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VAO_DATA_LEN * sizeof(float), (void*)(3 * sizeof(float)));
 
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -629,12 +630,13 @@ void dcmVolumeRender::initGeometry() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    glEnable(GL_TEXTURE_3D);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-
+//    glEnable(GL_TEXTURE_3D);
+//    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_BLEND);
+//    glEnable(GL_CULL_FACE);
 //    updateVBOData();
-    setCuttingPlane();
+    //setCuttingPlane();
+    dense_the_cube(2,2,2);
 }
 
 void dcmVolumeRender::initGeometry_texturebased() {
@@ -735,6 +737,10 @@ void dcmVolumeRender::onTexturebasedDraw(){
 void dcmVolumeRender::onRaycastDraw(){
     updateVBOData();
 
+//    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
@@ -792,6 +798,8 @@ void dcmVolumeRender::onRaycastDraw(){
 //        if(data[i] != GLubyte(0))
 //            LOGE("====value %d", data[i]);
 //    }
+//    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
 }
 void dcmVolumeRender::draw_intersect_plane(){
 
@@ -802,4 +810,53 @@ void dcmVolumeRender::draw_intersect_plane(){
 
     glBindVertexArray(VAO_PLANE);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+void dcmVolumeRender::dense_the_cube(int dx, int dy, int dz){
+//    std::set<vPair, CmpClass > vertice_set;
+    std::vector<vec3> c_vertices;
+    std::vector<GLuint> indices_tmp(36 * dx * dy * dz, 0);
+    int indice_idx = 0, indices_current_num = 0;
+    float sx = 1.0f/dx, sy = 1.0f / dy, sz = 1.0f/dz;
+    const vec3 sps[8] = {
+            vec3(0,0,0), vec3(sx, 0, 0),vec3(sx, sy, 0), vec3(0, sy, 0),
+            vec3(0,0,-sz), vec3(sx, 0, -sz),vec3(sx, sy, -sz), vec3(0, sy, -sz),
+    };
+    GLuint indice_map[8]= {0};
+
+    vec3 bp = vec3(sVertex[0], sVertex[1], sVertex[2]);
+    for(int cz_id = 0; cz_id<dz; cz_id++){
+        for(int cy_id = 0; cy_id<dy; cy_id++) {
+            for (int cx_id = 0; cx_id<dx; cx_id++) {
+                for (int n = 0; n< 8; n++) {
+                    vec3 cp = bp + sps[n];
+                    auto ret = std::find(c_vertices.begin(), c_vertices.end(), cp);
+                    if(ret != c_vertices.end()){
+                        indice_map[n] = (GLuint)std::distance(c_vertices.begin(), ret);
+                    }else{
+                        c_vertices.push_back(cp);
+                        indice_map[n] = (GLuint)indice_idx;
+                        indice_idx++;
+                    }
+                }
+                for(int id_indic = 0; id_indic<36; id_indic++){
+                    indices_[indices_current_num] = indice_map[sIndices[id_indic]];
+                    indices_tmp[indices_current_num] = indice_map[sIndices[id_indic]];
+                    indices_current_num++;
+                }
+
+                bp.x += sx;
+            }
+            bp.x = sVertex[0];
+            bp.y += sy;
+        }
+        bp.x = sVertex[0]; bp.y = sVertex[1]; bp.z -= sz;
+    }
+    vertices_num_ = indice_idx;
+    indices_num_ = 36 * dx * dy * dz;
+    for(int i=0; i<vertices_num_;i++){
+        int cid = VAO_DATA_LEN * i;
+        vertices_[cid] = c_vertices[i].x;vertices_[cid+1] = c_vertices[i].y;vertices_[cid+2] = c_vertices[i].z;
+    }
+    LOGE("===");
+//    memcpy(indices_, &indices_tmp, sizeof(GLuint) * indices_num_);
 }
