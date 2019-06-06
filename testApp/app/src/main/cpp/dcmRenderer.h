@@ -174,20 +174,33 @@ public:
         Mouse_old = glm::fvec2(x, y);
         xoffset*= MOUSE_ROTATE_SENSITIVITY;
         yoffset*= MOUSE_ROTATE_SENSITIVITY;
+
+        if(operate_entity == OP_CUT_SPHERE){
+            adjust_cut_sphere_pos(x, y);
+            return;
+        }
+
         if(fabsf(xoffset / _screen_w) > fabsf(yoffset/_screen_h)){
-            if(rotate_model)
-                _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
-            else
+            if(operate_entity == OP_CAMERA)
                 _camera->rotateCamera(3, glm::vec4(_modelMat[3]), xoffset);
-        }else{
-            if(rotate_model)
-                _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
             else
+                _modelMat = glm::rotate(_modelMat, xoffset, glm::vec3(0,1,0));
+
+
+        }else{
+            if(operate_entity == OP_CAMERA)
                 _camera->rotateCamera(2, glm::vec4(_modelMat[3]), -yoffset);
+            else
+                _modelMat = glm::rotate(_modelMat, -yoffset, glm::vec3(1,0,0));
         }
     }
     void onDoubleTouch(int id, float x, float y){
-        gl_draw_mode_id = (gl_draw_mode_id+1)%3;
+        if(id == 0)//single finger
+            gl_draw_mode_id = (gl_draw_mode_id+1)%3;
+        else if(id == 1)
+            adjust_cut_mode = static_cast<ADJUST_CUTTING >((adjust_cut_mode+ 1) % (int)CT_NR_ITEMS);
+        else if(id == 2)//debug!!!!! three fingers
+            operate_entity = static_cast<OPERATE_ENTITY >((operate_entity + 1) % (int)OP_NR_ITEMS);
     }
     bool changeRender(){
         render_mode = static_cast<RENDERER >((render_mode+1)%2);
@@ -216,10 +229,10 @@ public:
     }
     void onParamsSet(int idx, float value){
         if(idx < 0){
-            if(render_mode == TEXTURE_BASED)
-                setCuttingPlane_texturebased(value);
-            else
+            if(adjust_cut_mode == ADJ_CUT_PLANE)
                 setCuttingPlane(value);//should be 0-1
+            else
+                setCuttingSphereRadius(value);
         }
 
         else
@@ -262,6 +275,16 @@ private:
         RAYCAST = 0,
         TEXTURE_BASED
     };
+    enum ADJUST_CUTTING{
+        ADJ_CUT_PLANE = 0,
+        ADJ_CUT_SPHERE,
+        CT_NR_ITEMS
+    };
+    enum OPERATE_ENTITY{
+        OP_CAMERA = 0,
+        OP_CUT_SPHERE,
+        OP_NR_ITEMS
+    };
     GLenum RenderMode[3] = {GL_TRIANGLES, GL_POINTS,GL_LINES};
     int gl_draw_mode_id = 0;
 
@@ -289,6 +312,16 @@ private:
     glm::vec3 current_plane_point_ = glm::vec3(1000.0);
     glm::vec3 sphere_center_ = glm::vec3(1000.0);
     float sphere_radius = 0.2f;
+
+    glm::vec3 ori_cut_pieces = glm::vec3(10,10,5);
+    ADJUST_CUTTING adjust_cut_mode = ADJ_CUT_PLANE;
+    OPERATE_ENTITY operate_entity = OP_CAMERA;
+    const float sphere_raius_max  = 0.8f;
+
+    void adjust_cut_sphere_pos(float x_screen, float y_screen){
+        float x = x_screen/_screen_w, y = 1.0f - y_screen/_screen_h;
+
+    }
     //////////
 
     GLuint* m_VAOs;
@@ -314,7 +347,9 @@ private:
     void draw_intersect_plane();
     void updateVBOData();
     void setCuttingPlane(float percent = .0f);
-    void setCuttingPlane_texturebased(float percent = .0f);
+    void setCuttingSphereRadius(float percent){
+        sphere_radius = sphere_raius_max * percent;
+    }
     void updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm);
     void updateCuttingPlane_gpu(glm::vec3 p, glm::vec3 p_norm);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);

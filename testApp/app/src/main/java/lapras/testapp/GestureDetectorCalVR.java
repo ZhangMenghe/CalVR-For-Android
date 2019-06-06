@@ -46,15 +46,17 @@ public class GestureDetectorCalVR {
 
             // TWO FINGER DOUBLE: right double
             public void onTwoFingerDoubleTap(float ex, float ey){
-//                JNIInterface.JNIonDoubleTouch(1, ex, ey);
-                UIsController.ToggleShowView();
+                JNIInterface.JNIonDoubleTouch(1, ex, ey);
+               // UIsController.ToggleShowView();
             }
 
             public void onTwoFingerTripleTap(){}
             public void onTwoFingerLongPress(MotionEvent event){}
 
             // THREE FINGER TAPS
-            public void onThreeFingerDoubleTap(){}
+            public void onThreeFingerDoubleTap(){
+                JNIInterface.JNIonDoubleTouch(2, .0f, .0f);
+            }
             public void onThreeFingerTripleTap(){}
             public void onThreeFingerLongPress(MotionEvent event){}
         };

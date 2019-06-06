@@ -436,10 +436,6 @@ void dcmVolumeRender::restore_original_cube(){
     memcpy(vertices_, sVertex, sizeof(GLfloat) * VAO_DATA_LEN * vertices_num_);
     memcpy(indices_, sIndices, sizeof(GLuint) * indices_num_);
 }
-void dcmVolumeRender::setCuttingPlane_texturebased(float percent){
-//    _modelMat = glm::scale(mat4(1.0), scale_origin);
-    setCuttingPlane(percent);
-}
 void dcmVolumeRender::setCuttingPlane(float percent){
 //        float points_[9] ={0,0.5,0.5,
 //                        0.5,0.5,0,
@@ -650,7 +646,7 @@ void dcmVolumeRender::initGeometry() {
 //    glEnable(GL_CULL_FACE);
 //    updateVBOData();
     //setCuttingPlane();
-    dense_the_cube(20,20,10);
+    dense_the_cube((int)ori_cut_pieces.x,(int)ori_cut_pieces.y,(int)ori_cut_pieces.z);
 }
 
 void dcmVolumeRender::initGeometry_texturebased() {
