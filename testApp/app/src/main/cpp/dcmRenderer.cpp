@@ -194,7 +194,7 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
 dcmVolumeRender::dcmVolumeRender(AAssetManager *assetManager):
         cubeRenderer(assetManager){
     new assetLoader(assetManager);
-    _modelMat = mat4(1.0);
+    _modelMat = glm::scale(mat4(1.0), scale_origin);
 }
 
 void dcmVolumeRender::addImage(GLubyte * img, float location) {

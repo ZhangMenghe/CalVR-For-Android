@@ -47,10 +47,27 @@ float RayPlane(vec3 ro, vec3 rd, vec3 planep, vec3 planen) {
     if(d >  1e-5)
     return t/d;
     else if (t > .0)
-    return 1e5;
-    return -1e5;
+    return 1e5;//front, no effect
+    return -1e5;//behind, discard
 }
+bool pointSphere(vec3 p, vec3 sc, float radius){
+    return (length(p-sc) < radius);
+}
+float RaySphere(vec3 ro, vec3 rd, vec3 sc, float radius){
 
+    vec3 oc = ro - sc;
+    float a = dot(rd, rd);
+    float b = 2.0 * dot(oc, rd);
+    float c = dot(oc,oc) - radius*radius;
+    float discriminant = b*b - 4.0*a*c;
+    if(discriminant < 1e-5) //not intersect
+        return 1e5;
+    return -1e5;
+    discriminant = sqrt(discriminant);
+    float t1 = -b + discriminant; float t0 = -b-discriminant;
+    if(t0 * t1 < 1e-5) return -1e5;//discard, point inside circle
+    return t0 * 0.5;
+}
 // uniform vec3 u_clip_plane[6];
 // uniform int u_cpoints_num;
 vec3 phong_illumination_model(vec3 N,vec3 curColor,vec3 curPos){
@@ -237,6 +254,10 @@ vec4 RaycastSampling(float s, float t){
         return vec4(frag_color.rgb, color.a);
 }
 void main(){
+    if(u_draw_naive){
+        gl_FragColor = vec4(tex_coord, 1.0);
+        return;
+    }
     vec3 ray_start = tex_coord;
 
     vec2 intersect = intersect_box(ray_start, ray_dir);
@@ -249,39 +270,22 @@ void main(){
     #endif
 
     if (intersect.y < intersect.x) discard;
-    gl_FragColor = RaycastSampling(intersect.x, intersect.y);
 
-//    if( (tex_coord.x == tex_limit_min.x || tex_coord.x == tex_limit_max.x)
-//        && (tex_coord.y == tex_limit_min.y || tex_coord.y == tex_limit_max.y)
-//    &&(tex_coord.z == tex_limit_min.z || tex_coord.z == tex_limit_max.z) )
-//        if( (tex_coord.x == tex_limit_min.x || tex_coord.x == tex_limit_max.x)
-//            || (tex_coord.y == tex_limit_min.y || tex_coord.y == tex_limit_max.y)
-//        ||(tex_coord.z == tex_limit_min.z || tex_coord.z == tex_limit_max.z) )
-//        gl_FragColor = vec4(1.0,.0,.0,1.0);//RaycastSampling(intersect.x, intersect.y);
-//    else{
-//        float intensity = texture(uSampler_tex, ray_start).r;
-//        gl_FragColor = vec4(intensity);
+//    vec3 sphere_center = vec3(1.0); float sphere_radius = 0.5;
+//    intersect.y = min(intersect.y, RaySphere(tex_coord, ray_dir, sphere_center, sphere_radius));
+//
+//    if (intersect.y < intersect.x) {
+//        gl_FragColor = vec4(1.0,.0,.0,1.0);
+//        return;
+//        //discard;
 //    }
-
-
+    if(pointSphere(tex_coord, vec3(1.0), 0.5)) discard;
+//    {
+//                gl_FragColor = vec4(1.0,.0,.0,1.0);
+//                return;
+//    }
+    gl_FragColor = RaycastSampling(intersect.x, intersect.y);
 
 }
 
-//float dt = 1.0/sample_step_inverse;
-//vec3 p = ray_start + intersect.x * ray_dir;
-//for (float t = intersect.x; t < intersect.y; t += dt) {
-//    float val = texture(uSampler_tex, p).r;
-//    vec4 val_color = vec4(val);
-//    gl_FragColor.rgb += (1.0 - gl_FragColor.a) * val_color.a * val_color.rgb;
-//    gl_FragColor.a += (1.0 - gl_FragColor.a) * val_color.a;
-//    // Optimization: break out of the loop when the color is near opaque
-//    if (gl_FragColor.a >= 0.95) {
-//        break;
-//    }
-//    p += ray_dir * dt;
-//}
-
-//    gl_FragColor = vec4(ray_start, 1.0);
-//    float intensity = texture(uSampler_tex, tex_coord).r;
-//    gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
 
