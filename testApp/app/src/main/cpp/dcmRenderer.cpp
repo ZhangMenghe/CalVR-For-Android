@@ -481,9 +481,20 @@ void dcmVolumeRender::setCuttingPlane(float percent){
     }
     if(!is_cutting) return;
     vec3 pop_model = start_cutting + percent * cutting_length * vdir_model;
-    updateCuttingPlane(pop_model, vdir_model);
+    updateCuttingPlane_gpu(pop_model, vdir_model);
 }
+void dcmVolumeRender::updateCuttingPlane_gpu(glm::vec3 p, glm::vec3 p_norm){
+    vec3 view_model_dir = glm::inverse(mat3(_modelMat)) * _camera->getViewDirection();
+    if(dot(p_norm, view_model_dir) > 0)
+        p_norm = -p_norm;
 
+    current_plane_normal_ = p_norm;
+    current_plane_point_ = p + vec3(0.5);
+//    glUseProgram(program_ray);
+//    glUniform3f(glGetUniformLocation(program_ray, "PlanePoint"),p.x, p.y, p.z);
+//    glUniform3f(glGetUniformLocation(program_ray, "PlaneNormal"),p_norm.x, p_norm.y, p_norm.z);
+//    glUseProgram(0);
+}
 //p and p norm should be in model space
 void dcmVolumeRender::updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm){
     //view_dir and p_norm should be on the same side
@@ -639,7 +650,7 @@ void dcmVolumeRender::initGeometry() {
 //    glEnable(GL_CULL_FACE);
 //    updateVBOData();
     //setCuttingPlane();
-    dense_the_cube(20,20,20);
+    dense_the_cube(20,20,10);
 }
 
 void dcmVolumeRender::initGeometry_texturebased() {
@@ -781,8 +792,12 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glm::vec3 cam_pos =  _camera->getCameraPosition();
     glUniform3f(glGetUniformLocation(program_ray, "eye_pos_world"),cam_pos.x, cam_pos.y, cam_pos.z);
-    glUniform3f(glGetUniformLocation(program_ray, "tex_limit_max"),1.0f-stepsize_.x, 1.0f-stepsize_.y, 1.0f-stepsize_.z);
-    glUniform3f(glGetUniformLocation(program_ray, "tex_limit_min"),stepsize_.x, stepsize_.y, stepsize_.z);
+
+    glUniform3f(glGetUniformLocation(program_ray, "PlanePoint"), current_plane_point_.x, current_plane_point_.y, current_plane_point_.z);
+    glUniform3f(glGetUniformLocation(program_ray, "PlaneNormal"),current_plane_normal_.x, current_plane_normal_.y, current_plane_normal_.z);
+
+//    glUniform3f(glGetUniformLocation(program_ray, "tex_limit_max"),1.0f-stepsize_.x, 1.0f-stepsize_.y, 1.0f-stepsize_.z);
+//    glUniform3f(glGetUniformLocation(program_ray, "tex_limit_min"),stepsize_.x, stepsize_.y, stepsize_.z);
 
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_tex"), 0);
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_trans"), 1);

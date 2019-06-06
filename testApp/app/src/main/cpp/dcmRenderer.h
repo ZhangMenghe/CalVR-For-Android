@@ -102,8 +102,8 @@ public:
         _modelMat = glm::mat4(1.0f);
     }
 protected:
-    const int MAX_DIV_X = 100;
-    const int MAX_DIV_Y = 100;
+    const int MAX_DIV_X = 50;
+    const int MAX_DIV_Y = 50;
     const int MAX_DIV_Z = 50;
 
     const long MAX_VERTEX_NUM = MAX_DIV_X * MAX_DIV_Y * MAX_DIV_Z * 8;
@@ -271,8 +271,8 @@ private:
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
     const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
-    const float adjustParam_origin[4] = {400.0f, 0.9f, 250.0f, 0.3f};
-    float adjustParam[4]= {400.0f, 0.9f, 250.0f, 0.3f};
+    const float adjustParam_origin[4] = {100.0f, 0.7f, 250.0f, 0.3f};
+    float adjustParam[4]= {100.0f, 0.7f, 250.0f, 0.3f};
 
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = false;
     RENDERER render_mode = RAYCAST;
@@ -285,6 +285,8 @@ private:
     float cutting_length;
     bool is_cutting = true, is_in_deeper = false;
 
+    glm::vec3 current_plane_normal_ = glm::vec3(1.0);
+    glm::vec3 current_plane_point_ = glm::vec3(1000.0);
     GLuint* m_VAOs;
     GLuint VAO_PLANE, VBO_PLANE;
 
@@ -310,6 +312,7 @@ private:
     void setCuttingPlane(float percent = .0f);
     void setCuttingPlane_texturebased(float percent = .0f);
     void updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm);
+    void updateCuttingPlane_gpu(glm::vec3 p, glm::vec3 p_norm);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
     void updateTexCoords(GLfloat* vertices, glm::vec3 p);
     typedef std::pair<glm::vec3, int> vPair;

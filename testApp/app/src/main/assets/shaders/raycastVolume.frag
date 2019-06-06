@@ -28,7 +28,10 @@ uniform bool u_use_interpolation;
 uniform bool u_draw_naive;
 uniform float OpacityThreshold;
 uniform float volumex, volumey, volumez;
-uniform vec3 tex_limit_max, tex_limit_min;
+//uniform vec3 tex_limit_max, tex_limit_min;
+uniform vec3 PlanePoint;// = vec3(.0, .0, 0.5);
+uniform vec3 PlaneNormal;// = vec3(.0, .0, 1.0);
+
 vec2 RayCube(vec3 ro, vec3 rd, vec3 extents) {
     vec3 tMin = (-extents - ro) / rd;
     vec3 tMax = (extents - ro) / rd;
@@ -234,8 +237,6 @@ vec4 RaycastSampling(float s, float t){
         return vec4(frag_color.rgb, color.a);
 }
 void main(){
-    vec3 PlanePoint = vec3(.0, .0, 0.5);
-    vec3 PlaneNormal = vec3(.0, .0, 1.0);
     vec3 ray_start = tex_coord;
 
     vec2 intersect = intersect_box(ray_start, ray_dir);
