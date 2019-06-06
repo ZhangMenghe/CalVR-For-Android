@@ -31,6 +31,8 @@ uniform float volumex, volumey, volumez;
 //uniform vec3 tex_limit_max, tex_limit_min;
 uniform vec3 PlanePoint;// = vec3(.0, .0, 0.5);
 uniform vec3 PlaneNormal;// = vec3(.0, .0, 1.0);
+uniform vec3 sphere_center;
+uniform float sphere_radius;
 
 vec2 RayCube(vec3 ro, vec3 rd, vec3 extents) {
     vec3 tMin = (-extents - ro) / rd;
@@ -254,10 +256,6 @@ vec4 RaycastSampling(float s, float t){
         return vec4(frag_color.rgb, color.a);
 }
 void main(){
-    if(u_draw_naive){
-        gl_FragColor = vec4(tex_coord, 1.0);
-        return;
-    }
     vec3 ray_start = tex_coord;
 
     vec2 intersect = intersect_box(ray_start, ray_dir);
@@ -279,12 +277,15 @@ void main(){
 //        return;
 //        //discard;
 //    }
-    if(pointSphere(tex_coord, vec3(1.0), 0.5)) discard;
+    if(pointSphere(tex_coord, sphere_center, sphere_radius)) discard;
 //    {
 //                gl_FragColor = vec4(1.0,.0,.0,1.0);
 //                return;
 //    }
-    gl_FragColor = RaycastSampling(intersect.x, intersect.y);
+    if(u_draw_naive)
+        gl_FragColor = vec4(tex_coord, 1.0);
+    else
+        gl_FragColor = RaycastSampling(intersect.x, intersect.y);
 
 }
 

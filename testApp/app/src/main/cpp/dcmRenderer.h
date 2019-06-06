@@ -281,12 +281,16 @@ private:
     bool rotate_model = false;//toggle between rotate model and camera
 
 
+    //////all about cutting...
     glm::vec3 last_cutting_norm = glm::vec3(FLT_MAX), start_cutting;
     float cutting_length;
     bool is_cutting = true, is_in_deeper = false;
-
     glm::vec3 current_plane_normal_ = glm::vec3(1.0);
     glm::vec3 current_plane_point_ = glm::vec3(1000.0);
+    glm::vec3 sphere_center_ = glm::vec3(1000.0);
+    float sphere_radius = 0.2f;
+    //////////
+
     GLuint* m_VAOs;
     GLuint VAO_PLANE, VBO_PLANE;
 

@@ -795,7 +795,8 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glUniform3f(glGetUniformLocation(program_ray, "PlanePoint"), current_plane_point_.x, current_plane_point_.y, current_plane_point_.z);
     glUniform3f(glGetUniformLocation(program_ray, "PlaneNormal"),current_plane_normal_.x, current_plane_normal_.y, current_plane_normal_.z);
-
+    glUniform3f(glGetUniformLocation(program_ray, "sphere_center"), sphere_center_.x, sphere_center_.y, sphere_center_.z);
+    glUniform1f(glGetUniformLocation(program_ray, "sphere_radius"), sphere_radius);
 //    glUniform3f(glGetUniformLocation(program_ray, "tex_limit_max"),1.0f-stepsize_.x, 1.0f-stepsize_.y, 1.0f-stepsize_.z);
 //    glUniform3f(glGetUniformLocation(program_ray, "tex_limit_min"),stepsize_.x, stepsize_.y, stepsize_.z);
 
