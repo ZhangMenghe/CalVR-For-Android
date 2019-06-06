@@ -194,7 +194,7 @@ void getIntersectionPolygon(vec3 p, vec3 p_norm, vec3 aabb_min, vec3 aabb_max, s
 dcmVolumeRender::dcmVolumeRender(AAssetManager *assetManager):
         cubeRenderer(assetManager){
     new assetLoader(assetManager);
-    _modelMat = glm::scale(mat4(1.0), scale_origin);
+    _modelMat = mat4(1.0);//glm::scale(mat4(1.0), scale_origin);
 }
 
 void dcmVolumeRender::addImage(GLubyte * img, float location) {
@@ -243,9 +243,9 @@ void dcmVolumeRender::assembleTexture() {
 
     setting_1D_texture();
 
-    initGeometry_texturebased();
-
-    initGeometry();
+//    initGeometry_texturebased();
+    initGeometry_tmp();
+//    initGeometry();
 }
 void dcmVolumeRender::initGeometry_Naive() {
     float vertices[] = {
@@ -316,7 +316,9 @@ void dcmVolumeRender::onViewCreated(){
     program_plane = assetLoader::instance()->createGLShaderProgramFromFile("shaders/IntersectionPlane.vert", "shaders/IntersectionPlane.frag");
 
     program_texture = assetLoader::instance()->createGLShaderProgramFromFile("shaders/textureVolume.vert", "shaders/textureVolume.frag");
-    if(!program_ray || !program_texture || !program_plane)
+    mProgram = assetLoader::instance()->createGLShaderProgramFromFile("shaders/cube.vert", "shaders/cube.frag");
+
+    if(!program_ray || !program_texture || !program_plane||!mProgram)
         LOGE("===Failed to create shader program===");
 }
 
@@ -554,6 +556,31 @@ void dcmVolumeRender::updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm){
     updateGeometry(polygon, polygon_map, rpoints);
     updateVBOData();
 }
+void dcmVolumeRender::initGeometry_tmp(){
+    //Generate the VAO
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    glGenBuffers(1, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * 8 * VAO_DATA_LEN, sVertex, GL_STATIC_DRAW);
+
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VAO_DATA_LEN * sizeof(float), (void*)0);
+
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(GL_UNSIGNED_INT), sIndices, GL_STATIC_DRAW);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
 void dcmVolumeRender::initGeometry() {
     stepsize_ = vec3(1.0f / img_width, 1.0f / img_height, 1.0f/dimensions);
     volume_size = vec3(img_width, img_height, dimensions);
@@ -646,7 +673,8 @@ void dcmVolumeRender::initGeometry() {
 //    glEnable(GL_CULL_FACE);
 //    updateVBOData();
     //setCuttingPlane();
-    dense_the_cube((int)ori_cut_pieces.x,(int)ori_cut_pieces.y,(int)ori_cut_pieces.z);
+    dense_the_cube(1,1,1);
+//    dense_the_cube((int)ori_cut_pieces.x,(int)ori_cut_pieces.y,(int)ori_cut_pieces.z);
 }
 
 void dcmVolumeRender::initGeometry_texturebased() {
@@ -697,34 +725,38 @@ void dcmVolumeRender::initGeometry_texturebased() {
     }
 }
 void dcmVolumeRender::onDraw() {
-    switch(render_mode){
-        case TEXTURE_BASED:
+    onNaiveDraw();
+//    switch(render_mode){
+//        case TEXTURE_BASED:
+////            onTexturebasedDraw();
+//            onTexturebasedDraw_dense();
+//            break;
+//        case RAYCAST:
+//            onRaycastDraw();
+//            break;
+//        default:
 //            onTexturebasedDraw();
-            onTexturebasedDraw_dense();
-            break;
-        case RAYCAST:
-            onRaycastDraw();
-            break;
-        default:
-            onTexturebasedDraw();
-            break;
-    }
+//            break;
+//    }
+}
+void dcmVolumeRender::resetCuttingParams(){
+//    glUniform3fv(glGetUniformLocation(mProgram, "cp.Is"), 1, lightIs);
 }
 void dcmVolumeRender::onNaiveDraw() {
-//    glClear(GL_COLOR_BUFFER_BIT);
-//    glUseProgram(mProgram);
-//    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,VERTEX);
-//    glEnableVertexAttribArray(0);
-//    glDrawArrays(GL_TRIANGLES,0,3);
-
+    glDisable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(mProgram);
     glUniformMatrix4fv(glGetUniformLocation(mProgram, "uProjMat"), 1, GL_FALSE, &(_camera->getProjMat()[0][0]));
     glUniformMatrix4fv(glGetUniformLocation(mProgram, "uViewMat"), 1, GL_FALSE, &(_camera->getViewMat()[0][0]));
     glUniformMatrix4fv(glGetUniformLocation(mProgram, "uModelMat"), 1, GL_FALSE, &_modelMat[0][0]);
 
+    glUniform3f(glGetUniformLocation(mProgram, "PlanePoint"), current_plane_point_.x, current_plane_point_.y, current_plane_point_.z);
+    glUniform3f(glGetUniformLocation(mProgram, "PlaneNormal"),current_plane_normal_.x, current_plane_normal_.y, current_plane_normal_.z);
+
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawElements(RenderMode[gl_draw_mode_id], 36, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+    glEnable(GL_DEPTH_TEST);
 }
 void dcmVolumeRender::onTexturebasedDraw_dense(){
     updateVBOData();
@@ -766,12 +798,14 @@ void dcmVolumeRender::onTexturebasedDraw(){
     }
 }
 void dcmVolumeRender::onRaycastDraw(){
-    updateVBOData();
-
+//    updateVBOData();
+//
 //    glEnable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
+//    glCullFace(GL_BACK);
+//    glFrontFace(GL_CW);
+//    glCullFace(GL_BACK);
+//    glEnable(GL_DEPTH_TEST);
+//    glDisable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
@@ -791,6 +825,7 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glUniform3f(glGetUniformLocation(program_ray, "PlanePoint"), current_plane_point_.x, current_plane_point_.y, current_plane_point_.z);
     glUniform3f(glGetUniformLocation(program_ray, "PlaneNormal"),current_plane_normal_.x, current_plane_normal_.y, current_plane_normal_.z);
+
     glUniform3f(glGetUniformLocation(program_ray, "sphere_center"), sphere_center_.x, sphere_center_.y, sphere_center_.z);
     glUniform1f(glGetUniformLocation(program_ray, "sphere_radius"), sphere_radius);
 //    glUniform3f(glGetUniformLocation(program_ray, "tex_limit_max"),1.0f-stepsize_.x, 1.0f-stepsize_.y, 1.0f-stepsize_.z);
@@ -825,7 +860,7 @@ void dcmVolumeRender::onRaycastDraw(){
     glUniform1f(glGetUniformLocation(program_ray, "volumez"), volume_size.z);
     glBindVertexArray(VAO);
 
-    glDrawElements(RenderMode[gl_draw_mode_id], indices_num_, GL_UNSIGNED_INT, 0);
+    glDrawElements(RenderMode[gl_draw_mode_id], 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 //    LOGE("=====eyeposz: %f", _camera->getCameraPosition().z);
 //    draw_intersect_plane();
@@ -840,7 +875,9 @@ void dcmVolumeRender::onRaycastDraw(){
 //            LOGE("====value %d", data[i]);
 //    }
 //    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_CULL_FACE);
+//glEnable(GL_DEPTH_TEST);
 }
 void dcmVolumeRender::draw_intersect_plane(){
 
@@ -898,6 +935,28 @@ void dcmVolumeRender::dense_the_cube(int dx, int dy, int dz){
         int cid = VAO_DATA_LEN * i;
         vertices_[cid] = c_vertices[i].x;vertices_[cid+1] = c_vertices[i].y;vertices_[cid+2] = c_vertices[i].z;
     }
-    LOGE("===");
-//    memcpy(indices_, &indices_tmp, sizeof(GLuint) * indices_num_);
+}
+void dcmVolumeRender::adjust_cut_sphere_pos(float x_screen, float y_screen){
+//    float dist_factor = 1.0 - 1.0f/ length(_camera->getCameraPosition());
+//    float x = x_screen/_screen_w, y = 1.0f - y_screen/_screen_h;
+//    glm::mat4 inv_vp = glm::inverse(_camera->getViewMat() * _camera->getProjMat());
+//    glm::vec4 near_plane = glm::vec4(x, y, -1.0f, 1.0f) * inv_vp;
+//    float inv_w = 1.0f / near_plane.w;
+//    glm::vec3 p1 = glm::vec3(near_plane.x, near_plane.y,near_plane.z) * inv_w;
+//
+//    glm::vec4 far_plane = glm::vec4(x, y, 1.0f, 1.0f) * inv_vp;
+//    inv_w = 1.0f / far_plane.w;
+//    glm::vec3 p2 = glm::vec3(far_plane.x, far_plane.y,far_plane.z) * inv_w;
+//
+//    glm::vec3 ray_dir = normalize(p2 - p1);
+//    vec3 ray_start = _camera->getCameraPosition();
+//
+//    vec3 hit_point = ray_start + dist_factor * ray_dir;
+//    vec4 hit_pos_model = inverse(_modelMat) * vec4(hit_point, 1.0f);
+//    sphere_center_ = vec3(
+//            hit_pos_model.x / hit_pos_model.w,
+//            hit_pos_model.y / hit_pos_model.w,
+//            hit_pos_model.z / hit_pos_model.w - 4.0f);
+//    sphere_center_+=vec3(0.5);
+//    LOGE("====sphere center: %f, %f, %f", sphere_center_.x, sphere_center_.y, sphere_center_.z);
 }

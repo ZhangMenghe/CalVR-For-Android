@@ -20,16 +20,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <glm/vec4.hpp>
-//typedef struct mdcmImage{
-//    unsigned int* data;
-//    float sizex, sizey, sizez;
-//    float location;
-//
-//    mdcmImage(unsigned int * _data, float _location, float _sizex, float _sizey, float _sizez){
-//        data = _data;
-//        size
-//    }
-//}dcmImage;
+
 enum Face{
     FRONT=0,BACK,LEFT,RIGHT,UP,BOTTOM
 };
@@ -102,9 +93,9 @@ public:
         _modelMat = glm::mat4(1.0f);
     }
 protected:
-    const int MAX_DIV_X = 50;
-    const int MAX_DIV_Y = 50;
-    const int MAX_DIV_Z = 50;
+    const int MAX_DIV_X = 20;
+    const int MAX_DIV_Y = 20;
+    const int MAX_DIV_Z = 20;
 
     const long MAX_VERTEX_NUM = MAX_DIV_X * MAX_DIV_Y * MAX_DIV_Z * 8;
     const long MAX_INDICE_NUM =  MAX_DIV_X * MAX_DIV_Y * MAX_DIV_Z * 36;
@@ -132,12 +123,31 @@ protected:
             -0.5f,0.5f,-0.5f,//0.0f,1.0f,0.0f,		//x0,y1,z0//	//v7
     };
     const GLuint sIndices[36] = { 0,1,2,0,2,3,	//front
-                                 4,6,7,4,5,6,	//back
+                                 4,7,6,4,6,5,	//back
                                  4,0,3,4,3,7,	//left
                                  1,5,6,1,6,2,	//right
                                  3,2,6,3,6,7,	//top
                                  4,5,1,4,1,0,	//bottom
     };
+//    const GLuint sIndices[36] = { 0,1,2,2,3,0,	//front
+//                                 4,6,5,6,4,7,	//back
+//                                 3,7,4,4,0,3,	//left
+//                                 2,5,6,5,2,1,	//right
+//                                 7,2,6,2,7,3,	//top
+//                                 0,5,1,5,0,4	//bottom
+//    };
+//    const GLfloat sVertex[24]{
+//            -0.5f, -0.5f,  0.5f, 0.5f, -0.5f,  0.5f, 0.5f,  0.5f,  0.5f, -0.5f,  0.5f,  0.5f,
+//            -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f,  0.5f, -0.5f, -0.5f,  0.5f, -0.5f
+//    };
+//    const GLuint sIndices[36]{
+//            0, 1, 2, 2, 3, 0,
+//            1, 5, 6, 6, 2, 1,
+//            7, 6, 5, 5, 4, 7,
+//            4, 0, 3, 3, 7, 4,
+//            4, 5, 1, 1, 0, 4,
+//            3, 2, 6, 6, 7, 3
+//    };
     GLfloat* vertices_;
     GLuint* indices_;
 };
@@ -167,6 +177,10 @@ public:
 
     void onSingleTouchDown(float x, float y){
         Mouse_old = glm::fvec2(x, y);
+        if(operate_entity == OP_DENSE_CUBE){
+            float fact = x/_screen_w;//, y = 1.0f - x/_screen_h;
+            dense_the_cube((int)(fact*MAX_DIV_X), (int)(fact*MAX_DIV_Y), (int)(fact*MAX_DIV_Z*0.5));
+        }
     }
     void onTouchMove(float x, float y){
         //Camera::instance()->Rotate_Camera(x - Mouse_old.x, Mouse_old.y - y);
@@ -283,6 +297,7 @@ private:
     enum OPERATE_ENTITY{
         OP_CAMERA = 0,
         OP_CUT_SPHERE,
+        OP_DENSE_CUBE,
         OP_NR_ITEMS
     };
     GLenum RenderMode[3] = {GL_TRIANGLES, GL_POINTS,GL_LINES};
@@ -299,7 +314,7 @@ private:
 
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = false;
     RENDERER render_mode = RAYCAST;
-    bool use_simple_cube = false;
+    bool use_simple_cube = true;
 
     bool rotate_model = false;//toggle between rotate model and camera
 
@@ -310,18 +325,15 @@ private:
     bool is_cutting = true, is_in_deeper = false;
     glm::vec3 current_plane_normal_ = glm::vec3(1.0);
     glm::vec3 current_plane_point_ = glm::vec3(1000.0);
-    glm::vec3 sphere_center_ = glm::vec3(1000.0);
-    float sphere_radius = 0.2f;
+    glm::vec3 sphere_center_ = glm::vec3(1.0);
+    float sphere_radius = 0.5f;
 
     glm::vec3 ori_cut_pieces = glm::vec3(10,10,5);
     ADJUST_CUTTING adjust_cut_mode = ADJ_CUT_PLANE;
     OPERATE_ENTITY operate_entity = OP_CAMERA;
     const float sphere_raius_max  = 0.8f;
 
-    void adjust_cut_sphere_pos(float x_screen, float y_screen){
-        float x = x_screen/_screen_w, y = 1.0f - y_screen/_screen_h;
-
-    }
+    void adjust_cut_sphere_pos(float x_screen, float y_screen);
     //////////
 
     GLuint* m_VAOs;
@@ -335,6 +347,7 @@ private:
     void setting_1D_texture();
 
     void initGeometry();
+    void initGeometry_tmp();
     void initGeometry_texturebased();
     void initGeometry_Naive();
 
@@ -361,7 +374,7 @@ private:
             return p1.first.x == p2.first.x && p1.first.y == p2.first.y &&p1.first.z == p2.first.z;
         }
     };
-
+    void resetCuttingParams();
     void dense_the_cube(int dx, int dy, int dz);
 };
 

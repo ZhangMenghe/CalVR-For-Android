@@ -55,21 +55,16 @@ float RayPlane(vec3 ro, vec3 rd, vec3 planep, vec3 planen) {
 bool pointSphere(vec3 p, vec3 sc, float radius){
     return (length(p-sc) < radius);
 }
-float RaySphere(vec3 ro, vec3 rd, vec3 sc, float radius){
-
-    vec3 oc = ro - sc;
-    float a = dot(rd, rd);
-    float b = 2.0 * dot(oc, rd);
-    float c = dot(oc,oc) - radius*radius;
-    float discriminant = b*b - 4.0*a*c;
-    if(discriminant < 1e-5) //not intersect
-        return 1e5;
-    return -1e5;
-    discriminant = sqrt(discriminant);
-    float t1 = -b + discriminant; float t0 = -b-discriminant;
-    if(t0 * t1 < 1e-5) return -1e5;//discard, point inside circle
-    return t0 * 0.5;
+vec2 RaySphere(vec3 v3CameraPos, vec3 v3Ray, float radius) {
+    float B = 2.0 * dot(v3CameraPos, v3Ray);
+    float C = dot(v3CameraPos, v3CameraPos) - radius*radius;
+    float fDet = sqrt(max(0.0, B*B - 4.0 * C));
+    if (fDet > 0.01)
+        return vec2(0.5 * (-B - fDet), 0.5 * (-B + fDet));
+    else
+        return vec2(-1.0, -1.0);
 }
+
 // uniform vec3 u_clip_plane[6];
 // uniform int u_cpoints_num;
 vec3 phong_illumination_model(vec3 N,vec3 curColor,vec3 curPos){
@@ -261,11 +256,15 @@ void main(){
     vec2 intersect = intersect_box(ray_start, ray_dir);
     intersect.x = max(.0, intersect.x);intersect.y = min(intersect.y, 1.0);
 
-    #ifdef BACK_FACE_CULLED
-        intersect.x = max(intersect.x, RayPlane(ray_start, ray_dir, PlanePoint, PlaneNormal));
-    #else
+    //#ifdef BACK_FACE_CULLED
+    //    intersect.x = max(intersect.x, RayPlane(ray_start, ray_dir, PlanePoint, PlaneNormal));
+    //    intersect.x = max(intersect.x, RaySphere(ray_start, ray_dir, sphere_center, sphere_radius).x);
+    //#else
         intersect.y = min(intersect.y, RayPlane(ray_start, ray_dir, PlanePoint, PlaneNormal));
-    #endif
+        vec2 sphere = RaySphere(ray_start - sphere_center, ray_dir, sphere_radius);
+        if (sphere.x > 0.0 && sphere.y > 0.0)
+            intersect.y = min(intersect.y, sphere.x);
+    //#endif
 
     if (intersect.y < intersect.x) discard;
 
@@ -277,7 +276,7 @@ void main(){
 //        return;
 //        //discard;
 //    }
-    if(pointSphere(tex_coord, sphere_center, sphere_radius)) discard;
+    //  if(pointSphere(tex_coord, sphere_center, sphere_radius)) discard;
 //    {
 //                gl_FragColor = vec4(1.0,.0,.0,1.0);
 //                return;
