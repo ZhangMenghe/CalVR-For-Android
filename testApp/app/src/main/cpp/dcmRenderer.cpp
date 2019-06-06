@@ -639,7 +639,7 @@ void dcmVolumeRender::initGeometry() {
 //    glEnable(GL_CULL_FACE);
 //    updateVBOData();
     //setCuttingPlane();
-    dense_the_cube(2,2,2);
+    dense_the_cube(20,20,20);
 }
 
 void dcmVolumeRender::initGeometry_texturebased() {
@@ -781,6 +781,9 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glm::vec3 cam_pos =  _camera->getCameraPosition();
     glUniform3f(glGetUniformLocation(program_ray, "eye_pos_world"),cam_pos.x, cam_pos.y, cam_pos.z);
+    glUniform3f(glGetUniformLocation(program_ray, "tex_limit_max"),1.0f-stepsize_.x, 1.0f-stepsize_.y, 1.0f-stepsize_.z);
+    glUniform3f(glGetUniformLocation(program_ray, "tex_limit_min"),stepsize_.x, stepsize_.y, stepsize_.z);
+
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_tex"), 0);
     glUniform1i(glGetUniformLocation(program_ray, "uSampler_trans"), 1);
     glUniform1f(glGetUniformLocation(program_ray, "sample_step_inverse"), adjustParam[0]);
