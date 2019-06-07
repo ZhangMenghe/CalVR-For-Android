@@ -633,9 +633,9 @@ void dcmVolumeRender::initGeometry() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    glEnable(GL_TEXTURE_3D);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
+//    glEnable(GL_TEXTURE_3D);
+//    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_BLEND);
 
 //    updateVBOData();
     setCuttingPlane();
@@ -720,6 +720,11 @@ void dcmVolumeRender::onNaiveDraw() {
 }
 void dcmVolumeRender::onTexturebasedDraw_dense(){
     updateVBOData();
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
@@ -733,10 +738,15 @@ void dcmVolumeRender::onTexturebasedDraw_dense(){
                        &_modelMat[0][0]);
 
     glUniform1i(glGetUniformLocation(program_texture, "uSampler_tex"), 0);
+    glUniform1f(glGetUniformLocation(program_texture, "OpacityThreshold"), adjustParam[3]);
+    glUniform3f(glGetUniformLocation(program_texture, "volumesize"), volume_size.x, volume_size.y, volume_size.z);
 
     glBindVertexArray(VAO);
     glDrawElements(RenderMode[gl_draw_mode_id], indices_num_, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+
 }
 void dcmVolumeRender::onTexturebasedDraw(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -759,7 +769,8 @@ void dcmVolumeRender::onTexturebasedDraw(){
 }
 void dcmVolumeRender::onRaycastDraw(){
     updateVBOData();
-
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
@@ -817,6 +828,7 @@ void dcmVolumeRender::onRaycastDraw(){
 //        if(data[i] != GLubyte(0))
 //            LOGE("====value %d", data[i]);
 //    }
+glDisable(GL_BLEND);
 }
 void dcmVolumeRender::draw_intersect_plane(){
 

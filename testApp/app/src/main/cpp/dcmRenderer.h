@@ -128,11 +128,11 @@ protected:
             -0.5f,0.5f,-0.5f,0.0f,1.0f,0.0f,		//x0,y1,z0//	//v7
     };
     const GLuint sIndices[36] = { 0,1,2,0,2,3,	//front
-                                 4,6,7,4,5,6,	//back
-                                 4,0,3,4,3,7,	//left
-                                 1,5,6,1,6,2,	//right
-                                 3,2,6,3,6,7,	//top
-                                 4,5,1,4,1,0,	//bottom
+                                  4,7,6,4,6,5,	//back
+                                  4,0,3,4,3,7,	//left
+                                  1,5,6,1,6,2,	//right
+                                  3,2,6,3,6,7,	//top
+                                  4,5,1,4,1,0,	//bottom
     };
     GLfloat* vertices_;
     GLuint* indices_;
@@ -217,8 +217,13 @@ public:
                 setCuttingPlane(value);//should be 0-1
         }
 
-        else
-            adjustParam[idx] = value;
+        else{
+            if(idx == 1)
+                adjustParam[3] = value;
+            else
+                adjustParam[idx] = value;
+        }
+
     }
     bool getOriginalChecked(int idx){
         switch(idx) {
@@ -237,6 +242,7 @@ public:
         }
     }
     float getOriginalValue(int idx){
+        if(idx == 1) return adjustParam_origin[3];
         return adjustParam_origin[idx];
     }
     float getFPS(){ return fps_monitor_.Update();}
@@ -266,8 +272,8 @@ private:
     glm::fvec2 Mouse_old = glm::fvec2(.0);
     float _screen_w, _screen_h;
     const float MOUSE_ROTATE_SENSITIVITY = 0.005f;
-    const float adjustParam_origin[4] = {400.0f, 0.9f, 250.0f, 0.3f};
-    float adjustParam[4]= {400.0f, 0.9f, 250.0f, 0.3f};
+    const float adjustParam_origin[4] = {400.0f, 0.0f, 250.0f, 0.0f};
+    float adjustParam[4]= {400.0f, 0.0f, 250.0f, 0.0f};
 
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = false;
     RENDERER render_mode = RAYCAST;

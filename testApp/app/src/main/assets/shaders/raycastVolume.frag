@@ -93,7 +93,7 @@ void main(void){
   vec3 pos000 = vec3(0.0, 0.0, 0.0);
 
   vec4 frag_color = vec4(0,0,0,0);
-  vec4 color;
+  vec4 color = vec4(1.0);
   float density, max_density = -1.0;
   vec3 best_ray_pos = ray_pos;
 
@@ -133,13 +133,20 @@ void main(void){
         }
 
 
-        density += val_threshold - 0.5;
+//        density += val_threshold - 0.5;
+        density += 0.2;
+        float tmp_value = density -0.1;
+
         density = density * density * density;
 
         vec3 normal = normalize(NormalMatrix*(normalize(best_ray_pos)));
         vec3 sampled_color;
-        if(u_use_color_transfer == true)
-            sampled_color = texture(uSampler_trans, vec2(density, 1.0)).rgb;
+        if(u_use_color_transfer == true){
+//            tmp_value = tmp_value * tmp_value * tmp_value;
+            tmp_value = texture(uSampler_tex, tex_coord).r;
+            sampled_color = texture(uSampler_trans, vec2(tmp_value, 1.0)).rgb;
+        }
+
         else
             sampled_color = vec3(density);
 
@@ -147,10 +154,14 @@ void main(void){
             color.rgb = phong_illumination_model(normal, sampled_color, frag_position);
         else
             color.rgb = sampled_color;
+//        if(OpacityThreshold < 0.1){
+//            gl_FragColor = vec4(vec3(texture(uSampler_tex, tex_coord).r),1.0 );
+//            return;
+//        }
         if(density < OpacityThreshold)
             color.a = .0;
         else
-            color.a   = density * sample_step * brightness;
+            color.a   = density * sample_step * brightness;// * (sample_step_inverse / 800.0);
 
         frag_color.rgb = frag_color.rgb * (1.0 - color.a) + color.rgb * color.a;
     }
@@ -159,5 +170,5 @@ void main(void){
   if(frag_color.r == 0.0)
     discard;
   else
-    gl_FragColor = vec4(frag_color.rgb,1.0);
+    gl_FragColor = vec4(frag_color.rgb,color.a );
 }

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="toogleArr">
-        <item>Sample Step</item>
-        <item>Threshold</item>
-        <item>Brightness</item>
+        <item>Conciseness</item>
         <item>Opacity</item>
+        <item>Brightness</item>
     </string-array>
 
     <string-array name="switchArr">
