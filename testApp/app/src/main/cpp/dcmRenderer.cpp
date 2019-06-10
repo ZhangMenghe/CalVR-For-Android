@@ -633,19 +633,21 @@ void dcmVolumeRender::initGeometry() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    glEnable(GL_TEXTURE_3D);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
+//    glEnable(GL_TEXTURE_3D);
+//    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_BLEND);
 
 //    updateVBOData();
     setCuttingPlane();
 }
 
 void dcmVolumeRender::initGeometry_texturebased() {
-    m_VAOs = new GLuint[dimensions];
-    float dimension_inv = 1.0f / dimensions;
+    size_t dims = SLICE_DENSITY*dimensions;
 
-    for (int i = 0; i < dimensions; i++)
+    m_VAOs = std::vector<GLuint >(dims);
+    float dimension_inv = 1.0f / dims;
+
+    for (int i = 0; i < dims; i++)
     {
         float mappedZVal = (-1.0f + 2.0f * (float)i * dimension_inv)*scale_inv;
 
@@ -661,8 +663,8 @@ void dcmVolumeRender::initGeometry_texturebased() {
 
         unsigned int VBO, EBO;
         unsigned int indices[] = {
-                0, 1, 3, // first triangle
-                1, 2, 3  // second triangle
+                0,3,2,
+                2,1,0
         };
 
         glGenVertexArrays(1, &m_VAOs[i]);
@@ -691,14 +693,13 @@ void dcmVolumeRender::initGeometry_texturebased() {
 void dcmVolumeRender::onDraw() {
     switch(render_mode){
         case TEXTURE_BASED:
-//            onTexturebasedDraw();
-            onTexturebasedDraw_dense();
+            onTexturebasedDraw();
             break;
         case RAYCAST:
             onRaycastDraw();
             break;
         default:
-            onTexturebasedDraw();
+            onTexturebasedDraw_dense();
             break;
     }
 }
@@ -739,23 +740,31 @@ void dcmVolumeRender::onTexturebasedDraw_dense(){
     glBindVertexArray(0);
 }
 void dcmVolumeRender::onTexturebasedDraw(){
+    glEnable(GL_BLEND);
+    glDisable(GL_CULL_FACE);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_DEPTH_TEST);
+
+//    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (int i = 0; i < dimensions; i++) {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_3D, volume_texid);
-
-        glUseProgram(program_texture);
-        glUniformMatrix4fv(glGetUniformLocation(program_texture, "uProjMat"), 1, GL_FALSE,
-                           &(_camera->getProjMat()[0][0]));
-        glUniformMatrix4fv(glGetUniformLocation(program_texture, "uViewMat"), 1, GL_FALSE,
-                           &(_camera->getViewMat()[0][0]));
-        glUniformMatrix4fv(glGetUniformLocation(program_texture, "uModelMat"), 1, GL_FALSE,
-                           &_modelMat[0][0]);
-
-        glUniform1i(glGetUniformLocation(program_texture, "uSampler_tex"), 0);
-        glBindVertexArray(m_VAOs[i]);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_3D, volume_texid);
+    glUseProgram(program_texture);
+    glUniformMatrix4fv(glGetUniformLocation(program_texture, "uProjMat"), 1, GL_FALSE,
+                       &(_camera->getProjMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(program_texture, "uViewMat"), 1, GL_FALSE,
+                       &(_camera->getViewMat()[0][0]));
+    glUniformMatrix4fv(glGetUniformLocation(program_texture, "uModelMat"), 1, GL_FALSE,
+                       &_modelMat[0][0]);
+    glUniform1i(glGetUniformLocation(program_texture, "uSampler_tex"), 0);
+    for (auto vao:m_VAOs) {
+        glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
+    glUseProgram(0);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
 }
 void dcmVolumeRender::onRaycastDraw(){
     updateVBOData();

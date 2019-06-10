@@ -39,7 +39,7 @@ class Camera{
     glm::mat4 _viewMat, _projMat;
     glm::vec3 _eyePos, _up,  _center;
 
-    const float NEAR_PLANE = 0.01f;
+    const float NEAR_PLANE = 2.5f;//as close as possible
     const float FAR_PLANE = 1000.0f;
     const float FOV = 45.0f;
     const glm::vec3 ORI_CAM_POS = glm::vec3(0.0f, .0f, 3.0f);
@@ -105,7 +105,7 @@ protected:
     const int MAX_VERTEX_NUM = 15;
     const int MAX_INDICE_NUM = 90;
     const int VAO_DATA_LEN = 6;
-
+    const size_t SLICE_DENSITY = 5;
     glm::mat4 _modelMat;
 
     GLuint VAO,VBO[2], EBO;
@@ -260,7 +260,7 @@ private:
     GLenum RenderMode[3] = {GL_TRIANGLES, GL_POINTS,GL_LINES};
     int gl_draw_mode_id = 0;
 
-    const float scale_inv = 0.15f;
+    const float scale_inv = 0.2f;
     const glm::vec3 scale_origin = glm::vec3(1.2f, -1.2f, 0.6f);
 
     glm::fvec2 Mouse_old = glm::fvec2(.0);
@@ -270,7 +270,7 @@ private:
     float adjustParam[4]= {400.0f, 0.9f, 250.0f, 0.3f};
 
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = false;
-    RENDERER render_mode = RAYCAST;
+    RENDERER render_mode = TEXTURE_BASED;
     bool use_simple_cube = false;
 
     bool rotate_model = false;//toggle between rotate model and camera
@@ -280,7 +280,8 @@ private:
     float cutting_length;
     bool is_cutting = true, is_in_deeper = false;
 
-    GLuint* m_VAOs;
+    std::vector<GLuint> m_VAOs;
+
     GLuint VAO_PLANE, VBO_PLANE;
 
     glm::vec3 stepsize_, volume_size;
