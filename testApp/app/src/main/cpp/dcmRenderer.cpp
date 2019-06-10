@@ -202,19 +202,30 @@ void dcmVolumeRender::addImage(GLubyte * img, float location) {
             img,
             location));
 }
+void colorConverter(int hexValue,float* color){
+    color[0] = ((hexValue >> 16) & 0xFF) / 255.0;  // Extract the RR byte
+    color[1] = ((hexValue >> 8) & 0xFF) / 255.0;   // Extract the GG byte
+    color[2] = ((hexValue) & 0xFF) / 255.0;        // Extract the BB byte
+    color[3] = 1.0f;
+}
 void dcmVolumeRender::setting_1D_texture(){
-//    GLuint textureID;
-    //enable texture unit
     glActiveTexture(GL_TEXTURE1);
     //create texture object
     glGenTextures(1, &trans_texid);
     glBindTexture(GL_TEXTURE_2D, trans_texid);
     //bind current texture object and set the data
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, transfer_color);
+    float* m_transfer_color = new float[4 * Color_num_transfer];
+
+    for(int i=0; i<Color_num_transfer; i++)
+        colorConverter(hexcolor_transfer[i], &m_transfer_color[4*i]);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Color_num_transfer, 1, 0, GL_RGBA, GL_FLOAT, m_transfer_color);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    delete []m_transfer_color;
 }
 void dcmVolumeRender::assembleTexture() {
     std::sort(images_.begin(), images_.end(),
@@ -775,7 +786,11 @@ void dcmVolumeRender::onTexturebasedDraw(){
     glUniformMatrix4fv(glGetUniformLocation(program_texture, "uModelMat"), 1, GL_FALSE,
                        &_modelMat[0][0]);
     glUniform1i(glGetUniformLocation(program_texture, "uSampler_tex"), 0);
+    glUniform1i(glGetUniformLocation(program_texture, "uSampler_trans"), 1);
     glUniform3f(glGetUniformLocation(program_texture, "uVolumeSize"), volume_size.x, volume_size.y, volume_size.z);
+
+    glUniform1i(glGetUniformLocation(program_texture, "u_use_color_transfer"), use_color_tranfer);
+
 
     for (auto vao:m_VAOs) {
         glBindVertexArray(vao);

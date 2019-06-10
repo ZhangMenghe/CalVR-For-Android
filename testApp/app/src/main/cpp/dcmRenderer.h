@@ -261,7 +261,7 @@ private:
     int gl_draw_mode_id = 0;
 
     const float scale_inv = 0.3f;
-    const size_t NEED_SLCIES = 150;
+    const size_t NEED_SLCIES = 90;
     const glm::vec3 scale_origin = glm::vec3(1.2f, -1.2f, 0.6f);
 
     glm::fvec2 Mouse_old = glm::fvec2(.0);

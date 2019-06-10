@@ -1,5 +1,41 @@
 #pragma once
+const int Color_num_transfer = 25;
+const int hexcolor_transfer[] = {
+		//blue
+		0x011f4b,
+		0x03396c,
+		0x005b96,
+		0x6497b1,
+		0xb3cde0,
+		///green1
+		0x009688,
+		0x35a79c,
+		0x54b2a9,
+		0x65c3ba,
+		0x83d0c9,
 
+		////green2
+		0x617B30,
+		0x74923A,
+		0x81A140,
+		0xA3BF45,
+		0xB5CF49,
+
+		///orange
+		0xf0750f,
+		0xf48020,
+		0xf09537,
+		0xf0a150,
+		0xff9a00,
+
+		/////yellow
+
+		0xf8ed62,
+		0xfed601,
+		0xfed601,
+		0xfee402,
+		0xfee402,
+};
 float transfer_color[] = {
 	0.8			,0.20387	,0.2		,0.0	,
 	0.8			,0.21524	,0.2		,0.0	,
