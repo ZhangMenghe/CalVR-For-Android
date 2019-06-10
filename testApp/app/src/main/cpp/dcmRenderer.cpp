@@ -660,7 +660,7 @@ void init_static_buffers(GLuint &vao, float* vertices, int vertex_num, unsigned 
     glBindVertexArray(0);
 }
 void dcmVolumeRender::initGeometry_texturebased() {
-    size_t dims = SLICE_DENSITY*dimensions;
+    size_t dims = NEED_SLCIES;
     m_VAOs = std::vector<GLuint >(dims);
 
     float dimension_inv = 1.0f / dims;
