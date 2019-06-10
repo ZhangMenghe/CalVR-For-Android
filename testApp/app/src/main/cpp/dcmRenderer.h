@@ -270,6 +270,8 @@ private:
     const float adjustParam_origin[4] = {400.0f, 0.9f, 250.0f, 0.3f};
     float adjustParam[4]= {400.0f, 0.9f, 250.0f, 0.3f};
 
+    float adjust_opacities[3] = {1.0f, 1.0f, .0f};
+
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = false;
     RENDERER render_mode = TEXTURE_BASED;
     bool use_simple_cube = false;

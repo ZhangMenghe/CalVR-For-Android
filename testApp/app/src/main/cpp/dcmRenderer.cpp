@@ -792,10 +792,13 @@ void dcmVolumeRender::onTexturebasedDraw(){
     glUniform3f(glGetUniformLocation(program_texture, "uVolumeSize"), volume_size.x, volume_size.y, volume_size.z);
 
     glUniform1i(glGetUniformLocation(program_texture, "u_use_color_transfer"), use_color_tranfer);
-    glUniform1f(glGetUniformLocation(program_texture, "uOpacityThreshold"), adjustParam[3]);
+
+    //opacity
+    glUniform1f(glGetUniformLocation(program_texture, "uOpacitys.overall"), adjust_opacities[0]);
+    glUniform1f(glGetUniformLocation(program_texture, "uOpacitys.low_limit"), adjust_opacities[1]);
+    glUniform1f(glGetUniformLocation(program_texture, "uOpacitys.cut_off"), adjust_opacities[2]);
 
     if(_camera->getViewDirection().z <0){
-//        glUniform1i(glGetUniformLocation(program_texture, "u_is_front"), true);
         glFrontFace(GL_CCW);
         for (int id = 0; id <m_VAOs.size() - slice_start_idx; id++) {
             glBindVertexArray(m_VAOs[id]);
