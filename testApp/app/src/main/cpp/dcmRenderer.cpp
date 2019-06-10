@@ -767,10 +767,15 @@ void dcmVolumeRender::onTexturebasedDraw_dense(){
     glBindVertexArray(0);
 }
 void dcmVolumeRender::onTexturebasedDraw(){
+
     glEnable(GL_BLEND);
-    glDisable(GL_CULL_FACE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
+
     glEnable(GL_DEPTH_TEST);
+
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
@@ -787,20 +792,33 @@ void dcmVolumeRender::onTexturebasedDraw(){
     glUniform3f(glGetUniformLocation(program_texture, "uVolumeSize"), volume_size.x, volume_size.y, volume_size.z);
 
     glUniform1i(glGetUniformLocation(program_texture, "u_use_color_transfer"), use_color_tranfer);
+    glUniform1f(glGetUniformLocation(program_texture, "uOpacityThreshold"), adjustParam[3]);
 
+    if(_camera->getViewDirection().z <0){
+//        glUniform1i(glGetUniformLocation(program_texture, "u_is_front"), true);
+        glFrontFace(GL_CCW);
+        for (int id = 0; id <m_VAOs.size() - slice_start_idx; id++) {
+            glBindVertexArray(m_VAOs[id]);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        }
+    }
+    else{
+        glFrontFace(GL_CW);
+        for (int id = m_VAOs.size()-1; id >= slice_start_idx; id--) {
+            glBindVertexArray(m_VAOs[id]);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        }
+    }
 
-    for (int id = 0; id <m_VAOs.size() - slice_start_idx; id++) {
-        glBindVertexArray(m_VAOs[id]);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    }
-    if(slice_start_idx == 0){
-        glBindVertexArray(close_VAO);
-        glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
-    }
+//    if(slice_start_idx == 0){
+//        glBindVertexArray(close_VAO);
+//        glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+//    }
 
     glUseProgram(0);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
 }
 void dcmVolumeRender::onRaycastDraw(){
     updateVBOData();
