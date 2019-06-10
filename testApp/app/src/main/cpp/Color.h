@@ -15,26 +15,34 @@ const int hexcolor_transfer[] = {
 		0x83d0c9,
 
 		////green2
-		0x617B30,
-		0x74923A,
-		0x81A140,
-		0xA3BF45,
-		0xB5CF49,
+//		0x617B30,
+//		0x74923A,
+//		0x81A140,
+//		0xA3BF45,
+//		0xB5CF49,
+
+
+		//GREEN-YELLOS
+		0xa98600,
+		0xdab600,
+		0xf8ed62,
+		0xfed601,
+		0xfee402,
 
 		///orange
 		0xf0750f,
 		0xf48020,
 		0xf09537,
 		0xf0a150,
+		0Xf6412D,
+
+//red-orange
 		0xff9a00,
+		0xff4d00,
+		0xff7400,
+		0xcc0000,
+		0xff0000,
 
-		/////yellow
-
-		0xf8ed62,
-		0xfed601,
-		0xfed601,
-		0xfee402,
-		0xfee402,
 };
 float transfer_color[] = {
 	0.8			,0.20387	,0.2		,0.0	,
