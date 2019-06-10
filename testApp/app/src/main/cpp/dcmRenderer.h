@@ -280,7 +280,7 @@ private:
     glm::vec3 last_cutting_norm = glm::vec3(FLT_MAX), start_cutting;
     float cutting_length;
     bool is_cutting = true, is_in_deeper = false;
-
+    int slice_start_idx = 0;
     std::vector<GLuint> m_VAOs;
     GLuint close_VAO;
 

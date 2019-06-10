@@ -448,8 +448,7 @@ void dcmVolumeRender::restore_original_cube(){
     memcpy(indices_, sIndices, sizeof(GLuint) * indices_num_);
 }
 void dcmVolumeRender::setCuttingPlane_texturebased(float percent){
-//    _modelMat = glm::scale(mat4(1.0), scale_origin);
-    setCuttingPlane(percent);
+    slice_start_idx = (int)m_VAOs.size() * percent;
 }
 void dcmVolumeRender::setCuttingPlane(float percent){
 //        float points_[9] ={0,0.5,0.5,
@@ -773,8 +772,6 @@ void dcmVolumeRender::onTexturebasedDraw(){
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_DEPTH_TEST);
 
-//    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
@@ -792,12 +789,15 @@ void dcmVolumeRender::onTexturebasedDraw(){
     glUniform1i(glGetUniformLocation(program_texture, "u_use_color_transfer"), use_color_tranfer);
 
 
-    for (auto vao:m_VAOs) {
-        glBindVertexArray(vao);
+    for (int id = 0; id <m_VAOs.size() - slice_start_idx; id++) {
+        glBindVertexArray(m_VAOs[id]);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
-    glBindVertexArray(close_VAO);
-    glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+    if(slice_start_idx == 0){
+        glBindVertexArray(close_VAO);
+        glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+    }
+
     glUseProgram(0);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
