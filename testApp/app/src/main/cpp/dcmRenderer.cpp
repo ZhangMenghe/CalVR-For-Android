@@ -627,69 +627,86 @@ void dcmVolumeRender::initGeometry() {
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_INDICE_NUM * sizeof(GL_UNSIGNED_INT), nullptr, GL_DYNAMIC_DRAW);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_num_ * sizeof(GL_UNSIGNED_INT), indices_, GL_STATIC_DRAW);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-//    glEnable(GL_TEXTURE_3D);
-//    glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_BLEND);
-
-//    updateVBOData();
     setCuttingPlane();
 }
 
+void init_static_buffers(GLuint &vao, float* vertices, int vertex_num, unsigned int* indices, int indice_num){
+    glGenVertexArrays(1, &vao);
+    unsigned int VBO, EBO;
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glBindVertexArray((GLuint)vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * vertex_num, vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indice_num, indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+}
 void dcmVolumeRender::initGeometry_texturebased() {
     size_t dims = SLICE_DENSITY*dimensions;
-
     m_VAOs = std::vector<GLuint >(dims);
+
     float dimension_inv = 1.0f / dims;
 
-    for (int i = 0; i < dims; i++)
-    {
-        float mappedZVal = (-1.0f + 2.0f * (float)i * dimension_inv)*scale_inv;
+    const float mVertices[] = {
+            // positions		// texture coords
+            -0.5f,  -0.5f, .0,	0.0f, 0.0f, .0,   // top right
+            0.5f, -0.5f, .0,	1.0f, 0.0f, .0,  // bottom right
+            0.5f, 0.5f, .0,		1.0f, 1.0f, .0,  // bottom left
+            -0.5f,  0.5f, .0,	0.0f, 1.0f,  .0  // top left
+    };
+    unsigned int indices[] = {
+            0,3,2,
+            2,1,0
+    };
+    float vertices[24];
+    float mappedZVal = -scale_inv, zTex = .0f;
+    for (int i = 0; i < dims; i++){
+        memcpy(vertices, mVertices, sizeof(float)*24);
+        for(int j=0;j<4;j++){vertices[6*j + 2] = mappedZVal;vertices[6*j + 5] = zTex; }
+        mappedZVal+=2.0 * dimension_inv* scale_inv; zTex+=dimension_inv;
 
-//        float zTex = (float)mappedZVal + 0.5f;
-        float zTex = (float)i * dimension_inv;
-        float vertices[] = {
-                // positions		// texture coords
-                -0.5f,  -0.5f, mappedZVal,	0.0f, 0.0f, zTex,   // top right
-                0.5f, -0.5f, mappedZVal,	1.0f, 0.0f, zTex,  // bottom right
-                0.5f, 0.5f, mappedZVal,		1.0f, 1.0f, zTex,  // bottom left
-                -0.5f,  0.5f, mappedZVal,	0.0f, 1.0f,  zTex  // top left
-        };
-
-        unsigned int VBO, EBO;
-        unsigned int indices[] = {
-                0,3,2,
-                2,1,0
-        };
-
-        glGenVertexArrays(1, &m_VAOs[i]);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
-
-        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-        glBindVertexArray((GLuint)m_VAOs[i]);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*6, indices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glBindVertexArray(0);
+        init_static_buffers(m_VAOs[i], vertices, 4, indices, 6);
     }
+
+    //close gap
+    float close_points[] = {//World					//Color
+            -0.5f,-0.5f,scale_inv, 0.0f,0.0f,1.0f,		//x0, y0, z1, //	//v0
+            0.5f,-0.5f,scale_inv, 1.0f,0.0f,1.0f,		//x1,y0,z1, //	//v1
+            0.5f,0.5f,scale_inv,	1.0f,1.0f,1.0f,		//x1, y1, z1,//	//v2
+            -0.5f,0.5f,scale_inv,0.0f,1.0f,1.0f,		//x0,y1,z1, //	//v3
+            -0.5f,-0.5f,-scale_inv,0.0f,0.0f,0.0f,	//x0,y0,z0,//	//v4
+            0.5f,-0.5f,-scale_inv,1.0f,0.0f,0.0f,		//x1,y0,z0,//	//v5
+            0.5f,0.5f,-scale_inv,1.0f,1.0f,0.0f,	//x1,y1,z0, //	//v6
+            -0.5f,0.5f,-scale_inv,0.0f,1.0f,0.0f,		//x0,y1,z0//	//v7
+    };
+    unsigned int Sclose_indices[] = {
+            4,0,3,4,3,7,	//left
+            1,5,6,1,6,2,	//right
+            3,2,6,3,6,7,	//top
+            4,5,1,4,1,0,	//bottom
+    };
+
+    init_static_buffers(close_VAO, close_points, 8, Sclose_indices, 24);
 }
+
 void dcmVolumeRender::onDraw() {
     switch(render_mode){
         case TEXTURE_BASED:
@@ -758,10 +775,14 @@ void dcmVolumeRender::onTexturebasedDraw(){
     glUniformMatrix4fv(glGetUniformLocation(program_texture, "uModelMat"), 1, GL_FALSE,
                        &_modelMat[0][0]);
     glUniform1i(glGetUniformLocation(program_texture, "uSampler_tex"), 0);
+    glUniform3f(glGetUniformLocation(program_texture, "uVolumeSize"), volume_size.x, volume_size.y, volume_size.z);
+
     for (auto vao:m_VAOs) {
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
+    glBindVertexArray(close_VAO);
+    glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
     glUseProgram(0);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);

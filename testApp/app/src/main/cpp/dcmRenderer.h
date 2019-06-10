@@ -39,7 +39,7 @@ class Camera{
     glm::mat4 _viewMat, _projMat;
     glm::vec3 _eyePos, _up,  _center;
 
-    const float NEAR_PLANE = 2.5f;//as close as possible
+    const float NEAR_PLANE = 2.f;//as close as possible
     const float FAR_PLANE = 1000.0f;
     const float FOV = 45.0f;
     const glm::vec3 ORI_CAM_POS = glm::vec3(0.0f, .0f, 3.0f);
@@ -105,7 +105,7 @@ protected:
     const int MAX_VERTEX_NUM = 15;
     const int MAX_INDICE_NUM = 90;
     const int VAO_DATA_LEN = 6;
-    const size_t SLICE_DENSITY = 5;
+    const size_t SLICE_DENSITY = 3;
     glm::mat4 _modelMat;
 
     GLuint VAO,VBO[2], EBO;
@@ -281,6 +281,7 @@ private:
     bool is_cutting = true, is_in_deeper = false;
 
     std::vector<GLuint> m_VAOs;
+    GLuint close_VAO;
 
     GLuint VAO_PLANE, VBO_PLANE;
 
