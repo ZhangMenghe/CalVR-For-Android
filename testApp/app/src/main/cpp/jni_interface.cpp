@@ -142,6 +142,10 @@ JNI_METHOD(void, JNIsetSwitches)(JNIEnv * env, jclass, jint idx, jboolean isSet)
 JNI_METHOD(void, JNIsetParam)(JNIEnv * env, jclass, jint idx, jfloat value){
     renderNative(renderAddr)->onParamsSet(idx, value);
 }
+JNI_METHOD(void, JNIsetJavaUIStatus)(JNIEnv * env, jclass, jint item , jint id){
+    renderNative(renderAddr)->onJavaUIStatusSet(item, id);
+}
+
 JNI_METHOD(jboolean , JNIgetOriginalChecked)(JNIEnv*, jobject, jint idx){
     return renderNative(renderAddr)->getOriginalChecked(idx);
 }

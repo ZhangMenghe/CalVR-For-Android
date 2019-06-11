@@ -17,6 +17,7 @@ public class JNIInterface {
 
     public static native boolean JNIchangeRender();
     public static native void JNIsetSwitches(int idx, boolean isSet);
+    public static native void JNIsetJavaUIStatus(int item, int id);
     public static native void JNIsetParam(int idx, float value);
 
     public static native boolean JNIgetOriginalChecked(int idx);

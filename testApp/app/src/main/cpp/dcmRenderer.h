@@ -16,6 +16,7 @@
 
 #include "AndroidHelper.h"
 #include "perfMonitor.h"
+#include "funcsRenderer.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -109,7 +110,6 @@ protected:
     glm::mat4 _modelMat;
 
     GLuint VAO,VBO[2], EBO;
-    GLuint VAO_Func, VBO_Func, EBO_Func;
     GLuint mProgram;
 
     EGLContext mEglContext;
@@ -189,6 +189,10 @@ public:
         render_mode = static_cast<RENDERER >((render_mode+1)%2);
         return (render_mode == RAYCAST);
     }
+    void onJavaUIStatusSet(int item, int id){
+        juis_[item] = id;
+        u_draw_opacity = (item == 0 && id == 3);
+    }
     void onSwitchersSet(int idx, bool isSet){
         switch(idx){
             case 0:
@@ -219,7 +223,10 @@ public:
         }
         else if(idx >= 100){
             adjust_opacities[idx - 100] = value;
-            update_opacity_visualize_func();
+            func_renderer.UpdateFuncPoints(
+                    LINEAR_FUNC,
+                    glm::vec2(adjust_opacities[2]-0.5f, adjust_opacities[1] * adjust_opacities[0]),
+                    glm::vec2(0.5f, adjust_opacities[0]));
         }
         else
             adjustParam[idx] = value;
@@ -259,6 +266,8 @@ protected:
 
 private:
     perfMonitor fps_monitor_;
+    FuncRenderer func_renderer;
+
     enum RENDERER{
         RAYCAST = 0,
         TEXTURE_BASED
@@ -279,11 +288,12 @@ private:
     float adjust_opacities[3] = {1.0f, 1.0f, .0f};
 
     bool use_color_tranfer = false, use_lighting = false, use_interpolation = false;
+    bool u_draw_opacity = false;
     RENDERER render_mode = TEXTURE_BASED;
     bool use_simple_cube = false;
 
     bool rotate_model = false;//toggle between rotate model and camera
-
+    int juis_[2]={0};
 
     glm::vec3 last_cutting_norm = glm::vec3(FLT_MAX), start_cutting;
     float cutting_length;
@@ -295,7 +305,7 @@ private:
     GLuint VAO_PLANE, VBO_PLANE;
 
     glm::vec3 stepsize_, volume_size;
-    GLuint program_texture, program_ray, program_plane, program_func;
+    GLuint program_texture, program_ray, program_plane;
 
     std::vector<Polygon> polygon;
     PolygonMap polygon_map;
@@ -319,11 +329,6 @@ private:
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
     void updateTexCoords(GLfloat* vertices, glm::vec3 p);
 
-
-    GLfloat vertices_func_[8];
-    void init_opacity_visualize_func();
-    void update_opacity_visualize_func();
-    void draw_opacity_function();
 };
 
 

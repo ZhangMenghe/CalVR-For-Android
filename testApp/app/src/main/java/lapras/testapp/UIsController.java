@@ -113,6 +113,7 @@ public class UIsController {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 toggle_id = i;
                 update_toggle_item_display();
+                JNIInterface.JNIsetJavaUIStatus(0, toggle_id);
             }
 
             @Override
@@ -159,6 +160,7 @@ public class UIsController {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch_id = i;
+                JNIInterface.JNIsetJavaUIStatus(1, switch_id);
                 update_switch_item_display();
             }
 

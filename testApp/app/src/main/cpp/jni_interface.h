@@ -31,6 +31,8 @@ JNI_METHOD(void, JNIsetSwitches)(JNIEnv * env, jclass, jint , jboolean);
 
 JNI_METHOD(void, JNIsetParam)(JNIEnv * env, jclass, jint, jfloat);
 
+JNI_METHOD(void, JNIsetJavaUIStatus)(JNIEnv * env, jclass, jint, jint);
+
 JNI_METHOD(jboolean , JNIgetOriginalChecked)(JNIEnv*, jobject, jint);
 
 JNI_METHOD(jfloat , JNIgetOriginalValue)(JNIEnv*, jobject, jint);
