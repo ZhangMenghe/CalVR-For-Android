@@ -192,11 +192,13 @@ public:
     void onJavaUIStatusSet(int item, int id){
         juis_[item] = id;
         u_draw_opacity = (item == 0 && id == 3);
+        func_renderer.setOpacityShow(u_draw_opacity);
     }
     void onSwitchersSet(int idx, bool isSet){
         switch(idx){
             case 0:
                 use_color_tranfer = isSet;
+                func_renderer.setColorTransfer(use_color_tranfer);
                 return;
             case 1:
                 use_lighting = isSet;

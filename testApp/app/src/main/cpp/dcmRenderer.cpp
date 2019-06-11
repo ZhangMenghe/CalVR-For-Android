@@ -225,6 +225,7 @@ void dcmVolumeRender::setting_1D_texture(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
     delete []m_transfer_color;
 }
 void dcmVolumeRender::assembleTexture() {
@@ -251,12 +252,13 @@ void dcmVolumeRender::assembleTexture() {
     glTexImage3D(GL_TEXTURE_3D, 0, GL_R8, (int)img_width, (int)img_height, (int)dimensions, 0, GL_RED, GL_UNSIGNED_BYTE, data);
 
     delete[]data;
-
     setting_1D_texture();
+
 
     initGeometry_texturebased();
 
     initGeometry();
+    func_renderer.CreateFunction(COLOR_BAR);
     func_renderer.CreateFunction(LINEAR_FUNC);
     func_renderer.UpdateFuncPoints(
             LINEAR_FUNC,
@@ -336,6 +338,7 @@ void dcmVolumeRender::onViewCreated(){
     if(!program_ray || !program_texture || !program_plane)
         LOGE("===Failed to create shader program===");
     func_renderer.InitProgram();
+
 }
 
 void dcmVolumeRender::updateTexCoords(GLfloat* vertices, glm::vec3 p){
@@ -787,6 +790,10 @@ void dcmVolumeRender::onTexturebasedDraw(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, volume_texid);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, trans_texid);
+
     glUseProgram(program_texture);
     glUniformMatrix4fv(glGetUniformLocation(program_texture, "uProjMat"), 1, GL_FALSE,
                        &(_camera->getProjMat()[0][0]));
@@ -830,8 +837,12 @@ void dcmVolumeRender::onTexturebasedDraw(){
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    if(u_draw_opacity)
+
+//    func_renderer.Draw(COLOR_BAR);
+//    if(use_color_tranfer)
         func_renderer.Draw();
+    //if(u_draw_opacity)
+     //   func_renderer.Draw(LINEAR_FUNC);
 }
 void dcmVolumeRender::onRaycastDraw(){
     updateVBOData();

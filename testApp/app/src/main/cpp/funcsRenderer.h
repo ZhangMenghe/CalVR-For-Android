@@ -13,26 +13,35 @@
 
 enum FUNC_TYPE{
     LINEAR_FUNC = 0,
-
+    COLOR_BAR
 };
 class FuncRenderer{
 public:
     void InitProgram();
     void CreateFunction(FUNC_TYPE type);
+    void setColorTransfer(bool color_transfer){is_color_transferd = color_transfer;}
+    void setOpacityShow(bool opacity_adj){is_opacity_adj = opacity_adj;}
     void UpdateFuncPoints(FUNC_TYPE type, float* points, bool is_quad = true);
     void UpdateFuncPoints(FUNC_TYPE type, glm::vec2 p1, glm::vec2 p2, bool is_quad = true);
+    void Draw(FUNC_TYPE type);
     void Draw();
 protected:
     const size_t MAX_VERTICS=10;
     const GLuint indices_func_[6]= {0,1,2,
                                     0,2,3};
+
     GLuint VAO_FUNC, VBO_FUNC,EBO_Func;
     GLuint VAO_QUAD;
+    GLuint VAO_COLOR_BAR;
 
-    GLuint program_func, program_quad;
+    GLuint program_func, program_quad, program_color_bar;
     GLfloat *vertices_func_;
-
-    void createQuad();
+    bool is_color_transferd = false, is_opacity_adj = false;
+    GLuint createQuad();
+    GLuint createColorBar();
     void createLinearQuad();
+
+    void draw_color_bar();
+    void draw_opacity_func();
 };
 #endif
