@@ -109,6 +109,7 @@ protected:
     glm::mat4 _modelMat;
 
     GLuint VAO,VBO[2], EBO;
+    GLuint VAO_Func, VBO_Func, EBO_Func;
     GLuint mProgram;
 
     EGLContext mEglContext;
@@ -218,6 +219,7 @@ public:
         }
         else if(idx >= 100){
             adjust_opacities[idx - 100] = value;
+            update_opacity_visualize_func();
         }
         else
             adjustParam[idx] = value;
@@ -293,7 +295,7 @@ private:
     GLuint VAO_PLANE, VBO_PLANE;
 
     glm::vec3 stepsize_, volume_size;
-    GLuint program_texture, program_ray, program_plane;
+    GLuint program_texture, program_ray, program_plane, program_func;
 
     std::vector<Polygon> polygon;
     PolygonMap polygon_map;
@@ -316,6 +318,12 @@ private:
     void updateCuttingPlane(glm::vec3 p, glm::vec3 p_norm);
     void updateGeometry(std::vector<Polygon> polygon, PolygonMap polygon_map, std::vector<int> rpoints);
     void updateTexCoords(GLfloat* vertices, glm::vec3 p);
+
+
+    GLfloat vertices_func_[8];
+    void init_opacity_visualize_func();
+    void update_opacity_visualize_func();
+    void draw_opacity_function();
 };
 
 

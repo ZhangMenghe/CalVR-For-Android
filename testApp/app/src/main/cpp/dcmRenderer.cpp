@@ -257,6 +257,7 @@ void dcmVolumeRender::assembleTexture() {
     initGeometry_texturebased();
 
     initGeometry();
+    init_opacity_visualize_func();
 }
 void dcmVolumeRender::initGeometry_Naive() {
     float vertices[] = {
@@ -327,7 +328,8 @@ void dcmVolumeRender::onViewCreated(){
     program_plane = assetLoader::instance()->createGLShaderProgramFromFile("shaders/IntersectionPlane.vert", "shaders/IntersectionPlane.frag");
 
     program_texture = assetLoader::instance()->createGLShaderProgramFromFile("shaders/textureVolume.vert", "shaders/textureVolume.frag");
-    if(!program_ray || !program_texture || !program_plane)
+    program_func = assetLoader::instance()->createGLShaderProgramFromFile("shaders/opaViz.vert", "shaders/opaViz.frag");
+    if(!program_ray || !program_texture || !program_plane || !program_func)
         LOGE("===Failed to create shader program===");
 }
 
@@ -720,7 +722,8 @@ void dcmVolumeRender::initGeometry_texturebased() {
 void dcmVolumeRender::onDraw() {
     switch(render_mode){
         case TEXTURE_BASED:
-            onTexturebasedDraw();
+            draw_opacity_function();
+//            onTexturebasedDraw();
             break;
         case RAYCAST:
             onRaycastDraw();
@@ -813,6 +816,7 @@ void dcmVolumeRender::onTexturebasedDraw(){
         }
     }
 
+
 //    if(slice_start_idx == 0){
 //        glBindVertexArray(close_VAO);
 //        glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
@@ -822,6 +826,8 @@ void dcmVolumeRender::onTexturebasedDraw(){
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
+
+    draw_opacity_function();
 }
 void dcmVolumeRender::onRaycastDraw(){
     updateVBOData();
@@ -893,4 +899,51 @@ void dcmVolumeRender::draw_intersect_plane(){
 
     glBindVertexArray(VAO_PLANE);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+void dcmVolumeRender::init_opacity_visualize_func(){
+    glGenVertexArrays(1, &VAO_Func);
+    glBindVertexArray(VAO_Func);
+
+    glGenBuffers(1, &VBO_Func);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_Func);
+    glBufferData(GL_ARRAY_BUFFER, 8* sizeof(GL_FLOAT), nullptr, GL_DYNAMIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+
+    GLuint indices_func_[6]= {0,1,2,
+                              0,2,3};
+    glGenBuffers(1, &EBO_Func);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_Func);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*6, indices_func_, GL_STATIC_DRAW);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    update_opacity_visualize_func();
+}
+void dcmVolumeRender::update_opacity_visualize_func(){
+    float vertices[] = {
+            1.0f, adjust_opacities[0],//top-right
+            adjust_opacities[2], adjust_opacities[1] * adjust_opacities[0],//top-left
+            adjust_opacities[2], .0f,//bottom-left
+            1.0f, .0f//bottom-right
+    };
+    memcpy(vertices_func_, vertices, 8*sizeof(GL_FLOAT));
+}
+
+void dcmVolumeRender::draw_opacity_function(){
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_Func);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, 8  *sizeof(GL_FLOAT), vertices_func_);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glUseProgram(program_func);
+        glUniform2f(glGetUniformLocation(program_func, "uOffset"), -0.5f,-0.8f);
+        glUniform2f(glGetUniformLocation(program_func, "uScale"), 1.0f, 0.2f);
+        glBindVertexArray(VAO_Func);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
