@@ -216,7 +216,9 @@ public:
             else
                 setCuttingPlane(value);//should be 0-1
         }
-
+        else if(idx >= 100){
+            adjust_opacities[idx - 100] = value;
+        }
         else
             adjustParam[idx] = value;
     }
@@ -237,6 +239,8 @@ public:
         }
     }
     float getOriginalValue(int idx){
+        if(idx >= 100)
+            return adjust_opacities[idx - 100];
         return adjustParam_origin[idx];
     }
     float getFPS(){ return fps_monitor_.Update();}

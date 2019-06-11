@@ -7,6 +7,6 @@
     <string name="text_sample">Sample Step Inv: %1$.2f </string>
     <string name="text_threshold">Value Threshold: %1$.2f</string>
     <string name="text_brightness">Brightness: %1$.2f</string>
-    <string name="text_opacity_threshold">Opacity Threshold: %1$.2f</string>
+    <string name="text_opacity_threshold">value: %1$.2f</string>
     <string name="text_toggle">Value</string>
 </resources>

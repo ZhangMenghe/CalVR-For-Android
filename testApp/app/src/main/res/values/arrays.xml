@@ -15,5 +15,11 @@
         <item>Naive DCMI</item>
         <item>Cutting</item>
     </string-array>
+    <string-array name="opacityArr">
+        <item>Overall</item>
+        <item>Low Bound</item>
+        <item>Cut Off</item>
+    </string-array>
+
 
 </resources>

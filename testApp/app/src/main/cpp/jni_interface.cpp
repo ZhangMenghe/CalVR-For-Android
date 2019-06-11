@@ -6,8 +6,6 @@
 #include <vector>
 #include "dcmRenderer.h"
 namespace {
-    jobject main_object;
-    //global environment
     jlong renderAddr = 0;
 
     inline jlong getNativeClassAddr(dcmVolumeRender * native_controller){
