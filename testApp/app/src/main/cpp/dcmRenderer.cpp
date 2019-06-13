@@ -846,6 +846,9 @@ void dcmVolumeRender::onTexturebasedDraw(){
 }
 void dcmVolumeRender::onRaycastDraw(){
     updateVBOData();
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
@@ -853,6 +856,7 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, trans_texid);
+
 
     glUseProgram(program_ray);
 
@@ -892,6 +896,8 @@ void dcmVolumeRender::onRaycastDraw(){
 
     glDrawElements(RenderMode[gl_draw_mode_id], indices_num_, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
 }
 void dcmVolumeRender::draw_intersect_plane(){
 
