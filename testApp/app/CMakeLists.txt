@@ -19,7 +19,9 @@ include_directories(${GLM_DIRECTORY})
 add_library(laprasNative
             SHARED
             src/main/cpp/jni_interface.cpp
-            src/main/cpp/dcmRenderer.cpp
+	        src/main/cpp/dcmRenderer.cpp
+#			src/main/cpp/raycastBasedRenderer.cpp
+#			src/main/cpp/textureBasedRenderer.cpp
 			src/main/cpp/funcsRenderer.cpp
 			src/main/cpp/AndroidHelper.cpp
 			src/main/cpp/perfMonitor.cpp

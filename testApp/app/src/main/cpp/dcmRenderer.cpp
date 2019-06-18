@@ -214,7 +214,7 @@ void dcmVolumeRender::setting_1D_texture(){
     glGenTextures(1, &trans_texid);
     glBindTexture(GL_TEXTURE_2D, trans_texid);
     //bind current texture object and set the data
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     float* m_transfer_color = new float[4 * Color_num_transfer];
 
     for(int i=0; i<Color_num_transfer; i++)
@@ -248,7 +248,7 @@ void dcmVolumeRender::assembleTexture() {
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     // pixel transfer happens here from client to OpenGL server
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage3D(GL_TEXTURE_3D, 0, GL_R8, (int)img_width, (int)img_height, (int)dimensions, 0, GL_RED, GL_UNSIGNED_BYTE, data);
 
     delete[]data;
