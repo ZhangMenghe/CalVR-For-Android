@@ -6,6 +6,7 @@ SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAG
 SET( CMAKE_SHARED_LINKER_FLAGS  "${CMAKE_SHARED_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
 SET( CMAKE_STATIC_LINKER_FLAGS  "${CMAKE_STATIC_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
 SET( OSG_CPP_EXCEPTIONS_AVAILABLE "Yes")
+SET( USE_OPENCV 1)
 
 SET(KERNEL_LIBRARIES
     cvrKernel                     # For cvr, Kernel > Menu > Util
@@ -65,6 +66,7 @@ SET(PHYSX_LIBS
 	cpufeatures
 )
 
+include(CMakeLists-staticEIGEN.txt)
 include(CMakeLists-staticDependencies.txt)
 include(CMakeLists-staticOSG.txt)
 include(CMakeLists-staticMXML.txt)
@@ -82,11 +84,11 @@ add_library(arcore SHARED IMPORTED)
 set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
                       ${ARCORE_LIBPATH}/${ANDROID_ABI}/libarcore_sdk_c.so)
 
-include_directories(src/main/cpp/plugins/common)
-include_directories(src/main/cpp/plugins/MenuBasics)
-include_directories(src/main/cpp/plugins/PhysxBall)
-include_directories(src/main/cpp/plugins/GlesDrawables)
-include_directories(src/main/cpp/plugins/SpatialViz)
+IF(${USE_OPENCV})
+    set(OpenCV_DIR "${CMAKE_SOURCE_DIR}/../../../opencv-3.4.3/build/${ANDROID_ABI}/sdk/native/jni")
+    set(OpenCV_INCLUDE_DIR ${OpenCV_DIR}/include)
+    INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIR})
+ENDIF(${USE_OPENCV})
 
 add_library(ARCalVR
             SHARED
@@ -95,7 +97,6 @@ add_library(ARCalVR
             src/main/cpp/bgDrawable.cpp
             src/main/cpp/perfMonitor.cpp
             )
-
 target_link_libraries(ARCalVR
                       ${CVR_PLUGINS}
                       android

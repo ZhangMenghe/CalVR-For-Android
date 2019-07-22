@@ -12,7 +12,8 @@ import java.io.IOException;
 
 public class JniInterface {
     static {
-        System.loadLibrary("ARCalVRd");
+        System.loadLibrary("opencv_java3");
+        System.loadLibrary("ARCalVR");
     }
     private static final String TAG = "JniInterfaceCalVR";
     static AssetManager assetManager;

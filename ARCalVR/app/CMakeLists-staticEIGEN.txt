@@ -1,0 +1,15 @@
+set(EXT_PROJ_DIR  "${CMAKE_SOURCE_DIR}/../../..")
+
+SET(EIGEN_SOURCE_DIR "${EXT_PROJ_DIR}/eigen-3.3.5")
+SET(EIGEN_BUILD_DIR "${EXT_PROJ_DIR}/eigen-3.3.5/build/${ANDROID_ABI}")
+
+INCLUDE_DIRECTORIES(${EIGEN_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${EIGEN_BUILD_DIR})
+
+add_library(eigen_lapack_static STATIC IMPORTED)
+set_target_properties(eigen_lapack_static PROPERTIES IMPORTED_LOCATION
+                      ${EIGEN_BUILD_DIR}/lib/libeigen_lapack_static.a)
+
+add_library(eigen_blas_static STATIC IMPORTED)
+set_target_properties(eigen_blas_static PROPERTIES IMPORTED_LOCATION
+                      ${EIGEN_BUILD_DIR}/lib/libeigen_blas_static.a)
