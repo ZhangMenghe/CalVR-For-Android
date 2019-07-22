@@ -45,7 +45,7 @@
    </Input>
     
    <Plugin>
-    <PhysxBall value = "on" />
+    <PhysxBall value = "off" />
     <GlesDrawables value = "on" />
     <SpatialViz value = "off" />
 
