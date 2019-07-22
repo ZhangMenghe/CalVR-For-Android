@@ -1,8 +1,5 @@
 /[Bb]uild/
-/buildLib/
-/*GPU/
-# Prerequisites
-*.d
+/.idea/
 
 # Compiled Object files
 *.slo
