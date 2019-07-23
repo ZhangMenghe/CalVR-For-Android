@@ -4,6 +4,7 @@
 #include <osg/ShapeDrawable>
 #include <cvrUtil/AndroidPreloadPlugins.h>
 #include <MenuBasics/MenuBasics.h>
+#include <GlesDrawables/drawablesEntrance.h>
 #include <osg/Depth>
 #include <osg/Callback>
 #include <cvrKernel/PluginManager.h>
@@ -13,7 +14,7 @@ using namespace osg;
 
 REGISTER(MenuBasics);
 //REGISTER(PhysxBall)
-//REGISTER(GlesDrawables);
+REGISTER(GlesDrawables);
 //REGISTER(SpatialViz);
 
 void JNICallBackCallback::operator()(osg::Node *node, osg::NodeVisitor *nv) {
