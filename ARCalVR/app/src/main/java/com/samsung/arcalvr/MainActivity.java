@@ -1,5 +1,10 @@
 package com.samsung.arcalvr;
 
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -7,6 +12,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -54,10 +61,11 @@ public class MainActivity extends AppCompatActivity
     //Sensor pixel 2 meter
     ArrayList<Size> pixel_arr_size = new ArrayList<>();
 
-
+    Activity contex;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        contex=  this;
         setContentView(R.layout.activity_main);
 
         JniInterface.assetManager = getAssets();
@@ -117,7 +125,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        //synchronized to avoid racing
+//        synchronized to avoid racing
         if(isFinishing()) {
             synchronized (this) {
                 JniInterface.JNIonDestroy();
@@ -270,6 +278,14 @@ public class MainActivity extends AppCompatActivity
                 track_bnt.StartLockAnimation();
             }
         });
+    }
+    public void appRestart(){
+        Intent mStartActivity = new Intent(this, MainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
     }
     public float[] getPixelSize(){
         float[] arr = new float[pixel_arr_size.size() * 2];

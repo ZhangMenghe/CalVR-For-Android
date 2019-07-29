@@ -63,6 +63,8 @@ public:
 
     void onDrawFrame();
 
+    void onDestroy();
+
     void onSingleTouchDown(cvr::TouchType type, float x, float y);
 
     void onSingleTouchUp(cvr::TouchType type, float x, float y);

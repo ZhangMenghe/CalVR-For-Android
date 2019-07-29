@@ -61,6 +61,11 @@ allController::~allController(){
     delete _CalVR;
 }
 
+void allController::onDestroy(){
+//    delete _CalVR;
+    _CalVR = nullptr;
+}
+
 void allController::onCreate(const char * calvr_path){
     if(!_CalVR->init(calvr_path, _asset_manager))
         LOGE("Failed to init calvr kernel");
@@ -85,6 +90,7 @@ void allController::onCreate(const char * calvr_path){
         helper_class = static_cast<jclass>(env->NewGlobalRef(helper_class));
         JNIcallback = new JNICallBackCallback(env, helper_class, GetMainActivityObj());
         JNIcallback->registerCallBackFunction("popButtons", "()V");
+        JNIcallback->registerCallBackFunction("appRestart", "()V");
 //        JNIcallback->registerCallBackFunction("getPixelSize", "()[F", 1);
         _sceneGroup->addUpdateCallback(JNIcallback);
     }
@@ -140,7 +146,7 @@ void allController::onDoubleTouch(TouchType type, float x, float y){
 void allController::onTouchMove(TouchType type, float x, float y){
 
     AndroidInteractionEvent * aie = new AndroidInteractionEvent();
-    aie->setInteraction(BUTTON_DRAG);
+    aie->setInteraction(MOVE);
     _CalVR->setTouchEvent(aie, type, x, y);
 }
 void allController::setPixelSize(float * arr){
@@ -149,7 +155,7 @@ void allController::setPixelSize(float * arr){
 ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
     osg::ref_ptr<osg::ShapeDrawable> shape = new osg::ShapeDrawable;
     shape->setShape(new osg::Sphere(pos, 0.05f));
-    shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
+//    shape->setColor(osg::Vec4f(1.0f,.0f,.0f,1.0f));
     osg::ref_ptr<osg::Geode> node = new osg::Geode;
     Program * program = assetLoader::instance()->createShaderProgramFromFile("shaders/lighting.vert","shaders/lighting.frag");
 
@@ -164,7 +170,7 @@ ref_ptr<osg::Geode> allController::createDebugOSGSphere(osg::Vec3 pos) {
 
     stateSet->addUniform( new osg::Uniform("lightPosition", osg::Vec3(0,0,1)));
 
-    Uniform * baseColor = new osg::Uniform("uBaseColor", osg::Vec4f(1.0f, .0f, .0f, 1.0f));
+    Uniform * baseColor = new osg::Uniform("uBaseColor", osg::Vec4f(.0f, 1.0f, .0f, 1.0f));
     stateSet->addUniform(baseColor);
 
     node->addDrawable(shape.get());

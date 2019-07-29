@@ -80,8 +80,9 @@ JNI_METHOD(void, JNIonPause)(JNIEnv *, jclass){
     controllerNative(nativeAppAddr)->onPause();
 }
 JNI_METHOD(void, JNIonDestroy)(JNIEnv *, jclass, long controller_addr){
-    GetJniEnv()->DeleteGlobalRef(main_object);
+    controllerNative(controller_addr)->onDestroy();
     delete controllerNative(controller_addr);
+    GetJniEnv()->DeleteGlobalRef(main_object);
 }
 JNI_METHOD(jfloat, JNIgetFPS)(JNIEnv *, jclass){
     return controllerNative(nativeAppAddr)->getFPS();
